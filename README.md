@@ -87,9 +87,11 @@
 - 参赛队伍提交的所有参赛资料的知识产权归参赛队伍所有，参赛资料仅用于本次大赛评奖与宣发。
 - 初审的结果用来选择参加最终Demo的团队
 - 技术得分会结合 最终Demo 和问题答辩做调整，最终Demo 的内容和实现的代码功能应该一致
+
 - **本次活动的最终解释权归 OneBlock 及 Parity 官方所有。**
 
-## 注册及提交指南
+## 注册及提交流程指南
+
 ### 1. 填写谷歌表单
 
 参赛者可以通过以下链接提交报名完善信息，无论您是团队还是个人参赛，每个参赛队员都需要填写此表。
@@ -100,7 +102,7 @@
 
 对于中国注册者请添加微信（ID：yikuailianxi）加入「Polkadot Hackathon 2023冬季参赛群」。 入群后，请将您的群昵称修改为“姓名-XX项目”或“姓名-个人”（如果您尚未组队）。
 
-对于英语注册者，请加入我们的 Discord（https://discord.com/invite/fE8deY4UbP）并选择“2023 Winter Polkadot Hackathon Hacker”频道。 请在Discord里将您的用户名修改为“姓名-xx项目”或“姓名-个人”（如果您尚未组建团队）。
+对于英语注册者，请加入我们的 Discord（https://discord.com/invite/fE8deY4UbP) 并选择“2023 Winter Polkadot Hackathon Hacker”频道。 请在Discord里将您的用户名修改为“姓名-xx项目”或“姓名-个人”（如果您尚未组建团队）。
 
 <img src="./docs/assets/06-wechat.jpg" width="160px">
 
