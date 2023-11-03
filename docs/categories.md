@@ -137,7 +137,6 @@
 - [Darwinia](https://darwinia.network/)
 - [Celer](https://www.celer.network/)
 - 游戏 DAO
-- [Plasm](https://www.plasmnet.io/)
 
 ### DeFi 或 稳定币链
 
@@ -150,7 +149,6 @@
 现有的 DeFi 链例子：
 
 - [Acala](https://acala.network/)
-- [Laminar](https://laminar.one/)
 - [Centrifuge](https://centrifuge.io/)
 
 ### 隐私链
