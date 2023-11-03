@@ -185,7 +185,12 @@
   1. 2023夏季黑客松赛事参与细则 - Tracy  (Oneblock)
   2. 2023夏季黑客松赛事规则详解 - 周俊 (Parity 工程师)
 
-    加入方式: [Twitter Space](https://twitter.com/i/spaces/)
+- **Workshop #1：超越创新：探索新的区块链⼯具和技术实践**
+
+  2023年11月11日 20:00 - 21:30 UTC +8
+  1. 探索AA（账户抽象）在Polkadot中的潜力 - Suvi Dong (Parity 工程师)
+  2. 解锁Polkadot和XCM（跨链消息传递）的未来 - Kaichao(Parity 工程师)
+  3. 区块链领域还可以做哪些项目？zk ML（零知识机器学习）是答案吗？Jimmy (Substrate 贡献者)
 
 ## 联络
 
