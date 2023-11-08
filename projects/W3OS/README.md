@@ -50,17 +50,16 @@ TODO
 https://github.com/ff13dfly/W3OS/ Starting from the first commit
 
 
-## 黑客松期间计划完成的事项
-
+## Tasks Planned for the Hackathon
 **Frontend React**
-- Add group chat functionality UI
-- Add social login such as Twitter and Google, bind and to generate a Polkadot account
-- Load dapps from other hackathon projects
+- Implement UI for group chat functionality.
+- Add social login options like Twitter and Google, enabling users to generate and bind a Polkadot account.
+- Integrate Dapps from other hackathon projects.
 
 **Backend Node.js**
-- Backend interface implementation for group chat function
-- social login backend interface
-- Load dapps from other hackathon projects
+- Implement backend interfaces for the group chat feature.
+- Develop backend interfaces for social login functionality.
+- Enable Dapps from other hackathon projects.
 
 ## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
 
@@ -69,12 +68,12 @@ https://github.com/ff13dfly/W3OS/ Starting from the first commit
 - Demo 视频，ppt等大文件不要提交。可以在readme中存放它们的链接地址
 
 ## Team Info
-傅忠强：
-- Leader & Full-stack Devloper, experienced in blockchain development
-- Author of Anchor Network
+傅忠强 (Fu Zhongqiang):
+= Leader & Full-stack Developer, experienced in blockchain development.
+- Author of Anchor Network.
 - https://github.com/ff13dfly
 
-Backdoor
-- Full-stack Developer, experienced in substrate and frontend development
+Backdoor:
+- Full-stack Developer with expertise in substrate and frontend development.
 - https://github.com/doutv
 
