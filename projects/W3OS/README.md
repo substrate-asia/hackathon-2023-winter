@@ -5,34 +5,41 @@
 项目立项日期 (哪年哪月)：2023/11
 
 ## 项目整体简介
-项目简介，英文提交。包括但不限于：
-
-- 项目背景/原由/要解决的问题 (如有其他附件，可放到 `docs` 目录内。英文提交)。
-- 项目介绍
-- 项目Demo
-- 技术架构
-- 项目 logo (如有)，这 logo 会印制在文宣，会场海报或贴子上。
-- 项目的启始的commit，对于全新的项目可以是一个开源框架的clone，比如区块链clone自substrate-node-template, react
-框架等，请给出说明。对于成熟项目可以是一个branch，要求在2023年11月1号之后生成，说明有哪些功能是已经有了的
-
-W3OS: Web3.0 Operation System base on Anchor Network
+W3OS: Web3.0 Operating System Based on Anchor Network
 
 ### Background
-What is Anchor Network?
-What problems does W3OS solve?
+**What Problems Does W3OS Solve?**
+- Users without any cryptocurrency cannot use Web3.0, which poses a significant barrier to Web3.0 adoption.
+- On W3OS, there is no token requirement for users to access Dapps. 
+
+**What Is Anchor Network?**
+- Anchor Network is a blockchain network based on Polkadot/Substrate, designed to facilitate developers in creating Dapps and enable regular users to seamlessly enter the Web3.0 ecosystem.
+- Essentially, it operates as a Key-Value decentralized storage system. Developers can easily build Dapps on the network with just one day of learning.
+- Anchor Network has received a W3F Grant; you can find more details [here](https://github.com/w3f/Grants-Program/pull/1528).
+- For a comprehensive understanding, you can refer to the [Anchor Network whitepaper](https://github.com/ff13dfly/EasyPolka/blob/main/anchor%20network/Anchor_Network_White_Paper_EN.md).
 
 ### Overview
-- W3OS bases on Anchor Network, all data can be stored on the network. Even the OS itself and the private data.
-- Even without any coins, you can benifit from Web3.0. The Web3.0 account can be treated as mobile number, you can get in touch with another Web3.0 user without more information but SS58 account.
-- Complex blockchain world can be managed on W3OS, no need to visit so much website again.
+- W3OS is a Dapp store and an on-chain operating system. Similar to WeChat Mini Programs, which are hosted on Tencent's servers, W3OS operates on Anchor Network, backed by the Polkadot blockchain.
+- W3OS is built upon Anchor Network, storing all Dapp code and data on-chain. Even W3OS itself is stored on the blockchain.
+- Importantly, you can benefit from Web3.0 even without any cryptocurrency. Web3.0 accounts can be likened to mobile numbers, allowing you to connect with other users with just their SS58 account information.
 
-See more in [W3OS PPT](docs/W3OS_Overview.pdf)
+For more detailed information, please visit the [W3OS PPT](docs/W3OS_Overview.pdf).
 
 ### Demo
 Live on: https://android.im/os/
 
 ### Architecture
-TODO: text explanation
+W3OS comprises four main components: **System**, **Account**, **Storage**, and **Dapps**.
+
+1. The **System** of W3OS serves as the fundamental part for managing all functions, including APIs and services. APIs play a crucial role by providing stable version APIs for various networks.
+
+2. **Account** is the cornerstone of the blockchain network on W3OS, and it offers some interesting features. Users can maintain anonymity through their SS58 accounts, and they can also manage their accounts as usual.
+
+3. **Storage** functions are designed to assist both developers and customers in saving data on the Anchor network.
+
+4. **Dapps**, or decentralized applications, are the end result. With the support of the components mentioned above, there are numerous ways to develop your fully on-chain applications, particularly colorful non-financial applications.
+
+Thanks to the immutable features of blockchain, the entire W3OS can be deployed on the Anchor Network, even in a private setting.
 
 ![Architecture](docs/architecture.png)
 
@@ -70,6 +77,7 @@ GitHub 帐号
 
 傅忠强：
 - Leader & Full-stack Devloper, experienced in blockchain development
+- Author of Anchor Network
 - https://github.com/ff13dfly
 
 Backdoor
