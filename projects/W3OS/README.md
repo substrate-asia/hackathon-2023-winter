@@ -1,10 +1,10 @@
-## 基本资料
+## Basic Info
 
-项目名称：W3OS
+Project Name：W3OS
 
-项目立项日期 (哪年哪月)：2023/11
+Date of project initiation: 2023/11
 
-## 项目整体简介
+## Project Introduction
 W3OS: Web3.0 Operating System Based on Anchor Network
 
 ### Background
@@ -52,15 +52,15 @@ https://github.com/ff13dfly/W3OS/ Starting from the first commit
 
 ## 黑客松期间计划完成的事项
 
-**前端 React**
-- 添加群聊功能UI
-- 添加第三方登录，如Twitter/Google，并绑定生成一个波卡账户
-- 加载其他项目方、参赛者的dapp
+**Frontend React**
+- Add group chat functionality UI
+- Add social login such as Twitter and Google, bind and to generate a Polkadot account
+- Load dapps from other hackathon projects
 
-**后端 Node.js**
-- 群聊功能后端接口实现
-- 第三方登录后端接口
-- 加载其他项目方、参赛者的dapp
+**Backend Node.js**
+- Backend interface implementation for group chat function
+- social login backend interface
+- Load dapps from other hackathon projects
 
 ## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
 
@@ -68,13 +68,7 @@ https://github.com/ff13dfly/W3OS/ Starting from the first commit
 - 把相关代码放在 `src` 目录里，并在本栏列出在黑客松期间完成的开发工作及代码结构。我们将对这些目录/档案作重点技术评审。
 - Demo 视频，ppt等大文件不要提交。可以在readme中存放它们的链接地址
 
-## 队员信息
-包含参赛者名称及介绍
-在团队中担任的角色
-GitHub 帐号
-微信账号（如有请留下，方便及时联系）
-
-
+## Team Info
 傅忠强：
 - Leader & Full-stack Devloper, experienced in blockchain development
 - Author of Anchor Network
