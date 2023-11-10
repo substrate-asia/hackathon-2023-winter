@@ -56,6 +56,46 @@
 **项目可以选择多个赛道参赛，初审评审会根据项目实现的功能确定是否可以参与到单个赛道的角逐**
 
 ## Bounty奖项列表
+1 Acala
+
+赏金奖励：价值$5000 美元的 ACA
+
+第一名 最高$2,500美元的$ACA
+
+第二名 最高$1,500美元的$ACA
+
+第三名 最高$1,000美元的$ACA 
+
+参与奖 Acala Swag
+
+2 Bifrost
+
+赏金奖励： $1,000
+
+3 Cumulus Encrypted Storage System (CESS)
+
+一等奖: 1500美金 $CESS
+
+二等奖: 500美金 $CESS
+
+4 Gear Foundation
+
+赏金奖励: $3,000，
+每个项目 $1,000 (共三个项目)
+
+5 MoonBeam
+
+赏金奖励：$1,000
+
+6 Tanssi
+
+赏金奖励：$1,500
+
+第一名: $1,000
+
+第二名: $500
+
+[Bounty 详细说明](https://dorahacks.io/hackathon/polkadot-hackathon-2023-winter/bounty-&-bounty-bonus)
 
 ## 评分维度
 
@@ -191,6 +231,13 @@
   1. 探索AA（账户抽象）在Polkadot中的潜力 - Suvi Dong (Parity 工程师)
   2. 解锁Polkadot和XCM（跨链消息传递）的未来 - Kaichao(Parity 工程师)
   3. 区块链领域还可以做哪些项目？zk ML（零知识机器学习）是答案吗？Jimmy (Substrate 贡献者)
+
+- **Workshop #2**
+
+  2023年11月12日 20:00 - 21:30 UTC +8
+  1. 在 Acala EVM+ 上构建 DApp - Shunji Zhan，Acala 工程师
+  2. 全链流动性质押开发者堆栈 - Tyrone Pan，Bifrost 产品经理
+  3. Moonbeam 的预编译合约训练营活动 - Wuzhong，Moonbeam 开发者关系工程师
 
 ## 联络
 
