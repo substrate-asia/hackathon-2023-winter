@@ -1,0 +1,4 @@
+[submodule "projects/04-bilinearity/src/polkadot-sdk"]
+	path = projects/04-bilinearity/src/polkadot-sdk
+	url = https://github.com/paritytech/polkadot-sdk
+	branch = release-polkadot-v1.3.0
