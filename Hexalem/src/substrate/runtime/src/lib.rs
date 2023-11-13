@@ -251,6 +251,8 @@ impl pallet_balances::Config for Runtime {
 
 parameter_types! {
 	pub FeeMultiplier: Multiplier = Multiplier::one();
+
+	pub const HexalemMaxPlayers: u8 = 100;
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -274,6 +276,13 @@ impl pallet_template::Config for Runtime {
 	type WeightInfo = pallet_template::weights::SubstrateWeight<Runtime>;
 }
 
+/// Configure the pallet-hexalem in pallets/hexalem.
+impl pallet_hexalem::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = pallet_hexalem::weights::SubstrateWeight<Runtime>;
+	type MaxPlayers = HexalemMaxPlayers;
+}
+
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub struct Runtime {
@@ -286,6 +295,7 @@ construct_runtime!(
 		Sudo: pallet_sudo,
 		// Include the custom logic from the pallet-template in the runtime.
 		TemplateModule: pallet_template,
+		HexalemModule: pallet_hexalem,
 	}
 );
 

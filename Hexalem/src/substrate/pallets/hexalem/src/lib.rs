@@ -1,0 +1,143 @@
+#![cfg_attr(not(feature = "std"), no_std)]
+
+/// Edit this file to define custom logic or remove it if it is not needed.
+/// Learn more about FRAME and the core library of Substrate FRAME pallets:
+/// <https://docs.substrate.io/reference/frame-pallets/>
+pub use pallet::*;
+
+//#[cfg(test)]
+//mod mock;
+
+//#[cfg(test)]
+//mod tests;
+
+//#[cfg(feature = "runtime-benchmarks")]
+//mod benchmarking;
+pub mod weights;
+use scale_info::prelude::vec;
+pub use weights::*;
+
+#[frame_support::pallet]
+pub mod pallet {
+	use super::*;
+	use frame_support::pallet_prelude::*;
+	use frame_system::pallet_prelude::*;
+
+	#[pallet::pallet]
+	pub struct Pallet<T>(_);
+
+	// Type of Hash that we will use
+	type Hash = [u8; 64];
+
+	// Type of AccountId that is going to be used
+	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+	#[scale_info(skip_type_params(T))]
+	pub enum HexBoardState {
+		Matchmaking,
+		Playing,
+		Reward,
+		Finish,
+	}
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+	#[scale_info(skip_type_params(T))]
+	pub struct HexBoard<T: Config> {
+		pub state: HexBoardState,
+		pub rounds: u8,      // maximum number of rounds
+		pub turn: u8,        // current turn number
+		pub player_turn: u8, // Who is playing?
+		pub selection: u8,   // number of pieces for selection
+		pub number_of_players: u8,
+		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
+		pub last_move: u8,
+
+		//pub board: Hash,
+		pub selection_base: Hash,
+		pub selection_current: Hash,
+	}
+
+	/// Configure the pallet by specifying the parameters and types on which it depends.
+	#[pallet::config]
+	pub trait Config: frame_system::Config {
+		/// Because this pallet emits events, it depends on the runtime's definition of an event.
+		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+		/// Type representing the weight of this pallet
+		type WeightInfo: WeightInfo;
+
+		// Maximum number of players that can join a single game
+		#[pallet::constant]
+		type MaxPlayers: Get<u32>;
+	}
+
+	// The pallet's runtime storage items.
+	// https://docs.substrate.io/main-docs/build/runtime-storage/
+
+	// Learn more about declaring storage items:
+	// https://docs.substrate.io/main-docs/build/runtime-storage/#declaring-storage-items
+	#[pallet::storage]
+	pub type HexBoardStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, HexBoard<T>>;
+
+	// Pallets use events to inform users when important changes are made.
+	// https://docs.substrate.io/main-docs/build/events-errors/
+	#[pallet::event]
+	#[pallet::generate_deposit(pub(super) fn deposit_event)]
+	pub enum Event<T: Config> {
+		/// New game has been initialized
+		GameInitialized { who: T::AccountId },
+	}
+
+	// Errors inform users that something went wrong.
+	#[pallet::error]
+	pub enum Error<T> {
+		// Player has already initialised a game. They need to finish it.
+		AlreadyPlaying,
+
+		// Other errors
+		InternalError,
+	}
+
+	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
+	// These functions materialize as "extrinsics", which are often compared to transactions.
+	// Dispatchable functions must be annotated with a weight and must return a DispatchResult.
+	#[pallet::call]
+	impl<T: Config> Pallet<T> {
+		/// An example dispatchable that takes a singles value as a parameter, writes the value to
+		/// storage and emits an event. This function must be dispatched by a signed extrinsic.
+		#[pallet::call_index(0)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn initialize(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
+			// Check that the extrinsic was signed and get the signer.
+			// This function will return an error if the extrinsic is not signed.
+			// https://docs.substrate.io/main-docs/build/origins/
+			let who: T::AccountId = ensure_signed(origin)?;
+
+			ensure!(!HexBoardStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
+
+			// This can panic, but never will
+			let players =
+				BoundedVec::<T::AccountId, T::MaxPlayers>::try_from(vec![who.clone()]).map_err(|_| Error::<T>::InternalError)?;
+
+			HexBoardStorage::<T>::set(
+				&who,
+				Some(HexBoard {
+					state: HexBoardState::Matchmaking,
+					rounds: 15,
+					turn: 0,
+					players,
+					player_turn: 0,
+					selection: 2,
+					last_move: 0,
+					number_of_players,
+					selection_base: [0; 64],
+					selection_current: [0; 64],
+				}),
+			);
+
+			Self::deposit_event(Event::GameInitialized { who });
+			// Return a successful DispatchResultWithPostInfo
+			Ok(())
+		}
+	}
+}
