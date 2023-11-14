@@ -20,6 +20,7 @@ pub use weights::*;
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
+	use frame_support::sp_runtime;
 	use frame_support::pallet_prelude::*;
 	use frame_system::pallet_prelude::*;
 
@@ -34,7 +35,7 @@ pub mod pallet {
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
 	#[scale_info(skip_type_params(T))]
-	pub enum HexBoardState {
+	pub enum GameState {
 		Matchmaking,
 		Playing,
 		Reward,
@@ -43,8 +44,8 @@ pub mod pallet {
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
-	pub struct HexBoard<T: Config> {
-		pub state: HexBoardState,
+	pub struct Game<T: Config> {
+		pub state: GameState,
 		pub rounds: u8,      // maximum number of rounds
 		pub turn: u8,        // current turn number
 		pub player_turn: u8, // Who is playing?
@@ -58,11 +59,44 @@ pub mod pallet {
 		pub selection_current: Hash,
 	}
 
-	/// Configure the pallet by specifying the parameters and types on which it depends.
+
+	// HexBoard piece
+	type Piece = u8;
+
+	// The board itself
+	pub type Board<T> = BoundedVec<Piece, <T as pallet::Config>::MaxBoardSize>;
+
+	// The Board of the player, with all stats and materials
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+	#[scale_info(skip_type_params(T))]
+	pub struct HexBoard<T: Config> {
+		gold: u32,  // material
+		wood: u32,  // material
+		stone: u32, // material
+		population: u32,
+		board: Board<T>, // Board with all pieces
+	}
+
+	impl<T: Config> HexBoard<T>{
+		fn new(size: usize) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
+			let empty_board_vec: Board<T> = vec![0; size].try_into().map_err(|_| Error::<T>::InternalError)?;
+
+			Ok(HexBoard::<T> {
+				gold: 3,
+				wood: 0,
+				stone: 0,
+				population: 1,
+				board: empty_board_vec,
+			})
+		}
+	}
+
+
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		/// Because this pallet emits events, it depends on the runtime's definition of an event.
 		type RuntimeEvent: From<Event<Self>> + IsType<<Self as frame_system::Config>::RuntimeEvent>;
+
 		/// Type representing the weight of this pallet
 		type WeightInfo: WeightInfo;
 
@@ -73,6 +107,9 @@ pub mod pallet {
 		// Minimum number of players that can join a single game
 		#[pallet::constant]
 		type MinPlayers: Get<u8>;
+
+		#[pallet::constant]
+		type MaxBoardSize: Get<u32>;
 	}
 
 	// The pallet's runtime storage items.
@@ -81,13 +118,17 @@ pub mod pallet {
 	// Learn more about declaring storage items:
 	// https://docs.substrate.io/main-docs/build/runtime-storage/#declaring-storage-items
 	#[pallet::storage]
-	// Stores the HexBoard data assigned to a creator address key
-	pub type HexBoardStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, HexBoard<T>>;
+	// Stores the Game data assigned to a creator address key
+	pub type GameStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, Game<T>>;
 
 	#[pallet::storage]
 	// Stores a creator address key assigned to a player key.
 	pub type PlayersJoinedStorage<T: Config> =
 		StorageMap<_, Twox64Concat, T::AccountId, T::AccountId>;
+
+	#[pallet::storage]
+	// Stores the HexBoard data assigned to a player key.
+	pub type HexBoardStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, HexBoard<T>>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/main-docs/build/events-errors/
@@ -130,7 +171,7 @@ pub mod pallet {
 		// The game has already started. Can not start it twice.
 		GameAlreadyStarted,
 
-		// Other errors
+		// Other errors, that should never happen
 		InternalError,
 
 		// Please set the number_of_players parameter to a bigger number.
@@ -166,10 +207,10 @@ pub mod pallet {
 			let players = BoundedVec::<T::AccountId, T::MaxPlayers>::try_from(vec![who.clone()])
 				.map_err(|_| Error::<T>::InternalError)?;
 
-			HexBoardStorage::<T>::set(
+			GameStorage::<T>::set(
 				&who,
-				Some(HexBoard {
-					state: HexBoardState::Matchmaking,
+				Some(Game {
+					state: GameState::Matchmaking,
 					rounds: 15,
 					turn: 0,
 					players,
@@ -184,6 +225,11 @@ pub mod pallet {
 
 			PlayersJoinedStorage::<T>::set(&who, Some(who.clone()));
 
+			HexBoardStorage::<T>::set(
+				&who,
+				Some(HexBoard::<T>::new(25)?),
+			);
+
 			Self::deposit_event(Event::GameInitialized { who });
 			// Return a successful DispatchResultWithPostInfo
 			Ok(())
@@ -197,18 +243,18 @@ pub mod pallet {
 			// Ensures that the player is not already playing
 			ensure!(!PlayersJoinedStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
 
-			// Ensures that the hexboard exists
-			let mut hex_board = match HexBoardStorage::<T>::get(&creator_address) {
+			// Ensures that the Game exists
+			let mut game = match GameStorage::<T>::get(&creator_address) {
 				Some(value) => value,
 				None => return Err(Error::<T>::GameNotInitialized.into()),
 			};
-			
+
 			// Ensures that there is enough space for the user to join the game
-			ensure!(hex_board.players.len() < hex_board.number_of_players as usize, Error::<T>::GameIsFull);
+			ensure!(game.players.len() < game.number_of_players as usize, Error::<T>::GameIsFull);
 
-			let _ = hex_board.players.try_push(who.clone());
+			let _ = game.players.try_push(who.clone());
 
-			HexBoardStorage::<T>::set(&creator_address, Some(hex_board));
+			GameStorage::<T>::set(&creator_address, Some(game));
 
 			PlayersJoinedStorage::<T>::set(&who, Some(creator_address.clone()));
 
@@ -222,29 +268,58 @@ pub mod pallet {
 		pub fn start(origin: OriginFor<T>) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
-			// Ensures that the hexboard exists
-			let mut hex_board = match HexBoardStorage::<T>::get(&who) {
+			// Ensures that the Game exists
+			let mut game = match GameStorage::<T>::get(&who) {
 				Some(value) => value,
 				None => return Err(Error::<T>::GameNotInitialized.into()),
 			};
-			
+
 			// Ensures that there enough players have joined the game
-			ensure!(hex_board.players.len() == hex_board.number_of_players as usize, Error::<T>::NotEnoughPlayers);
+			ensure!(
+				game.players.len() == game.number_of_players as usize,
+				Error::<T>::NotEnoughPlayers
+			);
 
 			// Ensures the game has not started yet
-			ensure!(hex_board.state == HexBoardState::Matchmaking, Error::<T>::GameAlreadyStarted);
+			ensure!(game.state == GameState::Matchmaking, Error::<T>::GameAlreadyStarted);
 
-			hex_board.state = HexBoardState::Playing;
+			game.state = GameState::Playing;
 
 			//
 			// Generate new selection pieces.
 			//
 
-			HexBoardStorage::<T>::set(&who, Some(hex_board));
+			GameStorage::<T>::set(&who, Some(game));
 
-			Self::deposit_event(Event::GameStarted { game: who, /* More info */ });
+			Self::deposit_event(Event::GameStarted { game: who /* More info */ });
+
+			Ok(())
+		}
+
+
+		#[pallet::call_index(3)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn temp_play(origin: OriginFor<T>) -> DispatchResult {
+			let who: T::AccountId = ensure_signed(origin)?;
+
+			// Ensures that the Game exists
+			let mut hex_board = match HexBoardStorage::<T>::get(&who) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()), // Change this
+			};
+			
+			hex_board.board[0] = 1;
+
+			hex_board.board[3] = 5;
+			
+			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
 			Ok(())
 		}
 	}
 }
+
+// Other helper methods
+/*impl<T: Config> Pallet<T> {
+	fn new_selection() {}
+}*/

@@ -254,6 +254,7 @@ parameter_types! {
 
 	pub const HexalemMaxPlayers: u8 = 100;
 	pub const HexalemMinPlayers: u8 = 2;
+	pub const HexalemMaxBoardSize: u8 = 25;
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -283,6 +284,7 @@ impl pallet_hexalem::Config for Runtime {
 	type WeightInfo = pallet_hexalem::weights::SubstrateWeight<Runtime>;
 	type MaxPlayers = HexalemMaxPlayers;
 	type MinPlayers = HexalemMinPlayers;
+	type MaxBoardSize = HexalemMaxBoardSize;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
