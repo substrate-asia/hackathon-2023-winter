@@ -32,7 +32,7 @@ pub mod pallet {
 	// Type of AccountId that is going to be used
 	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
 	#[scale_info(skip_type_params(T))]
 	pub enum HexBoardState {
 		Matchmaking,
@@ -104,6 +104,12 @@ pub mod pallet {
 			who: T::AccountId,
 			game: T::AccountId,
 		},
+
+		// Game started
+		GameStarted {
+			game: T::AccountId,
+			// More details ...
+		},
 	}
 
 	// Errors inform users that something went wrong.
@@ -117,6 +123,12 @@ pub mod pallet {
 
 		// Game is already full of players. More players can not join anymore.
 		GameIsFull,
+
+		// Not enough players have joined the game, unable to start now
+		NotEnoughPlayers,
+
+		// The game has already started. Can not start it twice.
+		GameAlreadyStarted,
 
 		// Other errors
 		InternalError,
@@ -136,7 +148,7 @@ pub mod pallet {
 		/// storage and emits an event. This function must be dispatched by a signed extrinsic.
 		#[pallet::call_index(0)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn initialize_game(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
+		pub fn initialize(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
 			ensure!(!PlayersJoinedStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
@@ -179,7 +191,7 @@ pub mod pallet {
 
 		#[pallet::call_index(1)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn join_game(origin: OriginFor<T>, creator_address: T::AccountId) -> DispatchResult {
+		pub fn join(origin: OriginFor<T>, creator_address: T::AccountId) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
 			// Ensures that the player is not already playing
@@ -201,6 +213,36 @@ pub mod pallet {
 			PlayersJoinedStorage::<T>::set(&who, Some(creator_address.clone()));
 
 			Self::deposit_event(Event::PlayerJoined { who, game: creator_address });
+
+			Ok(())
+		}
+
+		#[pallet::call_index(2)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn start(origin: OriginFor<T>) -> DispatchResult {
+			let who: T::AccountId = ensure_signed(origin)?;
+
+			// Ensures that the hexboard exists
+			let mut hex_board = match HexBoardStorage::<T>::get(&who) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()),
+			};
+			
+			// Ensures that there enough players have joined the game
+			ensure!(hex_board.players.len() == hex_board.number_of_players as usize, Error::<T>::NotEnoughPlayers);
+
+			// Ensures the game has not started yet
+			ensure!(hex_board.state == HexBoardState::Matchmaking, Error::<T>::GameAlreadyStarted);
+
+			hex_board.state = HexBoardState::Playing;
+
+			//
+			// Generate new selection pieces.
+			//
+
+			HexBoardStorage::<T>::set(&who, Some(hex_board));
+
+			Self::deposit_event(Event::GameStarted { game: who, /* More info */ });
 
 			Ok(())
 		}
