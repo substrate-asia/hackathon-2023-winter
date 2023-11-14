@@ -68,7 +68,11 @@ pub mod pallet {
 
 		// Maximum number of players that can join a single game
 		#[pallet::constant]
-		type MaxPlayers: Get<u32>;
+		type MaxPlayers: Get<u8> + Get<u32>;
+
+		// Minimum number of players that can join a single game
+		#[pallet::constant]
+		type MinPlayers: Get<u8>;
 	}
 
 	// The pallet's runtime storage items.
@@ -77,7 +81,13 @@ pub mod pallet {
 	// Learn more about declaring storage items:
 	// https://docs.substrate.io/main-docs/build/runtime-storage/#declaring-storage-items
 	#[pallet::storage]
+	// Stores the HexBoard data assigned to a creator address key
 	pub type HexBoardStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, HexBoard<T>>;
+
+	#[pallet::storage]
+	// Stores a creator address key assigned to a player key.
+	pub type PlayersJoinedStorage<T: Config> =
+		StorageMap<_, Twox64Concat, T::AccountId, T::AccountId>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/main-docs/build/events-errors/
@@ -85,7 +95,15 @@ pub mod pallet {
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
 		/// New game has been initialized
-		GameInitialized { who: T::AccountId },
+		GameInitialized {
+			who: T::AccountId,
+		},
+
+		// Player joined a game
+		PlayerJoined {
+			who: T::AccountId,
+			game: T::AccountId,
+		},
 	}
 
 	// Errors inform users that something went wrong.
@@ -94,8 +112,19 @@ pub mod pallet {
 		// Player has already initialised a game. They need to finish it.
 		AlreadyPlaying,
 
+		// Game has not been initialized yet. Unable to join it.
+		GameNotInitialized,
+
+		// Game is already full of players. More players can not join anymore.
+		GameIsFull,
+
 		// Other errors
 		InternalError,
+
+		// Please set the number_of_players parameter to a bigger number.
+		NumberOfPlayersIsTooSmall,
+		// Please set the number_of_players parameter to a smaller number.
+		NumberOfPlayersIsTooLarge,
 	}
 
 	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
@@ -107,17 +136,23 @@ pub mod pallet {
 		/// storage and emits an event. This function must be dispatched by a signed extrinsic.
 		#[pallet::call_index(0)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn initialize(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
-			// Check that the extrinsic was signed and get the signer.
-			// This function will return an error if the extrinsic is not signed.
-			// https://docs.substrate.io/main-docs/build/origins/
+		pub fn initialize_game(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
-			ensure!(!HexBoardStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
+			ensure!(!PlayersJoinedStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
 
-			// This can panic, but never will
-			let players =
-				BoundedVec::<T::AccountId, T::MaxPlayers>::try_from(vec![who.clone()]).map_err(|_| Error::<T>::InternalError)?;
+			ensure!(
+				number_of_players >= T::MinPlayers::get(),
+				Error::<T>::NumberOfPlayersIsTooSmall
+			);
+
+			ensure!(
+				number_of_players <= T::MaxPlayers::get(),
+				Error::<T>::NumberOfPlayersIsTooLarge
+			);
+
+			let players = BoundedVec::<T::AccountId, T::MaxPlayers>::try_from(vec![who.clone()])
+				.map_err(|_| Error::<T>::InternalError)?;
 
 			HexBoardStorage::<T>::set(
 				&who,
@@ -135,8 +170,38 @@ pub mod pallet {
 				}),
 			);
 
+			PlayersJoinedStorage::<T>::set(&who, Some(who.clone()));
+
 			Self::deposit_event(Event::GameInitialized { who });
 			// Return a successful DispatchResultWithPostInfo
+			Ok(())
+		}
+
+		#[pallet::call_index(1)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn join_game(origin: OriginFor<T>, creator_address: T::AccountId) -> DispatchResult {
+			let who: T::AccountId = ensure_signed(origin)?;
+
+			// Ensures that the player is not already playing
+			ensure!(!PlayersJoinedStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
+
+			// Ensures that the hexboard exists
+			let mut hex_board = match HexBoardStorage::<T>::get(&creator_address) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()),
+			};
+			
+			// Ensures that there is enough space for the user to join the game
+			ensure!(hex_board.players.len() < hex_board.number_of_players as usize, Error::<T>::GameIsFull);
+
+			let _ = hex_board.players.try_push(who.clone());
+
+			HexBoardStorage::<T>::set(&creator_address, Some(hex_board));
+
+			PlayersJoinedStorage::<T>::set(&who, Some(creator_address.clone()));
+
+			Self::deposit_event(Event::PlayerJoined { who, game: creator_address });
+
 			Ok(())
 		}
 	}

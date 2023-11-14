@@ -253,6 +253,7 @@ parameter_types! {
 	pub FeeMultiplier: Multiplier = Multiplier::one();
 
 	pub const HexalemMaxPlayers: u8 = 100;
+	pub const HexalemMinPlayers: u8 = 2;
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -281,6 +282,7 @@ impl pallet_hexalem::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
 	type WeightInfo = pallet_hexalem::weights::SubstrateWeight<Runtime>;
 	type MaxPlayers = HexalemMaxPlayers;
+	type MinPlayers = HexalemMinPlayers;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
