@@ -13,21 +13,28 @@ namespace Substrate.Hexalem.WebAPI.Controllers
         private const double BLOCKTIME_SEC = 6;
 
         private readonly ApiContext _context;
+        private readonly Serilog.ILogger _logger;
 
         private readonly Random _random;
 
-        public HexalemGameController(ApiContext context)
+        public HexalemGameController(ApiContext context, Serilog.ILogger logger)
         {
             _random = new Random();
 
             _context = context;
+            _logger = logger;
 
-            _context.Configs.Add(new Config { Genesis = DateTime.Now });
+            if(!_context.Configs.Any())
+            {
+                _context.Configs.Add(new Config { Genesis = DateTime.Now });
+            }
 
-            _context.Players.Add(new Player() { Name = "Alice" });
-
-            _context.Players.Add(new Player() { Name = "Bob" });
-
+            if(!_context.Players.Any())
+            {
+                _context.Players.Add(new Player() { Name = "Alice", Address = "xxxx" });
+                _context.Players.Add(new Player() { Name = "Bob", Address = "yyyy" });
+            }
+            
             _context.SaveChanges();
         }
 
@@ -125,11 +132,12 @@ namespace Substrate.Hexalem.WebAPI.Controllers
             }
 
             var hexBoard = new HexBoard(bytes);
-            hexBoard = Game.Initialise(hexBoard, 1, CurrentBlockNumber(config.Genesis));
+
+            hexBoard = Game.Start(hexBoard, 1, CurrentBlockNumber(config.Genesis), _logger);
 
             var board = new Board()
             {
-                BoardValue = Convert.ToHexString(hexBoard.BoardValue),
+                BoardValue = Convert.ToHexString(hexBoard.Value),
                 SelectionBase = Convert.ToHexString(hexBoard.SelectionBase),
                 SelectionCurrent = Convert.ToHexString(hexBoard.SelectionCurrent),
                 Players = new List<Player> { inDbPlayer }

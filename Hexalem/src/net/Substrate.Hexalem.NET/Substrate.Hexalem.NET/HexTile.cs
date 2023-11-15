@@ -1,4 +1,6 @@
-﻿namespace Substrate.Hexalem
+﻿using Substrate.Hexalem.NET;
+
+namespace Substrate.Hexalem
 {
     public enum HexTileType
     {
@@ -21,14 +23,19 @@
     {
         public byte Value { get; private set; }
 
+        public HexTile(byte value)
+        {
+            Value = Value = (byte)((value << 4) | value);
+        }
+
+        public HexTile() : this(GameConfig.DefaultHexTileType, GameConfig.DefaultHexTileLevel)
+        {
+
+        }
+
         public HexTile(HexTileType hexTileType, HexTileLevel hexTileLevel)
         {
             Set(hexTileType, hexTileLevel);
-        }
-
-        public HexTile(byte value)
-        {
-            Value = value;
         }
 
         private void Set(HexTileType hexTileType, HexTileLevel hexTileLevel)
@@ -47,6 +54,11 @@
         {
             // Extract the upper half for TileLevel
             return (HexTileLevel)(Value >> 4);
+        }
+
+        public override string ToString()
+        {
+            return $"{GetHexTileType()} - {GetHexTileLevel()}";
         }
     }
 }

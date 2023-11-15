@@ -4,6 +4,7 @@
     public class HexGridTests
     {
         private HexGrid _hexGrid;
+        private HexTile _defaultTile;
         private byte[] _testBytes;
 
         [SetUp]
@@ -12,6 +13,8 @@
             // Initialize with a medium-sized grid for testing
             _testBytes = new byte[(int)HexGridSize.Medium];
             _hexGrid = new HexGrid(_testBytes);
+
+            _defaultTile = new HexTile(HexTileType.Grass, HexTileLevel.Normal);
         }
 
         [Test]
@@ -31,23 +34,52 @@
         [Test]
         public void Indexer_1D_ShouldGetAndSetValue()
         {
-            _hexGrid[0] = 10;
-            Assert.That(_hexGrid[0], Is.EqualTo(10));
+            _hexGrid[0] = _defaultTile;
+            Assert.That(_hexGrid[0], Is.EqualTo(_defaultTile));
         }
 
         [Test]
         public void Indexer_2D_ShouldGetAndSetValue()
         {
-            _hexGrid[0, 0] = 20;
-            Assert.That(_hexGrid[0, 0], Is.EqualTo(20));
+            _hexGrid[0, 0] = _defaultTile;
+            Assert.That(_hexGrid[0, 0], Is.EqualTo(_defaultTile));
         }
+
+        [Test]
+        public void Indexer_2D_WithInvalidCoordinate_ShouldThrowException()
+        {
+            Assert.Throws<NotSupportedException>(() => _hexGrid[10, 10] = _defaultTile);
+        }
+
 
         [Test]
         public void GetNeighbors_ShouldReturnCorrectNeighbors()
         {
-            var neighbors = _hexGrid.GetNeighbors(0, 0); // Assuming (0,0) is the center
             var expectedNeighborCount = 6; // A hexagon should have 6 neighbors
-            Assert.That(neighbors.Count, Is.EqualTo(expectedNeighborCount));
+            Assert.Multiple(() => {
+                Assert.That(_hexGrid.GetNeighbors(0, 0).Count, Is.EqualTo(expectedNeighborCount)); // Assuming (0,0) is the center
+                Assert.That(_hexGrid.GetNeighbors(-1, 1).Count, Is.EqualTo(expectedNeighborCount));
+                Assert.That(_hexGrid.GetNeighbors(0, 1).Count, Is.EqualTo(expectedNeighborCount));
+            });
+        }
+
+        [Test]
+        public void GetNeighbors_WithExternalCell_ShouldReturnCorrectNeighbors()
+        {
+            Assert.Multiple(() =>
+            {
+                Assert.That(_hexGrid.GetNeighbors(-2, -2).Count, Is.EqualTo(3)); // bottom middle
+                Assert.That(_hexGrid.GetNeighbors(2, 2).Count, Is.EqualTo(3)); // top middle
+
+                Assert.That(_hexGrid.GetNeighbors(2, 0).Count, Is.EqualTo(4)); // top right middle
+                Assert.That(_hexGrid.GetNeighbors(0, -2).Count, Is.EqualTo(4)); // bottom right middle
+
+                Assert.That(_hexGrid.GetNeighbors(0, 2).Count, Is.EqualTo(4)); // top left middle
+                Assert.That(_hexGrid.GetNeighbors(-2, 0).Count, Is.EqualTo(4)); // bottom left middle
+
+                Assert.That(_hexGrid.GetNeighbors(-2, 2).Count, Is.EqualTo(2)); // left
+                Assert.That(_hexGrid.GetNeighbors(2, -2).Count, Is.EqualTo(2)); // right
+            });
         }
 
         [Test]

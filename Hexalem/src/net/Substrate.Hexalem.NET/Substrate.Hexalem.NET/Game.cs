@@ -1,33 +1,42 @@
-﻿using System.Runtime.CompilerServices;
+﻿using Substrate.Hexalem.NET;
+using Substrate.Hexalem.NET.Draw;
+using Substrate.Hexalem.NET.GameException;
+using System.Runtime.CompilerServices;
+using Serilog;
+using Serilog.Core;
+using System;
+using System.Linq;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
 namespace Substrate.Hexalem
 {
-    public class Game
+    public static class Game
     {
-        public static HexBoard Initialise(HexBoard hexBoard, byte players, uint blockNumber)
+        public static HexBoard Start(HexBoard hexBoard, byte players, uint blockNumber, ILogger logger)
         {
-            hexBoard.Initialize(players);
+            logger.Information($"Start a new game | Start block = {blockNumber} | Nb player = {players}");
+
+            hexBoard.Initialize(players, HexGridSize.Medium);
             hexBoard.ShuffleSelection(blockNumber);
 
             // initial rewards given out ...
             return Rewards(hexBoard);
         }
 
-        public static HexBoard? ChooseAndPlace(HexBoard hexBoard, byte playerId, HexTile hexTile, GridCoords gridCoords)
+        public static HexBoard Play(HexBoard hexBoard, byte playerId, HexTile hexTile, GridCoords gridCoords, Draw draw)
         {
             if (hexBoard.PlayerTurn != playerId)
             {
-                return null;
+                throw new NotActiveTurnException($"Unable to play with playerId = {playerId} while it is not his turn");
             }
 
-            if (!Choose(hexBoard, hexTile))
+            if (!Choose(hexTile, draw))
             {
-                return null;
+                throw new TileNotAvailableException($"Tile {hexTile} is not available in the draw");
             }
 
-            return Place(hexBoard, hexTile, gridCoords);
+            return Place(hexBoard, playerId, hexTile, gridCoords);
         }
 
         public static HexBoard? NextTurn(uint blockNumber, HexBoard hexBoard, byte playerId)
@@ -44,9 +53,9 @@ namespace Substrate.Hexalem
             hexBoard.HexBoardTurn += 1;
 
             // next player turn
-            hexBoard.PlayerTurn = (byte)((hexBoard.PlayerTurn + 1) % hexBoard.Players);
+            hexBoard.PlayerTurn = (byte)((hexBoard.PlayerTurn + 1) % hexBoard.PlayersCount);
 
-            if (hexBoard.HexBoardTurn < hexBoard.Players)
+            if (hexBoard.HexBoardTurn < hexBoard.PlayersCount)
             {
                 return hexBoard;
             }
@@ -60,13 +69,23 @@ namespace Substrate.Hexalem
             return Rewards(hexBoard);
         }
 
-        public static bool Choose(HexBoard hexBoard, HexTile hexTile)
+        public static bool Choose(HexTile hexTile, Draw draw)
         {
+            draw.Take(hexTile);
             return true;
         }
 
-        public static HexBoard Place(HexBoard hexBoard, HexTile hexTile, GridCoords gridCoords)
+        private static HexBoard Place(HexBoard hexBoard, byte playerId, HexTile hexTile, GridCoords gridCoords)
         {
+            var playerGrid = hexBoard.PlayerGrids[playerId];
+
+            if(!playerGrid.IsValidHex(gridCoords.q, gridCoords.r))
+            {
+                throw new InvalidMapCoordinate($"({gridCoords.q}, {gridCoords.r}) are invalid coordinate");
+            }
+
+            playerGrid[gridCoords.q, gridCoords.r] = hexTile;
+
             return hexBoard;
         }
 

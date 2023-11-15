@@ -1,39 +1,64 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Substrate.Hexalem
 {
     public enum HexGridSize
     {
+        /// <summary>
+        /// 3x3 tiles
+        /// </summary>
         Small = 9,
+
+        /// <summary>
+        /// 5x5 tiles
+        /// </summary>
         Medium = 25,
+
+        /// <summary>
+        /// 7x7 tiles
+        /// </summary>
         Large = 49,
     }
 
     public class HexGrid
     {
         // Implicit operator to convert a HexGrid to a byte[]
-        public static implicit operator byte[](HexGrid hexGrid) => hexGrid.Bytes;
+        public static implicit operator byte[](HexGrid hexGrid) => hexGrid.Value;
 
         // Implicit operator to convert a byte[] to a HexGrid
         public static implicit operator HexGrid(byte[] bytes) => new HexGrid(bytes);
 
-        private byte[] Bytes { get; }
+        private byte[] Value
+        {
+            get
+            {
+                return Tiles.Select(x => x.Value).ToArray();
+            }
+        }
+        private HexTile[] Tiles { get; }
 
-        private int _sideLength;
-        private int _maxDistanceFromCenter;
+        private readonly int _hexagoneSize;
+        private readonly int _maxDistanceFromCenter;
 
         /// <summary>
         /// HexGrid constructor, bytes need to be of size 9, 25 or 49
         /// An odd number power two, to have a middle tile
         /// </summary>
-        /// <param name="bytes"></param>
-        public HexGrid(byte[] bytes)
+        /// <param name="value"></param>
+        public HexGrid(byte[] value)
         {
-            Bytes = bytes;
+            Tiles = new HexTile[value.Length];
 
-            _sideLength = (int)Math.Sqrt(bytes.Length);
-            _maxDistanceFromCenter = (_sideLength - 1) / 2;
+            for (int i = 0; i < value.Length; i++)
+            {
+                Tiles[i] = new HexTile(value[i]);
+            }
+
+            _hexagoneSize = (int)Math.Sqrt(value.Length);
+            _maxDistanceFromCenter = (_hexagoneSize - 1) / 2;
         }
 
         /// <summary>
@@ -41,10 +66,10 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public byte this[int index]
+        public HexTile this[int index]
         {
-            get { return Bytes[index]; }
-            set { Bytes[index] = value; }
+            get { return Tiles[index]; }
+            set { Tiles[index] = value; }
         }
 
         /// <summary>
@@ -53,10 +78,10 @@ namespace Substrate.Hexalem
         /// <param name="q"></param>
         /// <param name="r"></param>
         /// <returns></returns>
-        public byte this[int q, int r]
+        public HexTile this[int q, int r]
         {
-            get => Bytes[ToIndex(q, r)];
-            set => Bytes[ToIndex(q, r)] = value;
+            get => Tiles[ToIndex(q, r)];
+            set => Tiles[ToIndex(q, r)] = value;
         }
 
         /// <summary>
@@ -77,7 +102,7 @@ namespace Substrate.Hexalem
             // Convert axial coordinates (q, r) to a 1D array index
             // Adapt this formula based on your grid's structure.
             // Assuming a pointy-topped hex grid.
-            int index = r * _sideLength + q + (r / 2); // Example for pointy-topped
+            int index = r * _hexagoneSize + q + (r / 2); // Example for pointy-topped
 
             return index;
         }
@@ -109,8 +134,7 @@ namespace Substrate.Hexalem
         /// </summary>
         internal bool IsValidHex(int q, int r)
         {
-            int distance = (Math.Abs(q) + Math.Abs(q + r) + Math.Abs(r)) / 2;
-            return distance <= _maxDistanceFromCenter;
+            return Math.Abs(q) <= _hexagoneSize / 2 && Math.Abs(r) <= _hexagoneSize / 2;
         }
     }
 }
