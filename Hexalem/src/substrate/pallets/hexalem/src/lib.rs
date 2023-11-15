@@ -1,5 +1,6 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use crate::vec::Vec;
 /// Edit this file to define custom logic or remove it if it is not needed.
 /// Learn more about FRAME and the core library of Substrate FRAME pallets:
 /// <https://docs.substrate.io/reference/frame-pallets/>
@@ -14,21 +15,26 @@ pub use pallet::*;
 //#[cfg(feature = "runtime-benchmarks")]
 //mod benchmarking;
 pub mod weights;
+use frame_support::{sp_runtime, sp_runtime::SaturatedConversion};
 use scale_info::prelude::vec;
 pub use weights::*;
 
 #[frame_support::pallet]
 pub mod pallet {
 	use super::*;
-	use frame_support::sp_runtime;
 	use frame_support::pallet_prelude::*;
 	use frame_system::pallet_prelude::*;
 
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
 
-	// Type of Hash that we will use
-	type Hash = [u8; 64];
+	// HexBoard Tile
+	pub type Tile = u8;
+
+	// Tiles to select
+	pub type TileSelection<T> = BoundedVec<Tile, <T as Config>::MaxTileSelection>;
+
+	pub type TileSelectionBase = [Tile; 32];
 
 	// Type of AccountId that is going to be used
 	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
@@ -49,37 +55,36 @@ pub mod pallet {
 		pub rounds: u8,      // maximum number of rounds
 		pub turn: u8,        // current turn number
 		pub player_turn: u8, // Who is playing?
-		pub selection: u8,   // number of pieces for selection
 		pub number_of_players: u8,
 		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
-		pub last_move: u8,
-
-		//pub board: Hash,
-		pub selection_base: Hash,
-		pub selection_current: Hash,
+		// number of tiles for selection
+		pub selection_base: TileSelectionBase,
+		pub selection_base_size: u8,
+		pub selection: TileSelection<T>,
+		pub selection_size: u8,
 	}
 
-
-	// HexBoard piece
-	type Piece = u8;
+	type Material = u8;
 
 	// The board itself
-	pub type Board<T> = BoundedVec<Piece, <T as pallet::Config>::MaxBoardSize>;
+	pub type Board<T> = BoundedVec<Tile, <T as pallet::Config>::MaxBoardSize>;
 
-	// The Board of the player, with all stats and materials
+	// The board of the player, with all stats and materials
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	pub struct HexBoard<T: Config> {
-		gold: u32,  // material
-		wood: u32,  // material
-		stone: u32, // material
-		population: u32,
-		board: Board<T>, // Board with all pieces
+		gold: Material,  // material
+		wood: Material,  // material
+		stone: Material, // material
+		population: Material,
+		board: Board<T>,    // Board with all tiles
+		game: AccountId<T>, // Game key
 	}
 
-	impl<T: Config> HexBoard<T>{
-		fn new(size: usize) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
-			let empty_board_vec: Board<T> = vec![0; size].try_into().map_err(|_| Error::<T>::InternalError)?;
+	impl<T: Config> HexBoard<T> {
+		fn new(size: usize, game: AccountId<T>) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
+			let empty_board_vec: Board<T> =
+				vec![0; size].try_into().map_err(|_| Error::<T>::InternalError)?;
 
 			Ok(HexBoard::<T> {
 				gold: 3,
@@ -87,10 +92,10 @@ pub mod pallet {
 				stone: 0,
 				population: 1,
 				board: empty_board_vec,
+				game,
 			})
 		}
 	}
-
 
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
@@ -110,6 +115,9 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type MaxBoardSize: Get<u32>;
+
+		#[pallet::constant]
+		type MaxTileSelection: Get<u32>;
 	}
 
 	// The pallet's runtime storage items.
@@ -119,16 +127,11 @@ pub mod pallet {
 	// https://docs.substrate.io/main-docs/build/runtime-storage/#declaring-storage-items
 	#[pallet::storage]
 	// Stores the Game data assigned to a creator address key
-	pub type GameStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, Game<T>>;
-
-	#[pallet::storage]
-	// Stores a creator address key assigned to a player key.
-	pub type PlayersJoinedStorage<T: Config> =
-		StorageMap<_, Twox64Concat, T::AccountId, T::AccountId>;
+	pub type GameStorage<T: Config> = StorageMap<_, Identity, T::AccountId, Game<T>>;
 
 	#[pallet::storage]
 	// Stores the HexBoard data assigned to a player key.
-	pub type HexBoardStorage<T: Config> = StorageMap<_, Twox64Concat, T::AccountId, HexBoard<T>>;
+	pub type HexBoardStorage<T: Config> = StorageMap<_, Identity, T::AccountId, HexBoard<T>>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/main-docs/build/events-errors/
@@ -192,7 +195,7 @@ pub mod pallet {
 		pub fn initialize(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
-			ensure!(!PlayersJoinedStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
+			ensure!(!HexBoardStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
 
 			ensure!(
 				number_of_players >= T::MinPlayers::get(),
@@ -204,6 +207,7 @@ pub mod pallet {
 				Error::<T>::NumberOfPlayersIsTooLarge
 			);
 
+			// Creates the BoundedVec of players, currently just with one player (= creator)
 			let players = BoundedVec::<T::AccountId, T::MaxPlayers>::try_from(vec![who.clone()])
 				.map_err(|_| Error::<T>::InternalError)?;
 
@@ -215,20 +219,18 @@ pub mod pallet {
 					turn: 0,
 					players,
 					player_turn: 0,
-					selection: 2,
-					last_move: 0,
 					number_of_players,
-					selection_base: [0; 64],
-					selection_current: [0; 64],
+					selection_base_size: 4,
+					selection_base: [
+						1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+						22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
+					], // These are the tiles to select from
+					selection_size: 2,
+					selection: Default::default(),
 				}),
 			);
 
-			PlayersJoinedStorage::<T>::set(&who, Some(who.clone()));
-
-			HexBoardStorage::<T>::set(
-				&who,
-				Some(HexBoard::<T>::new(25)?),
-			);
+			HexBoardStorage::<T>::set(&who, Some(HexBoard::<T>::new(25, who.clone())?));
 
 			Self::deposit_event(Event::GameInitialized { who });
 			// Return a successful DispatchResultWithPostInfo
@@ -241,7 +243,7 @@ pub mod pallet {
 			let who: T::AccountId = ensure_signed(origin)?;
 
 			// Ensures that the player is not already playing
-			ensure!(!PlayersJoinedStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
+			ensure!(!HexBoardStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
 
 			// Ensures that the Game exists
 			let mut game = match GameStorage::<T>::get(&creator_address) {
@@ -256,7 +258,7 @@ pub mod pallet {
 
 			GameStorage::<T>::set(&creator_address, Some(game));
 
-			PlayersJoinedStorage::<T>::set(&who, Some(creator_address.clone()));
+			HexBoardStorage::<T>::set(&who, Some(HexBoard::<T>::new(25, creator_address.clone())?));
 
 			Self::deposit_event(Event::PlayerJoined { who, game: creator_address });
 
@@ -285,9 +287,12 @@ pub mod pallet {
 
 			game.state = GameState::Playing;
 
-			//
-			// Generate new selection pieces.
-			//
+			// Generate new selection Tiles.
+			game.selection = Self::new_selection(
+				game.selection_base,
+				game.selection_base_size,
+				game.selection_size,
+			)?;
 
 			GameStorage::<T>::set(&who, Some(game));
 
@@ -295,7 +300,6 @@ pub mod pallet {
 
 			Ok(())
 		}
-
 
 		#[pallet::call_index(3)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
@@ -307,11 +311,11 @@ pub mod pallet {
 				Some(value) => value,
 				None => return Err(Error::<T>::GameNotInitialized.into()), // Change this
 			};
-			
+
 			hex_board.board[0] = 1;
 
 			hex_board.board[3] = 5;
-			
+
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
 			Ok(())
@@ -320,6 +324,31 @@ pub mod pallet {
 }
 
 // Other helper methods
-/*impl<T: Config> Pallet<T> {
-	fn new_selection() {}
-}*/
+impl<T: Config> Pallet<T> {
+	// Helper method that generates a completely new selection
+	fn new_selection(
+		selection_base: TileSelectionBase,
+		selection_base_size: u8, /* Number of tiles that can be selected from the
+		                          * tile_selection */
+		selection_size: u8, // The resulting number of tiles that can be selected
+	) -> Result<TileSelection<T>, sp_runtime::DispatchError> {
+		// Current random source
+		let current_block_number = <frame_system::Pallet<T>>::block_number();
+
+		let mut new_tiles: Vec<Tile> = Default::default();
+
+		for i in 1..selection_size + 1 {
+			let ti: usize = ((current_block_number.saturated_into::<u128>() * i as u128) %
+				selection_base_size as u128)
+				.saturated_into::<usize>();
+			let randomly_selected_tile = selection_base[ti];
+			new_tiles.push(randomly_selected_tile);
+		}
+
+		// Casting
+		let tile_selection: TileSelection<T> =
+			new_tiles.try_into().map_err(|_| Error::<T>::InternalError)?;
+
+		Ok(tile_selection)
+	}
+}
