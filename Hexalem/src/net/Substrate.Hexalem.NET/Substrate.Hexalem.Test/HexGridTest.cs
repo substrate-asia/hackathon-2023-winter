@@ -68,12 +68,17 @@
         {
             Assert.Multiple(() =>
             {
-                Assert.That(_hexGrid.GetNeighbors(-2, -2).Count, Is.EqualTo(2)); // top left
-                Assert.That(_hexGrid.GetNeighbors(0, -2).Count, Is.EqualTo(4)); // top middle
-                Assert.That(_hexGrid.GetNeighbors(-2, 0).Count, Is.EqualTo(4)); // left middle
-                Assert.That(_hexGrid.GetNeighbors(2, 0).Count, Is.EqualTo(4)); // right middle
-                Assert.That(_hexGrid.GetNeighbors(-2, 2).Count, Is.EqualTo(3)); // bottom left
-                Assert.That(_hexGrid.GetNeighbors(2, 2).Count, Is.EqualTo(2)); // bottom right
+                Assert.That(_hexGrid.GetNeighbors(-2, -2).Count, Is.EqualTo(3)); // bottom middle
+                Assert.That(_hexGrid.GetNeighbors(2, 2).Count, Is.EqualTo(3)); // top middle
+
+                Assert.That(_hexGrid.GetNeighbors(2, 0).Count, Is.EqualTo(4)); // top right middle
+                Assert.That(_hexGrid.GetNeighbors(0, -2).Count, Is.EqualTo(4)); // bottom right middle
+
+                Assert.That(_hexGrid.GetNeighbors(0, 2).Count, Is.EqualTo(4)); // top left middle
+                Assert.That(_hexGrid.GetNeighbors(-2, 0).Count, Is.EqualTo(4)); // bottom left middle
+
+                Assert.That(_hexGrid.GetNeighbors(-2, 2).Count, Is.EqualTo(2)); // left
+                Assert.That(_hexGrid.GetNeighbors(2, -2).Count, Is.EqualTo(2)); // right
             });
         }
 

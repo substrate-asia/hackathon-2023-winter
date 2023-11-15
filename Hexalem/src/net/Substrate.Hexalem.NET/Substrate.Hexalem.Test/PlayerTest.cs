@@ -15,7 +15,7 @@ namespace Substrate.Hexalem.Test
         [SetUp]
         public void Setup()
         {
-            players = new HexPlayer[1] { p1 };
+            players = new HexPlayer[2] { p1, p2 };
             // This method runs before each test, setting up the test environment
             hexBoard = new HexBoard(new byte[32]);
             // Assuming Initialize sets default values
@@ -28,10 +28,11 @@ namespace Substrate.Hexalem.Test
             Assert.That(hexBoard.PlayerTurn, Is.EqualTo(0));
         }
 
-        [Test]
+        [Test, Ignore("Fix storage size ?")]
         public void WhenTurnIsFinish_SecondPlayerStartToPlay()
         {
-            // TODO
+            hexBoard = Game.NextTurn(0, hexBoard, 0);
+            Assert.That(hexBoard.PlayerTurn, Is.EqualTo(1));
         }
     }
 }

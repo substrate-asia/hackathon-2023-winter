@@ -52,7 +52,7 @@ namespace Substrate.Hexalem
 
             for (int i = 0; i < PlayersCount; i++)
             {
-                // [4 bytes]
+                // [6 bytes]
                 Players[i] = BuildPlayer(i);
 
                 // [25 bytes]

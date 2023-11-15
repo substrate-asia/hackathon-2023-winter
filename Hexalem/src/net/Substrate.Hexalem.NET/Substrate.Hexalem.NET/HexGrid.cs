@@ -113,7 +113,7 @@ namespace Substrate.Hexalem
         public List<(int q, int r)> GetNeighbors(int q, int r)
         {
             var neighbors = new List<(int q, int r)>();
-            var directions = new[] { (0, -1), (+1, -1), (+1, 0), (0, +1), (-1, +1), (-1, 0) };
+            var directions = new[] { (1, 1), (1, 0), (0, -1), (-1, -1), (-1, 0), (0, 1) };
 
             foreach (var direction in directions)
             {

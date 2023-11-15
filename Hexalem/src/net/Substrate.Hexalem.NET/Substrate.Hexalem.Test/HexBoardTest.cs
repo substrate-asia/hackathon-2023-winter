@@ -22,7 +22,7 @@ namespace Substrate.Hexalem.Tests
         }
 
         [Test]
-        public void Initialize_ShouldSetDefaultValues()
+        public void InitializeBoard_SingleMode_ShouldSetDefaultValues()
         {
             // Arrange is handled by Setup()
 
@@ -37,13 +37,46 @@ namespace Substrate.Hexalem.Tests
             Assert.That(players.Length, Is.EqualTo(hexBoard.PlayersCount), "All players should be instanciated");
             Assert.That(hexBoard.PlayerTurn, Is.EqualTo(0), "Initial player turn should be 0.");
 
-            Assert.That(p1.Ressources, Is.Not.Null);
-            Assert.That(p1.Ressources.Mana, Is.EqualTo(GameConfig.DefaultMana));
-            Assert.That(p1.Ressources.Human, Is.EqualTo(GameConfig.DefaultHuman));
-            Assert.That(p1.Ressources.Food, Is.EqualTo(GameConfig.DefaultFood));
-            Assert.That(p1.Ressources.Gold, Is.EqualTo(GameConfig.DefaultGold));
-            Assert.That(p1.Ressources.Water, Is.EqualTo(GameConfig.DefaultWater));
-            Assert.That(p1.Ressources.Wood, Is.EqualTo(GameConfig.DefaultWood));
+            Assert.That(hexBoard.Players[0].Ressources, Is.Not.Null);
+            Assert.That(hexBoard.Players[0].Ressources.Mana, Is.EqualTo(GameConfig.DefaultMana));
+            Assert.That(hexBoard.Players[0].Ressources.Human, Is.EqualTo(GameConfig.DefaultHuman));
+            Assert.That(hexBoard.Players[0].Ressources.Food, Is.EqualTo(GameConfig.DefaultFood));
+            Assert.That(hexBoard.Players[0].Ressources.Gold, Is.EqualTo(GameConfig.DefaultGold));
+            Assert.That(hexBoard.Players[0].Ressources.Water, Is.EqualTo(GameConfig.DefaultWater));
+            Assert.That(hexBoard.Players[0].Ressources.Wood, Is.EqualTo(GameConfig.DefaultWood));
+        }
+
+        [Test, Ignore("Todo, increase storage size ?")]
+        public void InitializeBoard_MultiPlayerMode_ShouldSetDefaultValues()
+        {
+            // Arrange is handled by Setup()
+
+            // Act
+            bool result = hexBoard.Initialize(2, HexGridSize.Medium);
+
+            // Assert
+            Assert.IsTrue(result, "Initialize should return true.");
+            Assert.That(hexBoard.HexBoardState, Is.EqualTo(HexBoardState.Round), "Initial state should be 'Round'.");
+            Assert.That(hexBoard.HexBoardRound, Is.EqualTo(0), "Initial round should be 0.");
+            Assert.That(hexBoard.PlayersCount, Is.EqualTo(2), "Initial player count should be 1.");
+            Assert.That(players.Length, Is.EqualTo(hexBoard.PlayersCount), "All players should be instanciated");
+            Assert.That(hexBoard.PlayerTurn, Is.EqualTo(0), "Initial player turn should be 0.");
+
+            Assert.That(hexBoard.Players[0].Ressources, Is.Not.Null);
+            Assert.That(hexBoard.Players[0].Ressources.Mana, Is.EqualTo(GameConfig.DefaultMana));
+            Assert.That(hexBoard.Players[0].Ressources.Human, Is.EqualTo(GameConfig.DefaultHuman));
+            Assert.That(hexBoard.Players[0].Ressources.Food, Is.EqualTo(GameConfig.DefaultFood));
+            Assert.That(hexBoard.Players[0].Ressources.Gold, Is.EqualTo(GameConfig.DefaultGold));
+            Assert.That(hexBoard.Players[0].Ressources.Water, Is.EqualTo(GameConfig.DefaultWater));
+            Assert.That(hexBoard.Players[0].Ressources.Wood, Is.EqualTo(GameConfig.DefaultWood));
+
+            Assert.That(hexBoard.Players[1].Ressources, Is.Not.Null);
+            Assert.That(hexBoard.Players[1].Ressources.Mana, Is.EqualTo(GameConfig.DefaultMana));
+            Assert.That(hexBoard.Players[1].Ressources.Human, Is.EqualTo(GameConfig.DefaultHuman));
+            Assert.That(hexBoard.Players[1].Ressources.Food, Is.EqualTo(GameConfig.DefaultFood));
+            Assert.That(hexBoard.Players[1].Ressources.Gold, Is.EqualTo(GameConfig.DefaultGold));
+            Assert.That(hexBoard.Players[1].Ressources.Water, Is.EqualTo(GameConfig.DefaultWater));
+            Assert.That(hexBoard.Players[1].Ressources.Wood, Is.EqualTo(GameConfig.DefaultWood));
         }
 
         [Test]

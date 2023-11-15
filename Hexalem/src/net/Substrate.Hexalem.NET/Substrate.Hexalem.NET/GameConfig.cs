@@ -44,7 +44,7 @@ namespace Substrate.Hexalem.NET
         
 
         public const byte DefaultMana = 0;
-        public const byte DefaultHuman = 1;
+        public const byte DefaultHuman = 0;
         public const byte DefaultGold = 0;
         public const byte DefaultFood = 0;
         public const byte DefaultWood = 0;
