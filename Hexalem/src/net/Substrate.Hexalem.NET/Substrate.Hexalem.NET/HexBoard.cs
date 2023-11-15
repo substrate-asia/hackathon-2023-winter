@@ -1,4 +1,5 @@
-﻿using Substrate.Hexalem.NET;
+﻿using Serilog;
+using Substrate.Hexalem.NET;
 using System;
 
 namespace Substrate.Hexalem
@@ -13,42 +14,75 @@ namespace Substrate.Hexalem
     public class HexBoard
     {
         public uint LastMove { get; set; }
-
-        public byte[] BoardValue { get; set; }
+        public byte[] Value { get; set; }
 
         public byte[] SelectionBase { get; set; }
-
         public byte[] SelectionCurrent { get; set; }
+
+        public HexPlayer[] Players { get; set; }
+        public HexGrid[] PlayerGrids { get; set; }
 
         public HexBoard(byte[] hash)
         {
             SelectionBase = hash;
-            BoardValue = new byte[64];
+            Value = new byte[64];
         }
 
-        public bool Initialize(byte players)
+        public HexBoard(HexPlayer[] players, HexGrid[] playerGrids)
+        {
+            Players = players;
+            PlayerGrids = playerGrids;
+
+            Value = new byte[GameConfig.GameStateStorageSize + Players.Length * (GameConfig.PlayerAccountStorageSize + playerGrids.Length)];
+        }
+
+        public bool Initialize(byte players, HexGridSize gridSize)
         {
             // game state [6 bytes]
             HexBoardState = HexBoardState.Round;
             HexBoardRound = 0;
             HexBoardTurn = 0;
-            Players = players;
+            PlayersCount = players;
             PlayerTurn = 0;
             Selection = 2;
+            HexGridSize = gridSize;
 
-            // player 1 [4 bytes]
-            var player1 = 0;
-            SetRessources(playerId: player1, mana: 0, human: 1);
-            // grid player 1 [25 bytes]
-            InitGrid(playerId: player1, home: new HexTile(HexTileType.Home, HexTileLevel.Normal));
+            Players = new HexPlayer[PlayersCount];
+            PlayerGrids = new HexGrid[PlayersCount];
 
-            var player2 = 1;
-            // player 2 [4 bytes]
-            SetRessources(playerId: player2, mana: 0, human: 1);
-            // grid player 2 [25 bytes]
-            InitGrid(playerId: player2, home: new HexTile(HexTileType.Home, HexTileLevel.Normal));
+            for (int i = 0; i < PlayersCount; i++)
+            {
+                // [4 bytes]
+                Players[i] = BuildPlayer(i);
+
+                // [25 bytes]
+                PlayerGrids[i] = BuildGrid(i);
+            }
 
             return true;
+        }
+
+        public HexPlayer BuildPlayer(int playerId)
+        {
+            var index = GameConfig.GameStateStorageSize + (playerId * GameConfig.PlayerRessourcesStorageSize);
+
+            return new HexPlayer(Helper.ExtractSubArray(Value, index, GameConfig.PlayerRessourcesStorageSize));
+        }
+
+        /// <summary>
+        /// Get the grid of a player
+        /// </summary>
+        /// <param name="playerId"></param>
+        /// <returns></returns>
+        public HexGrid BuildGrid(int playerId)
+        {
+            var index = GameConfig.GameStateStorageSize +
+                GameConfig.PlayerRessourcesStorageSize +
+                (playerId * (GameConfig.PlayerRessourcesStorageSize + GameConfig.PlayerGridStorageSize(HexGridSize)));
+
+            var playerGrid = new HexGrid(Helper.ExtractSubArray(Value, index, (int)HexGridSize));
+            playerGrid[(int)HexGridSize / 2] = new HexTile(HexTileType.Home, HexTileLevel.Normal);
+            return playerGrid;
         }
 
         public void ShuffleSelection(uint blockNumber)
@@ -69,15 +103,15 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="playerId"></param>
         /// <param name="home"></param>
-        private void InitGrid(int playerId, HexTile home)
-        {
-            HexGrid(playerId)[12] = home.Value;
-        }
+        //private void InitGrid(int playerId, HexTile home)
+        //{
+        //    HexGrid(playerId)[12] = home.Value;
+        //}
 
         public HexBoardState HexBoardState
         {
-            get => (HexBoardState)BoardValue[0];
-            set => BoardValue[0] = (byte)value;
+            get => (HexBoardState)Value[0];
+            set => Value[0] = (byte)value;
         }
 
         /// <summary>
@@ -86,8 +120,8 @@ namespace Substrate.Hexalem
         /// </summary>
         public byte HexBoardRound
         {
-            get => (byte)(BoardValue[1] >> 2);
-            set => BoardValue[1] = (byte)((BoardValue[1] & 0b0000_0011) | (value << 2));
+            get => (byte)(Value[1] >> 2);
+            set => Value[1] = (byte)((Value[1] & 0b0000_0011) | (value << 2));
         }
 
         /// <summary>
@@ -96,43 +130,32 @@ namespace Substrate.Hexalem
         /// </summary>
         public byte HexBoardTurn
         {
-            get => (byte)(BoardValue[1] & 0b0000_0011);
-            set => BoardValue[1] = (byte)((BoardValue[1] & 0b0000_0011) | (value & 0b0000_0011));
+            get => (byte)(Value[1] & 0b0000_0011);
+            set => Value[1] = (byte)((Value[1] & 0b0000_0011) | (value & 0b0000_0011));
         }
 
-        public byte Players
+        public byte PlayersCount
         {
-            get => (byte)(BoardValue[2] >> 4);
-            set => BoardValue[2] = (byte)((BoardValue[2] & 0x0F) | (value << 4));
+            get => (byte)(Value[2] >> 4);
+            set => Value[2] = (byte)((Value[2] & 0x0F) | (value << 4));
         }
 
         public byte PlayerTurn
         {
-            get => (byte)(BoardValue[2] & 0x0F);
-            set => BoardValue[2] = (byte)((BoardValue[2] & 0xF0) | (value & 0x0F));
+            get => (byte)(Value[2] & 0x0F);
+            set => Value[2] = (byte)((Value[2] & 0xF0) | (value & 0x0F));
         }
 
         public byte Selection
         {
-            get => (byte)(BoardValue[3] >> 4);
-            set => BoardValue[3] = (byte)((BoardValue[3] & 0x0F) | (value << 4));
+            get => (byte)(Value[3] >> 4);
+            set => Value[3] = (byte)((Value[3] & 0x0F) | (value << 4));
         }
 
-        /// <summary>
-        /// Get the grid of a player
-        /// </summary>
-        /// <param name="playerId"></param>
-        /// <returns></returns>
-        public HexGrid HexGrid(int playerId)
+        public HexGridSize HexGridSize
         {
-            var index = 6 + 4 + (playerId * (4 + 25));
-            return new HexGrid(Helper.ExtractSubArray(BoardValue, index, (int)GameConfig.GRID_SIZE));
-        }
-
-        private void SetRessources(int playerId, int mana, int human)
-        {
-            // set the ressources in the 4 player bytes
-            // 0x00 0x00 0x00 0x00
+            get => (HexGridSize)Value[4];
+            set => Value[4] = (byte)value;
         }
     }
 }

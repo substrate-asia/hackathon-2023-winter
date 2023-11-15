@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Substrate.Hexalem
 {
@@ -35,15 +36,24 @@ namespace Substrate.Hexalem
             switch (shuffleType)
             {
                 case ShuffleType.SplitHalfAndMove:
-                    // Existing logic...
+                    var firstPartSplit = array.Take(array.Length / 2);
+                    var secondPartSplit = array.Skip(array.Length / 2).Take(array.Length - array.Length / 2);
+                    
+                    Array.Copy(firstPartSplit.Concat(secondPartSplit).ToArray(), array, array.Length);
                     break;
 
                 case ShuffleType.ReverseFirstHalf:
-                    // Existing logic...
+                    var firstPartReverse = array.Take(array.Length / 2).Reverse();
+                    var secondPartReverse = array.Skip(array.Length / 2).Take(array.Length - array.Length / 2);
+
+                    Array.Copy(firstPartReverse.Concat(secondPartReverse).ToArray(), array, array.Length);
                     break;
 
                 case ShuffleType.ReverseSecondHalf:
-                    // Existing logic...
+                    var firstPartReverse2 = array.Take(array.Length / 2).Reverse();
+                    var secondPartReverse2 = array.Skip(array.Length / 2).Take(array.Length - array.Length / 2);
+
+                    Array.Copy(firstPartReverse2.Concat(secondPartReverse2).ToArray(), array, array.Length);
                     break;
 
                 case ShuffleType.Rotate:

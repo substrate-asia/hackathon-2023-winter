@@ -47,6 +47,7 @@ namespace Substrate.Hexalem.WebAPI.Data
         [Key]
         public int Id { get; set; }
         public string Name { get; set; }
+        public string Address { get; set; }
 
         // Nullable Foreign Key for Board
         public int? BoardId { get; set; }
