@@ -93,7 +93,11 @@ namespace Substrate.Hexalem
         {
             // calculate rewards
 
+            //hexBoard.PlayerGrids[0].Tiles
+
             return hexBoard;
         }
+
+        
     }
 }

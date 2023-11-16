@@ -56,5 +56,7 @@ namespace Substrate.Hexalem.NET
         public const int NbBlockMaxToPlay = 4;
 
         public const int NbTileInDraw = 32;
+
+        public const int BonusGroupedRessources = 3;
     }
 }
