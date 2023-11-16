@@ -14,7 +14,9 @@ pub use pallet::*;
 
 //#[cfg(feature = "runtime-benchmarks")]
 //mod benchmarking;
+
 pub mod weights;
+use codec::MaxEncodedLen;
 use frame_support::{sp_runtime, sp_runtime::SaturatedConversion};
 use scale_info::prelude::vec;
 use sp_runtime::traits::CheckedConversion;
@@ -29,13 +31,8 @@ pub mod pallet {
 	#[pallet::pallet]
 	pub struct Pallet<T>(_);
 
-	// HexBoard Tile
-	pub type Tile = u8;
-
 	// Tiles to select
-	pub type TileSelection<T> = BoundedVec<Tile, <T as Config>::MaxTileSelection>;
-
-	pub type TileSelectionBase = [Tile; 32];
+	pub type TileSelection<T> = BoundedVec<<T as Config>::Tile, <T as Config>::MaxTileSelection>;
 
 	// Type of AccountId that is going to be used
 	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
@@ -59,7 +56,7 @@ pub mod pallet {
 		pub number_of_players: u8,
 		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
 		// number of tiles for selection
-		pub selection_base: TileSelectionBase,
+		pub selection_base: TileSelectionBase<T>,
 		pub selection_base_size: u8,
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
@@ -67,8 +64,11 @@ pub mod pallet {
 
 	type Material = u8;
 
+	// This type will get changed to be more generic, but I did not have time now.
+	pub type TileSelectionBase<T> = [<T as Config>::Tile; 6];
+
 	// The board hex grid
-	pub type HexGrid<T> = BoundedVec<Tile, <T as pallet::Config>::MaxHexGridSize>;
+	pub type HexGrid<T> = BoundedVec<<T as Config>::Tile, <T as Config>::MaxHexGridSize>;
 
 	// The board of the player, with all stats and materials
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
@@ -84,8 +84,9 @@ pub mod pallet {
 
 	impl<T: Config> HexBoard<T> {
 		fn new(size: usize, game: AccountId<T>) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
-			let empty_hex_grid: HexGrid<T> =
-				vec![0; size].try_into().map_err(|_| Error::<T>::InternalError)?;
+			let empty_hex_grid: HexGrid<T> = vec![Default::default(); size]
+				.try_into()
+				.map_err(|_| Error::<T>::InternalError)?;
 
 			Ok(HexBoard::<T> {
 				gold: 3,
@@ -119,6 +120,19 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type MaxTileSelection: Get<u32>;
+
+		type Tile: Encode
+			+ Decode
+			+ TypeInfo
+			+ Copy
+			+ MaxEncodedLen
+			+ Parameter
+			+ Default
+			+ GetTileType
+			+ GetTileLevel;
+
+		#[pallet::constant]
+		type SelectionBase: Get<TileSelectionBase<Self>>;
 	}
 
 	// The pallet's runtime storage items.
@@ -221,10 +235,7 @@ pub mod pallet {
 					player_turn: 0,
 					number_of_players,
 					selection_base_size: 4,
-					selection_base: [
-						1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-						22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32,
-					], // These are the tiles to select from
+					selection_base: T::SelectionBase::get(), // These are the tiles to select from
 					selection_size: 2,
 					selection: Default::default(),
 				}),
@@ -312,9 +323,9 @@ pub mod pallet {
 				None => return Err(Error::<T>::GameNotInitialized.into()), // Change this
 			};
 
-			hex_board.hex_grid[0] = 1;
+			//hex_board.hex_grid[0] = 1u8.into();
 
-			hex_board.hex_grid[3] = 5;
+			//hex_board.hex_grid[3] = 5u8.into();
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
@@ -327,7 +338,7 @@ pub mod pallet {
 impl<T: Config> Pallet<T> {
 	/// Helper method that generates a completely new selection
 	fn new_selection(
-		selection_base: TileSelectionBase,
+		selection_base: TileSelectionBase<T>,
 		selection_base_size: u8, /* Number of tiles that can be selected from the
 		                          * tile_selection */
 		selection_size: u8, // The resulting number of tiles that can be selected
@@ -335,13 +346,13 @@ impl<T: Config> Pallet<T> {
 		// Current random source
 		let current_block_number = <frame_system::Pallet<T>>::block_number();
 
-		let mut new_tiles: Vec<Tile> = Default::default();
+		let mut new_tiles: Vec<T::Tile> = Default::default();
 
 		for i in 1..selection_size + 1 {
 			let ti: usize = ((current_block_number.saturated_into::<u128>() * i as u128) %
 				selection_base_size as u128)
 				.saturated_into::<usize>();
-			let randomly_selected_tile = selection_base[ti];
+			let randomly_selected_tile: T::Tile = selection_base[ti];
 			new_tiles.push(randomly_selected_tile);
 		}
 
@@ -389,4 +400,13 @@ impl<T: Config> Pallet<T> {
 			.checked_into::<u8>()
 			.ok_or(Error::<T>::MathOverflow.into())
 	}
+}
+
+// Custom traits
+pub trait GetTileType {
+	fn get_type(&self) -> u8;
+}
+
+pub trait GetTileLevel {
+	fn get_level(&self) -> u8;
 }
