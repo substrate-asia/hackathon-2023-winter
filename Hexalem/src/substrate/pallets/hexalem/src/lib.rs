@@ -66,8 +66,9 @@ pub mod pallet {
 
 	type Material = u8;
 
-	// The board itself
-	pub type Board<T> = BoundedVec<Tile, <T as pallet::Config>::MaxBoardSize>;
+	// The board hex grid
+	pub type HexGrid<T> = BoundedVec<Tile, <T as pallet::Config>::MaxHexGridSize>;
+	
 
 	// The board of the player, with all stats and materials
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
@@ -77,13 +78,13 @@ pub mod pallet {
 		wood: Material,  // material
 		stone: Material, // material
 		population: Material,
-		board: Board<T>,    // Board with all tiles
+		hex_grid: HexGrid<T>,    // Board with all tiles
 		game: AccountId<T>, // Game key
 	}
 
 	impl<T: Config> HexBoard<T> {
 		fn new(size: usize, game: AccountId<T>) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
-			let empty_board_vec: Board<T> =
+			let empty_hex_grid: HexGrid<T> =
 				vec![0; size].try_into().map_err(|_| Error::<T>::InternalError)?;
 
 			Ok(HexBoard::<T> {
@@ -91,7 +92,7 @@ pub mod pallet {
 				wood: 0,
 				stone: 0,
 				population: 1,
-				board: empty_board_vec,
+				hex_grid: empty_hex_grid,
 				game,
 			})
 		}
@@ -114,7 +115,7 @@ pub mod pallet {
 		type MinPlayers: Get<u8>;
 
 		#[pallet::constant]
-		type MaxBoardSize: Get<u32>;
+		type MaxHexGridSize: Get<u32>;
 
 		#[pallet::constant]
 		type MaxTileSelection: Get<u32>;
@@ -312,9 +313,9 @@ pub mod pallet {
 				None => return Err(Error::<T>::GameNotInitialized.into()), // Change this
 			};
 
-			hex_board.board[0] = 1;
+			hex_board.hex_grid[0] = 1;
 
-			hex_board.board[3] = 5;
+			hex_board.hex_grid[3] = 5;
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
