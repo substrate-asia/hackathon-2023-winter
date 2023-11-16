@@ -17,6 +17,7 @@ pub use pallet::*;
 pub mod weights;
 use frame_support::{sp_runtime, sp_runtime::SaturatedConversion};
 use scale_info::prelude::vec;
+use sp_runtime::traits::CheckedConversion;
 pub use weights::*;
 
 #[frame_support::pallet]
@@ -68,7 +69,6 @@ pub mod pallet {
 
 	// The board hex grid
 	pub type HexGrid<T> = BoundedVec<Tile, <T as pallet::Config>::MaxHexGridSize>;
-	
 
 	// The board of the player, with all stats and materials
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
@@ -78,8 +78,8 @@ pub mod pallet {
 		wood: Material,  // material
 		stone: Material, // material
 		population: Material,
-		hex_grid: HexGrid<T>,    // Board with all tiles
-		game: AccountId<T>, // Game key
+		hex_grid: HexGrid<T>, // Board with all tiles
+		game: AccountId<T>,   // Game key
 	}
 
 	impl<T: Config> HexBoard<T> {
@@ -180,17 +180,16 @@ pub mod pallet {
 
 		// Please set the number_of_players parameter to a bigger number.
 		NumberOfPlayersIsTooSmall,
+
 		// Please set the number_of_players parameter to a smaller number.
 		NumberOfPlayersIsTooLarge,
+
+		/// Math overflow
+		MathOverflow,
 	}
 
-	// Dispatchable functions allows users to interact with the pallet and invoke state changes.
-	// These functions materialize as "extrinsics", which are often compared to transactions.
-	// Dispatchable functions must be annotated with a weight and must return a DispatchResult.
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
-		/// An example dispatchable that takes a singles value as a parameter, writes the value to
-		/// storage and emits an event. This function must be dispatched by a signed extrinsic.
 		#[pallet::call_index(0)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn initialize(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
@@ -326,7 +325,7 @@ pub mod pallet {
 
 // Other helper methods
 impl<T: Config> Pallet<T> {
-	// Helper method that generates a completely new selection
+	/// Helper method that generates a completely new selection
 	fn new_selection(
 		selection_base: TileSelectionBase,
 		selection_base_size: u8, /* Number of tiles that can be selected from the
@@ -351,5 +350,43 @@ impl<T: Config> Pallet<T> {
 			new_tiles.try_into().map_err(|_| Error::<T>::InternalError)?;
 
 		Ok(tile_selection)
+	}
+
+	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
+	fn is_valid_hex(hex_grid_len: usize, q: i8, r: i8) -> bool {
+		q.abs() as usize <= hex_grid_len / 2 && r.abs() as usize <= hex_grid_len / 2
+	}
+
+	/// Get the neighbors of a hex tile in the grid
+	fn get_neigbouring_tiles(
+		hex_grid_len: usize,
+		q: i8,
+		r: i8,
+	) -> Result<Vec<(i8, i8)>, sp_runtime::DispatchError> {
+		let mut neigbouring_tiles: Vec<(i8, i8)> = Default::default();
+
+		let directions = [(1, 1), (1, 0), (0, -1), (-1, -1), (-1, 0), (0, 1)];
+
+		for (q_direction, r_direction) in directions {
+			let neighbour_q = q.checked_add(q_direction).ok_or(Error::<T>::MathOverflow)?;
+			let neighbout_r = r.checked_add(r_direction).ok_or(Error::<T>::MathOverflow)?;
+
+			if Self::is_valid_hex(hex_grid_len, neighbour_q, neighbout_r) {
+				neigbouring_tiles.push((neighbour_q, neighbout_r));
+			}
+		}
+
+		Ok(neigbouring_tiles)
+	}
+
+	/// Get the side length of the grid
+	fn hex_directions_to_index(
+		hex_grid_len: usize,
+		q: i8,
+		r: i8,
+	) -> Result<u8, sp_runtime::DispatchError> {
+		(r * hex_grid_len.saturated_into::<i8>() + q + (r / 2))
+			.checked_into::<u8>()
+			.ok_or(Error::<T>::MathOverflow.into())
 	}
 }
