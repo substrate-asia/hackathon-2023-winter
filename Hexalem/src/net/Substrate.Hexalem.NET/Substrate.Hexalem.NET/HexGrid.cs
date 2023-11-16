@@ -23,50 +23,26 @@ namespace Substrate.Hexalem
         Large = 49,
     }
 
-    public class HexGrid
+    public abstract class HexGrid<T>
     {
-        // Implicit operator to convert a HexGrid to a byte[]
-        public static implicit operator byte[](HexGrid hexGrid) => hexGrid.Value;
-
-        // Implicit operator to convert a byte[] to a HexGrid
-        public static implicit operator HexGrid(byte[] bytes) => new HexGrid(bytes);
-
-        private byte[] Value
+        protected HexGrid(T[] tiles)
         {
-            get
-            {
-                return Tiles.Select(x => x.Value).ToArray();
-            }
-        }
-        private HexTile[] Tiles { get; }
+            Tiles = tiles;
 
-        private readonly int _hexagoneSize;
-        private readonly int _maxDistanceFromCenter;
-
-        /// <summary>
-        /// HexGrid constructor, bytes need to be of size 9, 25 or 49
-        /// An odd number power two, to have a middle tile
-        /// </summary>
-        /// <param name="value"></param>
-        public HexGrid(byte[] value)
-        {
-            Tiles = new HexTile[value.Length];
-
-            for (int i = 0; i < value.Length; i++)
-            {
-                Tiles[i] = new HexTile(value[i]);
-            }
-
-            _hexagoneSize = (int)Math.Sqrt(value.Length);
+            _hexagoneSize = (int)Math.Sqrt(Tiles.Length);
             _maxDistanceFromCenter = (_hexagoneSize - 1) / 2;
         }
+
+        public T[] Tiles { get; internal set; }
+        protected int _hexagoneSize { get; set; }
+        protected int _maxDistanceFromCenter { get; set; }
 
         /// <summary>
         /// Indexer to access the internal array
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        public HexTile this[int index]
+        public T this[int index]
         {
             get { return Tiles[index]; }
             set { Tiles[index] = value; }
@@ -78,7 +54,7 @@ namespace Substrate.Hexalem
         /// <param name="q"></param>
         /// <param name="r"></param>
         /// <returns></returns>
-        public HexTile this[int q, int r]
+        public T this[int q, int r]
         {
             get => Tiles[ToIndex(q, r)];
             set => Tiles[ToIndex(q, r)] = value;
@@ -91,7 +67,7 @@ namespace Substrate.Hexalem
         /// <param name="r"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        private int ToIndex(int q, int r)
+        public int ToIndex(int q, int r)
         {
             // Check if the coordinates are valid before proceeding
             if (!IsValidHex(q, r))
@@ -108,8 +84,44 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
+        /// Return a tile from hex coordinate
+        /// </summary>
+        /// <param name="q"></param>
+        /// <param name="r"></param>
+        /// <returns></returns>
+        public T ToTile(int q, int r) => Tiles[ToIndex(q, r)];
+
+        /// <summary>
+        /// Return axial coordinate from index
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        private (int q, int r) ToAxialCoordinates(int index)
+        {
+            // Adapt this formula based on your grid's structure.
+            // Assuming a pointy-topped hex grid.
+            int q = index % _hexagoneSize - (index / _hexagoneSize) / 2;
+            int r = (index / _hexagoneSize);
+
+            // Check if the calculated coordinates are valid before returning
+            if (!IsValidHex(q, r))
+            {
+                throw new NotSupportedException("Index is out of range for hexagonal grid");
+            }
+
+            return (q, r);
+        }
+
+        /// <summary>
         /// Get the neighbors of a hex tile in the grid
         /// </summary>
+        public List<(int q, int r)> GetNeighbors(int index)
+        {
+            var coordinate = ToAxialCoordinates(index);
+            return GetNeighbors(coordinate.q, coordinate.r);
+        }
+
         public List<(int q, int r)> GetNeighbors(int q, int r)
         {
             var neighbors = new List<(int q, int r)>();
@@ -135,6 +147,35 @@ namespace Substrate.Hexalem
         internal bool IsValidHex(int q, int r)
         {
             return Math.Abs(q) <= _hexagoneSize / 2 && Math.Abs(r) <= _hexagoneSize / 2;
+        }
+    }
+    public class HexGrid : HexGrid<HexTile>
+    {
+        // Implicit operator to convert a HexGrid to a byte[]
+        public static implicit operator byte[](HexGrid hexGrid) => hexGrid.Value;
+
+        // Implicit operator to convert a byte[] to a HexGrid
+        public static implicit operator HexGrid(byte[] bytes) => new HexGrid(bytes);
+
+        private byte[] Value
+        {
+            get
+            {
+                return Tiles.Select(x => x.Value).ToArray();
+            }
+        }
+
+        /// <summary>
+        /// HexGrid constructor, bytes need to be of size 9, 25 or 49
+        /// An odd number power two, to have a middle tile
+        /// </summary>
+        /// <param name="value"></param>
+        public HexGrid(byte[] value) : base(new HexTile[value.Length])
+        {
+            for (int i = 0; i < value.Length; i++)
+            {
+                Tiles[i] = new HexTile(value[i]);
+            }
         }
     }
 }

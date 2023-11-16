@@ -56,6 +56,16 @@ namespace Substrate.Hexalem
             return (HexTileLevel)(Value >> 4);
         }
 
+        public int BonusPoint()
+        {
+            switch(GetHexTileType()) {
+                case HexTileType.Grass:
+                    return 5;
+                default:
+                    return 0;
+            }
+        }
+
         public override string ToString()
         {
             return $"{GetHexTileType()} - {GetHexTileLevel()}";
