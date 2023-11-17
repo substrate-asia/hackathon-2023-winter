@@ -7,7 +7,10 @@
 ## Important Note 
 CBIndex attended Polkadot Hackathon Summer 2023. At that time, we tried to complete copy-investing feature for copy fund (the basic feature of our platform), and worked on Vara blockchain. Due to the lack of maturity of the infra and time constraints, we barely finished the copy-investing feature. We were very lucky and won the 3rd place of the smart contract track.
 
-This time, we've done sufficient research and planning. We would love to try completing our advanced feature, namely active on-chain funds, on Moonriver.
+This time, we've done sufficient research and planning. We would love to try completing our advanced feature, namely active on-chain funds, on Moonriver. 
+
+One of the reasons we choose Moonriver is beacuse that CBIndex requires the price feed service of Chainlink, and Chainlink supports Moonriver.
+___
 
 ## Project Overview
 
