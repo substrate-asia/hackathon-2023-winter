@@ -54,7 +54,17 @@ The architecture diagram of CBIndex, as shown in Figure 2, offers a holistic vie
 
 ### Project Features
 
+- **On-chain fund creation and management (will be completed during the Hackathon)**
+- **Active fund investment (will be completed during the Hackathon)**
+- Copy fund investment
+- Index fund investment
+- Investment strategy
+- Fund performance tracking & analysis
+- Versatile AI agent
+
 ### Project Value
+
+Provide a better solution of making crypto asset investment, especially for new investors. On-chain fund is a new type of DeFi product, which has been proven to be effective in the traditional financial market. We believe that on-chain fund will be a new trend in the crypto market.
 
 ### Project Demo
 
