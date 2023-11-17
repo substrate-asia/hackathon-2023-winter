@@ -38,20 +38,6 @@ We deliver a solution built with on-chain funds.
 - Index fund: easy access to diversified crypto asset investments.
 - Simulator: equip each user with a powerful investment simulator to play with.
 
-👩‍💻 **Architecture**
-
-The technical architecture of CBIndex serves as the bedrock upon which the platform's diverse functionalities and features are built. This chapter aims to provide a comprehensive overview of the architecture, underlying technologies, and technical considerations that empower both the Simulator and the DApp components of CBIndex.
-By delving into the intricacies of our technical infrastructure, we seek to offer readers a transparent and in-depth understanding of how CBIndex operates, ensuring that it aligns with industry best practices and meets the highest standards of security, scalability, and performance. Whether you are a potential investor, a developer, or an end-user, this chapter is designed to elucidate the technical robustness that makes CBIndex a pioneering solution in the realm of on-chain investment and crypto asset management.
-
-![CBIndex Architecture](https://assets.cbindex.finance/api/uploads/2023-11-17/u5pi1j7stf.png)
-
-The architecture of CBIndex is meticulously designed to offer a harmonious blend of centralized and decentralized components, encapsulated within the Simulator and the DApp, respectively. This dual-architecture approach serves multiple purposes. First, it provides an educational, playful, and risk-free environment through the Simulator, allowing users to familiarize themselves with on-chain investment and crypto asset management without financial exposure.
-
-Second, it offers a decentralized, secure, and transparent platform through the DApp, aligning with the ethos of blockchain and catering to users who are ready for real investments.
-
-The three-layered structure—Infrastructure, Core, and Application—ensures modularity and scalability, allowing each component to evolve independently while maintaining overall system integrity. Additionally, the "Integration" part signifies CBIndex's commitment to adaptability and innovation, as it leaves room for incorporating essential services and emerging technologies to meet evolving market demands.
-The architecture diagram of CBIndex, as shown in Figure 2, offers a holistic view of the technical structure, divided into three primary layers: Infrastructure, Core, and Application. Each layer has specific components for both the Simulator and the DApp, and an additional part on the right outlines various integrations that enhance the platform's capabilities.
-
 ### Project Features
 
 - **On-chain fund creation and management (will be completed during the Hackathon)**
@@ -72,9 +58,22 @@ Website:
 
 ### Technical Architecture
 
-Image
+The technical architecture of CBIndex serves as the bedrock upon which the platform's diverse functionalities and features are built. This chapter aims to provide a comprehensive overview of the architecture, underlying technologies, and technical considerations that empower both the Simulator and the DApp components of CBIndex.
+By delving into the intricacies of our technical infrastructure, we seek to offer readers a transparent and in-depth understanding of how CBIndex operates, ensuring that it aligns with industry best practices and meets the highest standards of security, scalability, and performance. Whether you are a potential investor, a developer, or an end-user, this chapter is designed to elucidate the technical robustness that makes CBIndex a pioneering solution in the realm of on-chain investment and crypto asset management.
+
+![CBIndex Architecture](https://assets.cbindex.finance/api/uploads/2023-11-17/u5pi1j7stf.png)
+
+The architecture of CBIndex is meticulously designed to offer a harmonious blend of centralized and decentralized components, encapsulated within the Simulator and the DApp, respectively. This dual-architecture approach serves multiple purposes. First, it provides an educational, playful, and risk-free environment through the Simulator, allowing users to familiarize themselves with on-chain investment and crypto asset management without financial exposure.
+
+Second, it offers a decentralized, secure, and transparent platform through the DApp, aligning with the ethos of blockchain and catering to users who are ready for real investments.
+
+The three-layered structure—Infrastructure, Core, and Application—ensures modularity and scalability, allowing each component to evolve independently while maintaining overall system integrity. Additionally, the "Integration" part signifies CBIndex's commitment to adaptability and innovation, as it leaves room for incorporating essential services and emerging technologies to meet evolving market demands.
+The architecture diagram of CBIndex, as shown in Figure 2, offers a holistic view of the technical structure, divided into three primary layers: Infrastructure, Core, and Application. Each layer has specific components for both the Simulator and the DApp, and an additional part on the right outlines various integrations that enhance the platform's capabilities.
+
 
 ### Project Logo
+
+![CBIndex](https://assets.cbindex.finance/api/uploads/thumbnail/azq5pkw824.png)
 
 ## Planned Milestones for the Hackathon
 
