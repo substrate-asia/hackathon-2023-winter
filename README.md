@@ -243,7 +243,7 @@
 
 对黑客松有任何疑问，可以下方法联系我们:
 
-* [Github 讨论区](https://github.com/ParityAsia/hackathon-2023-winter/discussions)
+* [Github 讨论区](https://github.com/parity-asia/hackathon-2023-winter/discussions)
 
 * email: hackathon.asia@parity.io
 

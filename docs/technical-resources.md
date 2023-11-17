@@ -62,4 +62,4 @@ Substrate 让您可以通过制作及整合不同的模块来创建定制化的�
 
 ### 上一期黑客松的项目
 
-- [2023 夏季黑客松](https://github.com/ParityAsia/hackathon-2023-summer) - 2023 夏季黑客松所有团队的代码和文档提交
+- [2023 夏季黑客松](https://github.com/parity-asia/hackathon-2023-summer) - 2023 夏季黑客松所有团队的代码和文档提交
