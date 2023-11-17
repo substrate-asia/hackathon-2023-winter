@@ -13,10 +13,14 @@ namespace Substrate.Hexalem.NET
     {
         private sealed class VisitedTile
         {
-            public VisitedTile(bool alreadyVisisted, HexTile hexTile)
+            public int Q { get; set; }
+            public int R { get; set; }
+            public VisitedTile(bool alreadyVisisted, HexTile hexTile, int q, int r)
             {
                 this.IsAlreadyVisisted = alreadyVisisted;
                 this.HexTile = hexTile;
+                this.Q = q;
+                this.R = r;
             }
 
             public bool IsAlreadyVisisted { get; set; }
@@ -26,7 +30,7 @@ namespace Substrate.Hexalem.NET
 
             public override string ToString()
             {
-                return $"{IsAlreadyVisisted} | {HexTile.ToString()}";
+                return $"[{Q};{R}] | {IsAlreadyVisisted} | {HexTile}";
             }
 
         }
@@ -38,11 +42,24 @@ namespace Substrate.Hexalem.NET
             }
         }
 
+        private static VisitGrid BuildFromHexGrid(HexGrid hexGrid)
+        {
+            var visitedTiles = new List<VisitedTile>();
+            for (int i = 0; i < hexGrid.Tiles.Length; i++)
+            {
+                var coordinate = hexGrid.ToAxialCoordinates(i);
+                visitedTiles.Add(new VisitedTile(false, hexGrid.Tiles[i], coordinate.q, coordinate.r));
+            }
+
+            return new VisitGrid(visitedTiles.ToArray());
+        }
+
         public static int CalcReward(HexGrid hexGrid, ILogger logger)
         {
             int reward = 0;
-            var visitedTiles = hexGrid.Tiles.Select(x => new VisitedTile(false, x)).ToArray();
-            var visitGrid = new VisitGrid(visitedTiles);
+            //var visitedTiles = hexGrid.Tiles.Select(x => new VisitedTile(false, x)).ToArray();
+
+            var visitGrid = BuildFromHexGrid(hexGrid);
 
             for (int i = 0; i < visitGrid.Tiles.Count(); i++)
             {
@@ -58,7 +75,9 @@ namespace Substrate.Hexalem.NET
                     {
                         var bonus = typeTile.HexTile.BonusPoint();
                         reward += bonus;
-                        logger.Information($"{GameConfig.BonusGroupedRessources} {typeTile} adjacent. Bonus = {bonus}. Rewards are now {reward}");
+
+                        string log = $"Match combinaison = [{string.Join(", ", combinaisons.Select(x => (x.Q, x.R)))}] | Grouped ressource = {GameConfig.BonusGroupedRessources} adjacent. Bonus = {bonus}. Rewards are now {reward}";
+                        logger.Information(log);
                         
                         foreach(var combinaison in combinaisons)
                         {
@@ -81,11 +100,6 @@ namespace Substrate.Hexalem.NET
         {
             Guard.Against.Null(tiles);
             Guard.Against.NegativeOrZero(nbGroupBy);
-
-            if(nbGroupBy > tiles.Count())
-            {
-                throw new ArgumentException("Invalid group value which is greater than tiles number");
-            }
 
             return tiles.Combinations(nbGroupBy);
         }

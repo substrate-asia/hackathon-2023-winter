@@ -38,7 +38,6 @@ namespace Substrate.Hexalem.Test
                 new HexTile(HexTileType.Desert, HexTileLevel.Normal),
             };
 
-            Assert.Throws<ArgumentException>(() => Rewards.GetAllCombinaison(tiles, tiles.Count + 1).ToArray());
             Assert.Throws<ArgumentException>(() => Rewards.GetAllCombinaison(tiles, 0).ToArray());
 
         }
@@ -55,8 +54,8 @@ namespace Substrate.Hexalem.Test
             {
                 grassTile.Value,
                 grassTile.Value,
-                grassTile.Value,
                 homeTile.Value,
+                grassTile.Value,
                 desertTile.Value,
                 grassTile.Value,
                 desertTile.Value,

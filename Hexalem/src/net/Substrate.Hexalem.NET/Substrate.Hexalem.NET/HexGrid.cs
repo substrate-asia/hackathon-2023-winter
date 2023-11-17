@@ -119,7 +119,16 @@ namespace Substrate.Hexalem
         public List<(int q, int r)> GetNeighbors(int q, int r)
         {
             var neighbors = new List<(int q, int r)>();
-            var directions = new[] { (1, 1), (1, 0), (0, -1), (-1, -1), (-1, 0), (0, 1) };
+
+            // Ugly patch : need to find a better solution
+            (int, int)[] directions;
+            if(_hexagoneSize == 3)
+            {
+                directions = new[] { (0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0) };
+            } else
+            {
+                directions = new[] { (1, 1), (1, 0), (0, -1), (-1, -1), (-1, 0), (0, 1) };
+            }
 
             foreach (var direction in directions)
             {
