@@ -53,6 +53,25 @@
 
 
         [Test]
+        [TestCase(-2, -2, 0)]
+        [TestCase(-1, -2, 1)]
+        [TestCase(-2, -1, 5)]
+        [TestCase(0, -1, 7)]
+        [TestCase(0, 0, 12)]
+        [TestCase(2, 0, 14)]
+        [TestCase(-2, 2, 20)]
+        [TestCase(2, 2, 24)]
+        public void CorrelationBetweenIndexAndHexaCoord_ShouldWork(int q, int r, int index)
+        {
+            var calculatedIndex = _hexGrid.ToIndex(q, r);
+            Assert.That(calculatedIndex, Is.EqualTo(index));
+
+            var calculatedCoord = _hexGrid.ToAxialCoordinates(index);
+            Assert.That(calculatedCoord, Is.EqualTo((q, r)));
+
+        }
+
+        [Test]
         public void GetNeighbors_ShouldReturnCorrectNeighbors()
         {
             var expectedNeighborCount = 6; // A hexagon should have 6 neighbors

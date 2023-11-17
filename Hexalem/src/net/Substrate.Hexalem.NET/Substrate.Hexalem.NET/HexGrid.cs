@@ -75,11 +75,7 @@ namespace Substrate.Hexalem
                 throw new NotSupportedException("Hex coordinates are out of range");
             }
 
-            // Convert axial coordinates (q, r) to a 1D array index
-            // Adapt this formula based on your grid's structure.
-            // Assuming a pointy-topped hex grid.
-            int index = r * _hexagoneSize + q + (r / 2); // Example for pointy-topped
-
+            int index = q + _maxDistanceFromCenter + (r + _maxDistanceFromCenter) * _hexagoneSize;
             return index;
         }
 
@@ -97,12 +93,10 @@ namespace Substrate.Hexalem
         /// <param name="index"></param>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        private (int q, int r) ToAxialCoordinates(int index)
+        public (int q, int r) ToAxialCoordinates(int index)
         {
-            // Adapt this formula based on your grid's structure.
-            // Assuming a pointy-topped hex grid.
-            int q = index % _hexagoneSize - (index / _hexagoneSize) / 2;
-            int r = (index / _hexagoneSize);
+            int q = (index % _hexagoneSize) - _maxDistanceFromCenter;
+            int r = index / _hexagoneSize - (_hexagoneSize - 1) / 2;
 
             // Check if the calculated coordinates are valid before returning
             if (!IsValidHex(q, r))
