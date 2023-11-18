@@ -1,8 +1,8 @@
 ## Basic information
 
-Project name: VineStar 🍷.
-Platform/protocol: Polkadot & Astar Network.
-Project initiation date: November 1, 2023.
+- Project name: VineStar 🍷.
+- Platform/protocol: Polkadot & Astar Network.
+- Project initiation date: November 1, 2023.
 
 ## Project Overview
 
@@ -47,8 +47,8 @@ These are the primary features that make our application a true star.
 
 #### Project Demo
 
-Website:
-Twitter/X:
+- Website:
+- Twitter/X:
 
 #### Technical Architecture
 
@@ -79,8 +79,8 @@ All this tasks are being completed during the hackathon.
 
 ## Team Information
 
-Jose Luis Manco - Fullstack web developer
-Francisco Albornoz - Bussiness developer
-Carlos Rodriguez - Rust blockchain developer
-Eduardo - Designer and marketing lead
-Franklyn - Web developer
+- Jose Luis Manco - Fullstack web developer
+- Francisco Albornoz - Bussiness developer
+- Carlos Rodriguez - Rust blockchain developer
+- Eduardo - Designer and marketing lead
+- Franklyn - Web developer
