@@ -98,7 +98,7 @@ pub mod pallet {
 			})
 		}
 	}
-
+	
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
 		/// Because this pallet emits events, it depends on the runtime's definition of an event.
@@ -364,13 +364,13 @@ impl<T: Config> Pallet<T> {
 	}
 
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
-	fn is_valid_hex(hex_grid_len: usize, q: i8, r: i8) -> bool {
-		q.abs() as usize <= hex_grid_len / 2 && r.abs() as usize <= hex_grid_len / 2
+	fn is_valid_hex(max_distance: i8, q: i8, r: i8) -> bool {
+		q.abs() <= max_distance && r.abs() <= max_distance
 	}
 
 	/// Get the neighbors of a hex tile in the grid
 	fn get_neigbouring_tiles(
-		hex_grid_len: usize,
+		max_distance: i8,
 		q: i8,
 		r: i8,
 	) -> Result<Vec<(i8, i8)>, sp_runtime::DispatchError> {
@@ -382,7 +382,7 @@ impl<T: Config> Pallet<T> {
 			let neighbour_q = q.checked_add(q_direction).ok_or(Error::<T>::MathOverflow)?;
 			let neighbout_r = r.checked_add(r_direction).ok_or(Error::<T>::MathOverflow)?;
 
-			if Self::is_valid_hex(hex_grid_len, neighbour_q, neighbout_r) {
+			if Self::is_valid_hex(max_distance, neighbour_q, neighbout_r) {
 				neigbouring_tiles.push((neighbour_q, neighbout_r));
 			}
 		}
@@ -391,18 +391,36 @@ impl<T: Config> Pallet<T> {
 	}
 
 	/// Get the side length of the grid
-	fn hex_directions_to_index(
-		hex_grid_len: usize,
-		q: i8,
-		r: i8,
-	) -> Result<u8, sp_runtime::DispatchError> {
-		(r * hex_grid_len.saturated_into::<i8>() + q + (r / 2))
-			.checked_into::<u8>()
-			.ok_or(Error::<T>::MathOverflow.into())
+	fn hex_directions_to_index(max_distance: i8, side_length: i8, q: i8, r: i8) -> i8 {
+		q + max_distance + (r + max_distance) * side_length
+	}
+
+	/// Fast helper method that quickly computes the max_distance for the size of the board
+	fn max_distance_from_center(hex_grid_len: usize) -> i8 {
+		// (sqrt(hex_grid_len) - 1) / 2
+		match (hex_grid_len) {
+			9 => 1,
+			25 => 2,
+			49 => 3,
+			81 => 4,
+			_ => 0,
+		}
+	}
+
+	/// Fast helper method that quickly computes the side_length for the size of the board
+	fn side_length(hex_grid_len: usize) -> i8 {
+		// (sqrt(hex_grid_len)
+		match (hex_grid_len) {
+			9 => 3,
+			25 => 5,
+			49 => 7,
+			81 => 9,
+			_ => 0,
+		}
 	}
 }
 
-// Custom traits
+// Custom traits for Tile definition
 pub trait GetTileType {
 	fn get_type(&self) -> u8;
 }
