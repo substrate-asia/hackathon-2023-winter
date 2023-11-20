@@ -239,6 +239,19 @@
   2. 全链流动性质押开发者堆栈 - Tyrone Pan，Bifrost 产品经理
   3. Moonbeam 的预编译合约训练营活动 - Wuzhong，Moonbeam 开发者关系工程师
 
+- **Workshop #3**
+
+  2023年11月18日 20:00 - 21:30 UTC +8
+  1. 如何开始在 vara上构建DApp - Hangbiao (GearFoundation验证者经理)
+  2. Deoss GatewayAPI - Alex (CESS开发者关系)
+
+- **Workshop #4**
+
+  2023年11月19日 20:00 - 21:30 UTC +8
+  1. 构建跨链DApp的未来 - Wuzhong (Moonbeam开发者关系工程师)
+  2. 云服务赋能web3开发者 - Aleck Xiao (亚马逊云科技解决方案架构师)
+  3. Tanssi-Appchain让一切变得简单 - Augusto Collado (Tanssi开发者关系工程师)
+
 ## 联络
 
 对黑客松有任何疑问，可以下方法联系我们:
