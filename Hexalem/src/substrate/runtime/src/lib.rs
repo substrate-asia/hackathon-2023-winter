@@ -6,9 +6,11 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
-use codec::{Decode, MaxEncodedLen, Encode};
+use codec::{Decode, Encode, MaxEncodedLen};
 use pallet_grandpa::AuthorityId as GrandpaId;
-use pallet_hexalem::{GetTileLevel, GetTileType};
+use pallet_hexalem::{
+	GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer,
+};
 use scale_info::TypeInfo;
 use sp_api::impl_runtime_apis;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -68,13 +70,11 @@ pub type Balance = u128;
 #[derive(Encode, Decode, Debug, TypeInfo, Copy, Clone, MaxEncodedLen, Eq, PartialEq)]
 pub struct HexalemTile(u8);
 
-impl GetTileType for HexalemTile {
+impl GetTileInfo for HexalemTile {
 	fn get_type(&self) -> u8 {
 		self.0 >> 4
 	}
-}
 
-impl GetTileLevel for HexalemTile {
 	fn get_level(&self) -> u8 {
 		self.0 & 0x0F
 	}
@@ -86,6 +86,22 @@ impl Default for HexalemTile {
 	}
 }
 
+#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
+pub struct HexalemMaterialCost {
+	// I was lazy to optimize it now, but it will be easy to lower this to u8 in the future
+	material_type: Material,
+	material_cost: MaterialUnit,
+}
+
+impl GetMaterialInfo for HexalemMaterialCost {
+	fn get_material_type(&self) -> Material {
+		self.material_type
+	}
+
+	fn get_material_cost(&self) -> MaterialUnit {
+		self.material_cost
+	}
+}
 
 /// Index of a transaction in the chain.
 pub type Nonce = u32;
@@ -281,8 +297,49 @@ parameter_types! {
 	pub const HexalemMinPlayers: u8 = 2;
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 32;
-	pub const HexalemSelectionBase: [HexalemTile; 6] = [
-		HexalemTile(1), HexalemTile(2), HexalemTile(3), HexalemTile(4), HexalemTile(5), HexalemTile(6)
+	pub const HexalemSelectionBase: [TileOffer<Runtime>; 6] = [
+		TileOffer {
+			tile_to_buy: HexalemTile(1),
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(2),
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 5,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(3),
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(4),
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 5,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(5),
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(6),
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 5,
+			}
+		},
 	];
 }
 
@@ -316,6 +373,7 @@ impl pallet_hexalem::Config for Runtime {
 	type MaxHexGridSize = HexalemMaxHexGridSize;
 	type MaxTileSelection = HexalemMaxTileSelection;
 	type Tile = HexalemTile;
+	type MaterialCost = HexalemMaterialCost;
 	type SelectionBase = HexalemSelectionBase;
 }
 
