@@ -315,28 +315,28 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile(3),
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Stone,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile(4),
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Stone,
 				material_cost: 5,
 			}
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile(5),
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Gold,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile(6),
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Gold,
 				material_cost: 5,
 			}
 		},

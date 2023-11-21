@@ -20,7 +20,6 @@ use codec::MaxEncodedLen;
 use frame_support::{ensure, sp_runtime, sp_runtime::SaturatedConversion};
 use scale_info::prelude::vec;
 pub use weights::*;
-use frame_support::pallet_prelude::RuntimeDebug;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -47,9 +46,7 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, Decode, TypeInfo, RuntimeDebugNoBound, PartialEq, Clone)]
-	pub struct TeST {
-
-	}
+	pub struct TeST {}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
@@ -76,7 +73,9 @@ pub mod pallet {
 		Stone,
 	}
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound)]
+	#[derive(
+		Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound,
+	)]
 	#[scale_info(skip_type_params(T))]
 	pub struct TileOffer<T: Config> {
 		pub tile_to_buy: T::Tile,
@@ -274,6 +273,9 @@ pub mod pallet {
 
 		// Player is not on the turn
 		PlayerNotOnTurn,
+
+		// Game has not started yet, or has been finished already
+		GameNotPlaying,
 	}
 
 	#[pallet::call]
@@ -373,13 +375,14 @@ pub mod pallet {
 			game.state = GameState::Playing;
 
 			// Generate new selection Tiles.
-			game.selection = Self::new_selection(
-				&game.selection_base,
-				game.selection_base_size,
-				&game.selection_size,
+		    Self::new_selection(
+				&mut game
 			)?;
 
-			Self::deposit_event(Event::NewTileSelection { game: who.clone(), selection: game.selection.clone() });
+			Self::deposit_event(Event::NewTileSelection {
+				game: who.clone(),
+				selection: game.selection.clone(),
+			});
 
 			GameStorage::<T>::set(&who, Some(game));
 
@@ -390,7 +393,7 @@ pub mod pallet {
 
 		#[pallet::call_index(3)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn temp_play(origin: OriginFor<T>, moves: Vec<Move>) -> DispatchResult {
+		pub fn play(origin: OriginFor<T>, moves: Vec<Move>) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
 			// Ensures that the HexBoard exists
@@ -406,6 +409,8 @@ pub mod pallet {
 				Some(value) => value,
 				None => return Err(Error::<T>::GameNotInitialized.into()),
 			};
+
+			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
 			// Ensure that the player is on move
 			ensure!(game.players[game.player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
@@ -431,7 +436,8 @@ pub mod pallet {
 				Self::buy_free_from_selection(&mut game.selection, m.buy_index as usize)?;
 
 			// Buy and place other moves
-			for m in &moves {
+			for i in 1..moves_len {
+				let m: &Move = &moves[i];
 				hex_board.hex_grid[m.place_index as usize] = Self::buy_from_selection(
 					&mut game.selection,
 					&mut hex_board,
@@ -439,25 +445,39 @@ pub mod pallet {
 				)?;
 			}
 
-			// if last turn
+			// if last turn -> start new round
 			if game.player_turn as usize == game.players.len() - 1 {
 				game.player_turn = 0;
 
 				// new selection
-				game.selection = Self::new_selection(
-					&game.selection_base,
-					game.selection_base_size,
-					&game.selection_size,
+				Self::new_selection(
+					&mut game
 				)?;
 
-				Self::deposit_event(Event::NewTileSelection { game: game_address.clone(), selection: game.selection.clone() });
+				// if last round -> finish the game, give away rewards
+				if game.round == game.max_rounds {
+					// End of the game
+					// Give away rewards
+					// Delete all unncessary storage
+				} else {
+					game.round += 1;
+				}
+
+				Self::deposit_event(Event::NewTileSelection {
+					game: game_address.clone(),
+					selection: game.selection.clone(),
+				});
 			} else {
 				// +1 turn
 				game.player_turn += 1;
 
 				// Refill selection
-
-				// this needs to be done
+				Self::refill_selection(
+					&mut game.selection,
+					&game.selection_base,
+					game.selection_base_size,
+					game.selection_size,
+				)?;
 			}
 
 			GameStorage::<T>::set(&game_address, Some(game));
@@ -486,29 +506,49 @@ pub mod pallet {
 impl<T: Config> Pallet<T> {
 	/// Helper method that generates a completely new selection
 	fn new_selection(
-		selection_base: &TileSelectionBase<T>,
-		selection_base_size: u8, /* Number of tiles that can be selected from the
-		                          * tile_selection */
-		selection_size: &u8, // The resulting number of tiles that can be selected
-	) -> Result<TileSelection<T>, sp_runtime::DispatchError> {
+		game: &mut Game<T>
+	) -> Result<(), sp_runtime::DispatchError> {
 		// Current random source
 		let current_block_number = <frame_system::Pallet<T>>::block_number();
 
 		let mut new_tiles: Vec<TileOffer<T>> = Default::default();
 
-		for i in 1..selection_size + 1 {
+		for i in 1..game.selection_size + 1 {
 			let ti: usize = ((current_block_number.saturated_into::<u128>() * i as u128) %
-				selection_base_size as u128)
+				game.selection_base_size as u128)
 				.saturated_into::<usize>();
-			let randomly_selected_tile: TileOffer<T> = selection_base[ti].clone();
+			let randomly_selected_tile: TileOffer<T> = game.selection_base[ti].clone();
 			new_tiles.push(randomly_selected_tile);
 		}
 
 		// Casting
-		let tile_selection: TileSelection<T> =
+		game.selection =
 			new_tiles.try_into().map_err(|_| Error::<T>::InternalError)?;
 
-		Ok(tile_selection)
+		Ok(())
+	}
+
+	/// Helper method that generates a new offers to refill the existing selection
+	fn refill_selection(
+		selection: &mut TileSelection<T>,
+		selection_base: &TileSelectionBase<T>,
+		selection_base_size: u8, /* Number of tiles that can be selected from the
+		                          * tile_selection */
+		selection_size: u8, // The resulting number of tiles that can be selected
+	) -> Result<(), sp_runtime::DispatchError> {
+		// Current random source
+		let current_block_number = <frame_system::Pallet<T>>::block_number();
+
+		for i in 1..selection_size as usize + 1 - selection.len() {
+			let ti: usize = ((current_block_number.saturated_into::<u128>() * i as u128) %
+				selection_base_size as u128)
+				.saturated_into::<usize>();
+			let randomly_selected_tile: TileOffer<T> = selection_base[ti].clone();
+
+			selection.try_push(randomly_selected_tile).map_err(|_| Error::<T>::InternalError)?;
+		}
+
+		Ok(())
 	}
 
 	/// Helper method that determines if the user can buy a piece from the active selection
