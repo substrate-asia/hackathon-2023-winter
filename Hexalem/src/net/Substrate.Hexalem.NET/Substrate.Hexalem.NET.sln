@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33927.249
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.NET", "Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj", "{64D275F5-5B97-44FC-B372-C5611E3E89B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.NET", "Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj", "{64D275F5-5B97-44FC-B372-C5611E3E89B9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.Test", "Substrate.Hexalem.Test\Substrate.Hexalem.Test.csproj", "{57870F77-E108-4BE0-B906-2571F43321A9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Test", "Substrate.Hexalem.Test\Substrate.Hexalem.Test.csproj", "{57870F77-E108-4BE0-B906-2571F43321A9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.WebAPI", "Substrate.Hexalem.WebAPI\Substrate.Hexalem.WebAPI.csproj", "{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.WebAPI", "Substrate.Hexalem.WebAPI\Substrate.Hexalem.WebAPI.csproj", "{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.WebAPI.Test", "Substrate.Hexalem.WebAPI.Test\Substrate.Hexalem.WebAPI.Test.csproj", "{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.WebAPI.Test", "Substrate.Hexalem.WebAPI.Test\Substrate.Hexalem.WebAPI.Test.csproj", "{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.Console", "Substrate.Hexalem.Console\Substrate.Hexalem.Console.csproj", "{CD6F8095-337E-4012-B2D9-A12458E08775}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

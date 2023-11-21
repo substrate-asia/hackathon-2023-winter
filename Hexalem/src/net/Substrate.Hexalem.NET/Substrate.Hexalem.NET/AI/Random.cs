@@ -11,11 +11,13 @@ namespace Substrate.Hexalem.NET.AI
         private readonly System.Random _random;
         private readonly int _index;
 
-        public Random(System.Random random, int index)
+        public Random(int index)
         {
-            _random = random;
+            _random = new System.Random();
             _index = index;
         }
+
+        public string AiName => "Random";
 
         public PlayAction FindBestAction(HexaGame initialState, int iteration)
         {
@@ -23,7 +25,7 @@ namespace Substrate.Hexalem.NET.AI
 
             if(!buyableTiles.Any())
             {
-                Log.Information($"[AI {_index} does not have enough mana to buy a new tile");
+                Log.Information("[AI {index}] does not have enough mana to buy a new tile", _index);
                 return PlayAction.CannotPlay();
             }
 
@@ -31,14 +33,15 @@ namespace Substrate.Hexalem.NET.AI
 
             if(!availableTiles.Any())
             {
-                Log.Information($"[AI {_index} does not have free tiles to play");
+                Log.Warning("[AI {index}] have full board !", _index);
                 return PlayAction.CannotPlay();
             }
 
             var selectedTileIndex = _random.Next(buyableTiles.Count);
-            var selectedTile = buyableTiles[selectedTileIndex];
-
             var tileCoords = availableTiles[_random.Next(availableTiles.Count)];
+
+            Log.Information("[AI {_index}] choose tile num {num} ({typrTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
+
 
             return PlayAction.Play(selectedTileIndex, tileCoords);
         }

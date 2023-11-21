@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using Substrate.Hexalem.NET;
+using Substrate.Hexalem.NET.Extensions;
 using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
@@ -59,6 +60,10 @@ namespace Substrate.Hexalem
         public void NextRound(uint blockNumber)
         {
             HexaTuples.ForEach(p => { p.player.NextRound(blockNumber); p.board.NextRound(blockNumber); });
+
+            HexBoardTurn = 0;
+            HexBoardRound += 1;
+            Log.Information("Next round : reset turn to 0 and increase board round (now = {hbt})", HexBoardRound);
         }
 
         public void PostMove(uint blockNumber)
@@ -68,7 +73,7 @@ namespace Substrate.Hexalem
             // Shuffle and grab a new set with biggger selection
             if (UnboundTiles.Count < (Selection + 1) / 2)
             {
-                Log.Information("UnboundTiles is below half");
+                Log.Debug("UnboundTiles is below half");
                 if (Selection < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
                 {
                     Selection += 2;
@@ -134,12 +139,12 @@ namespace Substrate.Hexalem
             hexaPlayer[RessourceType.Mana] -= 1; // Todo : change by mana cost instead of 1
 
             UnboundTiles.RemoveAt(selectionIndex);
-            Log.Debug("UnboundTile num ${num} succesfully removed", selectionIndex);
+            Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
 
             return true;
         }
 
-        internal bool Turn(uint blockNumber, byte playerIndex)
+        internal bool UpdateTurnState(uint blockNumber, byte playerIndex)
         {
             // check if correct player
             if (PlayerTurn != playerIndex)
@@ -152,12 +157,20 @@ namespace Substrate.Hexalem
             if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
             {
                 Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                return false;
             }
 
             // do storage changes
             LastMove = BitConverter.GetBytes(blockNumber);
+            Log.Debug("Saved LastMove {lm}", LastMove.ToLog());
+
             PlayerTurn = (byte)((PlayerTurn + 1) % PlayersCount);
-            HexBoardTurn = (byte)(PlayerTurn == 0 ? 1 : 0);
+            Log.Debug("Switch to player {p}", PlayerTurn);
+
+            //HexBoardTurn = (byte)(PlayerTurn == 0 ? 1 : 0);
+            HexBoardTurn = (byte)(PlayerTurn % PlayersCount);
+            Log.Debug("Switch to board turn {bt}", HexBoardTurn);
+
             return true;
         }
 

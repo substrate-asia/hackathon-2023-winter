@@ -6,6 +6,8 @@ namespace Substrate.Hexalem.NET.AI
 {
     public class MonteCarlo : IThinking
     {
+        public string AiName => "MonteCarlo";
+
         private sealed class Node
         {
             public HexaGame State { get; }

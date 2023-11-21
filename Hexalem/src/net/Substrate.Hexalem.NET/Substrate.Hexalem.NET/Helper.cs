@@ -2,7 +2,7 @@
 
 namespace Substrate.Hexalem
 {
-    public class Helper
+    public static class Helper
     {
         public static T[] ExtractSubArray<T>(T[] source, int startIndex, int length)
         {

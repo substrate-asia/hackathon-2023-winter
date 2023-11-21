@@ -7,6 +7,8 @@ namespace Substrate.Hexalem.NET.AI
 {
     public interface IThinking
     {
+        public string AiName { get; }
         public PlayAction FindBestAction(HexaGame initialState, int iteration);
+
     }
 }

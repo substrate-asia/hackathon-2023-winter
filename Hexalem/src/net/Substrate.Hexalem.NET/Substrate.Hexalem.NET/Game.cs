@@ -44,8 +44,6 @@ namespace Substrate.Hexalem
         public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, 
             (int,int) coords)
         {
-            Log.Information($"Player num {playerIndex} can start to play");
-
             if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords)) 
             {
                 return null;
@@ -59,16 +57,18 @@ namespace Substrate.Hexalem
         public static HexaGame? FinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
         {
             // Update game turn information
-            if (!hexaGame.Turn(blockNumber, playerIndex))
+            if (!hexaGame.UpdateTurnState(blockNumber, playerIndex))
             {
                 return null;
             }
 
             // Add new ressouces to player
             hexaGame.CalcRewards(blockNumber, playerIndex);
+            Log.Debug("Rewards calculated for player {index}", playerIndex);
 
-            if (hexaGame.HexBoardTurn == 0)
+            if (hexaGame.HexBoardTurn != 0)
             {
+                Log.Debug("Players does not have already played this turn");
                 return hexaGame;
             }
 

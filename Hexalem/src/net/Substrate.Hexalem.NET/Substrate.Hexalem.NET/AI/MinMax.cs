@@ -9,6 +9,8 @@ namespace Substrate.Hexalem.NET.AI
     {
         private readonly int _maxDepth;
 
+        public string AiName => "MinMax";
+
         public MinMax(int maxDepth)
         {
             _maxDepth = maxDepth;
