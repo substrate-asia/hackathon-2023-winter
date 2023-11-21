@@ -13,28 +13,21 @@ namespace Substrate.Hexalem.WebAPI.Controllers
         private const double BLOCKTIME_SEC = 6;
 
         private readonly ApiContext _context;
-        private readonly Serilog.ILogger _logger;
 
         private readonly Random _random;
 
-        public HexalemGameController(ApiContext context, Serilog.ILogger logger)
+        public HexalemGameController(ApiContext context)
         {
             _random = new Random();
 
             _context = context;
-            _logger = logger;
 
-            if(!_context.Configs.Any())
-            {
-                _context.Configs.Add(new Config { Genesis = DateTime.Now });
-            }
+            _context.Configs.Add(new Config { Genesis = DateTime.Now });
 
-            if(!_context.Players.Any())
-            {
-                _context.Players.Add(new Player() { Name = "Alice", Address = "xxxx" });
-                _context.Players.Add(new Player() { Name = "Bob", Address = "yyyy" });
-            }
-            
+            _context.Players.Add(new Player() { Name = "Alice" });
+
+            _context.Players.Add(new Player() { Name = "Bob" });
+
             _context.SaveChanges();
         }
 
@@ -131,15 +124,14 @@ namespace Substrate.Hexalem.WebAPI.Controllers
                 return BadRequest("Invalid hash format.");
             }
 
-            var hexBoard = new HexBoard(bytes);
-
-            hexBoard = Game.Start(hexBoard, 1, CurrentBlockNumber(config.Genesis), _logger);
+            var hexBoard = new HexaGame(bytes);
+            hexBoard = Game.Initialise(hexBoard, 1, CurrentBlockNumber(config.Genesis));
 
             var board = new Board()
             {
                 BoardValue = Convert.ToHexString(hexBoard.Value),
-                SelectionBase = Convert.ToHexString(hexBoard.SelectionBase),
-                SelectionCurrent = Convert.ToHexString(hexBoard.SelectionCurrent),
+                SelectionBase =  null,
+                SelectionCurrent = null,
                 Players = new List<Player> { inDbPlayer }
             };
 

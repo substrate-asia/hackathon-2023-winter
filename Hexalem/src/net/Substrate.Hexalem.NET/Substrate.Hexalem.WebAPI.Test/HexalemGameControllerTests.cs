@@ -35,7 +35,7 @@ namespace Substrate.Hexalem.WebAPI.Test
             Assert.That(stringResult, Is.Not.Empty);
         }
 
-        [Test, Ignore("Todo debug")]
+        [Test]
         public async Task BlockNumberRoute_BlockNumberTest()
         {
             var response = await _httpClient.GetAsync("/api/HexalemGame/BlockNumber");

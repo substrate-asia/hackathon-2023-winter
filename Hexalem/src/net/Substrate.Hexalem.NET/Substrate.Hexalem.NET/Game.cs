@@ -1,11 +1,7 @@
-﻿using Substrate.Hexalem.NET;
-using Substrate.Hexalem.NET.Draw;
-using Substrate.Hexalem.NET.GameException;
-using System.Runtime.CompilerServices;
-using Serilog;
-using Serilog.Core;
+﻿using Serilog;
 using System;
-using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
@@ -13,91 +9,73 @@ namespace Substrate.Hexalem
 {
     public static class Game
     {
-        public static HexBoard Start(HexBoard hexBoard, byte players, uint blockNumber, ILogger logger)
+        public static HexaGame CreateGame(uint blockNumber, List<HexaPlayer> players, GridSize gridSize)
         {
-            logger.Information($"Start a new game | Start block = {blockNumber} | Nb player = {players}");
+            Random random = new Random();
 
-            hexBoard.Initialize(players, HexGridSize.Medium);
-            hexBoard.ShuffleSelection(blockNumber);
+            var randomHash = new byte[32];
+            random.NextBytes(randomHash);
 
-            // initial rewards given out ...
-            return Rewards(hexBoard);
-        }
-
-        public static HexBoard Play(HexBoard hexBoard, byte playerId, HexTile hexTile, GridCoords gridCoords, Draw draw)
-        {
-            if (hexBoard.PlayerTurn != playerId)
+            var hexaTuple = new List<(HexaPlayer, HexaBoard)>();
+            foreach (var player in players)
             {
-                throw new NotActiveTurnException($"Unable to play with playerId = {playerId} while it is not his turn");
+                var hexaBoard = new HexaBoard(new byte[(int)gridSize]);
+                hexaTuple.Add((player, hexaBoard));
             }
 
-            if (!Choose(hexTile, draw))
-            {
-                throw new TileNotAvailableException($"Tile {hexTile} is not available in the draw");
-            }
+            var hexaGame = new HexaGame(randomHash, hexaTuple);
+            hexaGame.Init(blockNumber);
 
-            return Place(hexBoard, playerId, hexTile, gridCoords);
+            Log.Information($"New Game created, with a {gridSize} hex grid and {hexaGame.PlayersCount} players.");
+
+            return hexaGame;
         }
 
-        public static HexBoard? NextTurn(uint blockNumber, HexBoard hexBoard, byte playerId)
+        /// <summary>
+        /// Player chose a tile and play it
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="coords"></param>
+        /// <param name="logger"></param>
+        /// <returns></returns>
+        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, 
+            (int,int) coords)
         {
-            if (hexBoard.PlayerTurn != playerId)
-            {
-                // TODO: check if max block per rounds are passed to force turn
-                // else return null
+            Log.Information($"Player num {playerIndex} can start to play");
 
+            if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords)) 
+            {
                 return null;
             }
 
-            // add turn
-            hexBoard.HexBoardTurn += 1;
+            hexaGame.PostMove(blockNumber);
 
-            // next player turn
-            hexBoard.PlayerTurn = (byte)((hexBoard.PlayerTurn + 1) % hexBoard.PlayersCount);
+            return hexaGame;
+        }
 
-            if (hexBoard.HexBoardTurn < hexBoard.PlayersCount)
+        public static HexaGame? FinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
+        {
+            // Update game turn information
+            if (!hexaGame.Turn(blockNumber, playerIndex))
             {
-                return hexBoard;
+                return null;
             }
 
-            // end of round start new one
-            hexBoard.HexBoardRound += 1;
-            hexBoard.HexBoardTurn = 0;
+            // Add new ressouces to player
+            hexaGame.CalcRewards(blockNumber, playerIndex);
 
-            hexBoard.ShuffleSelection(blockNumber);
-
-            return Rewards(hexBoard);
-        }
-
-        public static bool Choose(HexTile hexTile, Draw draw)
-        {
-            draw.Take(hexTile);
-            return true;
-        }
-
-        private static HexBoard Place(HexBoard hexBoard, byte playerId, HexTile hexTile, GridCoords gridCoords)
-        {
-            var playerGrid = hexBoard.PlayerGrids[playerId];
-
-            if(!playerGrid.IsValidHex(gridCoords.q, gridCoords.r))
+            if (hexaGame.HexBoardTurn == 0)
             {
-                throw new InvalidMapCoordinate($"({gridCoords.q}, {gridCoords.r}) are invalid coordinate");
+                return hexaGame;
             }
 
-            playerGrid[gridCoords.q, gridCoords.r] = hexTile;
+            hexaGame.NextRound(blockNumber);
 
-            return hexBoard;
+            return hexaGame;
         }
 
-        private static HexBoard Rewards(HexBoard hexBoard)
-        {
-            // calculate rewards
-
-            //hexBoard.PlayerGrids[0].Tiles
-
-            return hexBoard;
-        }
-
-        
     }
 }
