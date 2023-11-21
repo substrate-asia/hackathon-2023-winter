@@ -82,5 +82,7 @@ All this tasks are being completed during the hackathon.
 - Jose Luis Manco - Fullstack web developer
 - Francisco Albornoz - Bussiness developer
 - Carlos Rodriguez - Rust blockchain developer
-- Eduardo - Designer and marketing lead
-- Franklyn - Web developer
+- Eduardo Cardoso - Designer and marketing lead
+- Franklyn Ccahuana- Web developer
+- Alberto Torres - Chief Sommelier
+- 
