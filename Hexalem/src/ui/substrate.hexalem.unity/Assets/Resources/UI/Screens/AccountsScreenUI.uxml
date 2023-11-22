@@ -1,0 +1,23 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:Template name="HeaderBoxElement" src="project://database/Assets/Resources/UI/Boxes/HeaderBoxElement.uxml?fileID=9197481963319205126&amp;guid=93636438f421bbb4698baadc6e80b366&amp;type=3#HeaderBoxElement" />
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=f0c0984091307004087f5db030d4e506&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="AccountsScreen" style="flex-grow: 0; height: 1000px; width: 100%; flex-shrink: 1; min-width: auto; min-height: auto; flex-basis: auto; justify-content: flex-start; align-items: auto;">
+        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 350px; width: 100%; justify-content: flex-start; align-items: auto;">
+            <ui:Instance template="HeaderBoxElement" name="HeaderBoxElement" style="height: 100%; width: 100%; flex-shrink: 0;" />
+        </ui:VisualElement>
+        <ui:VisualElement name="FloatBody" style="flex-grow: 1; height: auto; width: 100%; flex-shrink: 0; min-height: auto; min-width: auto; justify-content: flex-start;">
+            <ui:ScrollView horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Auto" name="ScvListAccounts" focusable="true" style="flex-grow: 0; flex-shrink: 0; height: auto; width: 100%; align-items: auto;">
+                <ui:VisualElement name="VelAccountsBox" style="flex-grow: 0; width: 100%; flex-wrap: wrap; flex-shrink: 0;" />
+            </ui:ScrollView>
+        </ui:VisualElement>
+        <ui:VisualElement name="BottomBound" style="flex-grow: 0; height: 265px; width: 100%; flex-shrink: 0; justify-content: flex-start; align-items: auto; flex-basis: auto;">
+            <ui:VisualElement name="Filler" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 40px;" />
+            <ui:VisualElement name="CreateWalletBox" style="flex-grow: 0; height: 150px; flex-shrink: 0; width: 100%; padding-right: 65px; padding-bottom: 40px; padding-left: 65px; padding-top: 0;">
+                <ui:VisualElement name="CreateWalletButtonBox" style="flex-grow: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; padding-top: 0; width: 100%; height: 100%; flex-shrink: 0; -unity-text-align: upper-left;">
+                    <ui:Button text="ADD A NEW ACCOUNT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnCreateWallet" class="font-aeonik font-light-color layer-bg-dark border-color-drk" style="width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; font-size: 40px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; -unity-text-align: middle-center;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="Filler" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 75px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

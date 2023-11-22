@@ -1,0 +1,6 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements">
+    <ui:Template name="AvatarSmallElement" src="project://database/Assets/Resources/UI/Elements/AvatarSmallElement.uxml?fileID=9197481963319205126&amp;guid=23d137c036375bb46a5854065f68e454&amp;type=3#AvatarSmallElement" />
+    <ui:VisualElement name="AvatarBox" style="flex-grow: 0; height: 665px; width: 475px; padding-right: 15px; flex-shrink: 0; padding-top: 0; padding-bottom: 35px; padding-left: 15px; margin-right: 0; margin-top: 0; margin-bottom: 0; margin-left: 0; align-items: auto;">
+        <ui:Instance template="AvatarSmallElement" name="AvatarSmallElement" style="height: 625px; width: 445px;" />
+    </ui:VisualElement>
+</ui:UXML>
