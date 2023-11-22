@@ -45,7 +45,7 @@ namespace Substrate.Hexalem.Test
 
             // Player select the second tile
             var indexSelection = 1;
-            var selectedTile = hexaGame.HexaSelection.Value[indexSelection];
+            var selectedTile = hexaGame.UnboundTiles[indexSelection];
             // Player coordinate move
             var coordinate = (-2, -2);
 
@@ -62,7 +62,7 @@ namespace Substrate.Hexalem.Test
             Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].player[RessourceType.Mana], Is.EqualTo(0));
 
             // Now we should have selectedTile put in the correct coord
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo(selectedTile));
+            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTile));
 
             Assert.That(hexaGame.SelectBase, Is.EqualTo(2));
 
@@ -76,11 +76,11 @@ namespace Substrate.Hexalem.Test
             // Now it is Player 2 turn
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player2_Index));
 
-            selectedTile = hexaGame.HexaSelection.Value[0];
+            selectedTile = hexaGame.UnboundTiles[0];
              Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, coordinate);
 
             // Now we should have selectedTile put in the correct coord
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo(selectedTile));
+            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTile));
 
             // Selection is 4
             Assert.That(hexaGame.SelectBase, Is.EqualTo(4));

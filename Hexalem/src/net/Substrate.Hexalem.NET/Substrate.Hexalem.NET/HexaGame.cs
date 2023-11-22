@@ -24,11 +24,6 @@ namespace Substrate.Hexalem
         /// </summary>
         public List<HexaTile> UnboundTiles { get; private set; }
 
-        /// <summary>
-        /// Instance to manage tile pool
-        /// </summary>
-        public HexaSelection HexaSelection { get; set; }
-
         public HexaGame(byte[] id, byte[] selectionHash, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
             Id = id;
@@ -36,7 +31,6 @@ namespace Substrate.Hexalem
 
             HexaTuples = hexaTuples;
             UnboundTiles = new List<HexaTile>();
-            HexaSelection = new HexaSelection(selectionHash);
 
             HexBoardState = HexBoardState.Preparing;
             PlayersCount = (byte)hexaTuples.Count;
@@ -56,8 +50,7 @@ namespace Substrate.Hexalem
             PlayerTurn = 0;
             SelectBase = 2;
 
-            UnboundTiles = HexaSelection.Selection(SelectBase);
-            //HexaSelection.Shuffle(blockNumber);
+            UnboundTiles = RenewSelection(blockNumber, SelectBase);
         }
 
         public void NextRound(uint blockNumber)
@@ -69,23 +62,48 @@ namespace Substrate.Hexalem
             Log.Information("Next round : reset turn to 0 and increase board round (now = {hbt})", HexBoardRound);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blockNumber"></param>
         public void PostMove(uint blockNumber)
         {
             HexaTuples.ForEach(p => { p.player.PostMove(blockNumber); p.board.PostMove(blockNumber); });
 
-            // Shuffle and grab a new set with biggger selection
             if (UnboundTiles.Count < (SelectBase + 1) / 2)
             {
                 Log.Debug("UnboundTiles is below half");
                 if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
                 {
+                    Log.Information($"Selection is now {SelectBase}");
                     SelectBase += 2;
                 }
-                HexaSelection.Shuffle(blockNumber);
-                UnboundTiles = HexaSelection.Selection(SelectBase);
 
-                Log.Information($"Selection is now {SelectBase}");
+                UnboundTiles = RenewSelection(blockNumber, SelectBase);
             }
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="selectBase"></param>
+        /// <returns></returns>
+        internal List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
+        {
+            var values = Enum.GetValues(typeof(TileType))
+                .Cast<TileType>()
+                .Where(v => (int)v > 1).ToArray();
+
+            var offSet = (byte)(blockNumber % 32);
+            var result = new List<HexaTile>();
+            for (int i = 0; i < selectBase; i++)
+            {
+                var rawTile = Id[(offSet + selectBase) % 32];
+                result.Add((byte)(((byte)Rarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
+            }
+            return result;
         }
 
         /// <summary>
@@ -347,30 +365,12 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public byte SelectPos
-        {
-            get => Value[6];
-            set => Value[6] = value;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public byte SelectOffSet
-        {
-            get => Value[7];
-            set => Value[7] = value;
-        }
-
-        /// <summary>
         /// Last block number when a player made a move
         /// </summary>
         public byte[] LastMove
         {
-            get => Value.Skip(8).Take(4).ToArray();
-            set => value.CopyTo(Value, 8);
+            get => Value.Skip(6).Take(4).ToArray();
+            set => value.CopyTo(Value, 6);
         }
     }
 }
