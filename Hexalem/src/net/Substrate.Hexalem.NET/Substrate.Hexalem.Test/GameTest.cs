@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json.Linq;
+using StreamJsonRpc.Protocol;
 using Substrate.Hexalem.NET;
 using Substrate.NetApi.Extensions;
 using System;
@@ -26,10 +27,10 @@ namespace Substrate.Hexalem.Test
         public void Setup()
         {
             _hexGridMedium_Player1 = new HexaBoard(new byte[(int)GridSize.Medium]);
-            _hexPlayer_Player1 = new HexaPlayer();
+            _hexPlayer_Player1 = new HexaPlayer(new byte[32]);
 
             _hexGridMedium_Player2 = new HexaBoard(new byte[(int)GridSize.Medium]);
-            _hexPlayer_Player2 = new HexaPlayer();
+            _hexPlayer_Player2 = new HexaPlayer(new byte[32]);
 
             _selectionGenerator = new byte[GameConfig.NB_MAX_UNBOUNDED_TILES].Populate();
 
@@ -39,7 +40,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void StandardGameStart_2v2_ShouldSucceed()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(), new HexaPlayer() };
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             // Player select the second tile
@@ -63,7 +64,7 @@ namespace Substrate.Hexalem.Test
             // Now we should have selectedTile put in the correct coord
             Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo(selectedTile));
 
-            Assert.That(hexaGame.Selection, Is.EqualTo(2));
+            Assert.That(hexaGame.SelectBase, Is.EqualTo(2));
 
             Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
 
@@ -82,7 +83,7 @@ namespace Substrate.Hexalem.Test
             Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo(selectedTile));
 
             // Selection is 4
-            Assert.That(hexaGame.Selection, Is.EqualTo(4));
+            Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
 
             Game.FinishTurn(_defaultBlockStart + 6, hexaGame, hexaGame.PlayerTurn);
         }
@@ -90,7 +91,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void StartInitialize_ShouldHaveValidSetup()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(), new HexaPlayer() };
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             Assert.That(hexaGame.HexBoardState, Is.EqualTo(HexBoardState.Running), "Initial state should be 'Running'.");
@@ -117,7 +118,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void GameWrongPlayerTryToPlay_ShouldNotSuceed()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer() };
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             // Player index = 1 => Player 2
@@ -128,7 +129,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void Game_WhenPlayOnInvalidCoordinate_ShouldNotSucceed()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer() };
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-3, -3)), Is.False);
@@ -138,7 +139,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void Game_WhenPlayOnAlreadyFilledTile_ShouldNotSucceed()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer() };
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));

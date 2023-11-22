@@ -8,15 +8,18 @@ namespace Substrate.Hexalem
         public static implicit operator byte[](HexaPlayer p) => p.Value;
         public static implicit operator HexaPlayer(byte[] p) => new HexaPlayer(p);
 
+        public byte[] Id { get; set; }
+
         public byte[] Value { get; set; }
 
-        public HexaPlayer() : this(new byte[GameConfig.PLAYER_STORAGE_SIZE])
+        public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
         }
 
-        public HexaPlayer(byte[] hash)
+        public HexaPlayer(byte[] id, byte[] hash)
         {
+            Id = id;
             Value = hash;
         }
 

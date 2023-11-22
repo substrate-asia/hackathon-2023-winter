@@ -10,6 +10,8 @@ namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
     {
+        public byte[] Id { get; set; }
+
         public byte[] Value { get; set; }
 
         /// <summary>
@@ -27,8 +29,9 @@ namespace Substrate.Hexalem
         /// </summary>
         public HexaSelection HexaSelection { get; set; }
 
-        public HexaGame(byte[] selectionHash, List<(HexaPlayer, HexaBoard)> hexaTuples)
+        public HexaGame(byte[] id, byte[] selectionHash, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
+            Id = id;
             Value = new byte[16];
 
             HexaTuples = hexaTuples;
@@ -51,9 +54,9 @@ namespace Substrate.Hexalem
             HexBoardRound = 0;
             HexBoardTurn = 0;
             PlayerTurn = 0;
-            Selection = 2;
+            SelectBase = 2;
 
-            UnboundTiles = HexaSelection.Selection(Selection);
+            UnboundTiles = HexaSelection.Selection(SelectBase);
             //HexaSelection.Shuffle(blockNumber);
         }
 
@@ -71,17 +74,17 @@ namespace Substrate.Hexalem
             HexaTuples.ForEach(p => { p.player.PostMove(blockNumber); p.board.PostMove(blockNumber); });
 
             // Shuffle and grab a new set with biggger selection
-            if (UnboundTiles.Count < (Selection + 1) / 2)
+            if (UnboundTiles.Count < (SelectBase + 1) / 2)
             {
                 Log.Debug("UnboundTiles is below half");
-                if (Selection < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
+                if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
                 {
-                    Selection += 2;
+                    SelectBase += 2;
                 }
                 HexaSelection.Shuffle(blockNumber);
-                UnboundTiles = HexaSelection.Selection(Selection);
+                UnboundTiles = HexaSelection.Selection(SelectBase);
 
-                Log.Information($"Selection is now {Selection}");
+                Log.Information($"Selection is now {SelectBase}");
             }
         }
 
@@ -337,16 +340,37 @@ namespace Substrate.Hexalem
         /// <summary>
         /// Nb tiles a player can buy during his turn
         /// </summary>
-        public byte Selection
+        public byte SelectBase
         {
             get => Value[5];
             set => Value[5] = value;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte SelectPos
+        {
+            get => Value[6];
+            set => Value[6] = value;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public byte SelectOffSet
+        {
+            get => Value[7];
+            set => Value[7] = value;
+        }
+
+        /// <summary>
+        /// Last block number when a player made a move
+        /// </summary>
         public byte[] LastMove
         {
-            get => Value.Skip(6).Take(4).ToArray();
-            set => value.CopyTo(Value, 6);
+            get => Value.Skip(8).Take(4).ToArray();
+            set => value.CopyTo(Value, 8);
         }
     }
 }
