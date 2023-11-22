@@ -296,8 +296,9 @@ parameter_types! {
 	pub const HexalemMaxPlayers: u8 = 100;
 	pub const HexalemMinPlayers: u8 = 2;
 	pub const HexalemMaxHexGridSize: u8 = 25;
-	pub const HexalemMaxTileSelection: u8 = 32;
-	pub const HexalemSelectionBase: [TileOffer<Runtime>; 6] = [
+	pub const HexalemMaxTileSelection: u8 = 16;
+	pub const HexalemMaxTileSelectionBase: u8 = 32;
+	pub const HexalemAllTileOffers: [TileOffer<Runtime>; 6] = [
 		TileOffer {
 			tile_to_buy: HexalemTile(1),
 			tile_cost: HexalemMaterialCost {
@@ -372,9 +373,10 @@ impl pallet_hexalem::Config for Runtime {
 	type MinPlayers = HexalemMinPlayers;
 	type MaxHexGridSize = HexalemMaxHexGridSize;
 	type MaxTileSelection = HexalemMaxTileSelection;
+	type MaxTileSelectionBase = HexalemMaxTileSelectionBase;
 	type Tile = HexalemTile;
 	type MaterialCost = HexalemMaterialCost;
-	type SelectionBase = HexalemSelectionBase;
+	type AllTileOffers = HexalemAllTileOffers;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

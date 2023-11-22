@@ -16,8 +16,9 @@ pub use pallet::*;
 //mod benchmarking;
 
 pub mod weights;
-use codec::MaxEncodedLen;
-use frame_support::{ensure, sp_runtime, sp_runtime::SaturatedConversion};
+use frame_support::{
+	ensure, sp_runtime, sp_runtime::SaturatedConversion, traits::Get, StorageHasher,
+};
 use scale_info::prelude::vec;
 pub use weights::*;
 
@@ -31,13 +32,16 @@ pub mod pallet {
 	pub struct Pallet<T>(_);
 
 	// Tiles to select
-	pub type TileSelection<T> = BoundedVec<TileOffer<T>, <T as Config>::MaxTileSelection>;
+	pub type TileSelection<T> = BoundedVec<TileOfferIndex, <T as Config>::MaxTileSelection>;
+
+	pub type TileSelectionBase<T> = BoundedVec<TileOfferIndex, <T as Config>::MaxTileSelectionBase>;
 
 	// Type of AccountId that is going to be used
 	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
 
+	pub type GameId = [u8; 32];
+
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
-	#[scale_info(skip_type_params(T))]
 	pub enum GameState {
 		Matchmaking,
 		Playing,
@@ -45,8 +49,8 @@ pub mod pallet {
 		Finish,
 	}
 
-	#[derive(Encode, Decode, TypeInfo, RuntimeDebugNoBound, PartialEq, Clone)]
-	pub struct TeST {}
+	// Index used for referencing the TileOffer
+	pub type TileOfferIndex = u8;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
@@ -55,11 +59,9 @@ pub mod pallet {
 		pub max_rounds: u8,  // maximum number of rounds
 		pub round: u8,       // current round number
 		pub player_turn: u8, // Who is playing?
-		pub number_of_players: u8,
+		// pub number_of_players: u8,
 		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
-		// number of tiles for selection
-		pub selection_base: TileSelectionBase<T>,
-		pub selection_base_size: u8,
+		//pub selection_base_size: u8,                        // number of tiles for selection
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
 	}
@@ -83,7 +85,7 @@ pub mod pallet {
 	}
 
 	// This type will get changed to be more generic, but I did not have time now.
-	pub type TileSelectionBase<T> = [TileOffer<T>; 6];
+	pub type TileOffers<T> = [TileOffer<T>; 6];
 
 	// This type will get changed to be more generic, but I did not have time now.
 	#[derive(Encode, Decode, TypeInfo, PartialEq, Clone, Debug)]
@@ -104,11 +106,11 @@ pub mod pallet {
 		pub stone: MaterialUnit, // material
 		population: MaterialUnit,
 		hex_grid: HexGrid<T>, // Board with all tiles
-		game: AccountId<T>,   // Game key
+		game_id: GameId,      // Game key
 	}
 
 	impl<T: Config> HexBoard<T> {
-		fn new(size: usize, game: AccountId<T>) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
+		fn new(size: usize, game_id: GameId) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
 			let empty_hex_grid: HexGrid<T> = vec![Default::default(); size]
 				.try_into()
 				.map_err(|_| Error::<T>::InternalError)?;
@@ -119,7 +121,7 @@ pub mod pallet {
 				stone: 0,
 				population: 1,
 				hex_grid: empty_hex_grid,
-				game,
+				game_id,
 			})
 		}
 	}
@@ -134,7 +136,7 @@ pub mod pallet {
 
 		// Maximum number of players that can join a single game
 		#[pallet::constant]
-		type MaxPlayers: Get<u8> + Get<u32>;
+		type MaxPlayers: Get<u32>;
 
 		// Minimum number of players that can join a single game
 		#[pallet::constant]
@@ -145,6 +147,9 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type MaxTileSelection: Get<u32>;
+
+		#[pallet::constant]
+		type MaxTileSelectionBase: Get<u32>;
 
 		type Tile: Encode
 			+ Decode
@@ -168,7 +173,7 @@ pub mod pallet {
 			+ GetMaterialInfo;
 
 		#[pallet::constant]
-		type SelectionBase: Get<TileSelectionBase<Self>>;
+		type AllTileOffers: Get<TileOffers<Self>>;
 	}
 
 	// The pallet's runtime storage items.
@@ -178,50 +183,34 @@ pub mod pallet {
 	// https://docs.substrate.io/main-docs/build/runtime-storage/#declaring-storage-items
 	#[pallet::storage]
 	// Stores the Game data assigned to a creator address key
-	pub type GameStorage<T: Config> = StorageMap<_, Identity, T::AccountId, Game<T>>;
+	pub type GameStorage<T: Config> = StorageMap<_, Blake2_128Concat, GameId, Game<T>>;
 
 	#[pallet::storage]
 	// Stores the HexBoard data assigned to a player key.
-	pub type HexBoardStorage<T: Config> = StorageMap<_, Identity, T::AccountId, HexBoard<T>>;
+	pub type HexBoardStorage<T: Config> =
+		StorageMap<_, Blake2_128Concat, T::AccountId, HexBoard<T>>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/main-docs/build/events-errors/
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		/// New game has been initialized
-		GameInitialized {
-			who: T::AccountId,
-		},
-
-		// Player joined a game
-		PlayerJoined {
-			who: T::AccountId,
-			game: T::AccountId,
-		},
-
 		// Game started
-		GameStarted {
-			game: T::AccountId,
-			// More details ...
+		GameCreated {
+			game_id: GameId,
+			players: Vec<T::AccountId>,
 		},
 
 		// Player played a move
 		PlayedMoves {
-			game: T::AccountId,
+			game_id: GameId,
 			player: T::AccountId,
 			moves: Vec<Move>,
 		},
 
-		// Player skipped a turn
-		SkippedTurn {
-			game: T::AccountId,
-			player: T::AccountId,
-		},
-
 		// New selection has been drawn
 		NewTileSelection {
-			game: T::AccountId,
+			game_id: GameId,
 			selection: TileSelection<T>,
 		},
 	}
@@ -238,14 +227,11 @@ pub mod pallet {
 		// HexBoard has not been initialized yet. Unable to play.
 		HexBoardNotInitialized,
 
-		// Game is already full of players. More players can not join anymore.
-		GameIsFull,
-
-		// Not enough players have joined the game, unable to start now
-		NotEnoughPlayers,
-
 		// The game has already started. Can not start it twice.
 		GameAlreadyStarted,
+
+		// The game has already started. Can not create it twice.
+		GameAlreadyCreated,
 
 		// Other errors, that should never happen
 		InternalError,
@@ -276,122 +262,73 @@ pub mod pallet {
 
 		// Game has not started yet, or has been finished already
 		GameNotPlaying,
+
+		// The grid size is not 9, 25, 49
+		BadGridSize,
 	}
 
 	#[pallet::call]
 	impl<T: Config> Pallet<T> {
 		#[pallet::call_index(0)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn initialize(origin: OriginFor<T>, number_of_players: u8) -> DispatchResult {
+		pub fn create_game(
+			origin: OriginFor<T>,
+			players: Vec<T::AccountId>,
+			grid_size: u8,
+		) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
-			ensure!(!HexBoardStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
+			// you need to specify yourself as well, if you want to play.
+			let number_of_players = players.len();
 
 			ensure!(
-				number_of_players >= T::MinPlayers::get(),
+				number_of_players >= T::MinPlayers::get() as usize,
 				Error::<T>::NumberOfPlayersIsTooSmall
 			);
 
 			ensure!(
-				number_of_players <= T::MaxPlayers::get(),
+				number_of_players <= T::MaxPlayers::get() as usize,
 				Error::<T>::NumberOfPlayersIsTooLarge
 			);
 
-			// Creates the BoundedVec of players, currently just with one player (= creator)
-			let players = BoundedVec::<T::AccountId, T::MaxPlayers>::try_from(vec![who.clone()])
-				.map_err(|_| Error::<T>::InternalError)?;
+			ensure!(Self::is_valid_grid_size(grid_size), Error::<T>::BadGridSize);
 
-			GameStorage::<T>::set(
-				&who,
-				Some(Game {
-					state: GameState::Matchmaking,
-					max_rounds: 15,
-					round: 0,
-					players,
-					player_turn: 0,
-					number_of_players,
-					selection_base_size: 4,
-					selection_base: T::SelectionBase::get(), // These are the tiles to select from
-					selection_size: 2,
-					selection: Default::default(),
-				}),
-			);
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
 
-			HexBoardStorage::<T>::set(&who, Some(HexBoard::<T>::new(25, who.clone())?));
+			let game_id: GameId = Blake2_256::hash(&(&who, &current_block_number).encode());
 
-			Self::deposit_event(Event::GameInitialized { who });
-			// Return a successful DispatchResultWithPostInfo
+			ensure!(!GameStorage::<T>::contains_key(&game_id), Error::<T>::GameAlreadyCreated);
+
+			let mut game = Game {
+				state: GameState::Playing,
+				max_rounds: 15,
+				round: 0,
+				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
+				player_turn: 0,
+				selection_size: 2,
+				selection: Default::default(),
+			};
+
+			Self::new_selection(&mut game, game_id)?;
+
+			for player in &players {
+				ensure!(!HexBoardStorage::<T>::contains_key(player), Error::<T>::AlreadyPlaying);
+
+				HexBoardStorage::<T>::set(player, Some(HexBoard::<T>::new(25, game_id.clone())?));
+			}
+
+			let new_selection = game.selection.clone();
+
+			GameStorage::<T>::set(game_id, Some(game));
+
+			Self::deposit_event(Event::GameCreated { game_id: game_id.clone(), players });
+
+			Self::deposit_event(Event::NewTileSelection { game_id: game_id, selection: new_selection });
+
 			Ok(())
 		}
 
 		#[pallet::call_index(1)]
-		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn join(origin: OriginFor<T>, creator_address: T::AccountId) -> DispatchResult {
-			let who: T::AccountId = ensure_signed(origin)?;
-
-			// Ensures that the player is not already playing
-			ensure!(!HexBoardStorage::<T>::contains_key(&who), Error::<T>::AlreadyPlaying);
-
-			// Ensures that the Game exists
-			let mut game = match GameStorage::<T>::get(&creator_address) {
-				Some(value) => value,
-				None => return Err(Error::<T>::GameNotInitialized.into()),
-			};
-
-			// Ensures that there is enough space for the user to join the game
-			ensure!(game.players.len() < game.number_of_players as usize, Error::<T>::GameIsFull);
-
-			let _ = game.players.try_push(who.clone());
-
-			GameStorage::<T>::set(&creator_address, Some(game));
-
-			HexBoardStorage::<T>::set(&who, Some(HexBoard::<T>::new(25, creator_address.clone())?));
-
-			Self::deposit_event(Event::PlayerJoined { who, game: creator_address });
-
-			Ok(())
-		}
-
-		#[pallet::call_index(2)]
-		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn start(origin: OriginFor<T>) -> DispatchResult {
-			let who: T::AccountId = ensure_signed(origin)?;
-
-			// Ensures that the Game exists
-			let mut game = match GameStorage::<T>::get(&who) {
-				Some(value) => value,
-				None => return Err(Error::<T>::GameNotInitialized.into()),
-			};
-
-			// Ensures that there enough players have joined the game
-			ensure!(
-				game.players.len() == game.number_of_players as usize,
-				Error::<T>::NotEnoughPlayers
-			);
-
-			// Ensures the game has not started yet
-			ensure!(game.state == GameState::Matchmaking, Error::<T>::GameAlreadyStarted);
-
-			game.state = GameState::Playing;
-
-			// Generate new selection Tiles.
-		    Self::new_selection(
-				&mut game
-			)?;
-
-			Self::deposit_event(Event::NewTileSelection {
-				game: who.clone(),
-				selection: game.selection.clone(),
-			});
-
-			GameStorage::<T>::set(&who, Some(game));
-
-			Self::deposit_event(Event::GameStarted { game: who /* More info */ });
-
-			Ok(())
-		}
-
-		#[pallet::call_index(3)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn play(origin: OriginFor<T>, moves: Vec<Move>) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
@@ -402,10 +339,10 @@ pub mod pallet {
 				None => return Err(Error::<T>::HexBoardNotInitialized.into()),
 			};
 
-			let game_address: T::AccountId = hex_board.game.clone();
+			let game_id: GameId = hex_board.game_id.clone();
 
 			// Ensures that the Game exists
-			let mut game = match GameStorage::<T>::get(&game_address) {
+			let mut game = match GameStorage::<T>::get(&game_id) {
 				Some(value) => value,
 				None => return Err(Error::<T>::GameNotInitialized.into()),
 			};
@@ -416,7 +353,6 @@ pub mod pallet {
 			ensure!(game.players[game.player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
 
 			// Ensure mana usage, once implemented
-
 			let moves_len = moves.len();
 
 			// Ensure enough population for playing all moves
@@ -450,9 +386,7 @@ pub mod pallet {
 				game.player_turn = 0;
 
 				// new selection
-				Self::new_selection(
-					&mut game
-				)?;
+				Self::new_selection(&mut game, game_id)?;
 
 				// if last round -> finish the game, give away rewards
 				if game.round == game.max_rounds {
@@ -464,89 +398,43 @@ pub mod pallet {
 				}
 
 				Self::deposit_event(Event::NewTileSelection {
-					game: game_address.clone(),
+					game_id: game_id.clone(),
 					selection: game.selection.clone(),
 				});
 			} else {
 				// +1 turn
 				game.player_turn += 1;
 
-				// Refill selection
-				Self::refill_selection(
-					&mut game.selection,
-					&game.selection_base,
-					game.selection_base_size,
-					game.selection_size,
-				)?;
+				// Refill selection // Perhaps not..
 			}
 
-			GameStorage::<T>::set(&game_address, Some(game));
+			GameStorage::<T>::set(&game_id, Some(game));
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
-			Self::deposit_event(Event::PlayedMoves { game: game_address, player: who, moves });
+			Self::deposit_event(Event::PlayedMoves { game_id, player: who, moves });
 
 			Ok(())
-		}
-
-		#[pallet::call_index(4)]
-		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn temp_skip_turn(origin: OriginFor<T>, game_address: T::AccountId) -> DispatchResult {
-			let who: T::AccountId = ensure_signed(origin)?;
-
-			// ..
-
-			Self::deposit_event(Event::SkippedTurn { game: game_address, player: who });
-
-			return Ok(())
 		}
 	}
 }
 
 // Other helper methods
 impl<T: Config> Pallet<T> {
-	/// Helper method that generates a completely new selection
-	fn new_selection(
-		game: &mut Game<T>
-	) -> Result<(), sp_runtime::DispatchError> {
+	/// Helper method that generates a completely new selection from the selection_base
+	fn new_selection(game: &mut Game<T>, selection_base: GameId) -> Result<(), sp_runtime::DispatchError> {
 		// Current random source
 		let current_block_number = <frame_system::Pallet<T>>::block_number();
 
-		let mut new_tiles: Vec<TileOffer<T>> = Default::default();
+		let mut new_selection: Vec<TileOfferIndex> = Default::default();
 
-		for i in 1..game.selection_size + 1 {
-			let ti: usize = ((current_block_number.saturated_into::<u128>() * i as u128) %
-				game.selection_base_size as u128)
-				.saturated_into::<usize>();
-			let randomly_selected_tile: TileOffer<T> = game.selection_base[ti].clone();
-			new_tiles.push(randomly_selected_tile);
+		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
+
+		for i in 0..game.selection_size {
+			new_selection.push(selection_base[((i + offset) % 32) as usize]);
 		}
 
 		// Casting
-		game.selection =
-			new_tiles.try_into().map_err(|_| Error::<T>::InternalError)?;
-
-		Ok(())
-	}
-
-	/// Helper method that generates a new offers to refill the existing selection
-	fn refill_selection(
-		selection: &mut TileSelection<T>,
-		selection_base: &TileSelectionBase<T>,
-		selection_base_size: u8, /* Number of tiles that can be selected from the
-		                          * tile_selection */
-		selection_size: u8, // The resulting number of tiles that can be selected
-	) -> Result<(), sp_runtime::DispatchError> {
-		// Current random source
-		let current_block_number = <frame_system::Pallet<T>>::block_number();
-
-		for i in 1..selection_size as usize + 1 - selection.len() {
-			let ti: usize = ((current_block_number.saturated_into::<u128>() * i as u128) %
-				selection_base_size as u128)
-				.saturated_into::<usize>();
-			let randomly_selected_tile: TileOffer<T> = selection_base[ti].clone();
-
-			selection.try_push(randomly_selected_tile).map_err(|_| Error::<T>::InternalError)?;
-		}
+		game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
 
 		Ok(())
 	}
@@ -559,7 +447,13 @@ impl<T: Config> Pallet<T> {
 	) -> Result<T::Tile, sp_runtime::DispatchError> {
 		// Select the offer
 		ensure!(selection.len() > index_to_buy, Error::<T>::BuyIndexOutOfBounds);
-		let selected_offer = selection.remove(index_to_buy);
+		let selected_offer_index: TileOfferIndex = selection.remove(index_to_buy);
+
+		let all_offers = T::AllTileOffers::get();
+
+		ensure!(all_offers.len() > selected_offer_index as usize, Error::<T>::BuyIndexOutOfBounds);
+
+		let selected_offer = all_offers[selected_offer_index as usize].clone();
 
 		// Spend the materials for the offer
 		Self::spend_material(&selected_offer.tile_cost, hex_board)?;
@@ -574,9 +468,12 @@ impl<T: Config> Pallet<T> {
 	) -> Result<T::Tile, sp_runtime::DispatchError> {
 		// Select the offer
 		ensure!(selection.len() > index_to_buy, Error::<T>::BuyIndexOutOfBounds);
-		let selected_offer = selection.remove(index_to_buy);
+		let selected_offer_index: TileOfferIndex = selection.remove(index_to_buy);
 
-		Ok(selected_offer.tile_to_buy)
+		let all_offers = T::AllTileOffers::get();
+		ensure!(all_offers.len() > selected_offer_index as usize, Error::<T>::BuyIndexOutOfBounds);
+
+		Ok(all_offers[selected_offer_index as usize].tile_to_buy)
 	}
 
 	/// Helper method that spends the resources according to MaterialCost
@@ -657,6 +554,14 @@ impl<T: Config> Pallet<T> {
 			25 => 5,
 			49 => 7,
 			_ => 0,
+		}
+	}
+
+	/// Helper method that tells you if the board size is valid
+	fn is_valid_grid_size(size: u8) -> bool {
+		match size {
+			9 | 25 | 49 => true,
+			_ => false,
 		}
 	}
 }
