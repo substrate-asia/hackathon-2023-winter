@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.Tests
             // Initialize with a small-sized grid for testing
             _hexGridSmall = new HexaBoard(new byte[(int)GridSize.Small]);
 
-            _defaultTile = new HexaTile(TileType.Grass, Rarity.Normal);
+            _defaultTile = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
         }
 
         [Test]
@@ -231,9 +231,9 @@ namespace Substrate.Hexalem.Tests
             // Arrange
             var neighbors = new List<(int, HexaTile)?>
             {
-                (15, new HexaTile(TileType.Grass, Rarity.Normal)),
-                (1, new HexaTile(TileType.Grass, Rarity.Normal)),
-                (6, new HexaTile(TileType.Grass, Rarity.Normal)),
+                (15, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (1, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (6, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
                 null,
                 null,
                 null,
@@ -245,7 +245,7 @@ namespace Substrate.Hexalem.Tests
 
             // Assert
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Delta pattern");
-            Assert.That(pattern.Value.rarity, Is.EqualTo(Rarity.Rare), "Pattern should be Delta");
+            Assert.That(pattern.Value.rarity, Is.EqualTo(TileRarity.Rare), "Pattern should be Delta");
             CollectionAssert.AreEqual(new[] { 15, 1, 6 }, pattern.Value.indices, "Indices should match Delta pattern");
         }
 
@@ -257,11 +257,11 @@ namespace Substrate.Hexalem.Tests
             // Arrange
             var neighbors = new List<(int, HexaTile)?>
             {
-                (15, new HexaTile(TileType.Grass, Rarity.Normal)),
-                (1, new HexaTile(TileType.Grass, Rarity.Normal)),
+                (15, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (1, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
                 null,
                 null,
-                (6, new HexaTile(TileType.Grass, Rarity.Normal)),
+                (6, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
                 null,
                 null
             };
@@ -271,7 +271,7 @@ namespace Substrate.Hexalem.Tests
 
             // Assert
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Line pattern");
-            Assert.That(pattern.Value.Item1, Is.EqualTo(Rarity.Epic), "Pattern should be Line");
+            Assert.That(pattern.Value.Item1, Is.EqualTo(TileRarity.Epic), "Pattern should be Line");
             CollectionAssert.AreEqual(new[] { 15, 1, 6 }, pattern.Value.Item2, "Indices should match Line pattern");
         }
 
@@ -283,12 +283,12 @@ namespace Substrate.Hexalem.Tests
             // Arrange
             var neighbors = new List<(int, HexaTile)?>
             {
-                (15, new HexaTile(TileType.Grass, Rarity.Normal)),
-                (1, new HexaTile(TileType.Grass, Rarity.Normal)),
+                (15, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (1, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
                 null,
-                (6, new HexaTile(TileType.Grass, Rarity.Normal)),
+                (6, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
                 null,
-                (7, new HexaTile(TileType.Grass, Rarity.Normal)),
+                (7, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
                 null
             };
 
@@ -297,7 +297,7 @@ namespace Substrate.Hexalem.Tests
 
             // Assert
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Ypsilon pattern");
-            Assert.That(pattern.Value.Item1, Is.EqualTo(Rarity.Legendary), "Pattern should be Ypsilon");
+            Assert.That(pattern.Value.Item1, Is.EqualTo(TileRarity.Legendary), "Pattern should be Ypsilon");
             CollectionAssert.AreEqual(new[] { 15, 1, 6, 7 }, pattern.Value.Item2, "Indices should match Ypsilon pattern");
         }
 
@@ -312,27 +312,27 @@ namespace Substrate.Hexalem.Tests
             hexaBoard.Init(0);
 
             // Set up the board with some tiles
-            hexaBoard[0] = new HexaTile(TileType.Grass, Rarity.Normal);
-            hexaBoard[1] = new HexaTile(TileType.Water, Rarity.Normal);
-            hexaBoard[2] = new HexaTile(TileType.Water, Rarity.Rare);
-            hexaBoard[3] = new HexaTile(TileType.Water, Rarity.Rare);
-            hexaBoard[7] = new HexaTile(TileType.Water, Rarity.Rare);
+            hexaBoard[0] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[1] = new HexaTile(TileType.Water, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[2] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Normal);
+            hexaBoard[3] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Normal);
+            hexaBoard[7] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Normal);
 
             // Expected results
             var expectedStats = new byte[64]; // Adjust the size based on your needs
             expectedStats[0] = (int)GridSize.Medium - 6;
             // home
             expectedStats[(int)TileType.Home * tileTypes] = 1;
-            expectedStats[(int)TileType.Home * tileTypes + (int)Rarity.Normal] = 1;
+            expectedStats[(int)TileType.Home * tileTypes + (int)TileRarity.Normal] = 1;
 
             // grass
             expectedStats[(int)TileType.Grass * tileTypes] = 1;
-            expectedStats[(int)TileType.Grass * tileTypes + (int)Rarity.Normal] = 1;
+            expectedStats[(int)TileType.Grass * tileTypes + (int)TileRarity.Normal] = 1;
 
             // water
             expectedStats[(int)TileType.Water * tileTypes] = 4;
-            expectedStats[(int)TileType.Water * tileTypes + (int)Rarity.Normal] = 1;
-            expectedStats[(int)TileType.Water * tileTypes + (int)Rarity.Rare] = 3;
+            expectedStats[(int)TileType.Water * tileTypes + (int)TileRarity.Normal] = 1;
+            expectedStats[(int)TileType.Water * tileTypes + (int)TileRarity.Rare] = 3;
 
             // Act
             var stats = hexaBoard.Stats();

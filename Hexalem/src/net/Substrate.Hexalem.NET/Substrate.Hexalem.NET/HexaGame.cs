@@ -101,7 +101,7 @@ namespace Substrate.Hexalem
             for (int i = 0; i < selectBase; i++)
             {
                 var rawTile = Id[(offSet + selectBase) % 32];
-                result.Add((byte)(((byte)Rarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
+                result.Add((byte)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
             }
             return result;
         }
@@ -256,7 +256,7 @@ namespace Substrate.Hexalem
                     result = (byte)Math.Min(result, player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS);
 
                     var homeWeighted = 0;
-                    foreach (Rarity rarity in Enum.GetValues(typeof(Rarity)))
+                    foreach (TileRarity rarity in Enum.GetValues(typeof(TileRarity)))
                     {
                         homeWeighted += (int)rarity * boardStats[TileType.Home, rarity];
                     }

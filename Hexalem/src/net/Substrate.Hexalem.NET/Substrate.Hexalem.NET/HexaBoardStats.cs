@@ -18,7 +18,7 @@ namespace Substrate.Hexalem
         {
             Value = result;
             _maxTileTypes = Enum.GetValues(typeof(TileType)).Length;
-            _maxTilePatterns = Enum.GetValues(typeof(Rarity)).Length;
+            _maxTilePatterns = Enum.GetValues(typeof(TileRarity)).Length;
         }
 
         public byte this[TileType tileType]
@@ -27,7 +27,7 @@ namespace Substrate.Hexalem
             set => Value[(int)tileType * _maxTileTypes] = value;
         }
 
-        public byte this[TileType tileType, Rarity tilePattern]
+        public byte this[TileType tileType, TileRarity tilePattern]
         {
             get => Value[(int)tileType * _maxTileTypes + (int)tilePattern];
             set => Value[(int)tileType * _maxTileTypes + (int)tilePattern] = value;

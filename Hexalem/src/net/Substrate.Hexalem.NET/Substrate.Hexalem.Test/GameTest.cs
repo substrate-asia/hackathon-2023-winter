@@ -1,7 +1,9 @@
 ﻿using Newtonsoft.Json.Linq;
 using StreamJsonRpc.Protocol;
 using Substrate.Hexalem.NET;
+using Substrate.Hexalem.NET.AI;
 using Substrate.NetApi.Extensions;
+using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,6 +21,8 @@ namespace Substrate.Hexalem.Test
         private HexaBoard _hexGridMedium_Player2;
         private HexaPlayer _hexPlayer_Player2;
         private readonly int _player2_Index = 1;
+
+        private List<IThinking> _bots;
 
         private byte[] _selectionGenerator;
         private uint _defaultBlockStart;
@@ -153,6 +157,64 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (-1, -1)), Is.False);
 
+        }
+
+        [Test]
+        public void Game_EveryRound_ShouldHaveFreeMana()
+        {
+            var hexaPlayers = new List<HexaPlayer>() {
+                new HexaPlayer(new byte[32])
+            };
+
+            var hexGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            
+            Assert.That(hexGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+
+            // When a solo player finish a turn, it also finish a round
+            Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
+
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(1));
+            Assert.That(hexGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(2));
+
+            Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
+
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(2));
+            Assert.That(hexGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(3));
+        }
+
+        [Test]
+        public void Game_With3Players_ShouldHaveValidTurnsAndRounds()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { 
+                new HexaPlayer(new byte[32]), 
+                new HexaPlayer(new byte[32]), 
+                new HexaPlayer(new byte[32])
+            };
+
+            var hexGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(0));
+            Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+
+            Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
+
+            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(1));
+            Assert.That(hexGame.PlayerTurn, Is.EqualTo(1));
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+
+            Game.FinishTurn(2, hexGame, hexGame.PlayerTurn);
+
+            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(2));
+            Assert.That(hexGame.PlayerTurn, Is.EqualTo(2));
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+
+            Game.FinishTurn(3, hexGame, hexGame.PlayerTurn);
+
+            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(0));
+            Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
+            Assert.That(hexGame.HexBoardRound, Is.EqualTo(1));
         }
     }
 }

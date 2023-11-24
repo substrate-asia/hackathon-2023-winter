@@ -12,14 +12,23 @@
         Cave = 7,
     }
 
-    public enum Rarity
+    public enum TileRarity
     {
         None = 0,
         Normal = 1,
-        Rare = 2, // Delta
-        Epic = 3,  // Line
-        Legendary = 4, // Ypsilon
+        Rare = 2,
+        Epic = 3,
+        Legendary = 4,
         // Mythic = 5, // ...
+    }
+
+    public enum TilePattern
+    {
+        None = 0,
+        Normal = 1,
+        Delta = 2,
+        Line = 3,
+        Ypsilon = 4
     }
 
     public enum GridSize

@@ -21,7 +21,7 @@ namespace Substrate.Hexalem.Console
         {
             Log.Information("Start a new game between AI [{aiFirstType}] and [{aiSecondType}]", Bots[0].AiName, Bots[1].AiName);
 
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(), new HexaPlayer() };
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
             var hexGame = Game.CreateGame(1, hexaPlayers, GridSize.Medium);
 
             bool isFinish = true;

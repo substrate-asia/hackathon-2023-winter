@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Substrate.NetApi.Model.Meta;
+using System;
 
 namespace Substrate.Hexalem
 {
@@ -9,9 +10,13 @@ namespace Substrate.Hexalem
 
         public byte Value { get; set; }
 
-        public HexaTile(TileType hexTileType, Rarity hexTilePattern)
+        public HexaTile(TileType hexTileType, TileRarity hexTileRarity, TilePattern hexTilePattern)
         {
-            Value = (byte)(((byte)hexTilePattern << 4) | (byte)hexTileType);
+            var rarity = ((byte)hexTileRarity & 0x3) << 6;
+            var type = ((byte)hexTileType & 0x7) << 3;
+            var pattern = ((byte)hexTilePattern & 0x7);
+
+            Value = (byte)(rarity | type | pattern);
         }
 
         public HexaTile(byte value)
@@ -39,25 +44,38 @@ namespace Substrate.Hexalem
 
         public override string ToString()
         {
-            return $"{TileType} - {TilePattern}";
+            return $"{TileType} - {TileRarity} - {TilePattern}";
         }
     }
 
     public partial class HexaTile
     {
+        /// <summary>
+        /// 2 bits
+        /// </summary>
+        public TileRarity TileRarity
+        {
+            get => (TileRarity)((Value >> 6) & 0x3);
+            set => Value = (byte)((Value & 0x3F) | (((byte)value & 0x3) << 6));
+        }
+
+        /// <summary>
+        /// 3 bits
+        /// </summary>
         public TileType TileType
         {
-            get => (TileType)(Value & 0x0F);
-            set => Value = (byte) ((byte) (Value & 0xF0) | (byte)((byte)value & 0x0F));
+            get => (TileType)((Value >> 3) & 0x7);
+            set => Value = (byte)((Value & 0xCF) | (((byte)value & 0x7) << 3));
         }
 
-        public Rarity TilePattern
+        /// <summary>
+        /// 3 bits
+        /// </summary>
+        public TilePattern TilePattern
         {
-            get => (Rarity)(Value >> 4);
-            set => Value = (byte)(((byte)value << 4) | Value);
-
+            get => (TilePattern)(Value & 0x7);
+            set => Value = (byte)((Value & 0xF8) | ((byte)value & 0x7));
         }
-
     }
 
 }
