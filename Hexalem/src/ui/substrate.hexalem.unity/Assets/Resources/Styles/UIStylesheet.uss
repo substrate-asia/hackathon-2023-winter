@@ -49,5 +49,5 @@
 }
 
 .main-bg {
-    background-color: rgb(135, 112, 173);
+    background-color: rgba(135, 112, 173, 0.24);
 }
