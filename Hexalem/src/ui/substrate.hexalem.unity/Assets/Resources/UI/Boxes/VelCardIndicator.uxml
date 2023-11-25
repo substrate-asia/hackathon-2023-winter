@@ -1,5 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
-    <ui:VisualElement name="VelCardIndicator" style="flex-grow: 0; width: 40px; height: 40px; flex-shrink: 0; justify-content: center; align-items: center;">
-        <ui:VisualElement style="flex-grow: 0; width: 25px; flex-shrink: 0; height: 25px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); background-color: rgb(202, 202, 202);" />
-    </ui:VisualElement>
-</ui:UXML>

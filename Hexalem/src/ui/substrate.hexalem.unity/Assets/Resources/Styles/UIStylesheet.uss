@@ -4,58 +4,6 @@
     -unity-text-align: middle-center;
 }
 
-.font-color-drk {
-    color: rgb(36, 38, 40);
-}
-
-.font-color-lit {
-    color: rgb(255, 255, 255);
-}
-
-.background-color-drk {
-    background-color: rgb(36, 38, 40);
-}
-
-.background-color-lit {
-    background-color: rgb(255, 255, 255);
-}
-
-.unity-scroll-view_content-container {
-    flex-wrap: wrap;
-    flex-direction: row;
-}
-
-.panel_button {
-    background-color: rgb(62, 56, 50);
-    border-top-left-radius: 30px;
-    border-top-right-radius: 30px;
-    border-bottom-right-radius: 30px;
-    border-bottom-left-radius: 30px;
-}
-
-.panel_button_icon {
-    -unity-background-scale-mode: scale-to-fit;
-    margin-top: 15%;
-    margin-right: 10%;
-    margin-left: 10%;
-}
-
-.panel_button_text {
-    color: rgb(240, 219, 205);
-    font-size: 30px;
-    -unity-font-definition: url('project://database/Assets/Fonts/NexaBlack%20SDF.asset?fileID=11400000&guid=1ae826cfdcc741e469920de6462fd6f7&type=2#NexaBlack SDF');
-    -unity-text-align: middle-center;
-}
-
-.unity-text-field {
-    -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
-    color: rgb(144, 143, 141);
-}
-
-.font-color-black {
-    color: rgb(36, 38, 40);
-}
-
 .custom-text-field {
     flex-direction: column;
     -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
@@ -83,31 +31,11 @@
     color: rgb(36, 38, 40);
 }
 
-.main-bg-light {
-    flex-grow: 1;
-    width: 100%;
-    height: 100%;
-    background-color: rgb(255, 255, 255);
-}
-
-.border-color-drk {
+.border-color {
     border-left-color: rgb(0, 0, 0);
     border-right-color: rgb(0, 0, 0);
     border-top-color: rgb(0, 0, 0);
     border-bottom-color: rgb(0, 0, 0);
-}
-
-.border-color-grey {
-    border-left-color: rgb(135, 135, 135);
-    border-right-color: rgb(135, 135, 135);
-    border-top-color: rgb(135, 135, 135);
-    border-bottom-color: rgb(135, 135, 135);
-}
-
-.font-nexa {
-    -unity-font: initial;
-    -unity-font-definition: url('project://database/Assets/Fonts/NexaBlack%20SDF.asset?fileID=11400000&guid=1ae826cfdcc741e469920de6462fd6f7&type=2#NexaBlack SDF');
-    -unity-text-align: middle-left;
 }
 
 .font-regular {
@@ -116,28 +44,10 @@
     -unity-font: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=849f2d35a0c094a47a10ee1eec7bcd48&type=3#NotInter-Regular');
 }
 
-.font-dark-color {
+.font-color {
     color: rgb(0, 0, 0);
 }
 
-.font-grey-color {
-    color: rgb(127, 127, 127);
-}
-
-.font-light-color {
-    color: rgb(255, 255, 255);
-}
-
-.layer-bg-dark {
-    background-color: rgb(0, 0, 0);
-}
-
-.layer-bg-light {
-    background-color: rgb(255, 255, 255);
-}
-
-.layer-bg-grey {
-    width: 100%;
-    height: 100%;
-    background-color: rgb(236, 235, 233);
+.main-bg {
+    background-color: rgb(135, 112, 173);
 }

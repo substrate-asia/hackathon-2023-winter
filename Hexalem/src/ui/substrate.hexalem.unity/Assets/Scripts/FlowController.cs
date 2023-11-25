@@ -59,8 +59,6 @@ namespace Assets.Scripts
 
             // Initialize states
             _stateDictionary.Add(ScreenState.UnlockWallet, new LoginScreen(this));
-            _stateDictionary.Add(ScreenState.AccountSelection, new AccountSelectionState(this));
-            _stateDictionary.Add(ScreenState.ResetWallet, new ResetWalletState(this));
             _stateDictionary.Add(ScreenState.LoadScreen, new LoadScreenState(this));
             var mainScreen = new MainScreenState(this);
             _stateDictionary.Add(ScreenState.MainScreen, mainScreen);
