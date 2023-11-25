@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 
 namespace Substrate.Hexalem.NET
 {
@@ -30,5 +31,35 @@ namespace Substrate.Hexalem.NET
         public const byte FREE_MANA_PER_ROUND = 1;
 
         public const int NB_MAX_UNBOUNDED_TILES = 32;
+
+        public static int GoldCostForUpgrade(TileRarity rarity)
+        {
+            switch(rarity)
+            {
+                case TileRarity.Normal: // Normal to rare
+                    return 5;
+                case TileRarity.Rare: // Rare to Epic
+                    return 10;
+                case TileRarity.Epic: // Epic to Legendary
+                    return 15;
+                default:
+                    throw new InvalidOperationException($"Rarity {rarity} not supported...");
+            }
+        }
+
+        public static int MininumHumanToUpgrade(TileRarity rarity)
+        {
+            switch (rarity)
+            {
+                case TileRarity.Normal: // Normal to rare
+                    return 3;
+                case TileRarity.Rare: // Rare to Epic
+                    return 5;
+                case TileRarity.Epic: // Epic to Legendary
+                    return 8;
+                default:
+                    throw new InvalidOperationException($"Rarity {rarity} not supported...");
+            }
+        }
     }
 }

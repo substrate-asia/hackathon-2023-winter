@@ -60,6 +60,9 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
+            // Unbounded tiles should have normal rarity
+            Assert.That(hexaGame.UnboundTiles.All(x => x.TileRarity == TileRarity.Normal), Is.True);
+
             Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, indexSelection, coordinate);
 
             // Player 1 should have now 0 mana 
@@ -215,6 +218,52 @@ namespace Substrate.Hexalem.Test
             Assert.That(hexGame.HexBoardTurn, Is.EqualTo(0));
             Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
             Assert.That(hexGame.HexBoardRound, Is.EqualTo(1));
+        }
+
+        [Test]
+        public void UpgradeTile_WithEnoughtRessources_ShouldSucceed()
+        {
+            var playerRessources = new byte[8] { 10, 10, 10, 10, 10, 10, 10, 0 };
+
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            // Set ressources
+            hexaGame.HexaTuples.First().player.Value = playerRessources;
+
+            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
+            Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
+
+            // Now let's upgrade the tile
+            var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
+
+            Assert.That(res, Is.True);
+        }
+
+        [Test]
+        public void UpgradeTile_WithNotEnoughtRessources_ShouldFail()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
+            Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
+
+            var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
+            Assert.That(res, Is.False);
+        }
+
+        [Test]
+        public void UpgradeTile_WithEmptyTile_ShouldFail()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
+            Assert.That(res, Is.False);
         }
     }
 }

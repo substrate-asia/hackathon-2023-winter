@@ -1,4 +1,5 @@
-﻿using Substrate.NetApi.Model.Meta;
+﻿using Serilog;
+using Substrate.NetApi.Model.Meta;
 using System;
 
 namespace Substrate.Hexalem
@@ -40,6 +41,24 @@ namespace Substrate.Hexalem
             }
 
             return Value == v.Value;
+        }
+
+        internal bool Upgrade()
+        {
+            if(TileRarity ==  TileRarity.None) // Should never happen but...
+            {
+                Log.Error("Cannot upgrade tile which has not been set");
+                return false;
+            }
+
+            if(TileRarity == TileRarity.Legendary)
+            {
+                Log.Warning($"{nameof(TileRarity.Legendary)} cannot be upgrade");
+                return false;
+            }
+
+            TileRarity += 1;
+            return true;
         }
 
         public override string ToString()

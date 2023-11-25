@@ -101,6 +101,7 @@ namespace Substrate.Hexalem
             for (int i = 0; i < selectBase; i++)
             {
                 var rawTile = Id[(offSet + selectBase) % 32];
+                // TODO: change this
                 result.Add((byte)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
             }
             return result;
@@ -116,10 +117,8 @@ namespace Substrate.Hexalem
         internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
             // check if correct player
-            if (PlayerTurn != playerIndex)
+            if (!EnsureCurrentPlayer(playerIndex))
             {
-                Log.Error(LogMessages.InvalidPlayerTurn(playerIndex, PlayerTurn));
-
                 return false;
             }
 
@@ -165,12 +164,45 @@ namespace Substrate.Hexalem
             return true;
         }
 
+        internal bool UpgradeTile(byte playerIndex, (int q, int r) coords)
+        {
+            if (!EnsureCurrentPlayer(playerIndex))
+            {
+                return false;
+            }
+
+            HexaBoard hexaBoard = HexaTuples[PlayerTurn].board;
+            HexaPlayer hexaPlayer = HexaTuples[PlayerTurn].player;
+
+            // Ensure coord have a valid tile
+            var existingTile = (HexaTile)hexaBoard[coords.q, coords.r];
+
+            if (existingTile.TileType == TileType.None || existingTile.TileRarity == TileRarity.None)
+            {
+                Log.Warning("Cannot upgrade tile ({q, r}) because it not a valid tile", coords.q, coords.r);
+                return false;
+            }
+
+            // Check if player have enought ressources to upgrade
+            var goldRequired = GameConfig.GoldCostForUpgrade(existingTile.TileRarity);
+            var humansRequired = GameConfig.MininumHumanToUpgrade(existingTile.TileRarity);
+            if (hexaPlayer[RessourceType.Gold] < goldRequired ||
+                hexaPlayer[RessourceType.Humans] < humansRequired)
+            {
+                Log.Warning("Player {playerId} does not have enough Gold ({currentGold}) or Humans ({currentHuman}) to upgrade {tileRarity} (required {goldRequired} gold and {humanRequired})", PlayerTurn, hexaPlayer[RessourceType.Gold], hexaPlayer[RessourceType.Humans], existingTile.TileRarity, goldRequired, humansRequired);
+
+                return false;
+            }
+
+            // Upgrade tile to next level
+            return existingTile.Upgrade();
+        }
+
         internal bool UpdateTurnState(uint blockNumber, byte playerIndex)
         {
             // check if correct player
-            if (PlayerTurn != playerIndex)
+            if (!EnsureCurrentPlayer(playerIndex))
             {
-                Log.Error(LogMessages.InvalidPlayerTurn(playerIndex, PlayerTurn));
                 return false;
             }
 
@@ -302,6 +334,22 @@ namespace Substrate.Hexalem
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Check if playerIndex is the right <see cref="PlayerTurn"/>
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <returns>True if it is a valid playerIndex</returns>
+        private bool EnsureCurrentPlayer(byte playerIndex)
+        {
+            if (PlayerTurn != playerIndex)
+            {
+                Log.Error(LogMessages.InvalidPlayerTurn(playerIndex, PlayerTurn));
+                return false;
+            }
+
+            return true;
         }
     }
 

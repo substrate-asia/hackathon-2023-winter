@@ -54,6 +54,18 @@ namespace Substrate.Hexalem
             return hexaGame;
         }
 
+        public static HexaGame? Upgrade(uint blockNumber, HexaGame hexaGame, byte playerIndex, (int, int) coords)
+        {
+            if (!hexaGame.UpgradeTile(playerIndex, coords))
+            {
+                return null;
+            }
+
+            hexaGame.PostMove(blockNumber);
+
+            return hexaGame;
+        }
+
         public static HexaGame? FinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
         {
             // Update game turn information
