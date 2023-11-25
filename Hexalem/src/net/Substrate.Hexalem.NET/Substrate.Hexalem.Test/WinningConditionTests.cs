@@ -10,21 +10,25 @@ namespace Substrate.Hexalem.Test
     internal class WinningConditionTests
     {
         [Test]
-        public void GetAndSetValue_ShouldSucceed()
+        [TestCase(WinningCondition.HumanThreshold, 2)]
+        [TestCase(WinningCondition.HumanThreshold, 10)]
+        [TestCase(WinningCondition.GoldThreshold, 0)]
+        [TestCase(WinningCondition.GoldThreshold, 4)]
+        public void GetAndSetValue_ShouldSucceed(WinningCondition winning, int target)
         {
-            var winningCondition = new HexaWinningCondition(WinningCondition.HumanThreshold, 2);
+            var winningCondition = new HexaWinningCondition(winning, (byte)target);
 
-            Assert.That(winningCondition.WinningCondition, Is.EqualTo(WinningCondition.HumanThreshold));
-            Assert.That(winningCondition.Target, Is.EqualTo((byte)2));
+            Assert.That(winningCondition.WinningCondition, Is.EqualTo(winning));
+            Assert.That(winningCondition.Target, Is.EqualTo((byte)target));
         }
 
         [Test]
         public void InitWithByte_ShouldSucceed()
         {
-            var winningCondition = new HexaWinningCondition(new byte[2] { 1, 4 });
+            var winningCondition = new HexaWinningCondition(2);
 
-            Assert.That(winningCondition.WinningCondition, Is.EqualTo(WinningCondition.GoldThreshold));
-            Assert.That(winningCondition.Target, Is.EqualTo((byte)4));
+            Assert.That(winningCondition.WinningCondition, Is.EqualTo(WinningCondition.HumanThreshold));
+            Assert.That(winningCondition.Target, Is.EqualTo((byte)2));
         }
     }
 }

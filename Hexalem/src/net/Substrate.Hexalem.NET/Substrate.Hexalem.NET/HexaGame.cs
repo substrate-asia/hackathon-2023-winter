@@ -188,7 +188,6 @@ namespace Substrate.Hexalem
             PlayerTurn = (byte)((PlayerTurn + 1) % PlayersCount);
             Log.Debug("Switch to player {p}", PlayerTurn);
 
-            //HexBoardTurn = (byte)(PlayerTurn == 0 ? 1 : 0);
             HexBoardTurn = (byte)(PlayerTurn % PlayersCount);
             Log.Debug("Switch to board turn {bt}", HexBoardTurn);
 

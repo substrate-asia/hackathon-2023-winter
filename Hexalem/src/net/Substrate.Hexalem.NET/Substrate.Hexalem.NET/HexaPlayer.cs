@@ -3,12 +3,12 @@ using System;
 
 namespace Substrate.Hexalem
 {
-    public class HexaPlayer : IHexaBase
+    public partial class HexaPlayer : IHexaBase
     {
         public static implicit operator byte[](HexaPlayer p) => p.Value;
         public static implicit operator HexaPlayer(byte[] p) => new HexaPlayer(p);
 
-        public byte[] Id { get; set; }
+        public byte[] Id { get; set; } // AccountId32
 
         public byte[] Value { get; set; }
 
@@ -50,4 +50,18 @@ namespace Substrate.Hexalem
 
         }
     }
+
+    public partial class HexaPlayer
+    {
+        /// <summary>
+        /// Winning condition selected by the player
+        /// </summary>
+        public HexaWinningCondition WinningCondition
+        {
+            get => (HexaWinningCondition)Value[7];
+            set => Value[7] = value;
+        }
+    }
 }
+
+

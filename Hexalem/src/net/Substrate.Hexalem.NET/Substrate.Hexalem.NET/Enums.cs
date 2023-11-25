@@ -81,6 +81,5 @@
     {
         HumanThreshold,
         GoldThreshold,
-        DestructionThreshold,
     }
 }
