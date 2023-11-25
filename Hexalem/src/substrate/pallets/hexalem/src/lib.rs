@@ -56,13 +56,48 @@ pub mod pallet {
 	pub struct Game<T: Config> {
 		pub state: GameState,
 		pub max_rounds: u8,  // maximum number of rounds
+
+		// These can be compressed to take only u8
 		pub round: u8,       // current round number
 		pub player_turn: u8, // Who is playing?
+		pub played: bool,
+
+
 		// pub number_of_players: u8,
 		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
 		pub selection_base_size: u8,                          // number of tiles for selection
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
+	}
+
+	impl<T: Config> GameProperties for Game<T> {
+		fn get_played(&self) -> bool {
+			self.played
+		}
+
+		fn set_played(&mut self, played: bool) -> () {
+			self.played = played;
+		}
+
+		fn get_max_rounds(&self) -> u8 {
+			self.max_rounds
+		}
+
+		fn get_round(&self) -> u8 {
+			self.round
+		}
+
+		fn set_round(&mut self, round: u8) -> () {
+			self.round = round;
+		}
+
+		fn get_player_turn(&self) -> u8 {
+			self.player_turn
+		}
+
+		fn set_player_turn(&mut self, turn: u8) -> () {
+			self.player_turn = turn;
+		}
 	}
 
 	pub type MaterialUnit = u8;
@@ -339,6 +374,7 @@ pub mod pallet {
 				state: GameState::Playing,
 				max_rounds: 15,
 				round: 0,
+				played: false,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
 				player_turn: 0,
 				selection_base_size: 3,
@@ -396,14 +432,17 @@ pub mod pallet {
 
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
-			ensure!(game.players[game.player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
+			ensure!(game.players[game.get_player_turn() as usize] == who, Error::<T>::PlayerNotOnTurn);
 
 			ensure!(
 				hex_board.hex_grid.len() > move_played.place_index as usize,
 				Error::<T>::PlaceIndexOutOfBounds
 			);
 
-			ensure!(hex_board.hex_grid[move_played.place_index as usize].get_type() == TileType::Empty, Error::<T>::TileIsNotEmpty);
+			ensure!(
+				hex_board.hex_grid[move_played.place_index as usize].get_type() == TileType::Empty,
+				Error::<T>::TileIsNotEmpty
+			);
 
 			// buy and place the move
 			hex_board.hex_grid[move_played.place_index as usize] = Self::buy_from_selection(
@@ -412,6 +451,8 @@ pub mod pallet {
 				move_played.buy_index as usize,
 				&move_played.pay_type,
 			)?;
+
+			game.set_played(true);
 
 			Self::refill_selection(&mut game, game_id)?;
 
@@ -444,13 +485,18 @@ pub mod pallet {
 
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
-			ensure!(game.players[game.player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
+			let player_turn = game.get_player_turn();
 
-			if game.player_turn as usize == game.players.len() - 1 {
-				game.player_turn = 0;
-				game.round += 1;
+			ensure!(game.players[player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
 
-				if game.round > game.max_rounds {
+			let next_player_turn = player_turn + 1;
+			if next_player_turn as usize == game.players.len() {
+				game.set_player_turn(0);
+
+				let round = game.get_round() + 1;
+				game.set_round(round);
+
+				if round > game.get_max_rounds() {
 					game.state = GameState::Finished;
 
 					GameStorage::<T>::set(&game_id, Some(game));
@@ -460,10 +506,17 @@ pub mod pallet {
 					return Ok(())
 				}
 			} else {
-				game.player_turn += 1;
+				game.set_player_turn(next_player_turn);
 			}
 
-			let next_player = game.players[game.player_turn as usize].clone();
+			// If the played has not played, generate a new selection
+			if game.get_played() {
+				game.set_played(false);
+			} else {
+				Self::new_selection(&mut game, game_id)?;
+			}
+
+			let next_player = game.players[next_player_turn as usize].clone();
 
 			GameStorage::<T>::set(&game_id, Some(game));
 
@@ -516,17 +569,17 @@ impl<T: Config> Pallet<T> {
 			if game.selection_size as u32 != T::MaxTileSelection::get() {
 				game.selection_size += 2;
 			}
-			
+
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
 
-			let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<usize>();
+			let offset =
+				(current_block_number.saturated_into::<u128>() % 32).saturated_into::<usize>();
 
 			let mut new_selection = game.selection.to_vec();
 
 			for i in selection_len..game.selection_size as usize {
-				new_selection.push(
-					selection_base[(i + offset) % 32].clone() % game.selection_base_size,
-				);
+				new_selection
+					.push(selection_base[(i + offset) % 32].clone() % game.selection_base_size);
 			}
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
@@ -554,7 +607,8 @@ impl<T: Config> Pallet<T> {
 		// Spend the materials / mana for the offer
 		match pay_type {
 			PayType::Material => Self::spend_material(&selected_offer.tile_cost, hex_board)?,
-			PayType::Mana => Self::spend_material(&selected_offer.tile_cost.get_mana_cost(), hex_board)?,
+			PayType::Mana =>
+				Self::spend_material(&selected_offer.tile_cost.get_mana_cost(), hex_board)?,
 		}
 
 		Ok(selected_offer.tile_to_buy)
@@ -685,12 +739,27 @@ pub trait GetTileInfo {
 
 // Custom trait for MaterialCost definition
 pub trait GetMaterialInfo {
-	// Gets the material type you have to pay
+	/// Gets the material type you have to pay
 	fn get_material_type(&self) -> Material;
 
-	// Gets the material cost
+	/// Gets the material cost
 	fn get_material_cost(&self) -> MaterialUnit;
 
-	// Gets the mana cost equivalent
+	/// Gets the mana cost equivalent
 	fn get_mana_cost(&self) -> Self;
+}
+
+trait GameProperties {
+	// Player made a move
+	// It is used for determining whether to generate a new selection
+	fn get_played(&self) -> bool;
+	fn set_played(&mut self, played: bool) -> ();
+
+	fn get_max_rounds(&self) -> u8;
+
+	fn get_round(&self) -> u8;
+	fn set_round(&mut self, round: u8) -> ();
+
+	fn get_player_turn(&self) -> u8;
+	fn set_player_turn(&mut self, turn: u8) -> ();
 }
