@@ -235,10 +235,14 @@ namespace Substrate.Hexalem.Test
             Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
             Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
 
-            // Now let's upgrade the tile
-            var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
+            var standardTile = (HexaTile)hexaGame!.HexaTuples.First().board[-2, -2];
+            Assert.That(standardTile.TileRarity, Is.EqualTo(TileRarity.Normal));
 
-            Assert.That(res, Is.True);
+            // Now let's upgrade the tile
+            hexaGame = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
+
+            var upgradedTile = (HexaTile)hexaGame!.HexaTuples.First().board[-2, -2];
+            Assert.That(upgradedTile.TileRarity, Is.EqualTo(TileRarity.Rare));
         }
 
         [Test]
@@ -252,7 +256,7 @@ namespace Substrate.Hexalem.Test
             Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
 
             var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
-            Assert.That(res, Is.False);
+            Assert.That(res, Is.Null);
         }
 
         [Test]
@@ -263,7 +267,7 @@ namespace Substrate.Hexalem.Test
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
-            Assert.That(res, Is.False);
+            Assert.That(res, Is.Null);
         }
     }
 }
