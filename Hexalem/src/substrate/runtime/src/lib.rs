@@ -88,6 +88,18 @@ impl GetTileInfo for HexalemTile {
 		self.formations
 	}
 
+	fn set_formation_flag_1(&mut self, value: bool) -> () {
+		self.formations[0] = value;
+	}
+
+	fn set_formation_flag_2(&mut self, value: bool) -> () {
+		self.formations[1] = value;
+	}
+
+	fn set_formation_flag_3(&mut self, value: bool) -> () {
+		self.formations[2] = value;
+	}
+
 	fn set_level(&mut self, level: u8) -> () {
 		self.tile_level = level;
 	}

@@ -55,13 +55,12 @@ pub mod pallet {
 	#[scale_info(skip_type_params(T))]
 	pub struct Game<T: Config> {
 		pub state: GameState,
-		pub max_rounds: u8,  // maximum number of rounds
+		pub max_rounds: u8, // maximum number of rounds
 
 		// These can be compressed to take only u8
 		pub round: u8,       // current round number
 		pub player_turn: u8, // Who is playing?
 		pub played: bool,
-
 
 		// pub number_of_players: u8,
 		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
@@ -175,7 +174,7 @@ pub mod pallet {
 				.map_err(|_| Error::<T>::InternalError)?;
 
 			Ok(HexBoard::<T> {
-				gold: 3,
+				gold: 255,
 				wood: 0,
 				stone: 0,
 				food: 0,
@@ -432,7 +431,10 @@ pub mod pallet {
 
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
-			ensure!(game.players[game.get_player_turn() as usize] == who, Error::<T>::PlayerNotOnTurn);
+			ensure!(
+				game.players[game.get_player_turn() as usize] == who,
+				Error::<T>::PlayerNotOnTurn
+			);
 
 			ensure!(
 				hex_board.hex_grid.len() > move_played.place_index as usize,
@@ -455,6 +457,23 @@ pub mod pallet {
 			game.set_played(true);
 
 			Self::refill_selection(&mut game, game_id)?;
+
+			// Check formations
+			let grid_length: usize = hex_board.hex_grid.len();
+
+			let side_length: i8 = Self::side_length(&grid_length);
+			let max_distance: i8 = Self::max_distance_from_center(&grid_length);
+			let (tile_q, tile_r) =
+				Self::index_to_coords(move_played.place_index, &side_length, &max_distance)?;
+			let mut neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+			neighbours.push(Some((tile_q, tile_r)));
+
+			for option_tile in neighbours {
+				match option_tile {
+					Some((q, r)) => Self::check_formation(&mut hex_board, &q, &r)?,
+					None => (),
+				}
+			}
 
 			GameStorage::<T>::set(&game_id, Some(game));
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
@@ -489,10 +508,11 @@ pub mod pallet {
 
 			ensure!(game.players[player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
 
-			let next_player_turn = player_turn + 1;
-			if next_player_turn as usize == game.players.len() {
-				game.set_player_turn(0);
+			let next_player_turn = (player_turn + 1) % game.players.len().saturated_into::<u8>();
 
+			game.set_player_turn(next_player_turn);
+
+			if next_player_turn == 0 {
 				let round = game.get_round() + 1;
 				game.set_round(round);
 
@@ -505,8 +525,6 @@ pub mod pallet {
 
 					return Ok(())
 				}
-			} else {
-				game.set_player_turn(next_player_turn);
 			}
 
 			// If the played has not played, generate a new selection
@@ -657,42 +675,178 @@ impl<T: Config> Pallet<T> {
 		Ok(())
 	}
 
+	fn check_formation(
+		hex_board: &mut HexBoard<T>,
+		tile_q: &i8,
+		tile_r: &i8,
+	) -> Result<(), sp_runtime::DispatchError> {
+		let grid_length: usize = hex_board.hex_grid.len();
+		let max_distance: i8 = Self::max_distance_from_center(&grid_length);
+		let side_length: i8 = Self::side_length(&grid_length);
+
+		let tile_index: i8 = Self::coords_to_index(&max_distance, &side_length, tile_q, tile_r);
+
+		match hex_board.hex_grid[tile_index as usize].get_type() {
+			TileType::Empty => (),
+			TileType::Tree => {
+				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+
+				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
+				{
+					Some((TileType::Tree, TileType::Tree)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
+				}
+
+				match Self::get_reverse_delta_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
+					Some((TileType::Tree, TileType::Tree)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
+				}
+			},
+			TileType::Water => (),
+			TileType::Mountain => {
+				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+
+				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
+				{
+					Some((TileType::Mountain, TileType::Mountain)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
+				}
+
+				match Self::get_reverse_delta_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
+					Some((TileType::Mountain, TileType::Mountain)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
+				}
+			},
+			TileType::Desert => (),
+			TileType::House => {
+				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+
+				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
+				{
+					Some((TileType::House, TileType::House)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
+				}
+
+				match Self::get_reverse_delta_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
+					Some((TileType::House, TileType::House)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
+				}
+			},
+			TileType::Grass => (),
+		};
+
+		Ok(())
+	}
+
 	/// Helper method that updates the resources according to the formations on grid
 	fn receive_resources(hex_board: &mut HexBoard<T>) -> () {
 		// To be implemented later
 		hex_board.mana += hex_board.humans;
 	}
 
+	fn get_delta_position(
+		hex_board: &HexBoard<T>,
+		neighbours: &Vec<Option<(i8, i8)>>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Option<(TileType, TileType)> {
+		match (neighbours[0], neighbours[1]) {
+			(Some((q1, r1)), Some((q2, r2))) => {
+				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
+				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
+
+				let tile1 = hex_board.hex_grid[tile1_index as usize];
+				let tile2 = hex_board.hex_grid[tile2_index as usize];
+
+				Some((tile1.get_type(), tile2.get_type()))
+			},
+			_ => None,
+		}
+	}
+
+	fn get_reverse_delta_position(
+		hex_board: &HexBoard<T>,
+		neighbours: &Vec<Option<(i8, i8)>>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Option<(TileType, TileType)> {
+		match (neighbours[3], neighbours[4]) {
+			(Some((q1, r1)), Some((q2, r2))) => {
+				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
+				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
+
+				let tile1 = hex_board.hex_grid[tile1_index as usize];
+				let tile2 = hex_board.hex_grid[tile2_index as usize];
+
+				Some((tile1.get_type(), tile2.get_type()))
+			},
+			_ => None,
+		}
+	}
+
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
-	fn is_valid_hex(max_distance: i8, q: &i8, r: &i8) -> bool {
-		q.abs() <= max_distance && r.abs() <= max_distance
+	fn is_valid_hex(max_distance: &i8, q: &i8, r: &i8) -> bool {
+		&q.abs() <= max_distance && &r.abs() <= max_distance
 	}
 
 	/// Get the neighbors of a hex tile in the grid
-	fn get_neigbouring_tiles(
-		max_distance: i8,
+	fn get_neighbouring_tiles(
+		max_distance: &i8,
 		q: &i8,
 		r: &i8,
-	) -> Result<Vec<(i8, i8)>, sp_runtime::DispatchError> {
-		let mut neigbouring_tiles: Vec<(i8, i8)> = Default::default();
+	) -> Result<Vec<Option<(i8, i8)>>, sp_runtime::DispatchError> {
+		let mut neigbouring_tiles: Vec<Option<(i8, i8)>> = Default::default();
 
-		let directions = [(1, 1), (1, 0), (0, -1), (-1, -1), (-1, 0), (0, 1)];
+		let directions = [(0, -1), (1, -1), (1, 0), (0, 1), (-1, 1), (-1, 0)];
 
 		for (q_direction, r_direction) in directions {
 			let neighbour_q = q.checked_add(q_direction).ok_or(Error::<T>::MathOverflow)?;
 			let neighbout_r = r.checked_add(r_direction).ok_or(Error::<T>::MathOverflow)?;
 
-			if Self::is_valid_hex(max_distance, &neighbour_q, &neighbout_r) {
-				neigbouring_tiles.push((neighbour_q, neighbout_r));
+			if Self::is_valid_hex(&max_distance, &neighbour_q, &neighbout_r) {
+				neigbouring_tiles.push(Some((neighbour_q, neighbout_r)));
+			} else {
+				neigbouring_tiles.push(None)
 			}
 		}
 
 		Ok(neigbouring_tiles)
 	}
 
-	/// Get the side length of the grid
-	fn hex_directions_to_index(max_distance: &i8, side_length: &i8, q: &i8, r: &i8) -> i8 {
+	fn coords_to_index(max_distance: &i8, side_length: &i8, q: &i8, r: &i8) -> i8 {
 		q + max_distance + (r + max_distance) * side_length
+	}
+
+	fn index_to_coords(
+		index: u8,
+		side_length: &i8,
+		max_distance: &i8,
+	) -> Result<(i8, i8), sp_runtime::DispatchError> {
+		let index_i8: i8 = index.try_into().map_err(|_| Error::<T>::InternalError)?;
+		let q: i8 = (index_i8 % side_length) - max_distance;
+		let r: i8 = index_i8 / side_length - (side_length - 1) / 2;
+		Ok((q, r))
 	}
 
 	/// Fast helper method that quickly computes the max_distance for the size of the board
@@ -733,6 +887,12 @@ pub trait GetTileInfo {
 	fn get_type(&self) -> TileType;
 
 	fn get_formation_flags(&self) -> [bool; 3];
+
+	fn set_formation_flag_1(&mut self, value: bool) -> ();
+
+	fn set_formation_flag_2(&mut self, value: bool) -> ();
+
+	fn set_formation_flag_3(&mut self, value: bool) -> ();
 
 	fn set_level(&mut self, level: u8) -> ();
 }
