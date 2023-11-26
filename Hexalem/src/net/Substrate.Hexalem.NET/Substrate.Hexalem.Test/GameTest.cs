@@ -223,26 +223,34 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void UpgradeTile_WithEnoughtRessources_ShouldSucceed()
         {
-            var playerRessources = new byte[8] { 10, 10, 10, 10, 10, 10, 10, 0 };
-
+            var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            (int q, int r) coords = (-2, -2);
 
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
             // Set ressources
             hexaGame.HexaTuples.First().player.Value = playerRessources;
 
-            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
+            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (coords.q, coords.r));
             Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
 
-            var standardTile = (HexaTile)hexaGame!.HexaTuples.First().board[-2, -2];
+            var standardTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
             Assert.That(standardTile.TileRarity, Is.EqualTo(TileRarity.Normal));
 
             // Now let's upgrade the tile
-            hexaGame = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
+            hexaGame = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (coords.q, coords.r));
 
-            var upgradedTile = (HexaTile)hexaGame!.HexaTuples.First().board[-2, -2];
-            Assert.That(upgradedTile.TileRarity, Is.EqualTo(TileRarity.Rare));
+            var rareTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
+            Assert.That(rareTile.TileRarity, Is.EqualTo(TileRarity.Rare));
+
+            hexaGame = Game.Upgrade(_defaultBlockStart + 3, hexaGame, hexaGame.PlayerTurn, (coords.q, coords.r));
+            var epicTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
+            Assert.That(epicTile.TileRarity, Is.EqualTo(TileRarity.Epic));
+
+            //hexaGame = Game.Upgrade(_defaultBlockStart + 4, hexaGame, hexaGame.PlayerTurn, (coords.q, coords.r));
+            //var legendaryTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
+            //Assert.That(legendaryTile.TileRarity, Is.EqualTo(TileRarity.Legendary));
         }
 
         [Test]
