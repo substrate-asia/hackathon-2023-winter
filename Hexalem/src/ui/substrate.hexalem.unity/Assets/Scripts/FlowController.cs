@@ -8,16 +8,7 @@ namespace Assets.Scripts
 {
     public enum ScreenState
     {
-        UnlockWallet,
-        ResetWallet,
-        LoadScreen,
-        OnBoarding,
-        CreateWallet,
-        SetPassword,
-        VerifyPassword,
-        ImportSeed,
-        ImportJson,
-        AccountSelection,
+        StartScreen,
         MainScreen
     }
 
@@ -58,8 +49,7 @@ namespace Assets.Scripts
             CacheData = new CacheData();
 
             // Initialize states
-            _stateDictionary.Add(ScreenState.UnlockWallet, new LoginScreen(this));
-            _stateDictionary.Add(ScreenState.LoadScreen, new LoadScreenState(this));
+            _stateDictionary.Add(ScreenState.StartScreen, new LoginScreen(this));
             var mainScreen = new MainScreenState(this);
             _stateDictionary.Add(ScreenState.MainScreen, mainScreen);
 
@@ -95,7 +85,7 @@ namespace Assets.Scripts
             }
 
             // call insital flow state
-            ChangeScreenState(ScreenState.UnlockWallet);
+            ChangeScreenState(ScreenState.StartScreen);
         }
 
         /// <summary>
