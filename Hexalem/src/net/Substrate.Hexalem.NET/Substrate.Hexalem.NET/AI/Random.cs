@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Substrate.Hexalem.NET.AI
 {
-    public class Random: IThinking
+    public class Random : IThinking
     {
         private readonly System.Random _random;
         private readonly int _index;

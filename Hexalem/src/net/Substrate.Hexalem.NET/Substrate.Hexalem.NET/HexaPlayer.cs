@@ -40,6 +40,20 @@ namespace Substrate.Hexalem
             this[RessourceType.Gold] = GameConfig.DEFAULT_GOLD;
         }
 
+        public void AddWinCondition(WinningCondition condition)
+        {
+            switch(condition)
+            {
+                case Hexalem.WinningCondition.GoldThreshold:
+                    WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_GOLD);
+                    break;
+                case Hexalem.WinningCondition.HumanThreshold:
+                    WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_HUMAN);
+                    break;
+            }
+            
+        }
+
         public void NextRound(uint blockNumber)
         {
 

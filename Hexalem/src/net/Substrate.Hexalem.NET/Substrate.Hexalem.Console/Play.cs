@@ -20,8 +20,8 @@ namespace Substrate.Hexalem.Console
         public void StartGame()
         {
             Log.Information("Start a new game between AI [{aiFirstType}] and [{aiSecondType}]", Bots[0].AiName, Bots[1].AiName);
+            List<HexaPlayer> hexaPlayers = InitializePlayers();
 
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
             var hexGame = Game.CreateGame(1, hexaPlayers, GridSize.Medium);
 
             bool isFinish = true;
@@ -30,7 +30,7 @@ namespace Substrate.Hexalem.Console
             {
                 Log.Information("[Turn {turnId}][Round {roundId}] Player {playerId} is currently playing...", hexGame.HexBoardTurn, hexGame.HexBoardRound, hexGame.PlayerTurn);
 
-                while(hexGame.HexaTuples[hexGame.PlayerTurn].player[RessourceType.Mana] > 0)
+                while (hexGame.HexaTuples[hexGame.PlayerTurn].player[RessourceType.Mana] > 0)
                 {
                     var move = Bots[hexGame.PlayerTurn].FindBestAction(hexGame, 0);
 
@@ -45,6 +45,18 @@ namespace Substrate.Hexalem.Console
                 Game.FinishTurn(blockNumber, hexGame, hexGame.PlayerTurn);
                 blockNumber++;
             } while (!isFinish);
+        }
+
+        private static List<HexaPlayer> InitializePlayers()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
+
+            foreach (var hexaPlayer in hexaPlayers)
+            {
+                hexaPlayer.AddWinCondition(IThinking.ChooseWinningCondition());
+            }
+
+            return hexaPlayers;
         }
     }
 }
