@@ -709,50 +709,50 @@ impl<T: Config> Pallet<T> {
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
-			TileType::Water => (),
-			TileType::Mountain => {
+			TileType::Water =>  {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
-				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
+				match Self::get_line_right_position(&hex_board, &neighbours, &max_distance, &side_length)
 				{
-					Some((TileType::Mountain, TileType::Mountain)) =>
+					Some((TileType::Water, TileType::Water)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
 				}
 
-				match Self::get_reverse_delta_position(
+				match Self::get_line_left_position(
 					&hex_board,
 					&neighbours,
 					&max_distance,
 					&side_length,
 				) {
-					Some((TileType::Mountain, TileType::Mountain)) =>
+					Some((TileType::Water, TileType::Water)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
+				}
+			},
+			TileType::Mountain => {
+				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+
+				match Self::get_ypsilon_position(&hex_board, &neighbours, &max_distance, &side_length)
+				{
+					Some((TileType::Mountain, TileType::Mountain, TileType::Mountain)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
+				}
+
+				match Self::get_reverse_ypsilon_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
+					Some((TileType::Mountain, TileType::Mountain, TileType::Mountain)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
 			TileType::Desert => (),
-			TileType::House => {
-				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
-
-				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
-				{
-					Some((TileType::House, TileType::House)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
-				}
-
-				match Self::get_reverse_delta_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::House, TileType::House)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
-				}
-			},
+			TileType::House => (),
 			TileType::Grass => (),
 		};
 
@@ -792,6 +792,92 @@ impl<T: Config> Pallet<T> {
 		side_length: &i8,
 	) -> Option<(TileType, TileType)> {
 		match (neighbours[3], neighbours[4]) {
+			(Some((q1, r1)), Some((q2, r2))) => {
+				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
+				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
+
+				let tile1 = hex_board.hex_grid[tile1_index as usize];
+				let tile2 = hex_board.hex_grid[tile2_index as usize];
+
+				Some((tile1.get_type(), tile2.get_type()))
+			},
+			_ => None,
+		}
+	}
+	
+	fn get_ypsilon_position(
+		hex_board: &HexBoard<T>,
+		neighbours: &Vec<Option<(i8, i8)>>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Option<(TileType, TileType, TileType)> {
+		match (neighbours[0], neighbours[2], neighbours[4]) {
+			(Some((q1, r1)), Some((q2, r2)), Some((q3, r3))) => {
+				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
+				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
+				let tile3_index = Self::coords_to_index(&max_distance, &side_length, &q3, &r3);
+
+
+				let tile1 = hex_board.hex_grid[tile1_index as usize];
+				let tile2 = hex_board.hex_grid[tile2_index as usize];
+				let tile3 = hex_board.hex_grid[tile3_index as usize];
+
+				Some((tile1.get_type(), tile2.get_type(), tile3.get_type()))
+			},
+			_ => None,
+		}
+	}
+
+	fn get_reverse_ypsilon_position(
+		hex_board: &HexBoard<T>,
+		neighbours: &Vec<Option<(i8, i8)>>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Option<(TileType, TileType, TileType)> {
+		match (neighbours[1], neighbours[3], neighbours[5]) {
+			(Some((q1, r1)), Some((q2, r2)), Some((q3, r3))) => {
+				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
+				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
+				let tile3_index = Self::coords_to_index(&max_distance, &side_length, &q3, &r3);
+
+
+				let tile1 = hex_board.hex_grid[tile1_index as usize];
+				let tile2 = hex_board.hex_grid[tile2_index as usize];
+				let tile3 = hex_board.hex_grid[tile3_index as usize];
+
+				Some((tile1.get_type(), tile2.get_type(), tile3.get_type()))
+			},
+			_ => None,
+		}
+	}
+
+	fn get_line_right_position(
+		hex_board: &HexBoard<T>,
+		neighbours: &Vec<Option<(i8, i8)>>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Option<(TileType, TileType)> {
+		match (neighbours[0], neighbours[3]) {
+			(Some((q1, r1)), Some((q2, r2))) => {
+				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
+				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
+
+				let tile1 = hex_board.hex_grid[tile1_index as usize];
+				let tile2 = hex_board.hex_grid[tile2_index as usize];
+
+				Some((tile1.get_type(), tile2.get_type()))
+			},
+			_ => None,
+		}
+	}
+
+	fn get_line_left_position(
+		hex_board: &HexBoard<T>,
+		neighbours: &Vec<Option<(i8, i8)>>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Option<(TileType, TileType)> {
+		match (neighbours[2], neighbours[5]) {
 			(Some((q1, r1)), Some((q2, r2))) => {
 				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
 				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
