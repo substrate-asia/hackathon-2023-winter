@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.Hexalem.NET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -77,6 +78,12 @@ namespace Substrate.Hexalem
             // Add new ressouces to player
             hexaGame.CalcRewards(blockNumber, playerIndex);
             Log.Debug("Rewards calculated for player {index}", playerIndex);
+
+            // Does the current player win ?
+            if(hexaGame.IsGameWon())
+            {
+                return hexaGame;
+            }
 
             if (hexaGame.HexBoardTurn != 0)
             {

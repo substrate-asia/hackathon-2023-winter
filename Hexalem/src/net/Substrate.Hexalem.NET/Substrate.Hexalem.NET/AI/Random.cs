@@ -6,78 +6,73 @@ using System.Text;
 
 namespace Substrate.Hexalem.NET.AI
 {
-    public class Random: IThinking
+    public class Random : AI
     {
         private readonly System.Random _random;
-        private readonly int _index;
 
-        public Random(int index)
+        public Random(int index) : base(index)
         {
             _random = new System.Random();
-            _index = index;
         }
 
-        public string AiName => "Random";
+        public override string AiName => "Random";
 
-        public PlayAction FindBestAction(HexaGame initialState, int iteration)
+        public override PlayAction FindBestAction(HexaGame initialState, int iteration)
         {
-            var buyableTiles = BuyableTiles(initialState);
+            var buyableTiles = SelectionTiles(initialState);
 
-            if(!buyableTiles.Any())
+            // If the player cannot buy any tiles (assume that he cannot upgrade tile either) => cannot play
+            if (!buyableTiles.Any())
             {
                 Log.Information("[AI {index}] does not have enough mana to buy a new tile", _index);
                 return PlayAction.CannotPlay();
             }
 
-            var availableTiles = AvailableTiles(initialState);
+            var freeMapTiles = EmptyMapTiles(initialState);
+            var canPlayTile = freeMapTiles.Any();
+            var upgradableTiles = UpgradableTiles(initialState);
+            var canUpgradeTile = upgradableTiles.Any();
 
-            if(!availableTiles.Any())
+            if (!canPlayTile)
             {
                 Log.Warning("[AI {index}] have full board !", _index);
                 return PlayAction.CannotPlay();
             }
-
-            var selectedTileIndex = _random.Next(buyableTiles.Count);
-            var tileCoords = availableTiles[_random.Next(availableTiles.Count)];
-
-            Log.Information("[AI {_index}] choose tile num {num} ({typrTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
-
-
-            return PlayAction.Play(selectedTileIndex, tileCoords);
-        }
-
-        /// <summary>
-        /// Return list of tile AI can buy
-        /// </summary>
-        /// <returns></returns>
-        private List<HexaTile> BuyableTiles(HexaGame hexGame)
-        {
-            // Each tile cost 1 mana
-            if(hexGame.HexaTuples[hexGame.PlayerTurn].player[RessourceType.Mana] == 0)
+            
+            if (!canUpgradeTile)
             {
-                return new List<HexaTile>();
+                Log.Debug("[AI {index}] have nothing to upgrade !", _index);
             }
 
-            return hexGame.UnboundTiles;
-        }
-
-        /// <summary>
-        /// Return tiles where AI can play
-        /// </summary>
-        /// <returns></returns>
-        private List<(int q, int r)> AvailableTiles(HexaGame hexGame)
-        {
-            var freeTiles = new List<(int, int)>();
-            var playerBoard = hexGame.HexaTuples[_index].board;
-            for (int i = 0; i < playerBoard.Value.Length; i++)
+            // AI have to choose between buy a new tile and play it, or upgrade a tile
+            var selectedMove = (canPlayTile, canUpgradeTile) switch
             {
-                if(((HexaTile)playerBoard[i]).IsEmpty())
-                {
-                    freeTiles.Add(playerBoard.ToCoords(i));
-                }
-            }
+                (true, false) => "play",
+                (false, true) => "upgrade",
+                (true, true) => _random.Next(2) % 2 == 0 ? "play" : "upgrade",
+                _ => throw new InvalidOperationException("Unexpected error...")
+            };
 
-            return freeTiles;
+            if(selectedMove == "play")
+            {
+                var selectedTileIndex = _random.Next(buyableTiles.Count);
+                var tileCoords = freeMapTiles[_random.Next(freeMapTiles.Count)];
+
+                Log.Information("[AI {_index}] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
+
+
+                return PlayAction.Play(selectedTileIndex, tileCoords);
+            } else
+            {
+                var upgradableTilesIndex = _random.Next(upgradableTiles.Count);
+                var tileCoords = upgradableTiles[upgradableTilesIndex];
+
+                Log.Information("[AI {_index}] choose to upgrade tile ({r},{q})", _index, tileCoords.q, tileCoords.r);
+
+
+                return PlayAction.Upgrade(tileCoords);
+            }
+            
         }
     }
 }

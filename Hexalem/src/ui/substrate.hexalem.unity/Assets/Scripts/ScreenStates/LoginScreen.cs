@@ -37,7 +37,7 @@ namespace Assets.Scripts.ScreenStates
         {
             Debug.Log("Clicked enter button!");
 
-            //FlowController.ChangeScreenState(ScreenState.LoadScreen);
+            FlowController.ChangeScreenState(ScreenState.MainScreen);
         }
 
     }

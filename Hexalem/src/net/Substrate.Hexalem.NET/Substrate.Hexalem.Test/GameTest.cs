@@ -22,7 +22,7 @@ namespace Substrate.Hexalem.Test
         private HexaPlayer _hexPlayer_Player2;
         private readonly int _player2_Index = 1;
 
-        private List<IThinking> _bots;
+        private List<AI> _bots;
 
         private byte[] _selectionGenerator;
         private uint _defaultBlockStart;
@@ -254,7 +254,7 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void UpgradeTile_WithNotEnoughtRessources_ShouldFail()
+        public void UpgradeTile_WithNotEnoughRessources_ShouldFail()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
 

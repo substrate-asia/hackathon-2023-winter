@@ -15,7 +15,7 @@ namespace Substrate.Hexalem.Console
               .WriteTo.Console()
               .CreateLogger();
 
-            var play = new Play(new List<IThinking>() { new NET.AI.Random(0), new NET.AI.Random(1) });
+            var play = new Play(new List<AI>() { new NET.AI.Random(0), new NET.AI.Random(1) });
 
             play.StartGame();
         }

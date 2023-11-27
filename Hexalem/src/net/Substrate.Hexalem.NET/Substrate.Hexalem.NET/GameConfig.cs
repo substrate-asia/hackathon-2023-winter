@@ -32,6 +32,14 @@ namespace Substrate.Hexalem.NET
 
         public const int NB_MAX_UNBOUNDED_TILES = 32;
 
+        public const int DEFAULT_WINNING_CONDITION_GOLD = 10;
+        public const int DEFAULT_WINNING_CONDITION_HUMAN = 7;
+
+        public static List<TileType> UpgradableTypeTile()
+        {
+            return new List<TileType>() { TileType.Home }; // For now, only home can be upgrade
+        }
+
         public static int GoldCostForUpgrade(TileRarity rarity)
         {
             switch(rarity)
