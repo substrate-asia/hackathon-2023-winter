@@ -22,7 +22,7 @@ namespace Substrate.Hexalem.Test
         private HexaPlayer _hexPlayer_Player2;
         private readonly int _player2_Index = 1;
 
-        private List<IThinking> _bots;
+        private List<AI> _bots;
 
         private byte[] _selectionGenerator;
         private uint _defaultBlockStart;

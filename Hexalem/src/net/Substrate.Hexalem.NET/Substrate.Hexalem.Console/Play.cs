@@ -11,9 +11,9 @@ namespace Substrate.Hexalem.Console
 {
     public class Play
     {
-        public List<IThinking> Bots { get; set; }
+        public List<AI> Bots { get; set; }
 
-        public Play(List<IThinking> bots)
+        public Play(List<AI> bots)
         {
             Bots = bots;
         }
@@ -71,7 +71,7 @@ namespace Substrate.Hexalem.Console
 
             foreach (var hexaPlayer in hexaPlayers)
             {
-                hexaPlayer.AddWinCondition(IThinking.ChooseWinningCondition());
+                hexaPlayer.AddWinCondition(AI.ChooseWinningCondition());
             }
 
             return hexaPlayers;

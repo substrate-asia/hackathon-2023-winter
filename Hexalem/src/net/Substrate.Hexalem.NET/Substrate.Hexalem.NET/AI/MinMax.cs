@@ -1,25 +1,27 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using static System.Collections.Specialized.BitVector32;
 
 namespace Substrate.Hexalem.NET.AI
 {
-    public class MinMax : IThinking
+    public class MinMax : AI
     {
         private readonly int _maxDepth;
+        private PlayAction? bestAction;
 
-        public string AiName => "MinMax";
+        public override string AiName => "MinMax";
 
-        public MinMax(int maxDepth)
+        public MinMax(int index, int maxDepth) : base(index)
         {
             _maxDepth = maxDepth;
         }
 
-        public PlayAction FindBestAction(HexaGame initialState, int iteration)
+        public override PlayAction FindBestAction(HexaGame initialState, int iteration)
         {
             int bestScore = int.MinValue;
-            PlayAction bestAction = default(PlayAction);
 
             foreach (PlayAction action in GetPossibleActions(initialState))
             {
@@ -68,30 +70,75 @@ namespace Substrate.Hexalem.NET.AI
             }
         }
 
-        // Implement the following methods based on your specific game rules:
         private bool IsTerminal(HexaGame state)
         {
             // Check if the state is terminal (end of the game).
             // Return true if the game is over, false otherwise.
-            return false;
+            return !bestAction.CanPlay;
         }
 
         private List<PlayAction> GetPossibleActions(HexaGame state)
         {
-            // Return a list of possible actions from the current state.
-            return new List<PlayAction>();
+            var possibleActions = new List<PlayAction>();
+
+            var selectionTiles = SelectionTiles(state);
+            var emptyMapTiles = EmptyMapTiles(state);
+            var upgradableTiles = UpgradableTiles(state);
+
+            var canPlayTile = emptyMapTiles.Any();
+            var canUpgradeTile = upgradableTiles.Any();
+
+            // No action are available => we are stuck
+            if(!canPlayTile && !canUpgradeTile)
+                return possibleActions;
+
+
+            for(int i = 0; i < selectionTiles.Count; i++)
+            {
+                // Each tile that can be bought from the selection has to be put on the map
+                foreach (var emptyTile in emptyMapTiles)
+                {
+                    possibleActions.Add(PlayAction.Play(i, emptyTile));
+                }
+            }
+
+            foreach (var tileUpgrade in upgradableTiles)
+            {
+                possibleActions.Add(PlayAction.Upgrade(tileUpgrade));
+            }
+
+            return possibleActions;
         }
 
         private HexaGame ApplyAction(HexaGame state, PlayAction action)
         {
-            // Apply the given action to the current state and return the new state.
+            if(action.PlayTileAt != null)
+            {
+                state = Game.ChooseAndPlace(1, state, (byte)_index, action.SelectionIndex!.Value, action.PlayTileAt!.Value);
+            }
+
+            if(action.UpgradeTileAt != null)
+            {
+                state = Game.Upgrade(1, state, (byte)_index, action.UpgradeTileAt.Value);
+            }
+            
+
             return state;
         }
 
         private int Evaluate(HexaGame state)
         {
-            // Evaluate the given state and return a score.
-            // This could be based on some heuristics or other evaluation methods.
+            var hexaPlayer = state.HexaTuples[_index].player;
+            var hexaBoardStats = state.HexaTuples[_index].board.Stats();
+
+            var newMana = state.Evaluate(RessourceType.Mana, hexaPlayer, hexaBoardStats);
+            var newHumans = state.Evaluate(RessourceType.Humans, hexaPlayer, hexaBoardStats);
+            var newWater = state.Evaluate(RessourceType.Water, hexaPlayer, hexaBoardStats);
+            var newFood = state.Evaluate(RessourceType.Food, hexaPlayer, hexaBoardStats);
+            var newWood = state.Evaluate(RessourceType.Wood, hexaPlayer, hexaBoardStats);
+            var newStone = state.Evaluate(RessourceType.Stone, hexaPlayer, hexaBoardStats);
+            var newGold = state.Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
+
             return 0;
         }
     }

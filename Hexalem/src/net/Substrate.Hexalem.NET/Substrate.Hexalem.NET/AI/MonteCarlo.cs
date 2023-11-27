@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace Substrate.Hexalem.NET.AI
 {
-    public class MonteCarlo : IThinking
+    public class MonteCarlo : AI
     {
-        public string AiName => "MonteCarlo";
+        public override string AiName => "MonteCarlo";
 
         private sealed class Node
         {
@@ -28,12 +28,12 @@ namespace Substrate.Hexalem.NET.AI
         private readonly int _explorationParameter;
         private readonly System.Random _random = new System.Random();
 
-        public MonteCarlo(int explorationParameter = 2)
+        public MonteCarlo(int index ,int explorationParameter = 2) : base(index)
         {
             _explorationParameter = explorationParameter;
         }
 
-        public PlayAction FindBestAction(HexaGame initialState, int iterations)
+        public override PlayAction FindBestAction(HexaGame initialState, int iterations)
         {
             var root = new Node(initialState, default(PlayAction), null);
 

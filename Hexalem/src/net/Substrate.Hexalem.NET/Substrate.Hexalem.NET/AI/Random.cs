@@ -6,22 +6,20 @@ using System.Text;
 
 namespace Substrate.Hexalem.NET.AI
 {
-    public class Random : IThinking
+    public class Random : AI
     {
         private readonly System.Random _random;
-        private readonly int _index;
 
-        public Random(int index)
+        public Random(int index) : base(index)
         {
             _random = new System.Random();
-            _index = index;
         }
 
-        public string AiName => "Random";
+        public override string AiName => "Random";
 
-        public PlayAction FindBestAction(HexaGame initialState, int iteration)
+        public override PlayAction FindBestAction(HexaGame initialState, int iteration)
         {
-            var buyableTiles = BuyableTiles(initialState);
+            var buyableTiles = SelectionTiles(initialState);
 
             // If the player cannot buy any tiles (assume that he cannot upgrade tile either) => cannot play
             if (!buyableTiles.Any())
@@ -30,9 +28,9 @@ namespace Substrate.Hexalem.NET.AI
                 return PlayAction.CannotPlay();
             }
 
-            var availableTiles = AvailableTiles(initialState);
-            var canPlayTile = availableTiles.Any();
-            var upgradableTiles = UpgradableTile(initialState);
+            var freeMapTiles = EmptyMapTiles(initialState);
+            var canPlayTile = freeMapTiles.Any();
+            var upgradableTiles = UpgradableTiles(initialState);
             var canUpgradeTile = upgradableTiles.Any();
 
             if (!canPlayTile)
@@ -58,7 +56,7 @@ namespace Substrate.Hexalem.NET.AI
             if(selectedMove == "play")
             {
                 var selectedTileIndex = _random.Next(buyableTiles.Count);
-                var tileCoords = availableTiles[_random.Next(availableTiles.Count)];
+                var tileCoords = freeMapTiles[_random.Next(freeMapTiles.Count)];
 
                 Log.Information("[AI {_index}] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
 
@@ -75,67 +73,6 @@ namespace Substrate.Hexalem.NET.AI
                 return PlayAction.Upgrade(tileCoords);
             }
             
-        }
-
-        /// <summary>
-        /// Return list of tile AI can buy
-        /// </summary>
-        /// <returns></returns>
-        private List<HexaTile> BuyableTiles(HexaGame hexGame)
-        {
-            // Each tile cost 1 mana
-            if(hexGame.HexaTuples[hexGame.PlayerTurn].player[RessourceType.Mana] == 0)
-            {
-                return new List<HexaTile>();
-            }
-
-            return hexGame.UnboundTiles;
-        }
-
-        public List<(int q, int r)> UpgradableTile(HexaGame hexGame)
-        {
-            var upgradableTile = new List<(int, int)>();
-            var playerBoard = hexGame.HexaTuples[_index].board;
-            var player = hexGame.HexaTuples[hexGame.PlayerTurn].player;
-
-            for (int i = 0; i < playerBoard.Value.Length; i++)
-            {
-                /*
-                 * An upgradable tile have to :
-                 *  Be a non empty tile
-                 *  Be a valid upgradable tile (defined in Game configuration)
-                 *  Lower than epic rarity
-                 *  Have enough ressources to pay the upgrade
-                 */
-
-                var currentTile = (HexaTile)playerBoard[i];
-
-                if (currentTile.CanUpgrade() && player.CanUpgrade(currentTile))
-                {
-                    upgradableTile.Add(playerBoard.ToCoords(i));
-                }
-            }
-
-            return upgradableTile;
-        }
-
-        /// <summary>
-        /// Return tiles where AI can play
-        /// </summary>
-        /// <returns></returns>
-        private List<(int q, int r)> AvailableTiles(HexaGame hexGame)
-        {
-            var freeTiles = new List<(int, int)>();
-            var playerBoard = hexGame.HexaTuples[_index].board;
-            for (int i = 0; i < playerBoard.Value.Length; i++)
-            {
-                if(((HexaTile)playerBoard[i]).IsEmpty())
-                {
-                    freeTiles.Add(playerBoard.ToCoords(i));
-                }
-            }
-
-            return freeTiles;
         }
     }
 }
