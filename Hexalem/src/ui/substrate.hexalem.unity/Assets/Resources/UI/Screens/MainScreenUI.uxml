@@ -1,0 +1,31 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="LoginScreen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 200px; width: 100%; justify-content: center;">
+            <ui:VisualElement name="VelResources" style="flex-grow: 1; width: 100%; height: 100%; flex-direction: row; justify-content: center;">
+                <ui:VisualElement name="VelResourceElement" style="flex-grow: 0; height: 100px; padding-top: 25px; padding-right: 10px; padding-left: 10px; width: 100px; flex-shrink: 0; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="VelResouceImg" style="flex-grow: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/watter.png?fileID=2800000&amp;guid=5c10302cf2935444f8faaf53d3f0a283&amp;type=3#watter&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; justify-content: center; align-items: center;">
+                        <ui:Label tabindex="-1" text="+1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblResource" style="width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; justify-content: center; -unity-text-align: lower-right; -unity-font-style: bold; color: rgb(0, 255, 8);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="VelResourceElement" style="flex-grow: 0; height: 100px; padding-top: 25px; padding-right: 10px; padding-left: 10px; width: 100px; flex-shrink: 0; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="VelResouceImg" style="flex-grow: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/watter.png?fileID=2800000&amp;guid=5c10302cf2935444f8faaf53d3f0a283&amp;type=3#watter&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; justify-content: center; align-items: center;">
+                        <ui:Label tabindex="-1" text="+1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblResource" style="width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; justify-content: center; -unity-text-align: lower-right; -unity-font-style: bold; color: rgb(0, 255, 8);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="VelResourceElement" style="flex-grow: 0; height: 100px; padding-top: 25px; padding-right: 10px; padding-left: 10px; width: 100px; flex-shrink: 0; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="VelResouceImg" style="flex-grow: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/watter.png?fileID=2800000&amp;guid=5c10302cf2935444f8faaf53d3f0a283&amp;type=3#watter&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; justify-content: center; align-items: center;">
+                        <ui:Label tabindex="-1" text="+1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblResource" style="width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; justify-content: center; -unity-text-align: lower-right; -unity-font-style: bold; color: rgb(0, 255, 8);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="VelResourceElement" style="flex-grow: 0; height: 100px; padding-top: 25px; padding-right: 10px; padding-left: 10px; width: 100px; flex-shrink: 0; align-items: center; justify-content: center;">
+                    <ui:VisualElement name="VelResouceImg" style="flex-grow: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/watter.png?fileID=2800000&amp;guid=5c10302cf2935444f8faaf53d3f0a283&amp;type=3#watter&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; justify-content: center; align-items: center;">
+                        <ui:Label tabindex="-1" text="+1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblResource" style="width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; justify-content: center; -unity-text-align: lower-right; -unity-font-style: bold; color: rgb(0, 255, 8);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="FloatBody" style="flex-grow: 1; height: auto; width: 100%; flex-shrink: 1;" />
+        <ui:VisualElement name="BottomBound" style="flex-grow: 0; height: 150px; width: 100%; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>
