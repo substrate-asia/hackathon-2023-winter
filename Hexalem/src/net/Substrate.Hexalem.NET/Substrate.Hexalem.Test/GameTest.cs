@@ -254,7 +254,7 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void UpgradeTile_WithNotEnoughtRessources_ShouldFail()
+        public void UpgradeTile_WithNotEnoughRessources_ShouldFail()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
 

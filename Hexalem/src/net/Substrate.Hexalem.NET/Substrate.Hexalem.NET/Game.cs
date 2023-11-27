@@ -79,6 +79,12 @@ namespace Substrate.Hexalem
             hexaGame.CalcRewards(blockNumber, playerIndex);
             Log.Debug("Rewards calculated for player {index}", playerIndex);
 
+            // Does the current player win ?
+            if(hexaGame.IsGameWon())
+            {
+                return hexaGame;
+            }
+
             if (hexaGame.HexBoardTurn != 0)
             {
                 Log.Debug("Players does not have already played this turn");

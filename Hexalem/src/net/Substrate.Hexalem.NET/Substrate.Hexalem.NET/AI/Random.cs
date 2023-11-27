@@ -23,27 +23,58 @@ namespace Substrate.Hexalem.NET.AI
         {
             var buyableTiles = BuyableTiles(initialState);
 
-            if(!buyableTiles.Any())
+            // If the player cannot buy any tiles (assume that he cannot upgrade tile either) => cannot play
+            if (!buyableTiles.Any())
             {
                 Log.Information("[AI {index}] does not have enough mana to buy a new tile", _index);
                 return PlayAction.CannotPlay();
             }
 
             var availableTiles = AvailableTiles(initialState);
+            var canPlayTile = availableTiles.Any();
+            var upgradableTiles = UpgradableTile(initialState);
+            var canUpgradeTile = upgradableTiles.Any();
 
-            if(!availableTiles.Any())
+            if (!canPlayTile)
             {
                 Log.Warning("[AI {index}] have full board !", _index);
                 return PlayAction.CannotPlay();
             }
+            
+            if (!canUpgradeTile)
+            {
+                Log.Debug("[AI {index}] have nothing to upgrade !", _index);
+            }
 
-            var selectedTileIndex = _random.Next(buyableTiles.Count);
-            var tileCoords = availableTiles[_random.Next(availableTiles.Count)];
+            // AI have to choose between buy a new tile and play it, or upgrade a tile
+            var selectedMove = (canPlayTile, canUpgradeTile) switch
+            {
+                (true, false) => "play",
+                (false, true) => "upgrade",
+                (true, true) => _random.Next(2) % 2 == 0 ? "play" : "upgrade",
+                _ => throw new InvalidOperationException("Unexpected error...")
+            };
 
-            Log.Information("[AI {_index}] choose tile num {num} ({typrTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
+            if(selectedMove == "play")
+            {
+                var selectedTileIndex = _random.Next(buyableTiles.Count);
+                var tileCoords = availableTiles[_random.Next(availableTiles.Count)];
+
+                Log.Information("[AI {_index}] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
 
 
-            return PlayAction.Play(selectedTileIndex, tileCoords);
+                return PlayAction.Play(selectedTileIndex, tileCoords);
+            } else
+            {
+                var upgradableTilesIndex = _random.Next(upgradableTiles.Count);
+                var tileCoords = upgradableTiles[upgradableTilesIndex];
+
+                Log.Information("[AI {_index}] choose to upgrade tile ({r},{q})", _index, tileCoords.q, tileCoords.r);
+
+
+                return PlayAction.Upgrade(tileCoords);
+            }
+            
         }
 
         /// <summary>
@@ -59,6 +90,33 @@ namespace Substrate.Hexalem.NET.AI
             }
 
             return hexGame.UnboundTiles;
+        }
+
+        public List<(int q, int r)> UpgradableTile(HexaGame hexGame)
+        {
+            var upgradableTile = new List<(int, int)>();
+            var playerBoard = hexGame.HexaTuples[_index].board;
+            var player = hexGame.HexaTuples[hexGame.PlayerTurn].player;
+
+            for (int i = 0; i < playerBoard.Value.Length; i++)
+            {
+                /*
+                 * An upgradable tile have to :
+                 *  Be a non empty tile
+                 *  Be a valid upgradable tile (defined in Game configuration)
+                 *  Lower than epic rarity
+                 *  Have enough ressources to pay the upgrade
+                 */
+
+                var currentTile = (HexaTile)playerBoard[i];
+
+                if (currentTile.CanUpgrade() && player.CanUpgrade(currentTile))
+                {
+                    upgradableTile.Add(playerBoard.ToCoords(i));
+                }
+            }
+
+            return upgradableTile;
         }
 
         /// <summary>

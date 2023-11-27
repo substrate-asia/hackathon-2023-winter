@@ -1,6 +1,8 @@
 ﻿using Serilog;
+using Substrate.Hexalem.NET;
 using Substrate.NetApi.Model.Meta;
 using System;
+using System.Linq;
 
 namespace Substrate.Hexalem
 {
@@ -43,19 +45,38 @@ namespace Substrate.Hexalem
             return Value == v.Value;
         }
 
-        internal bool Upgrade()
+        /// <summary>
+        /// Determine if a tile can be upgrade
+        /// </summary>
+        /// <returns></returns>
+        internal bool CanUpgrade()
         {
-            if(TileRarity ==  TileRarity.None) // Should never happen but...
+            if (TileRarity == TileRarity.None) // Should never happen but...
             {
-                Log.Error("Cannot upgrade tile which has not been set");
+                Log.Debug("Cannot upgrade tile which has not been set");
                 return false;
             }
 
-            if(TileRarity == TileRarity.Legendary)
+            if (TileRarity == TileRarity.Legendary)
             {
-                Log.Warning($"{nameof(TileRarity.Legendary)} cannot be upgrade");
+                Log.Debug($"{nameof(TileRarity.Legendary)} cannot be upgrade");
                 return false;
             }
+
+            var upgradable = GameConfig.UpgradableTypeTile();
+
+            if (!upgradable.Any(x => x == TileType))
+            {
+                Log.Debug("{TileType} cannot be upgrade", TileType);
+                return false;
+            }
+
+            return true;
+        }
+        internal bool Upgrade()
+        {
+            if (!CanUpgrade())
+                return false;
 
             TileRarity += 1;
             return true;

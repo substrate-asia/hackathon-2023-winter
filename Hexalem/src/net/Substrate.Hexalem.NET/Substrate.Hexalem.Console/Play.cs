@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.AI;
 using System;
 using System.Collections.Generic;
@@ -17,8 +18,10 @@ namespace Substrate.Hexalem.Console
             Bots = bots;
         }
 
-        public void StartGame()
+        public GameResult StartGame()
         {
+            GameResult? gameResult = null;
+
             Log.Information("Start a new game between AI [{aiFirstType}] and [{aiSecondType}]", Bots[0].AiName, Bots[1].AiName);
             List<HexaPlayer> hexaPlayers = InitializePlayers();
 
@@ -36,15 +39,30 @@ namespace Substrate.Hexalem.Console
 
                     isFinish = !move.CanPlay;
                     if (!move.CanPlay)
+                    {
+                        gameResult = GameResult.TieGame();
                         break;
+                    }
 
-                    hexGame = Game.ChooseAndPlace(1, hexGame, hexGame.PlayerTurn, move.SelectionIndex!.Value, move.Coords!.Value);
+                    if(move.PlayTileAt is not null)
+                    {
+                        hexGame = Game.ChooseAndPlace(1, hexGame, hexGame.PlayerTurn, move.SelectionIndex!.Value, move.PlayTileAt!.Value);
+                    } else if(move.UpgradeTileAt is not null)
+                    {
+                        hexGame = Game.Upgrade(1, hexGame, hexGame.PlayerTurn, move.UpgradeTileAt.Value);
+                    }
                 }
 
                 Log.Warning("Player {num} has no mana and can not play anymore", hexGame.PlayerTurn);
-                Game.FinishTurn(blockNumber, hexGame, hexGame.PlayerTurn);
+                hexGame = Game.FinishTurn(blockNumber, hexGame, hexGame.PlayerTurn);
+                
+                isFinish = isFinish || hexGame.IsGameWon();
+                gameResult = GameResult.PlayerWinByReachingWinCondition(hexaPlayers[hexGame.PlayerTurn]);
+
                 blockNumber++;
             } while (!isFinish);
+
+            return gameResult;
         }
 
         private static List<HexaPlayer> InitializePlayers()

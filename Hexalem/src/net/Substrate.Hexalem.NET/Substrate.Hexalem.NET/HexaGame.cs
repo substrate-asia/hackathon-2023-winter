@@ -5,6 +5,7 @@ using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 
 namespace Substrate.Hexalem
 {
@@ -138,7 +139,7 @@ namespace Substrate.Hexalem
             // check if player has enough mana
             if (hexaPlayer[RessourceType.Mana] == 0)
             {
-                Log.Error("Player ${playerNum} does not have enought mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
+                Log.Error("Player ${playerNum} does not have enough mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
 
                 return false;
             }
@@ -248,6 +249,20 @@ namespace Substrate.Hexalem
 
             HexBoardTurn = 0;
             HexBoardRound += 1;
+        }
+
+        public bool IsGameWon()
+        {
+            var player = HexaTuples[PlayerTurn].player;
+
+            if (player.HasWin())
+            {
+                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.WinningCondition.WinningCondition);
+
+                return true;
+            }
+
+            return false;
         }
 
         internal void CalcRewards(uint blockNumber, byte playerIndex)
