@@ -152,7 +152,7 @@ namespace Assets.Scripts.ScreenStates
         {
             if (!IsConnected)
             {
-                FlowController.ChangeScreenState(ScreenState.LoadScreen);
+            //    FlowController.ChangeScreenState(ScreenState.LoadGame);
             }
         }
 

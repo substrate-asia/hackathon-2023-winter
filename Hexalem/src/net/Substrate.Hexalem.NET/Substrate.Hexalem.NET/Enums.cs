@@ -51,13 +51,13 @@
 
     public enum RessourceType
     {
-        Mana = 1,
-        Humans = 2,
-        Water = 3,
-        Food = 4,
-        Wood = 5,
-        Stone = 6,
-        Gold = 7,
+        Mana = 0,
+        Humans = 1,
+        Water = 2,
+        Food = 3,
+        Wood = 4,
+        Stone = 5,
+        Gold = 6,
     }
 
     public enum ShuffleType

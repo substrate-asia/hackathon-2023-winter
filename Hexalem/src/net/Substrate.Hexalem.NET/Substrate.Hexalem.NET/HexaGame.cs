@@ -102,7 +102,8 @@ namespace Substrate.Hexalem
             {
                 var rawTile = Id[(offSet + selectBase) % 32];
                 // TODO: change this
-                result.Add((byte)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
+                //result.Add((byte)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
+                result.Add(new HexaTile((TileType)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)), TileRarity.Normal, TilePattern.Normal));
             }
             return result;
         }
@@ -195,7 +196,16 @@ namespace Substrate.Hexalem
             }
 
             // Upgrade tile to next level
-            return existingTile.Upgrade();
+            var canUpgrade = existingTile.Upgrade();
+
+            if (!canUpgrade)
+                return false;
+
+            HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
+            hexaPlayer[RessourceType.Gold] -= (byte)goldRequired;
+            hexaPlayer[RessourceType.Humans] -= (byte)humansRequired;
+
+            return true;
         }
 
         internal bool UpdateTurnState(uint blockNumber, byte playerIndex)
