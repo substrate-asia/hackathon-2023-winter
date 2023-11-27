@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
-    <ui:VisualElement name="VelContainer" class="main-bg" style="width: 100%; height: 100%;">
+    <ui:VisualElement name="VelContainer" class="main-bg" style="width: 100%; height: 100%; background-color: rgba(135, 112, 173, 0.2);">
         <ui:VisualElement name="VelTopFiller" style="flex-grow: 0; width: 100%; height: 2%; flex-shrink: 0;" />
     </ui:VisualElement>
 </ui:UXML>
