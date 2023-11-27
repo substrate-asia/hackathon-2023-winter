@@ -1,5 +1,7 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
+use core::cmp;
+
 use crate::vec::Vec;
 /// Edit this file to define custom logic or remove it if it is not needed.
 /// Learn more about FRAME and the core library of Substrate FRAME pallets:
@@ -40,6 +42,10 @@ pub mod pallet {
 	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
 
 	pub type GameId = [u8; 32];
+
+	pub const WATER_PER_HUMAN: u8 = 1u8;
+	pub const FOOD_PER_HUMAN: u8 = 1u8;
+	pub const RESOURCE_PER_TILE: u8 = 1u8;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
 	pub enum GameState {
@@ -165,6 +171,35 @@ pub mod pallet {
 		pub humans: MaterialUnit,
 		pub hex_grid: HexGrid<T>, // Board with all tiles
 		game_id: GameId,          // Game key
+	}
+
+	pub struct BoardStats {
+		pub trees: u8,
+		pub mountains: u8,
+		pub waters: u8,
+		pub grass: u8,
+		pub houses: u8,
+
+		pub forrests: u8,
+		pub rivers: u8,
+		pub extreme_mountains: u8,
+		pub farms: u8,
+	}
+
+	impl Default for BoardStats {
+		fn default() -> Self {
+			Self {
+				trees: 0,
+				mountains: 0,
+				waters: 0,
+				houses: 0,
+				grass: 0,
+				forrests: 0,
+				rivers: 0,
+				extreme_mountains: 0,
+				farms: 0,
+			}
+		}
 	}
 
 	impl<T: Config> HexBoard<T> {
@@ -541,7 +576,7 @@ pub mod pallet {
 			Self::deposit_event(Event::NewTurn { game_id, next_player });
 
 			// Updating the resources
-			Self::receive_resources(&mut hex_board);
+			Self::evaluate_board(&mut hex_board);
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
@@ -675,6 +710,73 @@ impl<T: Config> Pallet<T> {
 		Ok(())
 	}
 
+	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
+		let mut board_stats: BoardStats = Default::default();
+
+		for tile in &hex_board.hex_grid {
+			match tile.get_type() {
+				TileType::Tree => {
+					board_stats.trees += 1;
+					let flags = tile.get_formation_flags();
+					if flags[0] {
+						board_stats.forrests += 1;
+					}
+					if flags[1] {
+						board_stats.forrests += 1;
+					}
+				},
+				TileType::Water => {
+					board_stats.waters += 1;
+					let flags = tile.get_formation_flags();
+					if flags[0] {
+						board_stats.rivers += 1;
+					}
+					if flags[1] {
+						board_stats.rivers += 1;
+					}
+				},
+				TileType::Mountain => {
+					board_stats.mountains += 1;
+					let flags = tile.get_formation_flags();
+					if flags[0] {
+						board_stats.extreme_mountains += 1;
+					}
+					if flags[1] {
+						board_stats.extreme_mountains += 1;
+					}
+				},
+				TileType::Desert => (),
+				TileType::House => (),
+				TileType::Grass => {
+					board_stats.grass += 1;
+					let flags = tile.get_formation_flags();
+					if flags[0] {
+						board_stats.farms += 1;
+					}
+					if flags[1] {
+						board_stats.farms += 1;
+					}
+				},
+				_ => (),
+			};
+		}
+
+		let num_of_humans = 1 + /* First human */
+			cmp::min(hex_board.food * FOOD_PER_HUMAN, hex_board.water * WATER_PER_HUMAN) +
+			board_stats.houses;
+
+		hex_board.mana += num_of_humans;
+
+		hex_board.humans = num_of_humans;
+
+		hex_board.water = board_stats.waters + board_stats.rivers * 3;
+
+		hex_board.food = board_stats.grass + board_stats.farms * 3;
+
+		// todo!();
+		//hex_board.stone = min(board_stats.mountains)
+	}
+
 	fn check_formation(
 		hex_board: &mut HexBoard<T>,
 		tile_q: &i8,
@@ -709,11 +811,15 @@ impl<T: Config> Pallet<T> {
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
-			TileType::Water =>  {
+			TileType::Water => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
-				match Self::get_line_right_position(&hex_board, &neighbours, &max_distance, &side_length)
-				{
+				match Self::get_line_right_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
 					Some((TileType::Water, TileType::Water)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
@@ -733,8 +839,12 @@ impl<T: Config> Pallet<T> {
 			TileType::Mountain => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
-				match Self::get_ypsilon_position(&hex_board, &neighbours, &max_distance, &side_length)
-				{
+				match Self::get_ypsilon_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
 					Some((TileType::Mountain, TileType::Mountain, TileType::Mountain)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
@@ -751,18 +861,32 @@ impl<T: Config> Pallet<T> {
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
-			TileType::Desert => (),
+			TileType::Desert => todo!(),
 			TileType::House => (),
-			TileType::Grass => (),
+			TileType::Grass => {
+				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+
+				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
+				{
+					Some((TileType::Water, TileType::Grass)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
+				}
+
+				match Self::get_reverse_delta_position(
+					&hex_board,
+					&neighbours,
+					&max_distance,
+					&side_length,
+				) {
+					Some((TileType::Grass, TileType::Water)) =>
+						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
+					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
+				}
+			},
 		};
 
 		Ok(())
-	}
-
-	/// Helper method that updates the resources according to the formations on grid
-	fn receive_resources(hex_board: &mut HexBoard<T>) -> () {
-		// To be implemented later
-		hex_board.mana += hex_board.humans;
 	}
 
 	fn get_delta_position(
@@ -791,7 +915,7 @@ impl<T: Config> Pallet<T> {
 		max_distance: &i8,
 		side_length: &i8,
 	) -> Option<(TileType, TileType)> {
-		match (neighbours[3], neighbours[4]) {
+		match (neighbours[1], neighbours[2]) {
 			(Some((q1, r1)), Some((q2, r2))) => {
 				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
 				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
@@ -804,7 +928,7 @@ impl<T: Config> Pallet<T> {
 			_ => None,
 		}
 	}
-	
+
 	fn get_ypsilon_position(
 		hex_board: &HexBoard<T>,
 		neighbours: &Vec<Option<(i8, i8)>>,
@@ -816,7 +940,6 @@ impl<T: Config> Pallet<T> {
 				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
 				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
 				let tile3_index = Self::coords_to_index(&max_distance, &side_length, &q3, &r3);
-
 
 				let tile1 = hex_board.hex_grid[tile1_index as usize];
 				let tile2 = hex_board.hex_grid[tile2_index as usize];
@@ -839,7 +962,6 @@ impl<T: Config> Pallet<T> {
 				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
 				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
 				let tile3_index = Self::coords_to_index(&max_distance, &side_length, &q3, &r3);
-
 
 				let tile1 = hex_board.hex_grid[tile1_index as usize];
 				let tile2 = hex_board.hex_grid[tile2_index as usize];
