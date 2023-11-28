@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/Global.uss?fileID=7433441132597879392&amp;guid=e324be30b2bf31e4c82f0913ce66535b&amp;type=3#Global" />
+    <ui:VisualElement name="ChooseGame" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Images/SplashScreen.png?fileID=2800000&amp;guid=fcd3b817b5f6c6747aa76bc78ea29d46&amp;type=3#SplashScreen&apos;);">
+        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 80px; width: 100%; justify-content: center; flex-direction: column; align-items: flex-end; margin-right: 0; padding-right: 10px;">
+            <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnSingleMode" class="font-aeonik layer-bg-dark font-light-color font-regular" style="width: 80px; height: 60px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; font-size: 50px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; -unity-text-align: middle-center; background-color: rgba(255, 73, 73, 0); background-image: url(&apos;project://database/Assets/Images/Back.png?fileID=2800000&amp;guid=0c289eef71584a844b725fed4f22927b&amp;type=3#Back&apos;); flex-direction: row; align-items: center;">
+                <ui:Label tabindex="-1" text="Back&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblButton" style="flex-grow: 1; flex-shrink: 1; -unity-font-style: normal; font-size: 14px; -unity-text-align: middle-center; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; color: rgb(255, 255, 255);" />
+            </ui:Button>
+        </ui:VisualElement>
+        <ui:VisualElement name="VelBody" style="flex-grow: 1; flex-direction: column; align-items: auto; justify-content: space-between; align-self: center;">
+            <ui:VisualElement name="VelFirstLine" style="flex-grow: 0; flex-direction: row; justify-content: space-around; flex-shrink: 0; width: 100%; height: 50%; align-self: auto; align-items: flex-end;">
+                <ui:VisualElement name="VelSingleMode" style="flex-grow: 0; flex-shrink: 0;">
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnSingleMode" class="font-aeonik layer-bg-dark font-light-color font-regular ButtonAction">
+                        <ui:Label tabindex="-1" text="Training" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblButton" style="flex-grow: 1; flex-shrink: 1; -unity-font-style: normal; font-size: 28px;" />
+                    </ui:Button>
+                </ui:VisualElement>
+                <ui:VisualElement name="VelAIMode" style="flex-grow: 0; flex-shrink: 0;">
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnAIMode" class="font-aeonik layer-bg-dark font-light-color font-regular" style="width: 150px; height: 100px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; font-size: 50px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; -unity-text-align: middle-center; background-color: rgba(255, 73, 73, 0); background-image: url(&apos;project://database/Assets/Images/Play_2.png?fileID=2800000&amp;guid=632cca2f1ba343346b8c32b006080729&amp;type=3#Play_2&apos;);">
+                        <ui:Label tabindex="-1" text="Vs AI" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblButton" style="flex-grow: 1; flex-shrink: 1; -unity-font-style: normal; font-size: 28px;" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="VelSecondLine" style="flex-grow: 0; width: 100%; height: 50%; flex-shrink: 0; justify-content: space-around; align-items: center;">
+                <ui:VisualElement name="VelPvpMode" style="flex-grow: 1;">
+                    <ui:Button parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnPvpMode" class="font-aeonik layer-bg-dark font-light-color font-regular" style="width: 150px; height: 100px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; font-size: 50px; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; -unity-text-align: middle-center; background-color: rgba(255, 73, 73, 0); background-image: url(&apos;project://database/Assets/Images/Play_2.png?fileID=2800000&amp;guid=632cca2f1ba343346b8c32b006080729&amp;type=3#Play_2&apos;);">
+                        <ui:Label tabindex="-1" text="PvP" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblButton" style="flex-grow: 1; flex-shrink: 1; -unity-font-style: normal; font-size: 28px;" />
+                    </ui:Button>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="BottomBound" style="flex-grow: 0; height: 80px; width: 100%; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>

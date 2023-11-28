@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/GameMenu.uss?fileID=7433441132597879392&amp;guid=a88b7911be4280f4f935126adb14dcab&amp;type=3#GameMenu" />
+    <ui:VisualElement name="VelTabs" style="flex-grow: 1; flex-direction: row; height: auto; justify-content: flex-start; align-items: flex-start; align-self: center;">
+        <ui:Label tabindex="-1" text="History" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblHistory" style="flex-grow: 1; flex-shrink: 1; align-items: stretch; justify-content: center; align-self: flex-start; flex-direction: column;" />
+        <ui:Label tabindex="-1" text="Main&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblMainTab" style="flex-shrink: 1; flex-grow: 1;" />
+        <ui:Label tabindex="-1" text="Account" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblAccount" style="flex-shrink: 1; flex-grow: 1;" />
+    </ui:VisualElement>
+</ui:UXML>
