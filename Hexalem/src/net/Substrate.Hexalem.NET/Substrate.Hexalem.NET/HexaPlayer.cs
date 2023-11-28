@@ -15,6 +15,7 @@ namespace Substrate.Hexalem
         public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
+            AddWinCondition(Hexalem.WinningCondition.HumanThreshold);
         }
 
         public HexaPlayer(byte[] id, byte[] hash)
@@ -38,6 +39,48 @@ namespace Substrate.Hexalem
             this[RessourceType.Wood] = GameConfig.DEFAULT_WOOD;
             this[RessourceType.Stone] = GameConfig.DEFAULT_STONE;
             this[RessourceType.Gold] = GameConfig.DEFAULT_GOLD;
+        }
+
+        public void AddWinCondition(WinningCondition condition)
+        {
+            switch(condition)
+            {
+                case Hexalem.WinningCondition.GoldThreshold:
+                    WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_GOLD);
+                    break;
+                case Hexalem.WinningCondition.HumanThreshold:
+                    WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_HUMAN);
+                    break;
+            }
+            
+        }
+
+        /// <summary>
+        /// Check if player reach his win condition
+        /// </summary>
+        /// <returns></returns>
+        public bool HasWin()
+        {
+            switch (WinningCondition.WinningCondition)
+            {
+                case Hexalem.WinningCondition.GoldThreshold:
+                    return this[RessourceType.Gold] >= WinningCondition.Target;
+                case Hexalem.WinningCondition.HumanThreshold:
+                    return this[RessourceType.Humans] >= WinningCondition.Target;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Check if player has enough ressources to upgrade tile
+        /// </summary>
+        /// <param name="tileRarity"></param>
+        /// <returns></returns>
+        public bool CanUpgrade(HexaTile tile)
+        {
+            return  this[RessourceType.Gold] >= GameConfig.GoldCostForUpgrade(tile.TileRarity) &&
+                    this[RessourceType.Humans] >= GameConfig.MininumHumanToUpgrade(tile.TileRarity);
         }
 
         public void NextRound(uint blockNumber)

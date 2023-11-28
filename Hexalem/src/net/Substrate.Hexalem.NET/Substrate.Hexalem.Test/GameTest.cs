@@ -22,7 +22,7 @@ namespace Substrate.Hexalem.Test
         private HexaPlayer _hexPlayer_Player2;
         private readonly int _player2_Index = 1;
 
-        private List<IThinking> _bots;
+        private List<AI> _bots;
 
         private byte[] _selectionGenerator;
         private uint _defaultBlockStart;
@@ -225,7 +225,7 @@ namespace Substrate.Hexalem.Test
         {
             var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            (int q, int r) coords = (-2, -2);
+            (int q, int r) coords = (0, 0); // Only Home can be upgraded at the moment
 
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
@@ -254,7 +254,7 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void UpgradeTile_WithNotEnoughtRessources_ShouldFail()
+        public void UpgradeTile_WithNotEnoughRessources_ShouldFail()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
 
@@ -276,6 +276,209 @@ namespace Substrate.Hexalem.Test
 
             var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
             Assert.That(res, Is.Null);
+        }
+
+        [Test]
+        public void RewardsMana_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+
+            // One mana from home and not enough human to have more
+            Assert.That(hexaGame.Evaluate(RessourceType.Mana, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            // Now add 2 more humans
+            tuple.player[RessourceType.Humans] = 3;
+
+            // One mana from home and one mana from 3 humans
+            Assert.That(hexaGame.Evaluate(RessourceType.Mana, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+
+            // Add rarity to home tile should not increase mana rewards
+            var homeTile = (HexaTile)tuple.board[12];
+
+            // Ensure we are on home tile
+            Assert.That(homeTile.TileType, Is.EqualTo(TileType.Home));
+            homeTile.TileRarity = TileRarity.Epic;
+
+            // Same rewards as before
+            Assert.That(hexaGame.Evaluate(RessourceType.Mana, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RewardsHuman_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+
+            // One human for home when not upgrade
+            Assert.That(hexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            // Add rarity to home tileto increase human rewards
+            var homeTile = (HexaTile)tuple.board[12];
+            Assert.That(homeTile.TileType, Is.EqualTo(TileType.Home));
+            homeTile.TileRarity = TileRarity.Epic;
+
+            // Add ressources humans need
+            tuple.player[RessourceType.Water] = 10;
+            tuple.player[RessourceType.Food] = 10;
+
+            Assert.That(hexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(3));
+
+            // But if I have not enough water for human
+            tuple.player[RessourceType.Water] = 4;
+
+            Assert.That(hexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RewardsWater_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            tuple.board[4] = new HexaTile(TileType.Water, TileRarity.Normal, TilePattern.Normal);
+            tuple.board[5] = new HexaTile(TileType.Water, TileRarity.Normal, TilePattern.Normal);
+
+            // Water reward is equal to nb water tiles on the field
+            Assert.That(hexaGame.Evaluate(RessourceType.Water, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RewardsFood_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            tuple.board[4] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            tuple.board[5] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+
+            // 2 grass field give 2 food
+            Assert.That(hexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+
+            // 1 forest field give 0 food
+            tuple.board[6] = new HexaTile(TileType.Forest, TileRarity.Normal, TilePattern.Normal);
+            Assert.That(hexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+
+            // 2 forest field give 0 food
+            tuple.board[7] = new HexaTile(TileType.Forest, TileRarity.Normal, TilePattern.Normal);
+            Assert.That(hexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void RewardsWood_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+
+            tuple.player[RessourceType.Humans] = 1;
+
+            // 0 forest and 1 human => no reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Wood, tuple.player, tuple.board.Stats()), Is.EqualTo(0));
+
+            tuple.board[4] = new HexaTile(TileType.Forest, TileRarity.Normal, TilePattern.Normal);
+
+            // 1 forest and 1 human => no reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Wood, tuple.player, tuple.board.Stats()), Is.EqualTo(0));
+
+            tuple.player[RessourceType.Humans] = 2;
+
+            // 1 forest and 2 humans => 1 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Wood, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            tuple.player[RessourceType.Humans] = 4;
+
+            // 4 forest and 4 humans => 2 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Wood, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+
+            tuple.player[RessourceType.Humans] = 8;
+
+            // 1 forest and 6 humans => 1 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Wood, tuple.player, tuple.board.Stats()), Is.EqualTo(3));
+        }
+
+        [Test]
+        public void RewardsStone_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+
+            tuple.player[RessourceType.Humans] = 1;
+
+            // 0 moutain and 1 human => no reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Stone, tuple.player, tuple.board.Stats()), Is.EqualTo(0));
+
+            tuple.board[4] = new HexaTile(TileType.Mountain, TileRarity.Normal, TilePattern.Normal);
+
+            // 1 moutain and 3 humans => no reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Stone, tuple.player, tuple.board.Stats()), Is.EqualTo(0));
+
+            tuple.player[RessourceType.Humans] = 4;
+
+            // 1 moutain and 4 humans => 1 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Stone, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            tuple.player[RessourceType.Humans] = 4;
+            tuple.board[5] = new HexaTile(TileType.Mountain, TileRarity.Normal, TilePattern.Normal);
+            tuple.board[6] = new HexaTile(TileType.Mountain, TileRarity.Normal, TilePattern.Normal);
+            tuple.board[7] = new HexaTile(TileType.Mountain, TileRarity.Normal, TilePattern.Normal);
+
+            // 4 moutains and 4 humans => 1 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Stone, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            tuple.player[RessourceType.Humans] = 8;
+
+            // 4 moutain and 8 humans => 2 rewards
+            Assert.That(hexaGame.Evaluate(RessourceType.Stone, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+        }
+
+        [Test]
+        public void RewardsGold_ShouldBeValid()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+
+            tuple.player[RessourceType.Humans] = 1;
+
+            // 0 cave and 1 human => no reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Gold, tuple.player, tuple.board.Stats()), Is.EqualTo(0));
+
+            tuple.board[4] = new HexaTile(TileType.Cave, TileRarity.Normal, TilePattern.Normal);
+            // 1 cave and 1 human => no reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Gold, tuple.player, tuple.board.Stats()), Is.EqualTo(0));
+
+            tuple.player[RessourceType.Humans] = 3;
+            // 1 cave and 3 humans => 1 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Gold, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            tuple.player[RessourceType.Humans] = 4;
+            tuple.board[5] = new HexaTile(TileType.Cave, TileRarity.Normal, TilePattern.Normal);
+            tuple.board[6] = new HexaTile(TileType.Cave, TileRarity.Normal, TilePattern.Normal);
+            // 3 cave and 4 humans => 1 reward
+            Assert.That(hexaGame.Evaluate(RessourceType.Gold, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
+
+            tuple.player[RessourceType.Humans] = 10;
+            tuple.board[7] = new HexaTile(TileType.Cave, TileRarity.Normal, TilePattern.Normal);
+            // 4 and 10 humans => 3 rewards
+            Assert.That(hexaGame.Evaluate(RessourceType.Gold, tuple.player, tuple.board.Stats()), Is.EqualTo(3));
         }
     }
 }

@@ -5,7 +5,10 @@ using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
@@ -138,7 +141,7 @@ namespace Substrate.Hexalem
             // check if player has enough mana
             if (hexaPlayer[RessourceType.Mana] == 0)
             {
-                Log.Error("Player ${playerNum} does not have enought mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
+                Log.Error("Player ${playerNum} does not have enough mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
 
                 return false;
             }
@@ -250,6 +253,20 @@ namespace Substrate.Hexalem
             HexBoardRound += 1;
         }
 
+        public bool IsGameWon()
+        {
+            var player = HexaTuples[PlayerTurn].player;
+
+            if (player.HasWin())
+            {
+                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.WinningCondition.WinningCondition);
+
+                return true;
+            }
+
+            return false;
+        }
+
         internal void CalcRewards(uint blockNumber, byte playerIndex)
         {
             var hexaPlayer = HexaTuples[playerIndex].player;
@@ -290,7 +307,7 @@ namespace Substrate.Hexalem
                     break;
 
                 case RessourceType.Humans:
-                    result = (byte)(boardStats[TileType.Home] * 1); // 1 Humans start in the Home
+                    result = byte.MaxValue; //(byte)(boardStats[TileType.Home] * 1); // 1 Humans start in the Home
 
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
                     result = (byte)Math.Min(result, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
@@ -301,7 +318,7 @@ namespace Substrate.Hexalem
                     {
                         homeWeighted += (int)rarity * boardStats[TileType.Home, rarity];
                     }
-                    result = (byte)Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS);
+                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
 
                     // Additional pattern logic
                     break;

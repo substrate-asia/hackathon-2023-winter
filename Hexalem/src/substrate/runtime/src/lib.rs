@@ -335,7 +335,7 @@ parameter_types! {
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 16;
 	pub const HexalemMaxTileSelectionBase: u8 = 32;
-	pub const HexalemAllTileOffers: [TileOffer<Runtime>; 6] = [
+	pub const HexalemAllTileOffers: [TileOffer<Runtime>; 16] = [
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Tree,
@@ -343,63 +343,176 @@ parameter_types! {
 				formations: [false; 3]
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 1,
-			}
-		},
-		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Mountain,
-				tile_level: 1,
-				formations: [false; 3],
-			},
-			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 1,
-			}
-		},
-		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
-				tile_level: 1,
-				formations: [false; 3],
-			},
-			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
+				material_type: Material::Wood,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Tree,
-				tile_level: 2,
-				formations: [false; 3],
+				tile_level: 1,
+				formations: [false; 3]
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 5,
+				material_type: Material::Wood,
+				material_cost: 2,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Tree,
+				tile_level: 1,
+				formations: [false; 3]
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Water,
+				material_cost: 2,
 			}
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Mountain,
-				tile_level: 2,
+				tile_level: 1,
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 5,
+				material_type: Material::Stone,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Mountain,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Stone,
+				material_cost: 2,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Mountain,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Food,
+				material_cost: 2,
+			}
+		},
+
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Grass,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Food,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Grass,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Food,
+				material_cost: 2,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Grass,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Food,
+				material_cost: 3,
+			}
+		},
+
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Water,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Water,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Water,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Water,
+				material_cost: 2,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::Water,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Water,
+				material_cost: 3,
+			}
+		},
+		
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::House,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Wood,
+				material_cost: 2,
 			}
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::House,
-				tile_level: 2,
+				tile_level: 1,
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 5,
+				material_type: Material::Wood,
+				material_cost: 3,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::House,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Stone,
+				material_cost: 2,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile{
+				tile_type: TileType::House,
+				tile_level: 1,
+				formations: [false; 3],
+			},
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Stone,
+				material_cost: 3,
 			}
 		},
 	];

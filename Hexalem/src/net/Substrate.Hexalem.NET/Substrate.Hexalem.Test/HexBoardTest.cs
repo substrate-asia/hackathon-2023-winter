@@ -305,7 +305,7 @@ namespace Substrate.Hexalem.Tests
         public void Stats_BoardStats_ShouldReturnCorrectCounts()
         {
             var tileTypes = Enum.GetValues(typeof(TileType)).Length;
-
+            var nbTilesNotEmpty = 7;
             // Arrange
             var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
 
@@ -314,31 +314,42 @@ namespace Substrate.Hexalem.Tests
             // Set up the board with some tiles
             hexaBoard[0] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
             hexaBoard[1] = new HexaTile(TileType.Water, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[2] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Normal);
-            hexaBoard[3] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Normal);
-            hexaBoard[7] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Normal);
+            hexaBoard[2] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Delta);
+            hexaBoard[3] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Delta);
+            hexaBoard[7] = new HexaTile(TileType.Water, TileRarity.Epic, TilePattern.Delta);
+            hexaBoard[22] = new HexaTile(TileType.Mountain, TileRarity.Epic, TilePattern.Normal);
 
-            // Expected results
-            var expectedStats = new byte[64]; // Adjust the size based on your needs
-            expectedStats[0] = (int)GridSize.Medium - 6;
-            // home
-            expectedStats[(int)TileType.Home * tileTypes] = 1;
-            expectedStats[(int)TileType.Home * tileTypes + (int)TileRarity.Normal] = 1;
-
-            // grass
-            expectedStats[(int)TileType.Grass * tileTypes] = 1;
-            expectedStats[(int)TileType.Grass * tileTypes + (int)TileRarity.Normal] = 1;
-
-            // water
-            expectedStats[(int)TileType.Water * tileTypes] = 4;
-            expectedStats[(int)TileType.Water * tileTypes + (int)TileRarity.Normal] = 1;
-            expectedStats[(int)TileType.Water * tileTypes + (int)TileRarity.Rare] = 3;
-
-            // Act
             var stats = hexaBoard.Stats();
 
-            // Assert
-            CollectionAssert.AreEqual(Convert.ToHexString(expectedStats), Convert.ToHexString(stats.Value), "Stats should match the expected distribution of tiles");
+            Assert.That(stats[TileType.None], Is.EqualTo((int)GridSize.Medium - nbTilesNotEmpty));
+
+            // Home
+            Assert.That(stats[TileType.Home], Is.EqualTo(1));
+            Assert.That(stats[TileType.Home, TileRarity.Normal], Is.EqualTo(1));
+            Assert.That(stats[TileType.Home, TileRarity.Rare], Is.EqualTo(0));
+            Assert.That(stats[TileType.Home, TileRarity.Epic], Is.EqualTo(0));
+
+            // Grass
+            Assert.That(stats[TileType.Grass], Is.EqualTo(1));
+            Assert.That(stats[TileType.Grass, TileRarity.Normal], Is.EqualTo(1));
+            Assert.That(stats[TileType.Grass, TileRarity.Rare], Is.EqualTo(0));
+            Assert.That(stats[TileType.Grass, TileRarity.Epic], Is.EqualTo(0));
+
+            // Mountain
+            Assert.That(stats[TileType.Mountain], Is.EqualTo(1));
+
+            Assert.That(stats[TileType.Mountain, TileRarity.Normal], Is.EqualTo(0));
+            Assert.That(stats[TileType.Mountain, TileRarity.Rare], Is.EqualTo(0));
+            Assert.That(stats[TileType.Mountain, TileRarity.Epic], Is.EqualTo(1));
+
+            // Watter
+            Assert.That(stats[TileType.Water], Is.EqualTo(4));
+
+            Assert.That(stats[TileType.Water, TileRarity.Normal], Is.EqualTo(1));
+            Assert.That(stats[TileType.Water, TileRarity.Rare], Is.EqualTo(2));
+            Assert.That(stats[TileType.Water, TileRarity.Epic], Is.EqualTo(1));
+            
+            Assert.That(stats[TileType.Water, TilePattern.Delta], Is.EqualTo(3));
         }
     }
 }
