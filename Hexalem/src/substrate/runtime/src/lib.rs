@@ -6,11 +6,9 @@
 #[cfg(feature = "std")]
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
-use codec::{Decode, Encode, MaxEncodedLen};
 use pallet_grandpa::AuthorityId as GrandpaId;
-use pallet_hexalem::{
-	GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer, TileType,
-};
+use pallet_hexalem::{GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer, TileType};
+use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
 use sp_api::impl_runtime_apis;
 use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -51,9 +49,6 @@ use pallet_transaction_payment::{ConstFeeMultiplier, CurrencyAdapter, Multiplier
 pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
-/// Import the template pallet.
-pub use pallet_template;
-
 /// An index to a block.
 pub type BlockNumber = u32;
 
@@ -72,7 +67,7 @@ pub struct HexalemTile {
 	// I was lazy to optimize it now, but it will be easy to lower this to u8 in the future
 	tile_type: TileType,
 	tile_level: u8,
-	formations: [bool; 3]
+	formations: [bool; 3],
 }
 
 impl GetTileInfo for HexalemTile {
@@ -107,11 +102,7 @@ impl GetTileInfo for HexalemTile {
 
 impl Default for HexalemTile {
 	fn default() -> Self {
-		Self {
-			tile_type: TileType::Empty,
-			tile_level: 1,
-			formations: [false; 3],
-		} 
+		Self { tile_type: TileType::Empty, tile_level: 1, formations: [false; 3] }
 	}
 }
 
@@ -174,8 +165,8 @@ pub mod opaque {
 // https://docs.substrate.io/main-docs/build/upgrade#runtime-versioning
 #[sp_version::runtime_version]
 pub const VERSION: RuntimeVersion = RuntimeVersion {
-	spec_name: create_runtime_str!("node-template"),
-	impl_name: create_runtime_str!("node-template"),
+	spec_name: create_runtime_str!("hexalem"),
+	impl_name: create_runtime_str!("hexalem"),
 	authoring_version: 1,
 	// The version of the runtime specification. A full node will not attempt to use its native
 	//   runtime in substitute for the on-chain Wasm runtime unless all of `spec_name`,
@@ -293,9 +284,17 @@ impl pallet_grandpa::Config for Runtime {
 	type WeightInfo = ();
 	type MaxAuthorities = ConstU32<32>;
 	type MaxSetIdSessionEntries = ConstU64<0>;
+	type MaxNominators = ();
 
 	type KeyOwnerProof = sp_core::Void;
 	type EquivocationReportSystem = ();
+}
+
+impl pallet_utility::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type RuntimeCall = RuntimeCall;
+	type PalletsOrigin = OriginCaller;
+	type WeightInfo = ();
 }
 
 impl pallet_timestamp::Config for Runtime {
@@ -470,7 +469,7 @@ parameter_types! {
 				material_cost: 3,
 			}
 		},
-		
+
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::House,
@@ -533,12 +532,6 @@ impl pallet_sudo::Config for Runtime {
 	type WeightInfo = pallet_sudo::weights::SubstrateWeight<Runtime>;
 }
 
-/// Configure the pallet-template in pallets/template.
-impl pallet_template::Config for Runtime {
-	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = pallet_template::weights::SubstrateWeight<Runtime>;
-}
-
 /// Configure the pallet-hexalem in pallets/hexalem.
 impl pallet_hexalem::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
@@ -556,16 +549,15 @@ impl pallet_hexalem::Config for Runtime {
 // Create the runtime by composing the FRAME pallets that were previously configured.
 construct_runtime!(
 	pub struct Runtime {
-		System: frame_system,
-		Timestamp: pallet_timestamp,
-		Aura: pallet_aura,
-		Grandpa: pallet_grandpa,
-		Balances: pallet_balances,
-		TransactionPayment: pallet_transaction_payment,
-		Sudo: pallet_sudo,
-		// Include the custom logic from the pallet-template in the runtime.
-		TemplateModule: pallet_template,
-		HexalemModule: pallet_hexalem,
+		System: frame_system = 0,
+		Timestamp: pallet_timestamp = 1,
+		Aura: pallet_aura = 2,
+		Grandpa: pallet_grandpa = 3,
+		Balances: pallet_balances = 4,
+		TransactionPayment: pallet_transaction_payment = 5,
+		Sudo: pallet_sudo = 6,
+		Utility: pallet_utility = 7,
+		HexalemModule: pallet_hexalem = 8,
 	}
 );
 
@@ -613,7 +605,6 @@ mod benches {
 		[pallet_balances, Balances]
 		[pallet_timestamp, Timestamp]
 		[pallet_sudo, Sudo]
-		[pallet_template, TemplateModule]
 	);
 }
 
