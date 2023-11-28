@@ -15,6 +15,7 @@ namespace Substrate.Hexalem
         public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
+            AddWinCondition(Hexalem.WinningCondition.HumanThreshold);
         }
 
         public HexaPlayer(byte[] id, byte[] hash)

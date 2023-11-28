@@ -225,7 +225,7 @@ namespace Substrate.Hexalem.Test
         {
             var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            (int q, int r) coords = (-2, -2);
+            (int q, int r) coords = (0, 0); // Only Home can be upgraded at the moment
 
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
