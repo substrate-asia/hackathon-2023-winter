@@ -301,6 +301,9 @@ pub mod pallet {
 		// New selection has been drawn
 		NewTileSelection { game_id: GameId, selection: TileSelection<T> },
 
+		// Selection has been refilled
+		SelectionRefilled { game_id: GameId, selection: TileSelection<T> },
+
 		// New turn
 		NewTurn { game_id: GameId, next_player: T::AccountId },
 
@@ -421,8 +424,6 @@ pub mod pallet {
 
 			game.selection_base_size = 6;
 
-			let new_selection = game.selection.clone();
-
 			// Initialise HexBoards for all players
 			for player in &players {
 				ensure!(!HexBoardStorage::<T>::contains_key(player), Error::<T>::AlreadyPlaying);
@@ -441,7 +442,6 @@ pub mod pallet {
 				players,
 			});
 
-			Self::deposit_event(Event::NewTileSelection { game_id, selection: new_selection });
 
 			Ok(())
 		}
@@ -609,6 +609,8 @@ impl<T: Config> Pallet<T> {
 		// Casting
 		game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
 
+		Self::deposit_event(Event::NewTileSelection { game_id: selection_base, selection: game.selection.clone() });
+
 		Ok(())
 	}
 
@@ -637,6 +639,8 @@ impl<T: Config> Pallet<T> {
 			}
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
+
+			Self::deposit_event(Event::SelectionRefilled { game_id: selection_base, selection: game.selection.clone() });
 		}
 
 		Ok(())
