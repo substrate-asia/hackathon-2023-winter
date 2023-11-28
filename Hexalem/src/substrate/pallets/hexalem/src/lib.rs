@@ -46,6 +46,7 @@ pub mod pallet {
 	pub const WATER_PER_HUMAN: u8 = 1u8;
 	pub const FOOD_PER_HUMAN: u8 = 1u8;
 	pub const RESOURCE_PER_TILE: u8 = 1u8;
+	pub const NUMBER_OF_FIRST_HUMANS: u8 = 1u8;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
 	pub enum GameState {
@@ -215,7 +216,7 @@ pub mod pallet {
 				food: 0,
 				water: 0,
 				mana: 1,
-				humans: 1,
+				humans: NUMBER_OF_FIRST_HUMANS,
 				hex_grid: empty_hex_grid,
 				game_id,
 			})
@@ -620,7 +621,7 @@ impl<T: Config> Pallet<T> {
 
 		if selection_len < (game.selection_size / 2 + 1) as usize {
 			if game.selection_size as u32 != T::MaxTileSelection::get() {
-				game.selection_size += 2;
+				game.selection_size = game.selection_size.saturating_add(2);
 			}
 
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
@@ -716,65 +717,71 @@ impl<T: Config> Pallet<T> {
 		for tile in &hex_board.hex_grid {
 			match tile.get_type() {
 				TileType::Tree => {
-					board_stats.trees += 1;
+					board_stats.trees = board_stats.trees.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.forrests += 1;
+						board_stats.forrests = board_stats.forrests.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.forrests += 1;
+						board_stats.forrests = board_stats.forrests.saturating_add(1);
 					}
 				},
 				TileType::Water => {
-					board_stats.waters += 1;
+					board_stats.waters = board_stats.waters.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.rivers += 1;
+						board_stats.rivers = board_stats.rivers.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.rivers += 1;
+						board_stats.rivers = board_stats.rivers.saturating_add(1);
 					}
 				},
 				TileType::Mountain => {
-					board_stats.mountains += 1;
+					board_stats.mountains = board_stats.mountains.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.extreme_mountains += 1;
+						board_stats.extreme_mountains = board_stats.extreme_mountains.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.extreme_mountains += 1;
+						board_stats.extreme_mountains = board_stats.extreme_mountains.saturating_add(1);
 					}
 				},
 				TileType::Desert => (),
 				TileType::House => (),
 				TileType::Grass => {
-					board_stats.grass += 1;
+					board_stats.grass = board_stats.grass.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.farms += 1;
+						board_stats.farms = board_stats.farms.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.farms += 1;
+						board_stats.farms = board_stats.farms.saturating_add(1);
 					}
 				},
 				_ => (),
 			};
 		}
 
-		let num_of_humans = 1 + /* First human */
-			cmp::min(hex_board.food * FOOD_PER_HUMAN, hex_board.water * WATER_PER_HUMAN) +
-			board_stats.houses;
+		let number_of_humans = NUMBER_OF_FIRST_HUMANS
+			.saturating_add(cmp::min(
+				hex_board.food.saturating_mul(FOOD_PER_HUMAN),
+				hex_board.water.saturating_mul(WATER_PER_HUMAN),
+			))
+			.saturating_add(board_stats.houses);
 
-		hex_board.mana += num_of_humans;
+		hex_board.mana = hex_board.mana.saturating_add(number_of_humans);
 
-		hex_board.humans = num_of_humans;
+		hex_board.humans = number_of_humans;
 
-		hex_board.water = board_stats.waters + board_stats.rivers * 3;
+		hex_board.water = hex_board.water.saturating_add(board_stats.waters).saturating_add(board_stats.rivers.saturating_mul(3)).saturating_add(board_stats.extreme_mountains);
 
-		hex_board.food = board_stats.grass + board_stats.farms * 3;
+		hex_board.food = board_stats.grass.saturating_add(board_stats.farms.saturating_mul(3));
 
-		// todo!();
-		//hex_board.stone = min(board_stats.mountains)
+		hex_board.wood = cmp::min(board_stats.trees, (number_of_humans + 1) / 2)
+			.saturating_add(board_stats.forrests.saturating_mul(3));
+
+		hex_board.stone = cmp::min(board_stats.mountains, number_of_humans / 2)
+			.saturating_add(board_stats.extreme_mountains.saturating_mul(3));
 	}
 
 	fn check_formation(
