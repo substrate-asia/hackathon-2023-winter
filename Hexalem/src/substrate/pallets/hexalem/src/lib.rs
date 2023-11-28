@@ -140,7 +140,7 @@ pub mod pallet {
 	}
 
 	// This type will get changed to be more generic, but I did not have time now.
-	pub type TileOffers<T> = [TileOffer<T>; 6];
+	pub type TileOffers<T> = [TileOffer<T>; 16];
 
 	#[derive(Encode, Decode, TypeInfo, PartialEq, Clone, Debug)]
 	pub enum PayType {
@@ -422,7 +422,7 @@ pub mod pallet {
 
 			Self::new_selection(&mut game, game_id)?;
 
-			game.selection_base_size = 6;
+			game.selection_base_size = 16;
 
 			// Initialise HexBoards for all players
 			for player in &players {
@@ -779,12 +779,12 @@ impl<T: Config> Pallet<T> {
 
 		hex_board.water = hex_board.water.saturating_add(board_stats.waters).saturating_add(board_stats.rivers.saturating_mul(3)).saturating_add(board_stats.extreme_mountains);
 
-		hex_board.food = board_stats.grass.saturating_add(board_stats.farms.saturating_mul(3));
+		hex_board.food = hex_board.food.saturating_add(board_stats.grass).saturating_add(board_stats.farms.saturating_mul(3));
 
-		hex_board.wood = cmp::min(board_stats.trees, (number_of_humans + 1) / 2)
+		hex_board.wood = hex_board.wood.saturating_add(cmp::min(board_stats.trees, (number_of_humans + 1) / 2))
 			.saturating_add(board_stats.forrests.saturating_mul(3));
 
-		hex_board.stone = cmp::min(board_stats.mountains, number_of_humans / 2)
+		hex_board.stone = hex_board.stone.saturating_add(cmp::min(board_stats.mountains, number_of_humans / 2))
 			.saturating_add(board_stats.extreme_mountains.saturating_mul(3));
 	}
 
