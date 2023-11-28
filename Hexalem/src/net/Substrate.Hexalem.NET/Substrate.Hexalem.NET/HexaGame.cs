@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
@@ -305,7 +307,7 @@ namespace Substrate.Hexalem
                     break;
 
                 case RessourceType.Humans:
-                    result = (byte)(boardStats[TileType.Home] * 1); // 1 Humans start in the Home
+                    result = byte.MaxValue; //(byte)(boardStats[TileType.Home] * 1); // 1 Humans start in the Home
 
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
                     result = (byte)Math.Min(result, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
@@ -316,7 +318,7 @@ namespace Substrate.Hexalem
                     {
                         homeWeighted += (int)rarity * boardStats[TileType.Home, rarity];
                     }
-                    result = (byte)Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS);
+                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
 
                     // Additional pattern logic
                     break;
