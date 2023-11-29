@@ -78,7 +78,7 @@ namespace Substrate.Hexalem.Console
 
             bool isConnected = await client.ConnectAsync(true, true, token);
 
-            Log.Information("Connected to blockchain = {isConected}", isConnected);
+            Log.Information("Connected to Hexalem local node = {isConected}", isConnected);
 
             var players = new List<Account>() { AliceAccount, BobAccount };
 
@@ -110,7 +110,7 @@ namespace Substrate.Hexalem.Console
                     Log.Information("Game and player boards successfully received. Let's build HexaGame instance");
                     var hexaGame = new HexaGame(game, new Integration.Model.BoardSharp[2] { aliceBoard, bobBoard });
 
-                    Log.Information($"HexaGame instance ok : {hexaGame}");
+                    Log.Information($"HexaGame instance : {hexaGame}");
                 }
             };
         }

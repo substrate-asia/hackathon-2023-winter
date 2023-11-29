@@ -4,6 +4,7 @@ using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.Extensions;
 using Substrate.Hexalem.NET.GameException;
+using Substrate.Integration.Helper;
 using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
@@ -464,7 +465,11 @@ namespace Substrate.Hexalem
             log += $"\n\t PlayerTurn = {PlayerTurn}";
             log += $"\n\t UnboundTiles.Length = {UnboundTiles.Count}";
 
-            log += $"\n\t Nb players = {HexaTuples.Count}";
+            log += $"\n\t Nb players = {PlayersCount}";
+            for(int i = 0; i < PlayersCount; i++)
+            {
+                log += $"\n\t\t Player {i} = {HexaTuples[i].player.Id.ToAddress()}";
+            }
 
             return log;
         }
