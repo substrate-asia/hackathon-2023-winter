@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,8 +26,8 @@ namespace Substrate.Hexalem.NET.AI
 
             foreach (PlayAction action in GetPossibleActions(initialState))
             {
-                var clone = (HexaGame)initialState.Clone();
-                int score = Minimax(ApplyAction(clone, action), 0, false);
+                var gameClone = initialState.Clone();
+                int score = Minimax(ApplyAction(gameClone, action), 0, true);
 
                 if (score > bestScore)
                 {
@@ -34,6 +35,19 @@ namespace Substrate.Hexalem.NET.AI
                     bestAction = action;
                 }
             }
+
+            if (bestAction.CanPlay)
+            {
+                if (bestAction.PlayTileAt != null)
+                {
+                    Log.Information("[AI {_index} MinMax] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, bestAction.SelectionIndex, SelectionTiles(initialState)[bestAction.SelectionIndex.Value], bestAction.PlayTileAt.Value.q, bestAction.PlayTileAt.Value.r);
+                } else if(bestAction.UpgradeTileAt != null)
+                {
+                    var tileUpgraded = (HexaTile)initialState.HexaTuples[initialState.PlayerTurn].board[bestAction.UpgradeTileAt.Value.q, bestAction.UpgradeTileAt.Value.r];
+                    Log.Information("[AI {_index} MinMax] choose tu upgrade tile ({typeTile}) at ({r},{q})", _index, tileUpgraded, bestAction.UpgradeTileAt.Value.q, bestAction.UpgradeTileAt.Value.r);
+                }
+            }
+            
 
             return bestAction;
         }
@@ -66,16 +80,10 @@ namespace Substrate.Hexalem.NET.AI
                     int eval = Minimax(ApplyAction(state, action), depth + 1, true);
                     minEval = Math.Min(minEval, eval);
                 }
-
                 return minEval;
             }
-        }
 
-        private bool IsTerminal(HexaGame state)
-        {
-            // Check if the state is terminal (end of the game).
-            // Return true if the game is over, false otherwise.
-            return !(UpgradableTiles(state).Any() && EmptyMapTiles(state).Any());
+            state = Game.FinishTurn(0, state, state.PlayerTurn);
         }
 
         private List<PlayAction> GetPossibleActions(HexaGame state)

@@ -82,6 +82,12 @@ namespace Substrate.Hexalem
             return true;
         }
 
+        public HexaTile Clone()
+        {
+            var cloneTile = new HexaTile(Value);
+            return cloneTile;
+        }
+
         public override string ToString()
         {
             return $"{TileType} - {TileRarity} - {TilePattern}";

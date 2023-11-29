@@ -24,7 +24,7 @@ namespace Substrate.Hexalem
                 hexaTuple.Add((player, hexaBoard));
             }
 
-            var hexaGame = new HexaGame(randomHash, randomHash, hexaTuple);
+            var hexaGame = new HexaGame(randomHash, hexaTuple);
             hexaGame.Init(blockNumber);
 
             Log.Information($"New Game created, with a {gridSize} hex grid and {hexaGame.PlayersCount} players.");

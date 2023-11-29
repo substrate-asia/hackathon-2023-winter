@@ -73,6 +73,12 @@ namespace Substrate.Hexalem
 
         }
 
+        internal HexaBoard Clone()
+        {
+            var cloneBoard = new HexaBoard((byte[])Value.Clone());
+            return cloneBoard;
+        }
+
         /// <summary>
         /// Indexer to access the internal array
         /// </summary>
@@ -319,7 +325,7 @@ namespace Substrate.Hexalem
 
             if (Value[index.Value] != 0x00)
             {
-                Log.Warning("Try to put a new tile ${tileType} on a non empty tile map (index = ${tileMapIndex}", chooseTile.TileType, index.Value);
+                Log.Warning("Try to put a new tile {tileType} on a non empty tile map (index = {tileMapIndex})", chooseTile.TileType, index.Value);
 
                 return false;
             }

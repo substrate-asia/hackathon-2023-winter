@@ -97,6 +97,14 @@ namespace Substrate.Hexalem.NET.AI
             return freeTiles;
         }
 
+        protected bool IsTerminal(HexaGame state)
+        {
+            // Player can play if :
+            // He can upgrade tiles
+            // Or : He can buy tile and put them on the board
+            return !(UpgradableTiles(state).Any() || (SelectionTiles(state).Any() && EmptyMapTiles(state).Any()));
+        }
+
         /// <summary>
         /// Expose available win condition a player can choose
         /// </summary>

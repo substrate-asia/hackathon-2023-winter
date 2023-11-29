@@ -27,7 +27,7 @@ namespace Substrate.Hexalem
         /// </summary>
         public List<HexaTile> UnboundTiles { get; private set; }
 
-        public HexaGame(byte[] id, byte[] selectionHash, List<(HexaPlayer, HexaBoard)> hexaTuples)
+        public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
             Id = id;
             Value = new byte[16];
@@ -78,7 +78,7 @@ namespace Substrate.Hexalem
                 Log.Debug("UnboundTiles is below half");
                 if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
                 {
-                    Log.Information($"Selection is now {SelectBase}");
+                    Log.Debug($"Selection is now {SelectBase}");
                     SelectBase += 2;
                 }
 
@@ -377,6 +377,24 @@ namespace Substrate.Hexalem
             }
 
             return true;
+        }
+
+        public HexaGame Clone()
+        {
+            var gameId = (byte[])this.Id.Clone();
+            var players = this.HexaTuples.Select(x => (x.player.Clone(), x.board.Clone())).ToList();
+
+            var cloneGame = new HexaGame(gameId, players);
+
+            cloneGame.HexBoardState = this.HexBoardState;
+            cloneGame.HexBoardRound = this.HexBoardRound;
+            cloneGame.HexBoardTurn = this.HexBoardTurn;
+            cloneGame.PlayerTurn = this.PlayerTurn;
+            cloneGame.SelectBase = this.SelectBase;
+
+            cloneGame.UnboundTiles = this.UnboundTiles.Select(x => x.Clone()).ToList();
+
+            return cloneGame;
         }
     }
 
