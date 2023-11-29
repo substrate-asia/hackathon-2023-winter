@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Serilog;
 using StrobeNet.Extensions;
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Storage;
@@ -27,7 +28,31 @@ namespace Substrate.Integration
 
         #region storage
 
+        /// <summary>
+        /// Get game
+        /// </summary>
+        /// <param name="gameId"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<GameSharp?> GetGameAsync(byte[] gameId, CancellationToken token)
+        {
+            if (!IsConnected)
+            {
+                Log.Warning("Currently not connected to the network!");
+                return null;
+            }
 
+            var key = new Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8();
+            key.Create(gameId);
+
+            var result = await SubstrateClient.HexalemModuleStorage.GameStorage(key, token);
+            if (result == null)
+            {
+                return null;
+            }
+
+            return new GameSharp(result);
+        }
 
         #endregion storage
 
