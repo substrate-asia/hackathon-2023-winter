@@ -773,27 +773,27 @@ impl<T: Config> Pallet<T> {
 			};
 		}
 
+		
+		let food_and_water_eaten = cmp::min(hex_board.food.saturating_mul(FOOD_PER_HUMAN), hex_board.water.saturating_mul(WATER_PER_HUMAN));
+
 		let number_of_humans = NUMBER_OF_FIRST_HUMANS
-			.saturating_add(cmp::min(
-				hex_board.food.saturating_mul(FOOD_PER_HUMAN),
-				hex_board.water.saturating_mul(WATER_PER_HUMAN),
-			))
+			.saturating_add(food_and_water_eaten)
 			.saturating_add(board_stats.houses);
 
 		hex_board.mana = hex_board.mana.saturating_add(number_of_humans);
-
-		hex_board.humans = number_of_humans;
 
 		hex_board.water = hex_board
 			.water
 			.saturating_add(board_stats.waters)
 			.saturating_add(board_stats.rivers.saturating_mul(3))
-			.saturating_add(board_stats.extreme_mountains);
+			.saturating_add(board_stats.extreme_mountains)
+			.saturating_sub(food_and_water_eaten);
 
 		hex_board.food = hex_board
 			.food
 			.saturating_add(board_stats.grass)
-			.saturating_add(board_stats.farms.saturating_mul(3));
+			.saturating_add(board_stats.farms.saturating_mul(3))
+			.saturating_sub(food_and_water_eaten);
 
 		hex_board.wood = hex_board
 			.wood
