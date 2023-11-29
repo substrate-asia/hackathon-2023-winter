@@ -141,7 +141,7 @@ namespace Substrate.Hexalem
             // check if player has enough mana
             if (hexaPlayer[RessourceType.Mana] == 0)
             {
-                Log.Error("Player ${playerNum} does not have enough mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
+                Log.Error("Player {playerNum} does not have enough mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
 
                 return false;
             }

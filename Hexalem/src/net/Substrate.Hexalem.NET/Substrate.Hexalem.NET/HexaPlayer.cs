@@ -1,5 +1,6 @@
 ﻿using Substrate.Hexalem.NET;
 using System;
+using System.Linq;
 
 namespace Substrate.Hexalem
 {
@@ -22,6 +23,19 @@ namespace Substrate.Hexalem
         {
             Id = id;
             Value = hash;
+        }
+
+        public static HexaPlayer Create(byte[] value)
+        {
+            if (value.Length != (32 + GameConfig.PLAYER_STORAGE_SIZE))
+                throw new ArgumentException("Value does not have the right size");
+
+            return new HexaPlayer(value.Take(32).ToArray(), value.Skip(32).Take(GameConfig.PLAYER_STORAGE_SIZE).ToArray());
+        }
+
+        public byte[] Export()
+        {
+            return Id.Concat(Value).ToArray();
         }
 
         public byte this[RessourceType ressourceType]

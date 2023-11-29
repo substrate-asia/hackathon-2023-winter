@@ -25,7 +25,8 @@ namespace Substrate.Hexalem.NET.AI
 
             foreach (PlayAction action in GetPossibleActions(initialState))
             {
-                int score = Minimax(ApplyAction(initialState, action), 0, false);
+                var clone = (HexaGame)initialState.Clone();
+                int score = Minimax(ApplyAction(clone, action), 0, false);
 
                 if (score > bestScore)
                 {
@@ -74,7 +75,7 @@ namespace Substrate.Hexalem.NET.AI
         {
             // Check if the state is terminal (end of the game).
             // Return true if the game is over, false otherwise.
-            return !bestAction.CanPlay;
+            return !(UpgradableTiles(state).Any() && EmptyMapTiles(state).Any());
         }
 
         private List<PlayAction> GetPossibleActions(HexaGame state)
@@ -107,6 +108,7 @@ namespace Substrate.Hexalem.NET.AI
                 possibleActions.Add(PlayAction.Upgrade(tileUpgrade));
             }
 
+            Log.Debug("[MinMax - GetPossibleActions] {nb} possible action found", possibleActions.Count);
             return possibleActions;
         }
 
@@ -139,7 +141,26 @@ namespace Substrate.Hexalem.NET.AI
             var newStone = state.Evaluate(RessourceType.Stone, hexaPlayer, hexaBoardStats);
             var newGold = state.Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
 
-            return 0;
+            var score =
+                manaScore(hexaPlayer.WinningCondition.WinningCondition) * newMana +
+                humanScore(hexaPlayer.WinningCondition.WinningCondition) * newHumans +
+                waterScore(hexaPlayer.WinningCondition.WinningCondition) * newWater +
+                foodScore(hexaPlayer.WinningCondition.WinningCondition) * newFood +
+                woodScore(hexaPlayer.WinningCondition.WinningCondition) * newWood +
+                stoneScore(hexaPlayer.WinningCondition.WinningCondition) * newStone +
+                goldScore(hexaPlayer.WinningCondition.WinningCondition) * newGold;
+
+
+            Log.Debug("\t[MinMax evaluation] Score = {score}", score);
+            return score;
         }
+
+        private int manaScore(WinningCondition wc) => 5;
+        private int humanScore(WinningCondition wc) => wc == WinningCondition.HumanThreshold ? 8 : 5;
+        private int waterScore(WinningCondition wc) => 1;
+        private int foodScore(WinningCondition wc) => 1;
+        private int woodScore(WinningCondition wc) => 1;
+        private int stoneScore(WinningCondition wc) => 1;
+        private int goldScore(WinningCondition wc) => wc == WinningCondition.GoldThreshold ? 8 : 5;
     }
 }
