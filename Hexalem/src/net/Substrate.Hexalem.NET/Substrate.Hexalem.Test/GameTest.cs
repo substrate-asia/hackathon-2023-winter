@@ -197,25 +197,21 @@ namespace Substrate.Hexalem.Test
 
             var hexGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
-            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(0));
             Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
             Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
 
             Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
 
-            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(1));
             Assert.That(hexGame.PlayerTurn, Is.EqualTo(1));
             Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
 
             Game.FinishTurn(2, hexGame, hexGame.PlayerTurn);
 
-            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(2));
             Assert.That(hexGame.PlayerTurn, Is.EqualTo(2));
             Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
 
             Game.FinishTurn(3, hexGame, hexGame.PlayerTurn);
 
-            Assert.That(hexGame.HexBoardTurn, Is.EqualTo(0));
             Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
             Assert.That(hexGame.HexBoardRound, Is.EqualTo(1));
         }

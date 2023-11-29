@@ -1,7 +1,10 @@
-﻿using Serilog;
+﻿using Newtonsoft.Json.Linq;
+using Serilog;
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.Extensions;
 using Substrate.Hexalem.NET.GameException;
+using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +19,6 @@ namespace Substrate.Hexalem
         public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
-
         /// <summary>
         /// Associate a player and his board
         /// </summary>
@@ -27,10 +29,70 @@ namespace Substrate.Hexalem
         /// </summary>
         public List<HexaTile> UnboundTiles { get; private set; }
 
-        public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
+        protected HexaGame()
+        {
+            Value = new byte[GameConfig.GAME_STORAGE_SIZE];
+        }
+
+        public HexaGame(GameSharp game, BoardSharp[] boards) : this()
+        {
+            if (boards.Any(x => Utils.Bytes2HexString(x.GameId) != Utils.Bytes2HexString(game.GameId)))
+                throw new InvalidOperationException($"Error while trying to create an HexaGame instance with different gameId ({game.GameId}/{boards.ToLog()})");
+
+            if (boards.Length != game.Players.Length)
+                throw new InvalidOperationException($"Inconsistent boards count (={boards.Length}) and players count (={game.Players.Length})");
+
+            
+            Id = game.GameId;
+
+            switch(game.State)
+            {
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Matchmaking:
+                    HexBoardState = HexBoardState.Preparing;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Playing:
+                    HexBoardState = HexBoardState.Running;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Finished:
+                    HexBoardState = HexBoardState.Finish;
+                    break;
+            }
+
+            HexBoardRound = game.Round;
+            PlayerTurn = game.PlayerTurn;
+            SelectBase = game.SelectionSize;
+            UnboundTiles = game.Selection.Select(x => (HexaTile)x).ToList();
+
+            // Assume that board and players are ordered
+            HexaTuples = new List<(HexaPlayer, HexaBoard)>();
+            foreach (var (board, playerAddress) in boards.Zip(game.Players, (b, p) => (b, p)))
+            {
+                var hexTiles = board.HexGrid.Select(x => new HexaTile(x));
+                var currentBoard = new HexaBoard(hexTiles.Select(x => x.Value).ToArray());
+
+                var ressources = new List<byte>()
+                {
+                    board.Mana,
+                    board.Humans,
+                    board.Water,
+                    board.Food,
+                    board.Wood,
+                    board.Stone,
+                    board.Gold
+                };
+
+                var currentPlayer = new HexaPlayer(Utils.GetPublicKeyFrom(playerAddress), ressources.ToArray());
+
+                HexaTuples.Add((currentPlayer, currentBoard));
+            }
+
+            PlayersCount = (byte)HexaTuples.Count;
+
+        }
+
+        public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples) : this()
         {
             Id = id;
-            Value = new byte[16];
 
             HexaTuples = hexaTuples;
             UnboundTiles = new List<HexaTile>();
@@ -49,7 +111,6 @@ namespace Substrate.Hexalem
 
             HexBoardState = HexBoardState.Running;
             HexBoardRound = 0;
-            HexBoardTurn = 0;
             PlayerTurn = 0;
             SelectBase = 2;
 
@@ -60,7 +121,7 @@ namespace Substrate.Hexalem
         {
             HexaTuples.ForEach(p => { p.player.NextRound(blockNumber); p.board.NextRound(blockNumber); });
 
-            HexBoardTurn = 0;
+            PlayerTurn = 0;
             HexBoardRound += 1;
             Log.Information("Next round : reset turn to 0 and increase board round (now = {hbt})", HexBoardRound);
         }
@@ -233,25 +294,22 @@ namespace Substrate.Hexalem
             PlayerTurn = (byte)((PlayerTurn + 1) % PlayersCount);
             Log.Debug("Switch to player {p}", PlayerTurn);
 
-            HexBoardTurn = (byte)(PlayerTurn % PlayersCount);
-            Log.Debug("Switch to board turn {bt}", HexBoardTurn);
-
             return true;
         }
 
-        internal void UpdateRound(uint blockNumber)
-        {
-            Log.Information($"BlockNumber = {blockNumber} - End of round {HexBoardRound}, add {GameConfig.FREE_MANA_PER_ROUND} mana to each player and start a new round");
+        //internal void UpdateRound(uint blockNumber)
+        //{
+        //    Log.Information($"BlockNumber = {blockNumber} - End of round {HexBoardRound}, add {GameConfig.FREE_MANA_PER_ROUND} mana to each player and start a new round");
 
-            // add 1 mana to all players
-            HexaTuples.ForEach(p =>
-            {
-                p.Item1[RessourceType.Mana] += GameConfig.FREE_MANA_PER_ROUND;
-            });
+        //    // add 1 mana to all players
+        //    HexaTuples.ForEach(p =>
+        //    {
+        //        p.Item1[RessourceType.Mana] += GameConfig.FREE_MANA_PER_ROUND;
+        //    });
 
-            HexBoardTurn = 0;
-            HexBoardRound += 1;
-        }
+        //    PlayerTurn = 0;
+        //    HexBoardRound += 1;
+        //}
 
         public bool IsGameWon()
         {
@@ -388,13 +446,27 @@ namespace Substrate.Hexalem
 
             cloneGame.HexBoardState = this.HexBoardState;
             cloneGame.HexBoardRound = this.HexBoardRound;
-            cloneGame.HexBoardTurn = this.HexBoardTurn;
             cloneGame.PlayerTurn = this.PlayerTurn;
             cloneGame.SelectBase = this.SelectBase;
 
             cloneGame.UnboundTiles = this.UnboundTiles.Select(x => x.Clone()).ToList();
 
             return cloneGame;
+        }
+
+        public override string ToString()
+        {
+            string log = $"HexaGame value :";
+
+            log += $"\n\t Id = {Utils.Bytes2HexString(Id)}";
+            log += $"\n\t HexBoardState = {HexBoardState}";
+            log += $"\n\t HexBoardRound = {HexBoardRound}";
+            log += $"\n\t PlayerTurn = {PlayerTurn}";
+            log += $"\n\t UnboundTiles.Length = {UnboundTiles.Count}";
+
+            log += $"\n\t Nb players = {HexaTuples.Count}";
+
+            return log;
         }
     }
 
@@ -417,16 +489,6 @@ namespace Substrate.Hexalem
         {
             get => Value[1];
             set => Value[1] = value;
-        }
-
-        /// <summary>
-        /// Holding the current turn number
-        /// There is a maximum of 4 turns per round
-        /// </summary>
-        public byte HexBoardTurn
-        {
-            get => Value[2];
-            set => Value[2] = value;
         }
 
         /// <summary>

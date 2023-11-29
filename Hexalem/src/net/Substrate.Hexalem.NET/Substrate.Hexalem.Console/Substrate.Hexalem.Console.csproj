@@ -9,10 +9,21 @@
 
   <ItemGroup>
     <PackageReference Include="Serilog.Sinks.Console" Version="5.0.0" />
+    <PackageReference Include="Substrate.NET.API" Version="0.9.11" />
+    <PackageReference Include="Substrate.NET.Wallet" Version="1.0.7" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Accounts\json_alice.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Accounts\json_password_apo.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

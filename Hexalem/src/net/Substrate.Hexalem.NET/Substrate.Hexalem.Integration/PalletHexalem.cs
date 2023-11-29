@@ -46,14 +46,23 @@ namespace Substrate.Integration
             key.Create(gameId);
 
             var result = await SubstrateClient.HexalemModuleStorage.GameStorage(key, token);
-            if (result == null)
-            {
-                return null;
-            }
+            
+            if (result == null) return null;
 
-            return new GameSharp(result);
+            return new GameSharp(gameId, result);
         }
 
+        public async Task<BoardSharp?> GetBoardAsync(string playerAddress, CancellationToken token)
+        {
+            var key = new AccountId32();
+            key.Create(Utils.GetPublicKeyFrom(playerAddress));
+
+            var result = await SubstrateClient.HexalemModuleStorage.HexBoardStorage(key, token);
+
+            if (result == null) return null;
+
+            return new BoardSharp(result);
+        }
         #endregion storage
 
         #region call

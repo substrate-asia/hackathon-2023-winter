@@ -10,4 +10,8 @@
     <PackageReference Include="Substrate.NET.API" Version="0.9.11" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -9,8 +9,9 @@ namespace Substrate.Hexalem.Integration.Model
 {
     public class GameSharp
     {
-        public GameSharp(Game game)
+        public GameSharp(byte[] gameId, Game game)
         {
+            GameId = gameId;
             State = game.State.Value;
             MaxRounds = game.MaxRounds.Value;
             Round = game.Round.Value;
@@ -22,6 +23,7 @@ namespace Substrate.Hexalem.Integration.Model
             SelectionSize = game.SelectionSize.Value;
         }
 
+        public byte[] GameId { get; private set; }
         public GameState State { get; private set; }
         public byte MaxRounds { get; private set; }
         public byte Round { get; private set; }

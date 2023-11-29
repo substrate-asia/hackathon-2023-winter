@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace Substrate.Hexalem
 {
     public static class Game
     {
+        
         public static HexaGame CreateGame(uint blockNumber, List<HexaPlayer> players, GridSize gridSize)
         {
             Random random = new Random();
@@ -85,7 +87,7 @@ namespace Substrate.Hexalem
                 return hexaGame;
             }
 
-            if (hexaGame.HexBoardTurn != 0)
+            if (hexaGame.PlayerTurn != 0)
             {
                 Log.Debug("Players does not have already played this turn");
                 return hexaGame;
