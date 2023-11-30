@@ -48,7 +48,7 @@ Mimir serves as a gateway for non-EOA accounts, offering unhindered access to a 
 
 夏季黑客松Demo: https://drive.google.com/file/d/1kEImUb6QvMj1GvGBSqOO1mohMdXBfsR8/view?usp=drive_link
 
-- 技术架构
+## 技术架构
 
 *后端*: 使用nodejs以及koa框架，提供交易以及账户查询
 
