@@ -49,8 +49,12 @@ Mimir serves as a gateway for non-EOA accounts, offering unhindered access to a 
 夏季黑客松Demo: https://drive.google.com/file/d/1kEImUb6QvMj1GvGBSqOO1mohMdXBfsR8/view?usp=drive_link
 
 - 技术架构
-- 项目的启始的commit，对于全新的项目可以是一个开源框架的clone，比如区块链clone自substrate-node-template, react 框架等，请给出说明。对于成熟项目可以是一个branch，要求在2023年11月1号之后生成，说明有哪些功能是已经有了的
-TODO
+
+*后端*: 使用nodejs以及koa框架，提供交易以及账户查询
+
+*监听端*: 采用polkadotjs监听链上交易，并使用图数据库进行存储
+
+*前端*: react技术栈
 
 ## Github
 
@@ -136,7 +140,7 @@ Mimir组装了Proxy + Multisig，实现了具有可变成员和阈值的多签�
 ### 功能3：交易监听
 
 用户可以恢复通过其他应用创建的多签账户，并可以使用Call Data恢复通过其他应用发起的多签交易。
-1. **交易监听框架**：通过监听substrate节点的交易，根据账户之间的关系模型构建出交易模型。
+1. **交易监听框架**：后端通过监听substrate节点的交易，解析并根据账户之间的关系模型构建出交易模型。
 2. **UI/UX**：包括Mimir整体应用设置功能（RPC设置和账户显示设置），以及用户恢复和管理来自其他Dapp的交易和账户的可视化界面。
 
 ### 功能4：用户体验优化
