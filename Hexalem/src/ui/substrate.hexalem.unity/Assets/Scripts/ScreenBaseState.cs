@@ -20,6 +20,7 @@ namespace Assets.Scripts
 
         protected StorageManager Storage => StorageManager.GetInstance();
 
+
         protected ScreenBaseState(FlowController flowController, ScreenBaseState parentState = null)
         {
             FlowController = flowController;

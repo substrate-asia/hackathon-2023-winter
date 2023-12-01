@@ -9,7 +9,11 @@ namespace Assets.Scripts
     public enum ScreenState
     {
         StartScreen,
-        MainScreen
+        ChooseScreen,
+        MainScreen,
+        GameScreen,
+        HistoryScreen,
+        AccountScreen
     }
 
     public enum ScreenSubState
@@ -50,6 +54,10 @@ namespace Assets.Scripts
 
             // Initialize states
             _stateDictionary.Add(ScreenState.StartScreen, new LoginScreen(this));
+            _stateDictionary.Add(ScreenState.ChooseScreen, new ChooseScreen(this));
+            _stateDictionary.Add(ScreenState.HistoryScreen, new HistoryScreen(this));
+            _stateDictionary.Add(ScreenState.AccountScreen, new AccountScreen(this));
+
             var mainScreen = new MainScreenState(this);
             _stateDictionary.Add(ScreenState.MainScreen, mainScreen);
 
