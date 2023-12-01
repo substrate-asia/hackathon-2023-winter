@@ -1,0 +1,23 @@
+[workspace.package]
+version = "1.0.1"
+authors = ["Share Technologies"]
+edition = "2021"
+license = "GPL-3.0"
+homepage = "https://friend.io"
+repository = "https://github.com/gear-tech/gear"
+
+[workspace]
+resolver = "2"
+
+members = [
+    "kee_bee_share",
+    "kee_bee_share/kee-bee-io",
+]
+
+
+[workspace.dependencies]
+gstd = { git = "https://github.com/gear-tech/gear.git", tag = "v1.0.1" }
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", tag = "v1.0.1" }
+gtest = { git = "https://github.com/gear-tech/gear.git", tag = "v1.0.1" }
+gmeta = { git = "https://github.com/gear-tech/gear", tag = "v1.0.1" }
+primitive-types = { version = "0.12", default-features = false }
