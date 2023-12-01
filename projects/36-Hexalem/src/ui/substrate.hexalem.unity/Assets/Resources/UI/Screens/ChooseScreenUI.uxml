@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="ChooseScreen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0);">
+        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 200px; width: 100%; justify-content: center;" />
+        <ui:VisualElement name="FloatBody" style="flex-grow: 1; height: auto; width: 100%; flex-shrink: 1;" />
+        <ui:VisualElement name="BottomBound" style="flex-grow: 0; height: 150px; width: 100%; flex-shrink: 0;" />
+    </ui:VisualElement>
+</ui:UXML>
