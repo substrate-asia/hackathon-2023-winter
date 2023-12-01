@@ -442,7 +442,6 @@ pub mod pallet {
 				players,
 			});
 
-
 			Ok(())
 		}
 
@@ -609,7 +608,10 @@ impl<T: Config> Pallet<T> {
 		// Casting
 		game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
 
-		Self::deposit_event(Event::NewTileSelection { game_id: selection_base, selection: game.selection.clone() });
+		Self::deposit_event(Event::NewTileSelection {
+			game_id: selection_base,
+			selection: game.selection.clone(),
+		});
 
 		Ok(())
 	}
@@ -640,7 +642,10 @@ impl<T: Config> Pallet<T> {
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
 
-			Self::deposit_event(Event::SelectionRefilled { game_id: selection_base, selection: game.selection.clone() });
+			Self::deposit_event(Event::SelectionRefilled {
+				game_id: selection_base,
+				selection: game.selection.clone(),
+			});
 		}
 
 		Ok(())
@@ -744,10 +749,12 @@ impl<T: Config> Pallet<T> {
 					board_stats.mountains = board_stats.mountains.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.extreme_mountains = board_stats.extreme_mountains.saturating_add(1);
+						board_stats.extreme_mountains =
+							board_stats.extreme_mountains.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.extreme_mountains = board_stats.extreme_mountains.saturating_add(1);
+						board_stats.extreme_mountains =
+							board_stats.extreme_mountains.saturating_add(1);
 					}
 				},
 				TileType::Desert => (),
@@ -766,25 +773,36 @@ impl<T: Config> Pallet<T> {
 			};
 		}
 
+		
+		let food_and_water_eaten = cmp::min(hex_board.food.saturating_mul(FOOD_PER_HUMAN), hex_board.water.saturating_mul(WATER_PER_HUMAN));
+
 		let number_of_humans = NUMBER_OF_FIRST_HUMANS
-			.saturating_add(cmp::min(
-				hex_board.food.saturating_mul(FOOD_PER_HUMAN),
-				hex_board.water.saturating_mul(WATER_PER_HUMAN),
-			))
+			.saturating_add(food_and_water_eaten)
 			.saturating_add(board_stats.houses);
 
 		hex_board.mana = hex_board.mana.saturating_add(number_of_humans);
 
-		hex_board.humans = number_of_humans;
+		hex_board.water = hex_board
+			.water
+			.saturating_add(board_stats.waters)
+			.saturating_add(board_stats.rivers.saturating_mul(3))
+			.saturating_add(board_stats.extreme_mountains)
+			.saturating_sub(food_and_water_eaten);
 
-		hex_board.water = hex_board.water.saturating_add(board_stats.waters).saturating_add(board_stats.rivers.saturating_mul(3)).saturating_add(board_stats.extreme_mountains);
+		hex_board.food = hex_board
+			.food
+			.saturating_add(board_stats.grass)
+			.saturating_add(board_stats.farms.saturating_mul(3))
+			.saturating_sub(food_and_water_eaten);
 
-		hex_board.food = hex_board.food.saturating_add(board_stats.grass).saturating_add(board_stats.farms.saturating_mul(3));
-
-		hex_board.wood = hex_board.wood.saturating_add(cmp::min(board_stats.trees, (number_of_humans + 1) / 2))
+		hex_board.wood = hex_board
+			.wood
+			.saturating_add(cmp::min(board_stats.trees, (number_of_humans + 1) / 2))
 			.saturating_add(board_stats.forrests.saturating_mul(3));
 
-		hex_board.stone = hex_board.stone.saturating_add(cmp::min(board_stats.mountains, number_of_humans / 2))
+		hex_board.stone = hex_board
+			.stone
+			.saturating_add(cmp::min(board_stats.mountains, number_of_humans / 2))
 			.saturating_add(board_stats.extreme_mountains.saturating_mul(3));
 	}
 
