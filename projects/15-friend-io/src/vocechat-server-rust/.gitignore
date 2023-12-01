@@ -1,0 +1,9 @@
+target
+/data
+/data1
+.idea
+build/docker/config
+build/docker/wwwroot
+build/docker/*.zip
+build/docker/vocechat-server
+wwwroot
