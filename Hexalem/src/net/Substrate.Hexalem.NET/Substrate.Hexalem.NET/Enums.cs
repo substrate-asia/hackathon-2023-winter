@@ -14,21 +14,19 @@
 
     public enum TileRarity
     {
-        None = 0,
-        Normal = 1,
-        Rare = 2,
-        Epic = 3,
-        Legendary = 4,
+        Normal = 0,
+        Rare = 1,
+        Epic = 2,
+        Legendary = 3,
         // Mythic = 5, // ...
     }
 
     public enum TilePattern
     {
-        None = 0,
-        Normal = 1,
-        Delta = 2,
-        Line = 3,
-        Ypsilon = 4
+        Normal = 0,
+        Delta = 1,
+        Line = 2,
+        Ypsilon = 3
     }
 
     public enum GridSize

@@ -166,9 +166,8 @@ namespace Substrate.Hexalem
             for (int i = 0; i < selectBase; i++)
             {
                 var rawTile = Id[(offSet + selectBase) % 32];
-                // TODO: change this
-                //result.Add((byte)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)));
-                result.Add(new HexaTile((TileType)(((byte)TileRarity.Normal << 4) | (byte)(int)values.GetValue((byte)(rawTile & 0x0F) % values.Length)), TileRarity.Normal, TilePattern.Normal));
+
+                result.Add(new HexaTile(values[rawTile % values.Length], TileRarity.Normal, TilePattern.Normal));
             }
             return result;
         }
@@ -243,7 +242,7 @@ namespace Substrate.Hexalem
             // Ensure coord have a valid tile
             var existingTile = (HexaTile)hexaBoard[coords.q, coords.r];
 
-            if (existingTile.TileType == TileType.None || existingTile.TileRarity == TileRarity.None)
+            if (existingTile.TileType == TileType.None)
             {
                 Log.Warning("Cannot upgrade tile ({q, r}) because it not a valid tile", coords.q, coords.r);
                 return false;

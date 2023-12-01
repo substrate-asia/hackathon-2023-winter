@@ -94,12 +94,6 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool CanUpgrade()
         {
-            if (TileRarity == TileRarity.None) // Should never happen but...
-            {
-                Log.Debug("Cannot upgrade tile which has not been set");
-                return false;
-            }
-
             if (TileRarity == TileRarity.Legendary)
             {
                 Log.Debug($"{nameof(TileRarity.Legendary)} cannot be upgrade");
