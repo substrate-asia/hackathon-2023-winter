@@ -336,13 +336,14 @@ parameter_types! {
 	pub const HexalemMaxTileSelectionBase: u8 = 32;
 	pub const HexalemAllTileOffers: [TileOffer<Runtime>; 16] = [
 		TileOffer {
-			tile_to_buy: HexalemTile{
+			tile_to_buy: HexalemTile {
 				tile_type: TileType::Tree,
 				tile_level: 1,
 				formations: [false; 3]
 			},
+			
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
@@ -353,7 +354,7 @@ parameter_types! {
 				formations: [false; 3]
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
@@ -364,7 +365,7 @@ parameter_types! {
 				formations: [false; 3]
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Water,
+				material_type: Material::Gold,
 				material_cost: 2,
 			}
 		},
@@ -375,7 +376,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Stone,
+				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
@@ -386,7 +387,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Stone,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
@@ -397,7 +398,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Food,
+				material_type: Material::Gold,
 				material_cost: 2,
 			}
 		},
@@ -409,7 +410,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Food,
+				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
@@ -420,7 +421,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Food,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
@@ -431,8 +432,8 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Food,
-				material_cost: 3,
+				material_type: Material::Gold,
+				material_cost: 1,
 			}
 		},
 
@@ -443,7 +444,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Water,
+				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
@@ -454,7 +455,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Water,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
@@ -465,8 +466,8 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Water,
-				material_cost: 3,
+				material_type: Material::Gold,
+				material_cost: 1,
 			}
 		},
 
@@ -477,7 +478,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
@@ -488,7 +489,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Wood,
+				material_type: Material::Mana,
 				material_cost: 3,
 			}
 		},
@@ -499,7 +500,7 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Stone,
+				material_type: Material::Gold,
 				material_cost: 2,
 			}
 		},
@@ -510,11 +511,19 @@ parameter_types! {
 				formations: [false; 3],
 			},
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Stone,
+				material_type: Material::Gold,
 				material_cost: 3,
 			}
 		},
 	];
+	pub const HexalemHomeTile: HexalemTile = HexalemTile {
+		tile_type: TileType::Home,
+		tile_level: 1,
+		formations: [false; 3],
+	};
+
+	pub const HexalemFoodPerHuman: u8 = 1u8;
+	pub const HexalemWaterPerHuman: u8 = 1u8;
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -544,6 +553,10 @@ impl pallet_hexalem::Config for Runtime {
 	type Tile = HexalemTile;
 	type MaterialCost = HexalemMaterialCost;
 	type AllTileOffers = HexalemAllTileOffers;
+	type WaterPerHuman = HexalemWaterPerHuman;
+	type FoodPerHuman = HexalemFoodPerHuman;
+	type HomeTile = HexalemHomeTile;
+
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

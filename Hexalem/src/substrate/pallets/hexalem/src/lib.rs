@@ -43,11 +43,6 @@ pub mod pallet {
 
 	pub type GameId = [u8; 32];
 
-	pub const WATER_PER_HUMAN: u8 = 1u8;
-	pub const FOOD_PER_HUMAN: u8 = 1u8;
-	pub const RESOURCE_PER_TILE: u8 = 1u8;
-	pub const NUMBER_OF_FIRST_HUMANS: u8 = 1u8;
-
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
 	pub enum GameState {
 		Matchmaking,
@@ -207,6 +202,8 @@ pub mod pallet {
 	}
 
 	pub struct BoardStats {
+		pub home_level: u8,
+
 		pub trees: u8,
 		pub mountains: u8,
 		pub waters: u8,
@@ -222,6 +219,7 @@ pub mod pallet {
 	impl Default for BoardStats {
 		fn default() -> Self {
 			Self {
+				home_level: 0,
 				trees: 0,
 				mountains: 0,
 				waters: 0,
@@ -237,9 +235,11 @@ pub mod pallet {
 
 	impl<T: Config> HexBoard<T> {
 		fn new(size: usize, game_id: GameId) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
-			let empty_hex_grid: HexGrid<T> = vec![Default::default(); size]
+			let mut new_hex_grid: HexGrid<T> = vec![Default::default(); size]
 				.try_into()
 				.map_err(|_| Error::<T>::InternalError)?;
+
+			new_hex_grid[size / 2] = T::HomeTile::get();
 
 			Ok(HexBoard::<T> {
 				gold: 255,
@@ -248,8 +248,8 @@ pub mod pallet {
 				food: 0,
 				water: 0,
 				mana: 1,
-				humans: NUMBER_OF_FIRST_HUMANS,
-				hex_grid: empty_hex_grid,
+				humans: 1,
+				hex_grid: new_hex_grid,
 				game_id,
 			})
 		}
@@ -303,6 +303,15 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type AllTileOffers: Get<TileOffers<Self>>;
+
+		#[pallet::constant]
+		type WaterPerHuman: Get<u8>;
+
+		#[pallet::constant]
+		type FoodPerHuman: Get<u8>;
+
+		#[pallet::constant]
+		type HomeTile: Get<Self::Tile>;
 	}
 
 	// The pallet's runtime storage items.
@@ -614,6 +623,25 @@ pub mod pallet {
 
 			Ok(())
 		}
+		#[pallet::call_index(3)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn root_delete_game(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
+			ensure_root(origin)?;
+
+			// Ensures that the Game exists
+			let game = match GameStorage::<T>::get(&game_id) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()),
+			};
+
+			for player in &game.players {
+				HexBoardStorage::<T>::remove(player);
+			}
+
+			GameStorage::<T>::remove(&game_id);
+
+			Ok(())
+		}
 	}
 }
 
@@ -763,6 +791,9 @@ impl<T: Config> Pallet<T> {
 
 		for tile in &hex_board.hex_grid {
 			match tile.get_type() {
+				TileType::Home => {
+					board_stats.home_level = tile.get_level();
+				},
 				TileType::Tree => {
 					board_stats.trees = board_stats.trees.saturating_add(1);
 					let flags = tile.get_formation_flags();
@@ -810,11 +841,10 @@ impl<T: Config> Pallet<T> {
 				_ => (),
 			};
 		}
-
 		
-		let food_and_water_eaten = cmp::min(hex_board.food.saturating_mul(FOOD_PER_HUMAN), hex_board.water.saturating_mul(WATER_PER_HUMAN));
+		let food_and_water_eaten = cmp::min(hex_board.food.saturating_mul(T::FoodPerHuman::get()), hex_board.water.saturating_mul(T::WaterPerHuman::get()));
 
-		let number_of_humans = NUMBER_OF_FIRST_HUMANS
+		let number_of_humans = board_stats.home_level
 			.saturating_add(food_and_water_eaten)
 			.saturating_add(board_stats.houses);
 
