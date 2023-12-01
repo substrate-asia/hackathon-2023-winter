@@ -31,7 +31,7 @@ namespace Substrate.Hexalem.Console
             uint blockNumber = 1;
             do
             {
-                Log.Information("[Turn {turnId}][Round {roundId}] Player {playerId} is currently playing...", hexGame.HexBoardTurn, hexGame.HexBoardRound, hexGame.PlayerTurn);
+                Log.Information("[Turn {turnId}][Round {roundId}][Player {playerId} {aiType}] is currently playing...", hexGame.PlayerTurn, hexGame.HexBoardRound, hexGame.PlayerTurn, Bots[hexGame.PlayerTurn].AiName);
 
                 while (hexGame.HexaTuples[hexGame.PlayerTurn].player[RessourceType.Mana] > 0)
                 {

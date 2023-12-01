@@ -58,7 +58,7 @@ namespace Substrate.Hexalem.NET.AI
                 var selectedTileIndex = _random.Next(buyableTiles.Count);
                 var tileCoords = freeMapTiles[_random.Next(freeMapTiles.Count)];
 
-                Log.Information("[AI {_index}] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
+                Log.Information("[AI {_index} Random] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
 
 
                 return PlayAction.Play(selectedTileIndex, tileCoords);
@@ -67,7 +67,7 @@ namespace Substrate.Hexalem.NET.AI
                 var upgradableTilesIndex = _random.Next(upgradableTiles.Count);
                 var tileCoords = upgradableTiles[upgradableTilesIndex];
 
-                Log.Information("[AI {_index}] choose to upgrade tile ({r},{q})", _index, tileCoords.q, tileCoords.r);
+                Log.Information("[AI {_index} Random] choose to upgrade tile ({r},{q})", _index, tileCoords.q, tileCoords.r);
 
 
                 return PlayAction.Upgrade(tileCoords);

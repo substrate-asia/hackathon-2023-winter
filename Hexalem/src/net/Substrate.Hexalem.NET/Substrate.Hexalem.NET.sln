@@ -13,7 +13,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.WebAPI.Te
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Console", "Substrate.Hexalem.Console\Substrate.Hexalem.Console.csproj", "{CD6F8095-337E-4012-B2D9-A12458E08775}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.Integration", "Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj", "{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Integration", "Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj", "{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.NET.NetApiExt", "Substrate.Hexalem.NET.NetApiExt\Substrate.Hexalem.NET.NetApiExt.csproj", "{23FBA163-D771-4425-A192-168C0D012346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.Integration.Test", "Substrate.Hexalem.Integration.Test\Substrate.Hexalem.Integration.Test.csproj", "{1473BCA5-6956-4D84-B131-423EECCC3614}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +49,14 @@ Global
 		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

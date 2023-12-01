@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,8 @@ namespace Substrate.Hexalem.NET.AI
 
             foreach (PlayAction action in GetPossibleActions(initialState))
             {
-                int score = Minimax(ApplyAction(initialState, action), 0, false);
+                var gameClone = initialState.Clone();
+                int score = Minimax(ApplyAction(gameClone, action), 0, true);
 
                 if (score > bestScore)
                 {
@@ -33,6 +35,19 @@ namespace Substrate.Hexalem.NET.AI
                     bestAction = action;
                 }
             }
+
+            if (bestAction.CanPlay)
+            {
+                if (bestAction.PlayTileAt != null)
+                {
+                    Log.Information("[AI {_index} MinMax] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, bestAction.SelectionIndex, SelectionTiles(initialState)[bestAction.SelectionIndex.Value], bestAction.PlayTileAt.Value.q, bestAction.PlayTileAt.Value.r);
+                } else if(bestAction.UpgradeTileAt != null)
+                {
+                    var tileUpgraded = (HexaTile)initialState.HexaTuples[initialState.PlayerTurn].board[bestAction.UpgradeTileAt.Value.q, bestAction.UpgradeTileAt.Value.r];
+                    Log.Information("[AI {_index} MinMax] choose tu upgrade tile ({typeTile}) at ({r},{q})", _index, tileUpgraded, bestAction.UpgradeTileAt.Value.q, bestAction.UpgradeTileAt.Value.r);
+                }
+            }
+            
 
             return bestAction;
         }
@@ -65,16 +80,10 @@ namespace Substrate.Hexalem.NET.AI
                     int eval = Minimax(ApplyAction(state, action), depth + 1, true);
                     minEval = Math.Min(minEval, eval);
                 }
-
                 return minEval;
             }
-        }
 
-        private bool IsTerminal(HexaGame state)
-        {
-            // Check if the state is terminal (end of the game).
-            // Return true if the game is over, false otherwise.
-            return !bestAction.CanPlay;
+            state = Game.FinishTurn(0, state, state.PlayerTurn);
         }
 
         private List<PlayAction> GetPossibleActions(HexaGame state)
@@ -107,6 +116,7 @@ namespace Substrate.Hexalem.NET.AI
                 possibleActions.Add(PlayAction.Upgrade(tileUpgrade));
             }
 
+            Log.Debug("[MinMax - GetPossibleActions] {nb} possible action found", possibleActions.Count);
             return possibleActions;
         }
 
@@ -139,7 +149,26 @@ namespace Substrate.Hexalem.NET.AI
             var newStone = state.Evaluate(RessourceType.Stone, hexaPlayer, hexaBoardStats);
             var newGold = state.Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
 
-            return 0;
+            var score =
+                manaScore(hexaPlayer.WinningCondition.WinningCondition) * newMana +
+                humanScore(hexaPlayer.WinningCondition.WinningCondition) * newHumans +
+                waterScore(hexaPlayer.WinningCondition.WinningCondition) * newWater +
+                foodScore(hexaPlayer.WinningCondition.WinningCondition) * newFood +
+                woodScore(hexaPlayer.WinningCondition.WinningCondition) * newWood +
+                stoneScore(hexaPlayer.WinningCondition.WinningCondition) * newStone +
+                goldScore(hexaPlayer.WinningCondition.WinningCondition) * newGold;
+
+
+            Log.Debug("\t[MinMax evaluation] Score = {score}", score);
+            return score;
         }
+
+        private int manaScore(WinningCondition wc) => 5;
+        private int humanScore(WinningCondition wc) => wc == WinningCondition.HumanThreshold ? 8 : 5;
+        private int waterScore(WinningCondition wc) => 1;
+        private int foodScore(WinningCondition wc) => 1;
+        private int woodScore(WinningCondition wc) => 1;
+        private int stoneScore(WinningCondition wc) => 1;
+        private int goldScore(WinningCondition wc) => wc == WinningCondition.GoldThreshold ? 8 : 5;
     }
 }

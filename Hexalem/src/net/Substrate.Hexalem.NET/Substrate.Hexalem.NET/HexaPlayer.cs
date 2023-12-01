@@ -1,5 +1,6 @@
 ﻿using Substrate.Hexalem.NET;
 using System;
+using System.Linq;
 
 namespace Substrate.Hexalem
 {
@@ -15,6 +16,7 @@ namespace Substrate.Hexalem
         public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
+            AddWinCondition(Hexalem.WinningCondition.HumanThreshold);
         }
 
         public HexaPlayer(byte[] id, byte[] hash)
@@ -90,6 +92,14 @@ namespace Substrate.Hexalem
         public void PostMove(uint blockNumber)
         {
 
+        }
+
+        internal HexaPlayer Clone()
+        {
+            var clonePlayer = new HexaPlayer((byte[])Id.Clone(), (byte[])Value.Clone());
+            clonePlayer.WinningCondition = new HexaWinningCondition(WinningCondition.WinningCondition, WinningCondition.Target);
+
+            return clonePlayer;
         }
     }
 

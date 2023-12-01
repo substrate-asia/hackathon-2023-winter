@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using Substrate.NetApi.Model.Meta;
 using System;
@@ -15,6 +16,11 @@ namespace Substrate.Hexalem
 
         public HexaTile(TileType hexTileType, TileRarity hexTileRarity, TilePattern hexTilePattern)
         {
+            build(hexTileType, hexTileRarity, hexTilePattern);
+        }
+
+        private void build(TileType hexTileType, TileRarity hexTileRarity, TilePattern hexTilePattern)
+        {
             var rarity = ((byte)hexTileRarity & 0x3) << 6;
             var type = ((byte)hexTileType & 0x7) << 3;
             var pattern = ((byte)hexTilePattern & 0x7);
@@ -25,6 +31,43 @@ namespace Substrate.Hexalem
         public HexaTile(byte value)
         {
             Value = value;
+        }
+
+        public HexaTile(TileSharp tileTypeSharp)
+        {
+            var tileType = TileType.None;
+            switch (tileTypeSharp.TileType)
+            {
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Empty:
+                    tileType = TileType.None;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Tree:
+                    tileType = TileType.Forest;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Water:
+                    tileType = TileType.Water;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Mountain:
+                    tileType = TileType.Mountain;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Desert:
+                    tileType = TileType.Desert;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.House:
+                    tileType = TileType.Home;
+                    break;
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Grass:
+                    tileType = TileType.Grass;
+                    break;
+                    // TODO : add cave
+            }
+
+            var values = Enum.GetValues(typeof(TileRarity)).Cast<TileRarity>().ToArray();
+            var titleRarity = (TileRarity)values[tileTypeSharp.TileLevel];
+
+            // TODO : handle formation ?
+
+            build(tileType, titleRarity, TilePattern.Normal);
         }
 
         /// <summary>
@@ -51,12 +94,6 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool CanUpgrade()
         {
-            if (TileRarity == TileRarity.None) // Should never happen but...
-            {
-                Log.Debug("Cannot upgrade tile which has not been set");
-                return false;
-            }
-
             if (TileRarity == TileRarity.Legendary)
             {
                 Log.Debug($"{nameof(TileRarity.Legendary)} cannot be upgrade");
@@ -80,6 +117,12 @@ namespace Substrate.Hexalem
 
             TileRarity += 1;
             return true;
+        }
+
+        public HexaTile Clone()
+        {
+            var cloneTile = new HexaTile(Value);
+            return cloneTile;
         }
 
         public override string ToString()

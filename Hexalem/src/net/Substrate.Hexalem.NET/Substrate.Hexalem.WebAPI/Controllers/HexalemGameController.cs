@@ -124,8 +124,8 @@ namespace Substrate.Hexalem.WebAPI.Controllers
                 return BadRequest("Invalid hash format.");
             }
 
-            var hexBoard = new HexaGame(bytes);
-            hexBoard = Game.Initialise(hexBoard, 1, CurrentBlockNumber(config.Genesis));
+            var hexPlayer = new HexaPlayer(new byte[32]);
+            var hexBoard = Game.CreateGame(CurrentBlockNumber(config.Genesis), new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
 
             var board = new Board()
             {

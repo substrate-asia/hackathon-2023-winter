@@ -73,6 +73,12 @@ namespace Substrate.Hexalem
 
         }
 
+        internal HexaBoard Clone()
+        {
+            var cloneBoard = new HexaBoard((byte[])Value.Clone());
+            return cloneBoard;
+        }
+
         /// <summary>
         /// Indexer to access the internal array
         /// </summary>
@@ -97,7 +103,7 @@ namespace Substrate.Hexalem
         /// <param name="r"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        internal int? ToIndex((int q, int r)? coords)
+        public int? ToIndex((int q, int r)? coords)
         {
             if (coords == null)
             {
@@ -319,7 +325,7 @@ namespace Substrate.Hexalem
 
             if (Value[index.Value] != 0x00)
             {
-                Log.Warning("Try to put a new tile ${tileType} on a non empty tile map (index = ${tileMapIndex}", chooseTile.TileType, index.Value);
+                Log.Warning("Try to put a new tile {tileType} on a non empty tile map (index = {tileMapIndex})", chooseTile.TileType, index.Value);
 
                 return false;
             }
@@ -339,11 +345,14 @@ namespace Substrate.Hexalem
             for (int i = 0; i < Value.Length; i++)
             {
                 HexaTile t = Value[i];
+
                 result[t.TileType] += 1; // total
+
                 // avoid counting none tiles twice
                 if (t.TileRarity != TileRarity.None)
                 {
                     result[t.TileType, t.TileRarity] += 1;
+                    result[t.TileType, t.TilePattern] += 1;
                 }
             }
 
