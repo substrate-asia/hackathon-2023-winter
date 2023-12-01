@@ -74,6 +74,8 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
+            Debug.Log("Start flow controller");
+
             var root = GetComponent<UIDocument>().rootVisualElement;
             VelContainer = root.Q<VisualElement>("VelContainer");
 
