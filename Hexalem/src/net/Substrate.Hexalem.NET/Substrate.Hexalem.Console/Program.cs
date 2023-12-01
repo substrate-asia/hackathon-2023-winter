@@ -19,7 +19,7 @@ namespace Substrate.Hexalem.Console
             //play.StartGame();
 
             var node = new HexalemNode();
-            await node.StartGameAsync(CancellationToken.None);
+            await node.InitAsync(CancellationToken.None);
 
             System.Console.ReadLine();
         }

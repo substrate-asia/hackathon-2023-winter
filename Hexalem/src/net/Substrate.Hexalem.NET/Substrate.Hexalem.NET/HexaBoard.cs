@@ -103,7 +103,7 @@ namespace Substrate.Hexalem
         /// <param name="r"></param>
         /// <returns></returns>
         /// <exception cref="IndexOutOfRangeException"></exception>
-        internal int? ToIndex((int q, int r)? coords)
+        public int? ToIndex((int q, int r)? coords)
         {
             if (coords == null)
             {

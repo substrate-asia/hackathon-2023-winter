@@ -1,6 +1,7 @@
 ﻿using Schnorrkel.Keys;
 using Serilog;
 using Substrate.Hexalem.NET;
+using Substrate.Hexalem.NET.AI;
 using Substrate.Integration;
 using Substrate.NET.Wallet.Keyring;
 using Substrate.NetApi;
@@ -66,53 +67,109 @@ namespace Substrate.Hexalem.Console
             ExpandMode.Ed25519);
 
             return Account.Build(
-                KeyType.Sr25519, 
+                KeyType.Sr25519,
                 miniSecret.ExpandToSecret().ToBytes(),
                 miniSecret.GetPair().Public.Key);
         }
 
-        public async Task StartGameAsync(CancellationToken token)
+        private Dictionary<string, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event> _state;
+        private List<Account> _players;
+        private SubstrateNetwork _client;
+        private int _concurrentTask;
+
+        public async Task InitAsync(CancellationToken token)
         {
+            _concurrentTask = 10;
+            _state = new Dictionary<string, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event>();
             Log.Information("Start creating a game on Hexalem node");
-            var client = new SubstrateNetwork(AliceAccount, Substrate.Integration.Helper.NetworkType.Live, "ws://127.0.0.1:9944");
+            _client = new SubstrateNetwork(AliceAccount, Substrate.Integration.Helper.NetworkType.Live, "ws://127.0.0.1:9944");
 
-            bool isConnected = await client.ConnectAsync(true, true, token);
+            bool isConnected = await _client.ConnectAsync(true, true, token);
 
-            Log.Information("Connected to Hexalem local node = {isConected}", isConnected);
+            Log.Information("Connected to Hexalem local node = {isConnected}", isConnected);
 
-            var players = new List<Account>() { AliceAccount, BobAccount };
+            _players = new List<Account>() { AliceAccount, BobAccount };
 
-            var gameSubscription = await client.CreateGameAsync(AliceAccount, players, (int)GridSize.Medium, 10, token);
-            Log.Information("New game started, subscription = {subscription}, wait for block", gameSubscription);
-
-            if (gameSubscription == null) throw new InvalidOperationException(nameof(gameSubscription));
-
-            //client.ExtrinsicManager.Add(gameSubscription, "startGame");
-            client.ExtrinsicManager.ExtrinsicUpdated += async (sender, e) =>
+            _client.ExtrinsicManager.ExtrinsicUpdated += async (sender, e) =>
             {
                 if (e.IsSuccess)
                 {
                     Log.Information("Extrinsic success");
+                    if (_state.ContainsKey(sender))
+                    {
+                        Log.Information($"{_state[sender]} successfully received !");
 
-                    // Fetch board for each player
-                    var aliceBoard = await client.GetBoardAsync(Utils.GetAddressFrom(AliceAccount.Bytes), token);
-                    var bobBoard = await client.GetBoardAsync(Utils.GetAddressFrom(BobAccount.Bytes), token);
-                    if (aliceBoard is null || bobBoard is null) 
-                        throw new InvalidOperationException("Boards are not set propertly");
-
-                    Log.Information("GameId = {gameId}", aliceBoard.GameId);
-
-                    var game = await client.GetGameAsync(aliceBoard.GameId, token);
-
-                    if(game is null)
-                        throw new InvalidOperationException("Game is not set propertly");
-
-                    Log.Information("Game and player boards successfully received. Let's build HexaGame instance");
-                    var hexaGame = new HexaGame(game, new Integration.Model.BoardSharp[2] { aliceBoard, bobBoard });
-
-                    Log.Information($"HexaGame instance : {hexaGame}");
+                        switch (_state[sender])
+                        {
+                            case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.GameCreated:
+                            case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.NewTurn:
+                                _state.Remove(sender);
+                                await PlayTurnAsync(token);
+                                break;
+                            case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.MovePlayed:
+                                _state.Remove(sender);
+                                await FinishTurnAsync(token);
+                                break;
+                        }
+                    }
                 }
             };
+
+            await StartGameAsync(token);
+        }
+
+        public async Task StartGameAsync(CancellationToken token)
+        {
+            var gameSubscription = await _client.CreateGameAsync(AliceAccount, _players, (int)GridSize.Medium, _concurrentTask, token);
+
+            _state.Add(gameSubscription, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.GameCreated);
+
+            Log.Information("New game started, subscription = {subscription}, wait for block", gameSubscription);
+
+            if (gameSubscription == null) throw new InvalidOperationException(nameof(gameSubscription));
+        }
+
+        public async Task PlayTurnAsync(CancellationToken token)
+        {
+            var aliceBoard = await _client.GetBoardAsync(Utils.GetAddressFrom(AliceAccount.Bytes), token);
+            var bobBoard = await _client.GetBoardAsync(Utils.GetAddressFrom(BobAccount.Bytes), token);
+            if (aliceBoard is null || bobBoard is null)
+                throw new InvalidOperationException("Boards are not set propertly");
+
+            Log.Information("GameId = {gameId}", aliceBoard.GameId);
+
+            var game = await _client.GetGameAsync(aliceBoard.GameId, token);
+
+            if (game is null)
+                throw new InvalidOperationException("Game is not set propertly");
+
+            Log.Information("Game and player boards successfully received. Let's build HexaGame instance");
+            var hexaGame = new HexaGame(game, new Integration.Model.BoardSharp[2] { aliceBoard, bobBoard });
+
+            Log.Information($"HexaGame instance : {hexaGame}");
+
+            AI bot = new NET.AI.Random(0);
+            var move = bot.FindBestAction(hexaGame, 0);
+            hexaGame = Game.ChooseAndPlace((await _client.GetBlocknumberAsync(CancellationToken.None)).Value, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
+
+
+            var playSubscription = await _client.PlayAsync(
+                AliceAccount,
+                (byte)hexaGame.HexaTuples[hexaGame.PlayerTurn].board.ToIndex(move.PlayTileAt).Value,
+                (byte)move.SelectionIndex!.Value,
+                NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.PayType.Mana,
+                _concurrentTask,
+                CancellationToken.None);
+
+            _state.Add(playSubscription, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.MovePlayed);
+        }
+
+        public async Task FinishTurnAsync(CancellationToken token)
+        {
+            var finishTurnSubscription = await _client.FinishTurnAsync(AliceAccount, _concurrentTask, token);
+            _state.Add(finishTurnSubscription, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.NewTurn);
+
         }
     }
 }
+
