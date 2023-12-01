@@ -120,14 +120,46 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
+	pub enum TileRarity {
+		Normal = 0,
+		Rare = 1,
+		Epic = 2,
+		Legendary = 3,
+	}
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
 	pub enum TileType {
-		Empty,
-		Tree,
-		Water,
-		Mountain,
-		Desert,
-		House,
-		Grass,
+		Empty = 0,
+		Home = 1,
+		Tree = 2,
+		Water = 3,
+		Mountain = 4,
+		Desert = 5,
+		House = 6,
+		Grass = 7,
+	}
+
+	impl TileType {
+		pub fn from_u8(value: u8) -> Self {
+			match value {
+				1 => TileType::Home,
+				2 => TileType::Tree,
+				3 => TileType::Water,
+				4 => TileType::Mountain,
+				5 => TileType::Desert,
+				6 => TileType::House,
+				7 => TileType::Grass,
+				_ => TileType::Empty,
+			}
+		}
+	}
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
+	pub enum TilePattern {
+		Normal = 0,
+		Delta = 1,
+		Line = 2,
+		Ypsilon = 3,
 	}
 
 	#[derive(
@@ -600,9 +632,15 @@ impl<T: Config> Pallet<T> {
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
 		for i in 0..game.selection_size {
-			new_selection.push(
-				selection_base[((i + offset) % 32) as usize].clone() % game.selection_base_size,
-			);
+
+			let raw_tile = selection_base[((i as u8 + offset) % 32) as usize];
+
+			// Simulating the `build` logic from C#
+			let tile_type = TileType::from_u8((raw_tile % 6) + 2); // only allowing 2,3,4,5,6,7 as solution
+	
+			let r_byte = (TileRarity::Normal as u8 & 0x3) << 6 | (tile_type as u8 & 0x7) << 3 | TilePattern::Normal as u8 & 0x7;
+
+			new_selection.push(r_byte);
 		}
 
 		// Casting
@@ -819,6 +857,7 @@ impl<T: Config> Pallet<T> {
 
 		match hex_board.hex_grid[tile_index as usize].get_type() {
 			TileType::Empty => (),
+			TileType::Home => (), // todo
 			TileType::Tree => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
