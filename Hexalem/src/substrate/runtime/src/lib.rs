@@ -63,46 +63,52 @@ pub type AccountId = <<Signature as Verify>::Signer as IdentifyAccount>::Account
 pub type Balance = u128;
 
 #[derive(Encode, Decode, Debug, TypeInfo, Copy, Clone, MaxEncodedLen, Eq, PartialEq)]
-pub struct HexalemTile {
-	// I was lazy to optimize it now, but it will be easy to lower this to u8 in the future
-	tile_type: TileType,
-	tile_level: u8,
-	formations: [bool; 3],
-}
+pub struct HexalemTile(u8);
 
 impl GetTileInfo for HexalemTile {
 	fn get_type(&self) -> TileType {
-		self.tile_type
+		TileType::from_u8((self.0 >> 3) & 0x7)
 	}
 
 	fn get_level(&self) -> u8 {
-		self.tile_level
+		(self.0 >> 6) & 0x3
 	}
 
 	fn get_formation_flags(&self) -> [bool; 3] {
-		self.formations
+		[(self.0 & 0x1) != 0, (self.0 & 0x2) != 0, (self.0 & 0x4) != 0]
 	}
 
 	fn set_formation_flag_1(&mut self, value: bool) -> () {
-		self.formations[0] = value;
+		self.0 = (self.0 & 0xFE) | value as u8
 	}
 
 	fn set_formation_flag_2(&mut self, value: bool) -> () {
-		self.formations[1] = value;
+		self.0 = (self.0 & 0xFD) | ((value as u8) << 1)
 	}
 
 	fn set_formation_flag_3(&mut self, value: bool) -> () {
-		self.formations[2] = value;
+		self.0 = (self.0 & 0xFB) | ((value as u8) << 2)
 	}
 
 	fn set_level(&mut self, level: u8) -> () {
-		self.tile_level = level;
+		self.0 = (self.0 & 0x3F) | ((level & 0x3) << 6);
+	}
+
+	fn build(tile_type: TileType, level: u8, formations: [bool; 3]) -> Self {
+		let byte = (level & 0x3) << 6 |
+			(tile_type as u8 & 0x7) << 3 |
+			0 as u8 & 0x7 |
+			formations[0] as u8 |
+			((formations[1] as u8) << 1) |
+			((formations[2] as u8) << 2);
+
+		Self(byte)
 	}
 }
 
 impl Default for HexalemTile {
 	fn default() -> Self {
-		Self { tile_type: TileType::Empty, tile_level: 1, formations: [false; 3] }
+		Self(64) // Empty tile
 	}
 }
 
@@ -120,14 +126,6 @@ impl GetMaterialInfo for HexalemMaterialCost {
 
 	fn get_material_cost(&self) -> MaterialUnit {
 		self.material_cost
-	}
-
-	fn get_mana_cost(&self) -> Self {
-		// https://en.wikipedia.org/wiki/Triangular_number
-		Self {
-			material_type: Material::Mana,
-			material_cost: (self.material_cost * self.material_cost + 1) / 2,
-		}
 	}
 }
 
@@ -336,194 +334,127 @@ parameter_types! {
 	pub const HexalemMaxTileSelectionBase: u8 = 32;
 	pub const HexalemAllTileOffers: [TileOffer<Runtime>; 16] = [
 		TileOffer {
-			tile_to_buy: HexalemTile {
-				tile_type: TileType::Tree,
-				tile_level: 1,
-				formations: [false; 3]
-			},
-			
+			tile_to_buy: HexalemTile(104), // Tree, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Tree,
-				tile_level: 1,
-				formations: [false; 3]
-			},
+			tile_to_buy: HexalemTile(104), // Tree, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Tree,
-				tile_level: 1,
-				formations: [false; 3]
-			},
+			tile_to_buy: HexalemTile(104), // Tree, level 1
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Mountain,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(96), // Mountain, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Mountain,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(96), // Mountain, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Mountain,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(96), // Mountain, level 1
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
+				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Grass,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(80), // Grass, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Grass,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(80), // Grass, level 1
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Mana,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(80), // Grass, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
-			}
-		},
-		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Grass,
-				tile_level: 1,
-				formations: [false; 3],
-			},
-			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 1,
 			}
 		},
 
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Water,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(88), // Water, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Water,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(88), // Water, level 1
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Mana,
+				material_cost: 1,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(88), // Water, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
-			}
-		},
-		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::Water,
-				tile_level: 1,
-				formations: [false; 3],
-			},
-			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 1,
 			}
 		},
 
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(72), // Home, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(72), // Home, level 1
+			tile_cost: HexalemMaterialCost {
+				material_type: Material::Mana,
+				material_cost: 2,
+			}
+		},
+		TileOffer {
+			tile_to_buy: HexalemTile(72), // Home, level 1
 			tile_cost: HexalemMaterialCost {
 				material_type: Material::Mana,
 				material_cost: 3,
 			}
 		},
 		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
-				tile_level: 1,
-				formations: [false; 3],
-			},
+			tile_to_buy: HexalemTile(72), // Home, level 1
 			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
-				material_cost: 2,
-			}
-		},
-		TileOffer {
-			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
-				tile_level: 1,
-				formations: [false; 3],
-			},
-			tile_cost: HexalemMaterialCost {
-				material_type: Material::Gold,
+				material_type: Material::Mana,
 				material_cost: 3,
 			}
 		},
 	];
-	pub const HexalemHomeTile: HexalemTile = HexalemTile {
-		tile_type: TileType::Home,
-		tile_level: 1,
-		formations: [false; 3],
-	};
+	pub const HexalemHomeTile: HexalemTile = HexalemTile(72); // Home, level 1
 
 	pub const HexalemFoodPerHuman: u8 = 1u8;
 	pub const HexalemWaterPerHuman: u8 = 1u8;
+	pub const HexalemHomePerHumans: u8 = 3u8;
+
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -555,8 +486,8 @@ impl pallet_hexalem::Config for Runtime {
 	type AllTileOffers = HexalemAllTileOffers;
 	type WaterPerHuman = HexalemWaterPerHuman;
 	type FoodPerHuman = HexalemFoodPerHuman;
+	type HomePerHumans = HexalemHomePerHumans;
 	type HomeTile = HexalemHomeTile;
-
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

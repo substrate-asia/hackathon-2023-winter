@@ -66,7 +66,6 @@ pub mod pallet {
 
 		// pub number_of_players: u8,
 		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
-		pub selection_base_size: u8,                          // number of tiles for selection
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
 	}
@@ -126,24 +125,24 @@ pub mod pallet {
 	pub enum TileType {
 		Empty = 0,
 		Home = 1,
-		Tree = 2,
+		Grass = 2,
 		Water = 3,
 		Mountain = 4,
-		Desert = 5,
-		House = 6,
-		Grass = 7,
+		Tree = 5,
+		Desert = 6,
+		Cave = 7,
 	}
 
 	impl TileType {
 		pub fn from_u8(value: u8) -> Self {
 			match value {
 				1 => TileType::Home,
-				2 => TileType::Tree,
+				2 => TileType::Grass,
 				3 => TileType::Water,
 				4 => TileType::Mountain,
-				5 => TileType::Desert,
-				6 => TileType::House,
-				7 => TileType::Grass,
+				5 => TileType::Tree,
+				6 => TileType::Desert,
+				7 => TileType::Cave,
 				_ => TileType::Empty,
 			}
 		}
@@ -161,7 +160,7 @@ pub mod pallet {
 		Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound,
 	)]
 	#[scale_info(skip_type_params(T))]
-	pub struct TileOffer<T: Config> {
+	pub struct TTileOffer<T: Config> {
 		pub tile_to_buy: T::Tile,
 		pub tile_cost: T::MaterialCost,
 	}
@@ -180,7 +179,6 @@ pub mod pallet {
 	pub struct Move {
 		place_index: u8,
 		buy_index: u8, // We can fit buy_index and pay_type together
-		pay_type: PayType,
 	}
 
 	// The board hex grid
@@ -202,13 +200,11 @@ pub mod pallet {
 	}
 
 	pub struct BoardStats {
-		pub home_level: u8,
-
 		pub trees: u8,
 		pub mountains: u8,
 		pub waters: u8,
 		pub grass: u8,
-		pub houses: u8,
+		pub homes: u8,
 
 		pub forrests: u8,
 		pub rivers: u8,
@@ -219,11 +215,10 @@ pub mod pallet {
 	impl Default for BoardStats {
 		fn default() -> Self {
 			Self {
-				home_level: 0,
 				trees: 0,
 				mountains: 0,
 				waters: 0,
-				houses: 0,
+				homes: 0,
 				grass: 0,
 				forrests: 0,
 				rivers: 0,
@@ -309,6 +304,9 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type FoodPerHuman: Get<u8>;
+
+		#[pallet::constant]
+		type HomePerHumans: Get<u8>;
 
 		#[pallet::constant]
 		type HomeTile: Get<Self::Tile>;
@@ -456,14 +454,11 @@ pub mod pallet {
 				played: false,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
 				player_turn: 0,
-				selection_base_size: 3,
 				selection_size: 2,
 				selection: Default::default(),
 			};
 
 			Self::new_selection(&mut game, game_id)?;
-
-			game.selection_base_size = 16;
 
 			// Initialise HexBoards for all players
 			for player in &players {
@@ -527,7 +522,6 @@ pub mod pallet {
 				&mut game.selection,
 				&mut hex_board,
 				move_played.buy_index as usize,
-				&move_played.pay_type,
 			)?;
 
 			game.set_played(true);
@@ -603,7 +597,7 @@ pub mod pallet {
 				}
 			}
 
-			// If the played has not played, generate a new selection
+			// If the player has not played, generate a new selection
 			if game.get_played() {
 				game.set_played(false);
 			} else {
@@ -660,15 +654,9 @@ impl<T: Config> Pallet<T> {
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
 		for i in 0..game.selection_size {
-
-			let raw_tile = selection_base[((i as u8 + offset) % 32) as usize];
-
-			// Simulating the `build` logic from C#
-			let tile_type = TileType::from_u8((raw_tile % 6) + 2); // only allowing 2,3,4,5,6,7 as solution
-	
-			let r_byte = (TileRarity::Normal as u8 & 0x3) << 6 | (tile_type as u8 & 0x7) << 3 | TilePattern::Normal as u8 & 0x7;
-
-			new_selection.push(r_byte);
+			new_selection.push(
+				selection_base[((i + offset) % 32) as usize].clone() % 16,
+			);
 		}
 
 		// Casting
@@ -702,8 +690,7 @@ impl<T: Config> Pallet<T> {
 			let mut new_selection = game.selection.to_vec();
 
 			for i in selection_len..game.selection_size as usize {
-				new_selection
-					.push(selection_base[(i + offset) % 32].clone() % game.selection_base_size);
+				new_selection.push(selection_base[(i + offset) % 32].clone() % 16);
 			}
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
@@ -722,7 +709,6 @@ impl<T: Config> Pallet<T> {
 		selection: &mut TileSelection<T>,
 		hex_board: &mut HexBoard<T>,
 		index_to_buy: usize,
-		pay_type: &PayType,
 	) -> Result<T::Tile, sp_runtime::DispatchError> {
 		// Select the offer
 		ensure!(selection.len() > index_to_buy, Error::<T>::BuyIndexOutOfBounds);
@@ -733,12 +719,7 @@ impl<T: Config> Pallet<T> {
 		ensure!(all_offers.len() > selected_offer_index as usize, Error::<T>::BuyIndexOutOfBounds);
 		let selected_offer = all_offers[selected_offer_index as usize].clone();
 
-		// Spend the materials / mana for the offer
-		match pay_type {
-			PayType::Material => Self::spend_material(&selected_offer.tile_cost, hex_board)?,
-			PayType::Mana =>
-				Self::spend_material(&selected_offer.tile_cost.get_mana_cost(), hex_board)?,
-		}
+		Self::spend_material(&selected_offer.tile_cost, hex_board)?;
 
 		Ok(selected_offer.tile_to_buy)
 	}
@@ -792,7 +773,7 @@ impl<T: Config> Pallet<T> {
 		for tile in &hex_board.hex_grid {
 			match tile.get_type() {
 				TileType::Home => {
-					board_stats.home_level = tile.get_level();
+					board_stats.homes = board_stats.homes.saturating_add(1);
 				},
 				TileType::Tree => {
 					board_stats.trees = board_stats.trees.saturating_add(1);
@@ -827,7 +808,7 @@ impl<T: Config> Pallet<T> {
 					}
 				},
 				TileType::Desert => (),
-				TileType::House => (),
+				TileType::Cave => (),
 				TileType::Grass => {
 					board_stats.grass = board_stats.grass.saturating_add(1);
 					let flags = tile.get_formation_flags();
@@ -841,14 +822,21 @@ impl<T: Config> Pallet<T> {
 				_ => (),
 			};
 		}
-		
-		let food_and_water_eaten = cmp::min(hex_board.food.saturating_mul(T::FoodPerHuman::get()), hex_board.water.saturating_mul(T::WaterPerHuman::get()));
 
-		let number_of_humans = board_stats.home_level
-			.saturating_add(food_and_water_eaten)
-			.saturating_add(board_stats.houses);
+		let food_and_water_eaten = cmp::min(
+			hex_board.food.saturating_mul(T::FoodPerHuman::get()),
+			hex_board.water.saturating_mul(T::WaterPerHuman::get()),
+		);
 
-		hex_board.mana = hex_board.mana.saturating_add(number_of_humans);
+		let number_of_humans = cmp::min(
+			board_stats.homes.saturating_add(food_and_water_eaten),
+			board_stats.homes.saturating_mul(T::HomePerHumans::get()),
+		);
+
+		hex_board.mana = hex_board
+			.mana
+			.saturating_add(number_of_humans / 2)
+			.saturating_add(board_stats.homes);
 
 		hex_board.water = hex_board
 			.water
@@ -960,7 +948,7 @@ impl<T: Config> Pallet<T> {
 				}
 			},
 			TileType::Desert => todo!(),
-			TileType::House => (),
+			TileType::Cave => (),
 			TileType::Grass => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
@@ -1201,6 +1189,8 @@ pub trait GetTileInfo {
 	fn set_formation_flag_3(&mut self, value: bool) -> ();
 
 	fn set_level(&mut self, level: u8) -> ();
+
+	fn build(tile_type: TileType, level: u8, formations: [bool; 3]) -> Self;
 }
 
 // Custom trait for MaterialCost definition
@@ -1210,9 +1200,6 @@ pub trait GetMaterialInfo {
 
 	/// Gets the material cost
 	fn get_material_cost(&self) -> MaterialUnit;
-
-	/// Gets the mana cost equivalent
-	fn get_mana_cost(&self) -> Self;
 }
 
 trait GameProperties {

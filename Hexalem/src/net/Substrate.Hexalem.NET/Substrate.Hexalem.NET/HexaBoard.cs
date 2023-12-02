@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
@@ -168,122 +169,6 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Set the patterns of the hex tiles in the grid
-        /// </summary>
-        /// <returns></returns>
-        /// <exception cref="NotSupportedException"></exception>
-        public List<List<(int q, int r)>> SetPatterns()
-        {
-            for (int i = 0; i < Value.Length; i++)
-            {
-                HexaTile t = Value[i];
-                if (t == null || t.TileRarity != TileRarity.Normal)
-                {
-                    continue;
-                }
-
-                if (t == null)
-                {
-                    continue;
-                }
-
-                var coords = ToCoords(i);
-                List<(int, int)?> neighbours = GetNeighbors(coords);
-                List<(int, HexaTile)?> n = new List<(int, HexaTile)?>() { (i, t) };
-                foreach (var neighbour in neighbours)
-                {
-                    var index = ToIndex(neighbour);
-                    if (index == null)
-                    {
-                        n.Add(null);
-                        continue;
-                    }
-
-                    n.Add((index.Value, (HexaTile)Value[index.Value]));
-                }
-
-                if (n.Count != 6)
-                {
-                    throw new NotSupportedException("Not the correct amount of neighbours to proccess!");
-                }
-
-                (TileRarity, int[])? result = GetPattern(n);
-
-                if (result == null)
-                {
-                    continue;
-                }
-
-                foreach (var index in result.Value.Item2)
-                {
-                    SetTileLevel(index, result.Value.Item1);
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Get the pattern of a hex tile in the grid
-        /// </summary>
-        /// <param name="n"></param>
-        /// <returns></returns>
-        internal (TileRarity rarity, int[] indices)? GetPattern(List<(int indice, HexaTile tile)?> n)
-        {
-            // delta
-            if (n[1] != null && n[2] != null && n[1].Value.tile.Same(n[2].Value.tile) && n[0].Value.tile.Same(n[2].Value.tile))
-            {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[1].Value.indice, n[2].Value.indice });
-            }
-            else if (n[2] != null && n[3] != null && n[2].Value.tile.Same(n[3].Value.tile) && n[0].Value.tile.Same(n[3].Value.tile))
-            {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[2].Value.indice, n[3].Value.indice });
-            }
-            else if (n[3] != null && n[4] != null && n[3].Value.tile.Same(n[4].Value.tile) && n[0].Value.tile.Same(n[4].Value.tile))
-            {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[3].Value.indice, n[4].Value.indice });
-            }
-            else if (n[4] != null && n[5] != null && n[4].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
-            {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[4].Value.indice, n[5].Value.indice });
-            }
-            else if (n[5] != null && n[6] != null && n[5].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
-            {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[5].Value.indice, n[6].Value.indice });
-            }
-            else if (n[6] != null && n[1] != null && n[6].Value.tile.Same(n[1].Value.tile) && n[0].Value.tile.Same(n[1].Value.tile))
-            {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[6].Value.indice, n[1].Value.indice });
-            }
-            else
-            // line
-            if (n[1] != null && n[4] != null && n[1].Value.tile.Same(n[4].Value.tile) && n[0].Value.tile.Same(n[4].Value.tile))
-            {
-                return (TileRarity.Epic, new[] { n[0].Value.indice, n[1].Value.indice, n[4].Value.indice });
-            }
-            else if (n[2] != null && n[5] != null && n[2].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
-            {
-                return (TileRarity.Epic, new[] { n[0].Value.indice, n[2].Value.indice, n[5].Value.indice });
-            }
-            else if (n[3] != null && n[6] != null && n[3].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
-            {
-                return (TileRarity.Epic, new[] { n[0].Value.indice, n[3].Value.indice, n[6].Value.indice });
-            }
-            else
-            // ypsilon
-            if (n[1] != null && n[3] != null && n[5] != null && n[1].Value.tile.Same(n[3].Value.tile) && n[1].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
-            {
-                return (TileRarity.Legendary, new[] { n[0].Value.indice, n[1].Value.indice, n[3].Value.indice, n[5].Value.indice });
-            }
-            else if (n[2] != null && n[4] != null && n[6] != null && n[2].Value.tile.Same(n[4].Value.tile) && n[2].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
-            {
-                return (TileRarity.Legendary, new[] { n[0].Value.indice, n[2].Value.indice, n[4].Value.indice, n[6].Value.indice });
-            }
-
-            return null;
-        }
-
-        /// <summary>
         /// Set the level of a hex tile in the grid
         /// </summary>
         /// <param name="i"></param>
@@ -331,7 +216,188 @@ namespace Substrate.Hexalem
             }
 
             Value[index.Value] = chooseTile;
+
             return true;
+        }
+        
+        internal void CheckFormations((int, int) coords)
+        {
+            var neighbours = GetNeighbors(coords);
+
+            neighbours.Add(coords);
+
+            foreach((int, int)? c in neighbours)
+            {
+                if(c != null)
+                {
+                    int index = ToIndex(coords).Value;
+
+                    HexaTile tile = Value[index];
+
+                    switch (tile.TileType) {
+                        case TileType.Tree:
+
+                            var treeNeighbours = GetNeighbors(c.Value);
+
+                            var delta = GetDeltaPosition(treeNeighbours);
+
+                            tile.SetFormationFlag1 = (delta.HasValue && delta.Value.Item1 == TileType.Tree && delta.Value.Item2 == TileType.Tree);
+
+                            var reverseDelta = GetReverseDeltaPosition(treeNeighbours);
+
+                            tile.SetFormationFlag2 = (reverseDelta.HasValue && reverseDelta.Value.Item1 == TileType.Tree && reverseDelta.Value.Item2 == TileType.Tree);
+
+                            Value[index] = tile;
+
+                            break;
+
+                        case TileType.Mountain:
+                            var mountainNeighbours = GetNeighbors(c.Value);
+
+                            var ypsilon = GetYpsilonPosition(mountainNeighbours);
+
+                            tile.SetFormationFlag1 = (ypsilon.HasValue && ypsilon.Value.Item1 == TileType.Mountain && ypsilon.Value.Item2 == TileType.Mountain && ypsilon.Value.Item3 == TileType.Mountain);
+
+                            var reverseYpsilon = GetReverseYpsilonPosition(mountainNeighbours);
+
+                            tile.SetFormationFlag2 = (reverseYpsilon.HasValue && reverseYpsilon.Value.Item1 == TileType.Mountain && reverseYpsilon.Value.Item2 == TileType.Mountain && reverseYpsilon.Value.Item3 == TileType.Mountain);
+
+                            Value[index] = tile;
+
+                            break;
+
+                        case TileType.Water:
+                            var waterNeighbours = GetNeighbors(c.Value);
+
+                            var lineRight = GetLineRightPosition(waterNeighbours);
+
+                            tile.SetFormationFlag1 = (lineRight.HasValue && lineRight.Value.Item1 == TileType.Water && lineRight.Value.Item2 == TileType.Water);
+
+                            var lineLeft = GetLineLeftPosition(waterNeighbours);
+
+                            tile.SetFormationFlag2 = (lineLeft.HasValue && lineLeft.Value.Item1 == TileType.Water && lineLeft.Value.Item2 == TileType.Water);
+
+                            Value[index] = tile;
+
+                            break;
+
+                        case TileType.Grass:
+                            var grassNeighbours = GetNeighbors(c.Value);
+
+                            var grassDelta = GetDeltaPosition(grassNeighbours);
+
+                            tile.SetFormationFlag1 = (grassDelta.HasValue && grassDelta.Value.Item1 == TileType.Water && grassDelta.Value.Item2 == TileType.Grass);
+
+                            var grassReverseDelta = GetReverseDeltaPosition(grassNeighbours);
+
+                            tile.SetFormationFlag2 = (grassReverseDelta.HasValue && grassReverseDelta.Value.Item1 == TileType.Grass && grassReverseDelta.Value.Item2 == TileType.Water);
+
+                            Value[index] = tile;
+
+                            break;
+                    }
+
+                }
+            }
+        }
+
+        internal (TileType, TileType)? GetDeltaPosition(List<(int, int)?> neighbours)
+        {
+            if (neighbours[0].HasValue && neighbours[1].HasValue) {
+                int tile1Index = ToIndex(neighbours[0].Value).Value;
+                int tile2Index = ToIndex(neighbours[1].Value).Value;
+
+                HexaTile tile1 = Value[tile1Index];
+                HexaTile tile2 = Value[tile2Index];
+
+                return (tile1.TileType, tile2.TileType);
+            }
+
+            return null;
+        }
+
+        internal (TileType, TileType)? GetReverseDeltaPosition(List<(int, int)?> neighbours)
+        {
+            if (neighbours[1].HasValue && neighbours[2].HasValue)
+            {
+                int tile1Index = ToIndex(neighbours[1].Value).Value;
+                int tile2Index = ToIndex(neighbours[2].Value).Value;
+
+                HexaTile tile1 = Value[tile1Index];
+                HexaTile tile2 = Value[tile2Index];
+
+                return (tile1.TileType, tile2.TileType);
+            }
+
+            return null;
+        }
+
+        internal (TileType, TileType, TileType)? GetYpsilonPosition(List<(int, int)?> neighbours)
+        {
+            if (neighbours[0].HasValue && neighbours[2].HasValue && neighbours[4].HasValue)
+            {
+                int tile1Index = ToIndex(neighbours[0].Value).Value;
+                int tile2Index = ToIndex(neighbours[2].Value).Value;
+                int tile3Index = ToIndex(neighbours[4].Value).Value;
+
+                HexaTile tile1 = Value[tile1Index];
+                HexaTile tile2 = Value[tile2Index];
+                HexaTile tile3 = Value[tile3Index];
+
+                return (tile1.TileType, tile2.TileType, tile3.TileType);
+            }
+
+            return null;
+        }
+
+        internal (TileType, TileType, TileType)? GetReverseYpsilonPosition(List<(int, int)?> neighbours)
+        {
+            if (neighbours[1].HasValue && neighbours[3].HasValue && neighbours[5].HasValue)
+            {
+                int tile1Index = ToIndex(neighbours[1].Value).Value;
+                int tile2Index = ToIndex(neighbours[3].Value).Value;
+                int tile3Index = ToIndex(neighbours[5].Value).Value;
+
+                HexaTile tile1 = Value[tile1Index];
+                HexaTile tile2 = Value[tile2Index];
+                HexaTile tile3 = Value[tile3Index];
+
+                return (tile1.TileType, tile2.TileType, tile3.TileType);
+            }
+
+            return null;
+        }
+
+        internal (TileType, TileType)? GetLineRightPosition(List<(int, int)?> neighbours)
+        {
+            if (neighbours[0].HasValue && neighbours[3].HasValue)
+            {
+                int tile1Index = ToIndex(neighbours[0].Value).Value;
+                int tile2Index = ToIndex(neighbours[3].Value).Value;
+
+                HexaTile tile1 = Value[tile1Index];
+                HexaTile tile2 = Value[tile2Index];
+
+                return (tile1.TileType, tile2.TileType);
+            }
+
+            return null;
+        }
+
+        internal (TileType, TileType)? GetLineLeftPosition(List<(int, int)?> neighbours)
+        {
+            if (neighbours[2].HasValue && neighbours[5].HasValue)
+            {
+                int tile1Index = ToIndex(neighbours[2].Value).Value;
+                int tile2Index = ToIndex(neighbours[5].Value).Value;
+
+                HexaTile tile1 = Value[tile1Index];
+                HexaTile tile2 = Value[tile2Index];
+
+                return (tile1.TileType, tile2.TileType);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -352,11 +418,65 @@ namespace Substrate.Hexalem
                 if (t.TileRarity != TileRarity.None)
                 {
                     result[t.TileType, t.TileRarity] += 1;
-                    result[t.TileType, t.TilePattern] += 1;
+                    /// Does not work right now...
+                    //result[t.TileType, t.TilePattern] += 1;
                 }
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Get the stats of the board
+        /// </summary>
+        /// <returns></returns>
+        internal SimpleBoardStats SimpleStats()
+        {
+            var boardStats = new SimpleBoardStats();
+
+            for (int i = 0; i < Value.Length; i++)
+            {
+                HexaTile t = Value[i];
+
+                bool[] formations;
+                switch (t.TileType)
+                {
+                    case TileType.Home:
+                        boardStats.Homes += 1;
+                        break;
+                    case TileType.Tree:
+                        boardStats.Trees += 1;
+
+                        formations = t.FormationFlags;
+
+                        boardStats.Forrests += (byte)((formations[0] ? 1 : 0) + (formations[1] ? 1 : 0));
+                        break;
+
+                    case TileType.Water:
+                        boardStats.Waters += 1;
+
+                        formations = t.FormationFlags;
+
+                        boardStats.Rivers += (byte)((formations[0] ? 1 : 0) + (formations[1] ? 1 : 0));
+                        break;
+                    case TileType.Mountain:
+                        boardStats.Mountains += 1;
+
+                        formations = t.FormationFlags;
+
+                        boardStats.ExtremeMountains += (byte)((formations[0] ? 1 : 0) + (formations[1] ? 1 : 0));
+                        break;
+                    case TileType.Grass:
+                        boardStats.Grass += 1;
+
+                        formations = t.FormationFlags;
+
+                        boardStats.Farms += (byte)((formations[0] ? 1 : 0) + (formations[1] ? 1 : 0));
+                        break;
+                }
+            }
+
+            return boardStats;
         }
     }
 }

@@ -15,7 +15,6 @@ namespace Substrate.Hexalem.NET
 
         public const double WATER_PER_WATER = 1;
         public const double FOOD_PER_GRASS = 1;
-        public const double FOOD_PER_FOREST = 0.5;
 
         public const int GAME_STORAGE_SIZE = 16;
         public const int PLAYER_STORAGE_SIZE = 8;

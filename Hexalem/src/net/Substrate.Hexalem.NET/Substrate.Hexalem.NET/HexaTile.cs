@@ -42,7 +42,7 @@ namespace Substrate.Hexalem
                     tileType = TileType.None;
                     break;
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Tree:
-                    tileType = TileType.Forest;
+                    tileType = TileType.Tree;
                     break;
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Water:
                     tileType = TileType.Water;
@@ -53,7 +53,7 @@ namespace Substrate.Hexalem
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Desert:
                     tileType = TileType.Desert;
                     break;
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.House:
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Home:
                     tileType = TileType.Home;
                     break;
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Grass:
@@ -127,7 +127,7 @@ namespace Substrate.Hexalem
 
         public override string ToString()
         {
-            return $"{TileType} - {TileRarity} - {TilePattern}";
+            return $"{TileType} - {TileRarity} - {FormationFlags[0]}, {FormationFlags[1]}, {FormationFlags[2]}";
         }
     }
 
@@ -154,10 +154,24 @@ namespace Substrate.Hexalem
         /// <summary>
         /// 3 bits
         /// </summary>
-        public TilePattern TilePattern
+        public bool[] FormationFlags
         {
-            get => (TilePattern)(Value & 0x7);
-            set => Value = (byte)((Value & 0xF8) | ((byte)value & 0x7));
+            get => new bool[3] { (Value & 0x1) != 0, (Value & 0x2) != 0, (Value & 0x4) != 0 };
+        }
+
+        public bool SetFormationFlag1
+        {
+            set => Value = (byte)((Value & 0xFE) | (value ? 1 : 0));
+        }
+
+        public bool SetFormationFlag2
+        {
+            set => Value = (byte)((Value & 0xFD) | (value ? 2 : 0));
+        }
+
+        public bool SetFormationFlag3
+        {
+            set => Value = (byte)((Value & 0xFB) | (value ? 4 : 0));
         }
     }
 

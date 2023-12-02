@@ -7,7 +7,7 @@
         Grass = 2,
         Water = 3,
         Mountain = 4,
-        Forest = 5,
+        Tree = 5,
         Desert = 6,
         Cave = 7,
     }

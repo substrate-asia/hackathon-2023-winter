@@ -17,6 +17,121 @@ namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
     {
+        public TileOffer[] ALL_TILE_OFFERS = new TileOffer[16] {
+            new TileOffer {
+                TileToBuy = new HexaTile(104), // Tree, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(104), // Tree, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(104), // Tree, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(96), // Mountain, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(96), // Mountain, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(96), // Mountain, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(80), // Grass, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 1,
+                }
+            },
+             new TileOffer {
+                TileToBuy = new HexaTile(80), // Grass, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 1,
+                }
+            },
+              new TileOffer {
+                TileToBuy = new HexaTile(80), // Grass, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(88), // Water, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(88), // Water, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(88), // Water, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(72), // Home, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(72), // Home, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 2,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(72), // Home, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 3,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(72), // Home, level 1
+                TileCost = new MaterialCost {
+                    MaterialType = Material.Mana,
+                    Cost = 3,
+                }
+            },
+        };
+
         public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
@@ -28,7 +143,7 @@ namespace Substrate.Hexalem
         /// <summary>
         /// Tiles that can be bought by players
         /// </summary>
-        public List<HexaTile> UnboundTiles { get; private set; }
+        public List<byte> UnboundTileOffers { get; private set; }
 
         protected HexaGame()
         {
@@ -62,7 +177,7 @@ namespace Substrate.Hexalem
             HexBoardRound = game.Round;
             PlayerTurn = game.PlayerTurn;
             SelectBase = game.SelectionSize;
-            UnboundTiles = game.Selection.Select(x => (HexaTile)x).ToList();
+            UnboundTileOffers = game.Selection.Select(x => x).ToList();
 
             // Assume that board and players are ordered
             HexaTuples = new List<(HexaPlayer, HexaBoard)>();
@@ -96,7 +211,7 @@ namespace Substrate.Hexalem
             Id = id;
 
             HexaTuples = hexaTuples;
-            UnboundTiles = new List<HexaTile>();
+            UnboundTileOffers = new List<byte>();
 
             HexBoardState = HexBoardState.Preparing;
             PlayersCount = (byte)hexaTuples.Count;
@@ -115,7 +230,7 @@ namespace Substrate.Hexalem
             PlayerTurn = 0;
             SelectBase = 2;
 
-            UnboundTiles = RenewSelection(blockNumber, SelectBase);
+            UnboundTileOffers = NewSelection(blockNumber, SelectBase);
         }
 
         public void NextRound(uint blockNumber)
@@ -135,16 +250,16 @@ namespace Substrate.Hexalem
         {
             HexaTuples.ForEach(p => { p.player.PostMove(blockNumber); p.board.PostMove(blockNumber); });
 
-            if (UnboundTiles.Count < (SelectBase + 1) / 2)
+            if (UnboundTileOffers.Count < (SelectBase + 1) / 2)
             {
-                Log.Debug("UnboundTiles is below half");
+                Log.Debug("UnboundTileOffers is below half");
                 if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
                 {
                     Log.Debug($"Selection is now {SelectBase}");
                     SelectBase += 2;
                 }
 
-                UnboundTiles = RenewSelection(blockNumber, SelectBase);
+                UnboundTileOffers = RefillSelection(blockNumber, SelectBase);
             }
 
         }
@@ -153,21 +268,39 @@ namespace Substrate.Hexalem
         /// 
         /// </summary>
         /// <param name="blockNumber"></param>
-        /// <param name="selectBase"></param>
+        /// <param name="selectBase">selection size</param>
         /// <returns></returns>
-        internal List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
+        internal List<byte> NewSelection(uint blockNumber, int selectBase)
         {
-            var values = Enum.GetValues(typeof(TileType))
-                .Cast<TileType>()
-                .Where(v => (int)v > 1).ToArray();
-
             var offSet = (byte)(blockNumber % 32);
-            var result = new List<HexaTile>();
+
+            var result = new List<byte>();
+
             for (int i = 0; i < selectBase; i++)
             {
-                var rawTile = Id[(offSet + selectBase) % 32];
+                byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
-                result.Add(new HexaTile(values[rawTile % values.Length], TileRarity.Normal, TilePattern.Normal));
+                result.Add(tileIndex);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="selectBase">selection size</param>
+        /// <returns></returns>
+        internal List<byte> RefillSelection(uint blockNumber, int selectBase)
+        {
+
+            var offSet = (byte)(blockNumber % 32);
+            var result = new List<byte>();
+            for (int i = UnboundTileOffers.Count(); i < selectBase; i++)
+            {
+                byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
+
+                result.Add(tileIndex);
             }
             return result;
         }
@@ -188,7 +321,7 @@ namespace Substrate.Hexalem
             }
 
             // check if selection is valid
-            if (selectionIndex < 0 || selectionIndex >= UnboundTiles.Count)
+            if (selectionIndex < 0 || selectionIndex >= UnboundTileOffers.Count)
             {
                 Log.Error(LogMessages.InvalidTileSelection(selectionIndex));
 
@@ -197,7 +330,7 @@ namespace Substrate.Hexalem
 
             var hexaPlayer = HexaTuples[playerIndex].player;
             var hexaBoard = HexaTuples[playerIndex].board;
-            var chooseTile = UnboundTiles[selectionIndex];
+            var chooseTile = UnboundTileOffers[selectionIndex];
 
             // check if player has enough mana
             if (hexaPlayer[RessourceType.Mana] == 0)
@@ -214,6 +347,9 @@ namespace Substrate.Hexalem
                 {
                     return false;
                 }
+
+                hexaBoard.CheckFormations(coords);
+
             } catch(InvalidMapCoordinate ex)
             {
                 Log.Error(ex.Message);
@@ -223,8 +359,10 @@ namespace Substrate.Hexalem
             // on a successful place do the storage changes
             hexaPlayer[RessourceType.Mana] -= 1; // Todo : change by mana cost instead of 1
 
-            UnboundTiles.RemoveAt(selectionIndex);
+            UnboundTileOffers.RemoveAt(selectionIndex);
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
+
+            Played = true;
 
             return true;
         }
@@ -294,6 +432,16 @@ namespace Substrate.Hexalem
             PlayerTurn = (byte)((PlayerTurn + 1) % PlayersCount);
             Log.Debug("Switch to player {p}", PlayerTurn);
 
+            // If the player has not played, generate a new selection
+            if (Played)
+            {
+                Played = false;
+            }
+            else
+            {
+                UnboundTileOffers = NewSelection(blockNumber, SelectBase);
+            }
+
             return true;
         }
 
@@ -329,96 +477,68 @@ namespace Substrate.Hexalem
         {
             var hexaPlayer = HexaTuples[playerIndex].player;
             var hexaBoard = HexaTuples[playerIndex].board;
-            var hexaBoardStats = hexaBoard.Stats();
 
-            var newMana = Evaluate(RessourceType.Mana, hexaPlayer, hexaBoardStats);
-            var newHumans = Evaluate(RessourceType.Humans, hexaPlayer, hexaBoardStats);
-            var newWater = Evaluate(RessourceType.Water, hexaPlayer, hexaBoardStats);
-            var newFood = Evaluate(RessourceType.Food, hexaPlayer, hexaBoardStats);
-            var newWood = Evaluate(RessourceType.Wood, hexaPlayer, hexaBoardStats);
-            var newStone = Evaluate(RessourceType.Stone, hexaPlayer, hexaBoardStats);
-            var newGold = Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
-
-            // TODO: remove humans being used for multiple resources, by removing them once used for a resource
-
-            hexaPlayer[RessourceType.Mana] += newMana;
-            hexaPlayer[RessourceType.Humans] += newHumans;
-            hexaPlayer[RessourceType.Water] += newWater;
-            hexaPlayer[RessourceType.Food] += newFood;
-            hexaPlayer[RessourceType.Wood] += newWood;
-            hexaPlayer[RessourceType.Stone] += newStone;
-            hexaPlayer[RessourceType.Gold] += newGold;
+            Evaluate(hexaBoard, hexaPlayer);
         }
 
-        internal byte Evaluate(RessourceType resourceType, HexaPlayer player, HexaBoardStats boardStats)
+        internal void Evaluate(HexaBoard hexaBoard, HexaPlayer player)
         {
+            SimpleBoardStats boardStats = hexaBoard.SimpleStats();
+
             // https://www.simplypsychology.org/maslow.html
-            byte result = 0;
 
-            switch (resourceType)
-            {
-                case RessourceType.Mana:
-                    result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
-                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
+            player[RessourceType.Mana] += (byte)(boardStats.Homes * 1); // 1 Mana from Home
+            player[RessourceType.Mana] += (byte)(player[RessourceType.Humans] / 2); // 1 Mana from 2 Humans
 
-                    // Additional pattern logic
-                    break;
+            // Additional pattern logic
+            // none
 
-                case RessourceType.Humans:
-                    result = byte.MaxValue; //(byte)(boardStats[TileType.Home] * 1); // 1 Humans start in the Home
+            // Physiological needs: breathing, food, water, shelter, clothing, sleep
+            byte foodAndWaterEaten = (byte)Math.Min(
+                player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS,
+                player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS
+            );
 
-                    // Physiological needs: breathing, food, water, shelter, clothing, sleep
-                    result = (byte)Math.Min(result, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
-                    result = (byte)Math.Min(result, player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS);
+            player[RessourceType.Humans] = (byte)(
+                Math.Min(
+                    foodAndWaterEaten,
+                    boardStats.Homes * GameConfig.HOME_PER_HUMANS
+                )
+            );
 
-                    var homeWeighted = 0;
-                    foreach (TileRarity rarity in Enum.GetValues(typeof(TileRarity)))
-                    {
-                        homeWeighted += (int)rarity * boardStats[TileType.Home, rarity];
-                    }
-                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
+            // Additional pattern logic
+            // none
 
-                    // Additional pattern logic
-                    break;
 
-                case RessourceType.Water:
-                    result += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
+            player[RessourceType.Water] += (byte)(boardStats.Waters * GameConfig.WATER_PER_WATER);
 
-                    // Additional pattern logic
-                    break;
+            // Additional pattern logic
+            player[RessourceType.Water] += (byte)(boardStats.Rivers * 3);
+            player[RessourceType.Water] += boardStats.ExtremeMountains;
 
-                case RessourceType.Food:
-                    result += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
-                    result += (byte)(boardStats[TileType.Forest] * GameConfig.FOOD_PER_FOREST);
 
-                    // Additional pattern logic
-                    break;
+            player[RessourceType.Food] += (byte)(boardStats.Grass * GameConfig.FOOD_PER_GRASS);
 
-                case RessourceType.Wood:
-                    // 1 Forest can create Wood for 6 humans, but need 2 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Forest] * 3, player[RessourceType.Humans] / 2);
+            // Additional pattern logic
+            player[RessourceType.Food] += (byte)(boardStats.Farms * 3);
 
-                    // Additional pattern logic
-                    break;
+            // 1 tree needs 2 humans for 1 (First tree needs just 1 human)
+            player[RessourceType.Wood] += (byte)Math.Min(boardStats.Trees, (player[RessourceType.Humans] + 1) / 2);
 
-                case RessourceType.Stone:
-                    // 1 Mountain can create Stone for 16 humans, but need 4 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Mountain] * 4, player[RessourceType.Humans] / 4);
-                    // 1 Cave can create wood for 4 humans, but need 2 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
+            // Additional pattern logic
+            player[RessourceType.Wood] += (byte)(boardStats.Forrests * 3);
 
-                    // Additional pattern logic
-                    break;
 
-                case RessourceType.Gold:
+            // 1 Mountain needs 2 humans
+            player[RessourceType.Stone] += (byte)Math.Min(boardStats.Mountains, player[RessourceType.Humans] / 2);
 
-                    // 1 Rare (delta) Cave can create Gold for 1 humans, but need 3 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Cave] * 1, player[RessourceType.Humans] / 3);
-                    // Additional pattern logic
-                    break;
-            }
+            // 1 Cave can create wood for 4 humans, but need 2 humans for 1
+            /// Not implemented
+            // result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
 
-            return result;
+            // Additional pattern logic
+
+            player[RessourceType.Stone] += (byte)(boardStats.Mountains * 3);
         }
 
         /// <summary>
@@ -449,7 +569,7 @@ namespace Substrate.Hexalem
             cloneGame.PlayerTurn = this.PlayerTurn;
             cloneGame.SelectBase = this.SelectBase;
 
-            cloneGame.UnboundTiles = this.UnboundTiles.Select(x => x.Clone()).ToList();
+            cloneGame.UnboundTileOffers = this.UnboundTileOffers.Select(x => x).ToList();
 
             return cloneGame;
         }
@@ -462,7 +582,7 @@ namespace Substrate.Hexalem
             log += $"\n\t HexBoardState = {HexBoardState}";
             log += $"\n\t HexBoardRound = {HexBoardRound}";
             log += $"\n\t PlayerTurn = {PlayerTurn}";
-            log += $"\n\t UnboundTiles.Length = {UnboundTiles.Count}";
+            log += $"\n\t UnboundTileOffers.Length = {UnboundTileOffers.Count}";
 
             log += $"\n\t Nb players = {PlayersCount}";
             for(int i = 0; i < PlayersCount; i++)
@@ -530,5 +650,7 @@ namespace Substrate.Hexalem
             get => Value.Skip(6).Take(4).ToArray();
             set => value.CopyTo(Value, 6);
         }
+
+        public bool Played { get; set; } = false;
     }
 }
