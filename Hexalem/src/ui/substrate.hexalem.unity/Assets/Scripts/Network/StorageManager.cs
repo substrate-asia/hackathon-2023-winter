@@ -55,12 +55,6 @@ public class StorageManager : Singleton<StorageManager>
             return false;
         }
 
-        if (Network.Client.Account == null)
-        {
-            Debug.Log($"[StorageManager] Client account not set");
-            return false;
-        }
-
         return true;
     }
 
@@ -82,6 +76,12 @@ public class StorageManager : Singleton<StorageManager>
         OnNextBlocknumber?.Invoke(blockNumber.Value);
 
         Debug.Log($"[StorageManager] Block {BlockNumber}");
+
+        if (Network.Client.Account == null)
+        {
+            Debug.Log($"[StorageManager] Client account not set");
+            return;
+        }
 
         AccountInfo = await Network.Client.GetAccountAsync(CancellationToken.None);
     }
