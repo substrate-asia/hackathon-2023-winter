@@ -1,4 +1,4 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
-    <ui:VisualElement name="VelLogo" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Images/HexaLogo.png?fileID=2800000&amp;guid=e787ff8e2866b5346913314e5e9d2f49&amp;type=3#HexaLogo&apos;); -unity-background-scale-mode: scale-to-fit; padding-right: 0; margin-right: 0; margin-left: 0; width: 100%; height: 100%; flex-shrink: 1;" />
+    <ui:VisualElement name="VelLogo" style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Images/Logo.png?fileID=2800000&amp;guid=419858647e12d0c41a737dc2fc84a891&amp;type=3#Logo&apos;); -unity-background-scale-mode: scale-to-fit; padding-right: 0; margin-right: 0; margin-left: 0; width: 100%; height: 100%; flex-shrink: 1;" />
 </ui:UXML>
