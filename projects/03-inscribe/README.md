@@ -9,7 +9,7 @@ Project establishment date 2023.11.11
   - We do Something
   - What the use of this project. 
 - Technology Architecture
-  ![Build Smart Contract && Dapp On Gear / Vara Network](./docs/architecture.png)
+  Build Smart Contract && Dapp On Gear / Vara Network
 
 
 ## Things planned to be accomplished during the hackathon
