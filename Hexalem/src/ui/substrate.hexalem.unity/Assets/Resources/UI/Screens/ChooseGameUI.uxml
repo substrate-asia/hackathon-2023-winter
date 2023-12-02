@@ -32,5 +32,4 @@
             <ui:Instance template="GameMenu" name="GameMenu" style="justify-content: flex-start; align-self: flex-end; width: 100%;" />
         </ui:VisualElement>
     </ui:VisualElement>
-    <Assets.Scripts.CustomTextField />
 </ui:UXML>

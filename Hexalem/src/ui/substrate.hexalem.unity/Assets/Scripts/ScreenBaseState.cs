@@ -12,6 +12,7 @@ namespace Assets.Scripts
             Done
         }
 
+        protected GameEventManager GameEventManager => GameEventManager.GetInstance();
         protected FlowController FlowController { get; private set; }
 
         protected ScreenBaseState ParentState { get; private set; }

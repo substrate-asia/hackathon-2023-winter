@@ -31,18 +31,20 @@ namespace Assets.Scripts
             {
                 Debug.Log($"[Training] Start new game");
                 FlowController.ChangeScreenState(ScreenState.MainScreen);
+
+                GameEventManager.OnStartGame();
             });
 
             _btnVsAi.RegisterCallback((ClickEvent evt) =>
             {
                 Debug.Log($"[VsAI] Start new game");
-                FlowController.ChangeScreenState(ScreenState.MainScreen);
+                FlowController.ChangeScreenState(ScreenState.HistoryScreen);
             });
 
             _btnPvp.RegisterCallback((ClickEvent evt) =>
             {
                 Debug.Log($"[PvP] Start new game");
-                FlowController.ChangeScreenState(ScreenState.MainScreen);
+                FlowController.ChangeScreenState(ScreenState.AccountScreen);
             });
 
             _btnCancel.RegisterCallback((ClickEvent evt) =>
