@@ -91,13 +91,10 @@ namespace Assets.Scripts.ScreenStates
 
             if (Network.Client.Account != null)
             {
-                var fileName = Network.Wallet.FileName;
-                if (Network.Wallet.FileName.Length > 12)
-                {
-                    fileName = $"{Network.Wallet.FileName.Substring(0, 10)}..";
-                }
-                _lblAccount.text = fileName;
-                _lblAddress.text = Network.Client.Account.Value.Take(6) + " ... " + Network.Client.Account.Value.Skip(43);
+                _lblAccount.text = Network.CurrentAccountType.Value.ToString();
+                Debug.Log(Network.Client.Account.Value);
+                var address = Network.Client.Account.Value;
+                _lblAddress.text = address.Substring(0,6) + " ... " + address.Substring(20, 6);
             }
             else
             {

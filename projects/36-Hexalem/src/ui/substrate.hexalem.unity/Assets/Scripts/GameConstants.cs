@@ -27,6 +27,10 @@ namespace Assets.Scripts
         public static StyleColor ColorGreen => new StyleColor(new Color32(111, 207, 151, 255));
         public static StyleColor ColorRed => new StyleColor(new Color32(255, 0, 0, 255));
 
+        public static StyleColor ColorUnselected => new StyleColor(new Color32(200, 175, 150, 255));
+
+        public static StyleColor ColorSelected => new StyleColor(new Color32(150, 200, 150, 255));
+
         public static StyleColor ColorTransparent => new StyleColor(new Color32(0, 0, 0, 0));
 
         public static StyleColor ColorExtrinsic => new StyleColor(new Color32(95, 88, 88, 255));
