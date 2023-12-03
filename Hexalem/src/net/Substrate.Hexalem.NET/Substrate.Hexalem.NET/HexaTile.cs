@@ -96,13 +96,13 @@ namespace Substrate.Hexalem
         {
             if (TileRarity == TileRarity.Legendary)
             {
-                Log.Debug($"{nameof(TileRarity.Legendary)} cannot be upgrade");
+                Log.Debug($"{nameof(TileRarity.Legendary)} is already maxed out");
                 return false;
             }
 
             var upgradable = GameConfig.UpgradableTypeTile();
 
-            if (!upgradable.Any(x => x == TileType))
+            if (!upgradable.Contains(TileType))
             {
                 Log.Debug("{TileType} cannot be upgrade", TileType);
                 return false;
@@ -113,7 +113,9 @@ namespace Substrate.Hexalem
         internal bool Upgrade()
         {
             if (!CanUpgrade())
+            {
                 return false;
+            }
 
             TileRarity += 1;
             return true;

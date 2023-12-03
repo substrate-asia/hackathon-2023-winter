@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json.Linq;
-using Serilog;
+﻿using Serilog;
 using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.Extensions;
@@ -9,10 +8,10 @@ using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
+
 namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
@@ -20,6 +19,7 @@ namespace Substrate.Hexalem
         public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
+
         /// <summary>
         /// Associate a player and his board
         /// </summary>
@@ -43,17 +43,18 @@ namespace Substrate.Hexalem
             if (boards.Length != game.Players.Length)
                 throw new InvalidOperationException($"Inconsistent boards count (={boards.Length}) and players count (={game.Players.Length})");
 
-            
             Id = game.GameId;
 
-            switch(game.State)
+            switch (game.State)
             {
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Matchmaking:
                     HexBoardState = HexBoardState.Preparing;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Playing:
                     HexBoardState = HexBoardState.Running;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Finished:
                     HexBoardState = HexBoardState.Finish;
                     break;
@@ -88,7 +89,6 @@ namespace Substrate.Hexalem
             }
 
             PlayersCount = (byte)HexaTuples.Count;
-
         }
 
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples) : this()
@@ -128,7 +128,7 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="blockNumber"></param>
         public void PostMove(uint blockNumber)
@@ -146,11 +146,10 @@ namespace Substrate.Hexalem
 
                 UnboundTiles = RenewSelection(blockNumber, SelectBase);
             }
-
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="blockNumber"></param>
         /// <param name="selectBase"></param>
@@ -254,6 +253,29 @@ namespace Substrate.Hexalem
             return result;
         }
 
+        public bool CanUpgrade(byte playerIndex, (int q, int r) coords)
+        {
+            if (!EnsureCurrentPlayer(playerIndex))
+            {
+                return false;
+            }
+
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var tile = (HexaTile)board[coords.q, coords.r];
+            if (!EnsureUpgradableTile(tile))
+            {
+                return false;
+            }
+
+            if (!EnsureRessourcesToPlay(player, tile))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         /// <summary>
         /// Upgrade a tile
         /// </summary>
@@ -262,46 +284,33 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool UpgradeTile(byte playerIndex, (int q, int r) coords)
         {
-            if (!EnsureCurrentPlayer(playerIndex))
+            if (!CanUpgrade(playerIndex, coords))
             {
                 return false;
             }
 
-            HexaBoard hexaBoard = HexaTuples[PlayerTurn].board;
-            HexaPlayer hexaPlayer = HexaTuples[PlayerTurn].player;
+            var (player, board) = HexaTuples[PlayerTurn];
 
             // Ensure coord have a valid tile
-            var existingTile = (HexaTile)hexaBoard[coords.q, coords.r];
-
-            if (existingTile.TileType == TileType.Empty)
-            {
-                Log.Warning("Cannot upgrade tile ({q, r}) because it not a valid tile", coords.q, coords.r);
-                return false;
-            }
-
-            // Check if player have enought ressources to upgrade
-            var goldRequired = GameConfig.GoldCostForUpgrade(existingTile.TileRarity);
-            var humansRequired = GameConfig.MininumHumanToUpgrade(existingTile.TileRarity);
-            if (hexaPlayer[RessourceType.Gold] < goldRequired ||
-                hexaPlayer[RessourceType.Humans] < humansRequired)
-            {
-                Log.Warning("Player {playerId} does not have enough Gold ({currentGold}) or Humans ({currentHuman}) to upgrade {tileRarity} (required {goldRequired} gold and {humanRequired})", PlayerTurn, hexaPlayer[RessourceType.Gold], hexaPlayer[RessourceType.Humans], existingTile.TileRarity, goldRequired, humansRequired);
-                return false;
-            }
+            var existingTile = (HexaTile)board[coords.q, coords.r];
 
             // Upgrade tile to next level, if failed return
-            if (!existingTile.Upgrade())
-            {
-                return false;
-            }
+            existingTile.Upgrade();
 
             HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
-            hexaPlayer[RessourceType.Gold] -= (byte)goldRequired;
-            hexaPlayer[RessourceType.Humans] -= (byte)humansRequired;
+            player[RessourceType.Gold] -= (byte)GameConfig.GoldCostForUpgrade(existingTile.TileRarity);
+            player[RessourceType.Humans] -= (byte)GameConfig.MininumHumanToUpgrade(existingTile.TileRarity);
 
             return true;
         }
 
+
+        /// <summary>
+        /// Update game turn information
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
         internal bool UpdateTurnState(uint blockNumber, byte playerIndex)
         {
             // check if correct player
@@ -467,6 +476,47 @@ namespace Substrate.Hexalem
             return true;
         }
 
+        /// <summary>
+        /// Ensure that the tile can be upgraded
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        private bool EnsureUpgradableTile(HexaTile tile)
+        {
+            var upgradableTileTypes = GameConfig.UpgradableTypeTile();
+
+            if (tile.TileType == TileType.Empty 
+             || tile.TileRarity == TileRarity.Legendary 
+             || !upgradableTileTypes.Contains(tile.TileType))
+            {
+                Log.Error(LogMessages.InvalidTileToUpgrade(tile));
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Ensure that the player have enough ressources to upgrade the tile
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        private bool EnsureRessourcesToPlay(HexaPlayer player, HexaTile tile)
+        {
+            // Check if player have enought ressources to upgrade
+            var goldRequired = GameConfig.GoldCostForUpgrade(tile.TileRarity);
+            var humansRequired = GameConfig.MininumHumanToUpgrade(tile.TileRarity);
+            if (player[RessourceType.Gold] < goldRequired
+             || player[RessourceType.Humans] < humansRequired)
+            {
+                Log.Error(LogMessages.MissingRessourcesToPlay(player, tile, goldRequired, humansRequired));
+                return false;
+            }
+
+            return true;
+        }
+
         public HexaGame Clone()
         {
             var gameId = (byte[])this.Id.Clone();
@@ -495,7 +545,7 @@ namespace Substrate.Hexalem
             log += $"\n\t UnboundTiles.Length = {UnboundTiles.Count}";
 
             log += $"\n\t Nb players = {PlayersCount}";
-            for(int i = 0; i < PlayersCount; i++)
+            for (int i = 0; i < PlayersCount; i++)
             {
                 log += $"\n\t\t Player {i} = {HexaTuples[i].player.Id.ToAddress()}";
             }
