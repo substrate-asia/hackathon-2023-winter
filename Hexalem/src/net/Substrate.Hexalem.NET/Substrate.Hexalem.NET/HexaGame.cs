@@ -227,7 +227,9 @@ namespace Substrate.Hexalem
             UnboundTiles.RemoveAt(selectionIndex);
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
 
-            // Set Patterns
+            // Set Patterns (can be optimized to only set around the played tile)
+            //hexaBoard.SetPatterns();
+            hexaBoard.SetPatterns(coords);
 
             return true;
         }

@@ -2,6 +2,7 @@
 using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Substrate.Hexalem
 {
@@ -168,61 +169,105 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Set the patterns of the hex tiles in the grid
+        /// Set patterns only around a tile and it's impacting neighbours
+        /// </summary>
+        /// <param name="tileCoords"></param>
+        /// <returns></returns>
+        public List<List<int>> SetPatterns((int, int) tileCoords)
+        {
+            List<int> impactTiles = new List<int>() { ToIndex(tileCoords).Value };
+            foreach (var neighbour in GetNeighbors(tileCoords))
+            {
+                var neighbourIndex = ToIndex(neighbour);
+                if (neighbourIndex != null)
+                {
+                    impactTiles.Add(neighbourIndex.Value);
+                }
+            }
+
+            List<List<int>> result = new List<List<int>>();
+            foreach (var i in impactTiles)
+            {
+                var patternResult = SetPatternAroundTile(i);
+                if (patternResult != null)
+                {
+                    result.Add(patternResult);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Set patterns on the whole grid
         /// </summary>
         /// <returns></returns>
-        /// <exception cref="NotSupportedException"></exception>
         public List<List<int>> SetPatterns()
         {
             List<List<int>> result = new List<List<int>>();
             for (int i = 0; i < Value.Length; i++)
             {
-                HexaTile t = Value[i];
-                if (t == null || t.TilePattern != TilePattern.Normal)
+                var patternResult = SetPatternAroundTile(i);
+                if (patternResult != null)
                 {
-                    continue;
+                    result.Add(patternResult);
                 }
-
-                var coords = ToCoords(i);
-                List<(int, int)?> neighbours = GetNeighbors(coords);
-                List<(int, HexaTile)?> n = new List<(int, HexaTile)?>() { (i, t) };
-                foreach (var neighbour in neighbours)
-                {
-                    var index = ToIndex(neighbour);
-                    if (index == null)
-                    {
-                        n.Add(null);
-                        continue;
-                    }
-
-                    n.Add((index.Value, (HexaTile)Value[index.Value]));
-                }
-
-                if (n.Count != 6)
-                {
-                    throw new NotSupportedException("Not the correct amount of neighbours to proccess!");
-                }
-
-                (TilePattern, int[])? pattern = GetPattern(n);
-
-                if (pattern == null)
-                {
-                    continue;
-                }
-
-                var list = new List<int>();
-                foreach (var index in pattern.Value.Item2)
-                {
-                    var hexaTile = (HexaTile)Value[i];
-                    hexaTile.TilePattern = pattern.Value.Item1;
-                    Value[i] = hexaTile;
-                    list.Add(index);
-                }
-
-                result.Add(list);
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="tileIndex"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        internal List<int> SetPatternAroundTile(int tileIndex)
+        {
+            HexaTile t = Value[tileIndex];
+            if (t == null || t.TilePattern != TilePattern.Normal)
+            {
+                return null;
+            }
+
+            var coords = ToCoords(tileIndex);
+            List<(int, int)?> neighbours = GetNeighbors(coords);
+            List<(int, HexaTile)?> n = new List<(int, HexaTile)?>() { (tileIndex, t) };
+            foreach (var neighbour in neighbours)
+            {
+                var index = ToIndex(neighbour);
+                if (index == null)
+                {
+                    n.Add(null);
+                    continue;
+                }
+
+                n.Add((index.Value, (HexaTile)Value[index.Value]));
+            }
+
+            if (n.Count != 7)
+            {
+                throw new NotSupportedException("Not the correct amount of neighbours to process!");
+            }
+
+            (TilePattern, int[])? pattern = GetPattern(n);
+
+            if (pattern == null)
+            {
+                return null;
+            }
+
+            var list = new List<int>();
+            foreach (var index in pattern.Value.Item2)
+            {
+                var hexaTile = (HexaTile)Value[tileIndex];
+                hexaTile.TilePattern = pattern.Value.Item1;
+                Value[tileIndex] = hexaTile;
+                list.Add(index);
+            }
+
+            return list;
         }
 
         /// <summary>
