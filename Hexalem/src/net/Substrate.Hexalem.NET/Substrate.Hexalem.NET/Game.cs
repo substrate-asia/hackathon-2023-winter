@@ -9,6 +9,13 @@ namespace Substrate.Hexalem
 {
     public static class Game
     {
+        /// <summary>
+        /// Create a new game
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="players"></param>
+        /// <param name="gridSize"></param>
+        /// <returns></returns>
         public static HexaGame CreateGame(uint blockNumber, List<HexaPlayer> players, GridSize gridSize)
         {
             Random random = new Random();
@@ -54,6 +61,14 @@ namespace Substrate.Hexalem
             return hexaGame;
         }
 
+        /// <summary>
+        /// Player upgrade a tile
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="coords"></param>
+        /// <returns></returns>
         public static HexaGame? Upgrade(uint blockNumber, HexaGame hexaGame, byte playerIndex, (int, int) coords)
         {
             if (!hexaGame.UpgradeTile(playerIndex, coords))
@@ -66,6 +81,13 @@ namespace Substrate.Hexalem
             return hexaGame;
         }
 
+        /// <summary>
+        /// Player finish his turn or win the game by call a late opponent
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
         public static HexaGame? FinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
         {
             // Update game turn information
