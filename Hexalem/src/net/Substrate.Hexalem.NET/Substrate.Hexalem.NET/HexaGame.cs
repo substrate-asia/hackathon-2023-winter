@@ -304,7 +304,6 @@ namespace Substrate.Hexalem
             return true;
         }
 
-
         /// <summary>
         /// Update game turn information
         /// </summary>
@@ -485,8 +484,8 @@ namespace Substrate.Hexalem
         {
             var upgradableTileTypes = GameConfig.UpgradableTypeTile();
 
-            if (tile.TileType == TileType.Empty 
-             || tile.TileRarity == TileRarity.Legendary 
+            if (tile.TileType == TileType.Empty
+             || tile.TileRarity == TileRarity.Legendary
              || !upgradableTileTypes.Contains(tile.TileType))
             {
                 Log.Error(LogMessages.InvalidTileToUpgrade(tile));

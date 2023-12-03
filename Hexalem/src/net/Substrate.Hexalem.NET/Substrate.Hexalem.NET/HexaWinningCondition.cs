@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Substrate.Hexalem.NET
+﻿namespace Substrate.Hexalem.NET
 {
     public partial class HexaWinningCondition
     {
         public static implicit operator byte(HexaWinningCondition p) => p.Value;
+
         public static implicit operator HexaWinningCondition(byte p) => new HexaWinningCondition(p);
 
         public byte Value { get; set; }
@@ -35,7 +32,6 @@ namespace Substrate.Hexalem.NET
         {
             get => (byte)(Value & 0x3F);
             set => Value = (byte)((Value & 0xC0) | (value & 0x3F));
-
         }
     }
 }

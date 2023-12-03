@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -11,7 +9,6 @@ namespace Substrate.Hexalem
 {
     public static class Game
     {
-        
         public static HexaGame CreateGame(uint blockNumber, List<HexaPlayer> players, GridSize gridSize)
         {
             Random random = new Random();
@@ -44,10 +41,10 @@ namespace Substrate.Hexalem
         /// <param name="coords"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, 
-            (int,int) coords)
+        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex,
+            (int, int) coords)
         {
-            if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords)) 
+            if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords))
             {
                 return null;
             }
@@ -82,7 +79,7 @@ namespace Substrate.Hexalem
             Log.Debug("Rewards calculated for player {index}", playerIndex);
 
             // Does the current player win ?
-            if(hexaGame.IsGameWon())
+            if (hexaGame.IsGameWon())
             {
                 return hexaGame;
             }
@@ -97,6 +94,5 @@ namespace Substrate.Hexalem
 
             return hexaGame;
         }
-
     }
 }

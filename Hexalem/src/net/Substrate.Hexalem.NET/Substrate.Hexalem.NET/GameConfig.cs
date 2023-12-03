@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace Substrate.Hexalem.NET
 {
@@ -22,6 +20,7 @@ namespace Substrate.Hexalem.NET
 
         // Default player ressources
         public const byte DEFAULT_MANA = 1;
+
         public const byte DEFAULT_HUMANS = 1;
         public const byte DEFAULT_WATER = 0;
         public const byte DEFAULT_FOOD = 0;
@@ -43,14 +42,17 @@ namespace Substrate.Hexalem.NET
 
         public static int GoldCostForUpgrade(TileRarity rarity)
         {
-            switch(rarity)
+            switch (rarity)
             {
                 case TileRarity.Normal: // Normal to rare
                     return 5;
+
                 case TileRarity.Rare: // Rare to Epic
                     return 10;
+
                 case TileRarity.Epic: // Epic to Legendary
                     return 15;
+
                 default:
                     throw new InvalidOperationException($"Rarity {rarity} not supported...");
             }
@@ -62,10 +64,13 @@ namespace Substrate.Hexalem.NET
             {
                 case TileRarity.Normal: // Normal to rare
                     return 3;
+
                 case TileRarity.Rare: // Rare to Epic
                     return 5;
+
                 case TileRarity.Epic: // Epic to Legendary
                     return 8;
+
                 default:
                     throw new InvalidOperationException($"Rarity {rarity} not supported...");
             }

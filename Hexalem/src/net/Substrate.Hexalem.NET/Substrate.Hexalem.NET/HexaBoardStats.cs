@@ -1,13 +1,11 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
-using System.Linq;
+﻿using System;
 
 namespace Substrate.Hexalem
 {
     internal class HexaBoardStats
     {
         public byte[] Value;
-        
+
         public HexaBoardRarityStats Rarity { get; }
         public HexaBoardPatternStats Pattern { get; }
 
@@ -16,7 +14,6 @@ namespace Substrate.Hexalem
 
         public HexaBoardStats() : this(new byte[8], new byte[StorageSize], new byte[StorageSize])
         {
-
         }
 
         protected HexaBoardStats(byte[] resultType, byte[] resultRarity, byte[] resultPattern)
@@ -33,6 +30,7 @@ namespace Substrate.Hexalem
             get => Value[(int)tileType];
             set => Value[(int)tileType] = value;
         }
+
         public byte this[TileType tileType, TileRarity tileRarity]
         {
             get => Rarity[tileType, tileRarity];
@@ -48,15 +46,13 @@ namespace Substrate.Hexalem
 
     internal class HexaBoardRarityStats
     {
-        
         public byte[] Value;
         private readonly int _maxTileTypes;
 
         public HexaBoardRarityStats() : this(new byte[HexaBoardStats.StorageSize])
         {
-
         }
-        
+
         public HexaBoardRarityStats(byte[] result)
         {
             Value = result;
@@ -77,7 +73,6 @@ namespace Substrate.Hexalem
 
         public HexaBoardPatternStats() : this(new byte[HexaBoardStats.StorageSize])
         {
-
         }
 
         public HexaBoardPatternStats(byte[] result)

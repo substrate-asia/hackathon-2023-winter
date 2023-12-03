@@ -1,12 +1,11 @@
 ﻿using Substrate.Hexalem.NET;
-using System;
-using System.Linq;
 
 namespace Substrate.Hexalem
 {
     public partial class HexaPlayer : IHexaBase
     {
         public static implicit operator byte[](HexaPlayer p) => p.Value;
+
         public static implicit operator HexaPlayer(byte[] p) => new HexaPlayer(p);
 
         public byte[] Id { get; set; } // AccountId32
@@ -44,16 +43,16 @@ namespace Substrate.Hexalem
 
         public void AddWinCondition(WinningCondition condition)
         {
-            switch(condition)
+            switch (condition)
             {
                 case Hexalem.WinningCondition.GoldThreshold:
                     WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_GOLD);
                     break;
+
                 case Hexalem.WinningCondition.HumanThreshold:
                     WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_HUMAN);
                     break;
             }
-            
         }
 
         /// <summary>
@@ -66,6 +65,7 @@ namespace Substrate.Hexalem
             {
                 case Hexalem.WinningCondition.GoldThreshold:
                     return this[RessourceType.Gold] >= WinningCondition.Target;
+
                 case Hexalem.WinningCondition.HumanThreshold:
                     return this[RessourceType.Humans] >= WinningCondition.Target;
             }
@@ -80,18 +80,16 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         public bool CanUpgrade(HexaTile tile)
         {
-            return  this[RessourceType.Gold] >= GameConfig.GoldCostForUpgrade(tile.TileRarity) &&
+            return this[RessourceType.Gold] >= GameConfig.GoldCostForUpgrade(tile.TileRarity) &&
                     this[RessourceType.Humans] >= GameConfig.MininumHumanToUpgrade(tile.TileRarity);
         }
 
         public void NextRound(uint blockNumber)
         {
-
         }
 
         public void PostMove(uint blockNumber)
         {
-
         }
 
         internal HexaPlayer Clone()
@@ -115,5 +113,3 @@ namespace Substrate.Hexalem
         }
     }
 }
-
-

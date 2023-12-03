@@ -2,11 +2,9 @@
 using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Substrate.Hexalem
 {
-
     public class HexaBoard : IHexaBase
     {
         // Implicit operator to convert a HexGrid to a byte[]
@@ -41,7 +39,6 @@ namespace Substrate.Hexalem
             _maxDistanceFromCenter = (_sideLength - 1) / 2;
         }
 
-
         public GridSize CalcGridSize()
         {
             switch (Value.Length)
@@ -71,7 +68,6 @@ namespace Substrate.Hexalem
 
         public void PostMove(uint blockNumber)
         {
-
         }
 
         internal HexaBoard Clone()
@@ -218,7 +214,7 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tileIndex"></param>
         /// <returns></returns>
@@ -346,7 +342,7 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool Place((int, int) coords, HexaTile chooseTile)
         {
-           var index = ToIndex(coords);
+            var index = ToIndex(coords);
 
             if (index == null)
             {
