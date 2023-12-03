@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public static class GameConstant
     {
-
+        public const float TileRatio = 0.3599393f;
         public static StyleColor ColorMythical => new StyleColor(new Color32(211, 194, 42, 255));
         public static StyleColor ColorLegendary => new StyleColor(new Color32(211, 116, 42, 255));
         public static StyleColor ColorEpic => new StyleColor(new Color32(165, 95, 255, 255));

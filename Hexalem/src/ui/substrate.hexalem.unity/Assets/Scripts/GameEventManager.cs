@@ -7,13 +7,13 @@ namespace Assets.Scripts
 {
     public class GameEventManager : Singleton<GameEventManager>
     {
-        public delegate void OnStartNewGame();
+        public delegate void OnStartNewGame(string gameType);
         public static event OnStartNewGame startNewGameDelegate;
 
-        public void OnStartGame()
+        public void OnStartGame(string gameType)
         {
             Debug.Log("GameEventManager > OnStartGame");
-            startNewGameDelegate();
+            startNewGameDelegate(gameType);
         }
     }
 }

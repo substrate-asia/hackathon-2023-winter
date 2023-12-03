@@ -2105,7 +2105,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   EmptyTile: {fileID: 1492892586787341698, guid: 741f4a30ed9572c40989e913069b57f3, type: 3}
-  WaterTile: {fileID: 593471849022218006, guid: 543a54fdaf7ab5843b83b191f59a6d3b, type: 3}
+  HomeTile: {fileID: 7535761464842861189, guid: b7e06d50ddb73c64a90cf44d5eddf9e1, type: 3}
+  GrassTile: {fileID: 1492892586787341698, guid: 3f17cfaeb2c44f64fa9c9e918f44d20c, type: 3}
+  WaterTile: {fileID: 5336340007631838155, guid: c936f084c3fcfa349b2cfad1ef04c4d8, type: 3}
+  MountainTile: {fileID: 8917444722939965052, guid: b3f7247fcfa9d3a48864f63d2cadabc8, type: 3}
+  ForestTile: {fileID: 4035475300060606343, guid: d79eac969a6fd2a4db639df87d918a5c, type: 3}
+  DesertTile: {fileID: 5284488795092646866, guid: 1171c66293b2f624ca5c959821dbd084, type: 3}
+  CaveTile: {fileID: 1407661191612855244, guid: 91ec7902fcfbb2f4b9aec0d72b42d316, type: 3}
 --- !u!1001 &1263666040
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3368,7 +3374,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1870062991}
-  - component: {fileID: 1870062992}
   m_Layer: 0
   m_Name: Selection
   m_TagString: SelectionTag
@@ -3407,18 +3412,6 @@ Transform:
   - {fileID: 424452342}
   m_Father: {fileID: 1211438516}
   m_LocalEulerAnglesHint: {x: 0, y: -30, z: 0}
---- !u!114 &1870062992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1870062990}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c945ca71186eb8447b8cca7761ae4cca, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1915573046
 PrefabInstance:
   m_ObjectHideFlags: 0

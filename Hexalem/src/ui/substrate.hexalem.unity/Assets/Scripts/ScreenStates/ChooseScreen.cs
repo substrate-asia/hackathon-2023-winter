@@ -32,7 +32,7 @@ namespace Assets.Scripts
                 Debug.Log($"[Training] Start new game");
                 FlowController.ChangeScreenState(ScreenState.MainScreen);
 
-                GameEventManager.OnStartGame();
+                GameEventManager.OnStartGame("training");
             });
 
             _btnVsAi.RegisterCallback((ClickEvent evt) =>
