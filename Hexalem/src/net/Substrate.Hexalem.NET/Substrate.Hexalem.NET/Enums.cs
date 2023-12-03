@@ -2,7 +2,7 @@
 {
     public enum TileType
     {
-        None = 0,
+        Empty = 0,
         Home = 1,
         Grass = 2,
         Water = 3,

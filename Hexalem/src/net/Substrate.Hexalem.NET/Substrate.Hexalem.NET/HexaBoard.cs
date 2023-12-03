@@ -172,17 +172,13 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <returns></returns>
         /// <exception cref="NotSupportedException"></exception>
-        public List<List<(int q, int r)>> SetPatterns()
+        public List<List<int>> SetPatterns()
         {
+            List<List<int>> result = new List<List<int>>();
             for (int i = 0; i < Value.Length; i++)
             {
                 HexaTile t = Value[i];
-                if (t == null || t.TileRarity != TileRarity.Normal)
-                {
-                    continue;
-                }
-
-                if (t == null)
+                if (t == null || t.TilePattern != TilePattern.Normal)
                 {
                     continue;
                 }
@@ -207,20 +203,26 @@ namespace Substrate.Hexalem
                     throw new NotSupportedException("Not the correct amount of neighbours to proccess!");
                 }
 
-                (TileRarity, int[])? result = GetPattern(n);
+                (TilePattern, int[])? pattern = GetPattern(n);
 
-                if (result == null)
+                if (pattern == null)
                 {
                     continue;
                 }
 
-                foreach (var index in result.Value.Item2)
+                var list = new List<int>();
+                foreach (var index in pattern.Value.Item2)
                 {
-                    SetTileLevel(index, result.Value.Item1);
+                    var hexaTile = (HexaTile)Value[i];
+                    hexaTile.TilePattern = pattern.Value.Item1;
+                    Value[i] = hexaTile;
+                    list.Add(index);
                 }
+
+                result.Add(list);
             }
 
-            return null;
+            return result;
         }
 
         /// <summary>
@@ -228,76 +230,59 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="n"></param>
         /// <returns></returns>
-        internal (TileRarity rarity, int[] indices)? GetPattern(List<(int indice, HexaTile tile)?> n)
+        internal (TilePattern pattern, int[] indices)? GetPattern(List<(int indice, HexaTile tile)?> n)
         {
             // delta
             if (n[1] != null && n[2] != null && n[1].Value.tile.Same(n[2].Value.tile) && n[0].Value.tile.Same(n[2].Value.tile))
             {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[1].Value.indice, n[2].Value.indice });
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[1].Value.indice, n[2].Value.indice });
             }
             else if (n[2] != null && n[3] != null && n[2].Value.tile.Same(n[3].Value.tile) && n[0].Value.tile.Same(n[3].Value.tile))
             {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[2].Value.indice, n[3].Value.indice });
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[2].Value.indice, n[3].Value.indice });
             }
             else if (n[3] != null && n[4] != null && n[3].Value.tile.Same(n[4].Value.tile) && n[0].Value.tile.Same(n[4].Value.tile))
             {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[3].Value.indice, n[4].Value.indice });
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[3].Value.indice, n[4].Value.indice });
             }
             else if (n[4] != null && n[5] != null && n[4].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
             {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[4].Value.indice, n[5].Value.indice });
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[4].Value.indice, n[5].Value.indice });
             }
             else if (n[5] != null && n[6] != null && n[5].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
             {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[5].Value.indice, n[6].Value.indice });
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[5].Value.indice, n[6].Value.indice });
             }
             else if (n[6] != null && n[1] != null && n[6].Value.tile.Same(n[1].Value.tile) && n[0].Value.tile.Same(n[1].Value.tile))
             {
-                return (TileRarity.Rare, new[] { n[0].Value.indice, n[6].Value.indice, n[1].Value.indice });
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[6].Value.indice, n[1].Value.indice });
             }
             else
             // line
             if (n[1] != null && n[4] != null && n[1].Value.tile.Same(n[4].Value.tile) && n[0].Value.tile.Same(n[4].Value.tile))
             {
-                return (TileRarity.Epic, new[] { n[0].Value.indice, n[1].Value.indice, n[4].Value.indice });
+                return (TilePattern.Line, new[] { n[0].Value.indice, n[1].Value.indice, n[4].Value.indice });
             }
             else if (n[2] != null && n[5] != null && n[2].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
             {
-                return (TileRarity.Epic, new[] { n[0].Value.indice, n[2].Value.indice, n[5].Value.indice });
+                return (TilePattern.Line, new[] { n[0].Value.indice, n[2].Value.indice, n[5].Value.indice });
             }
             else if (n[3] != null && n[6] != null && n[3].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
             {
-                return (TileRarity.Epic, new[] { n[0].Value.indice, n[3].Value.indice, n[6].Value.indice });
+                return (TilePattern.Line, new[] { n[0].Value.indice, n[3].Value.indice, n[6].Value.indice });
             }
             else
             // ypsilon
             if (n[1] != null && n[3] != null && n[5] != null && n[1].Value.tile.Same(n[3].Value.tile) && n[1].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
             {
-                return (TileRarity.Legendary, new[] { n[0].Value.indice, n[1].Value.indice, n[3].Value.indice, n[5].Value.indice });
+                return (TilePattern.Ypsilon, new[] { n[0].Value.indice, n[1].Value.indice, n[3].Value.indice, n[5].Value.indice });
             }
             else if (n[2] != null && n[4] != null && n[6] != null && n[2].Value.tile.Same(n[4].Value.tile) && n[2].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
             {
-                return (TileRarity.Legendary, new[] { n[0].Value.indice, n[2].Value.indice, n[4].Value.indice, n[6].Value.indice });
+                return (TilePattern.Ypsilon, new[] { n[0].Value.indice, n[2].Value.indice, n[4].Value.indice, n[6].Value.indice });
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Set the level of a hex tile in the grid
-        /// </summary>
-        /// <param name="i"></param>
-        /// <param name="hexTileLevel"></param>
-        private void SetTileLevel(int i, TileRarity hexTileLevel)
-        {
-            if (Value.Length <= i || Value[i] == 0x00)
-            {
-                return;
-            }
-            var hexaTile = ((HexaTile)Value[i]);
-            hexaTile.TileRarity = hexTileLevel;
-
-            Value[i] = hexaTile;
         }
 
         /// <summary>
@@ -349,7 +334,7 @@ namespace Substrate.Hexalem
                 result[t.TileType] += 1; // total
 
                 // avoid counting none tiles twice
-                if (t.TileRarity != TileRarity.None)
+                if (t.TileType != TileType.Empty)
                 {
                     result[t.TileType, t.TileRarity] += 1;
                     result[t.TileType, t.TilePattern] += 1;

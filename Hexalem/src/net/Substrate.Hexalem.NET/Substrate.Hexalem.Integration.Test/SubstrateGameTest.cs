@@ -134,10 +134,10 @@ namespace Substrate.Hexalem.Integration.Test
             Assert.That(hexaGame.HexaTuples, Is.Not.Null);
 
             var aliceTiles = hexaGame.HexaTuples[0].board.Value.Select(x => (HexaTile)x);
-            Assert.IsTrue(aliceTiles.All(x => x.TileType == TileType.None));
+            Assert.IsTrue(aliceTiles.All(x => x.TileType == TileType.Empty));
 
             var bobTiles = hexaGame.HexaTuples[1].board.Value.Select(x => (HexaTile)x);
-            Assert.IsTrue(bobTiles.All(x => x.TileType == TileType.None));
+            Assert.IsTrue(bobTiles.All(x => x.TileType == TileType.Empty));
 
         }
     }

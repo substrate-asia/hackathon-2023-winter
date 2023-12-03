@@ -315,16 +315,18 @@ namespace Substrate.Hexalem.Test
             // One human for home when not upgrade
             Assert.That(hexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
 
-            // Add rarity to home tileto increase human rewards
+            // Add rarity to home tile to increase human rewards
             var homeTile = (HexaTile)tuple.board[12];
             Assert.That(homeTile.TileType, Is.EqualTo(TileType.Home));
+            
             homeTile.TileRarity = TileRarity.Epic;
+            tuple.board[12] = homeTile;
 
             // Add ressources humans need
             tuple.player[RessourceType.Water] = 10;
             tuple.player[RessourceType.Food] = 10;
 
-            Assert.That(hexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(3));
+            Assert.That(hexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(5));
 
             // But if I have not enough water for human
             tuple.player[RessourceType.Water] = 4;

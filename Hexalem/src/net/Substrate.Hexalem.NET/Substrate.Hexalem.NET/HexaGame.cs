@@ -214,7 +214,8 @@ namespace Substrate.Hexalem
                 {
                     return false;
                 }
-            } catch(InvalidMapCoordinate ex)
+            } 
+            catch(InvalidMapCoordinate ex)
             {
                 Log.Error(ex.Message);
                 return false;
@@ -225,6 +226,8 @@ namespace Substrate.Hexalem
 
             UnboundTiles.RemoveAt(selectionIndex);
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
+
+            // Set Patterns
 
             return true;
         }
@@ -242,7 +245,7 @@ namespace Substrate.Hexalem
             // Ensure coord have a valid tile
             var existingTile = (HexaTile)hexaBoard[coords.q, coords.r];
 
-            if (existingTile.TileType == TileType.None)
+            if (existingTile.TileType == TileType.Empty)
             {
                 Log.Warning("Cannot upgrade tile ({q, r}) because it not a valid tile", coords.q, coords.r);
                 return false;

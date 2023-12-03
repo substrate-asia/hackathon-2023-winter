@@ -35,11 +35,11 @@ namespace Substrate.Hexalem
 
         public HexaTile(TileSharp tileTypeSharp)
         {
-            var tileType = TileType.None;
+            var tileType = TileType.Empty;
             switch (tileTypeSharp.TileType)
             {
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Empty:
-                    tileType = TileType.None;
+                    tileType = TileType.Empty;
                     break;
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Tree:
                     tileType = TileType.Forest;
