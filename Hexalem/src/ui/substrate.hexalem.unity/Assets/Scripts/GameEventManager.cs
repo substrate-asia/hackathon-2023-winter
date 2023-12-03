@@ -1,19 +1,40 @@
 using Assets.Scripts;
+using Substrate.Hexalem;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Assets.Scripts.ScreenStates.MainScreenState;
 
 namespace Assets.Scripts
 {
     public class GameEventManager : Singleton<GameEventManager>
     {
         public delegate void OnStartNewGame(string gameType);
-        public static event OnStartNewGame startNewGameDelegate;
+        public static event OnStartNewGame StartNewGameDelegate;
 
         public void OnStartGame(string gameType)
         {
             Debug.Log("GameEventManager > OnStartGame");
-            startNewGameDelegate(gameType);
+            StartNewGameDelegate(gameType);
         }
+
+        public delegate void RessourcesChangedHandler(HexaPlayer player);
+        public event RessourcesChangedHandler OnRessourcesChangedDelegate;
+
+        public void OnRessourcesChanged(HexaPlayer player)
+        {
+            Debug.Log("GameEventManager > OnRessourcesChanged");
+            OnRessourcesChangedDelegate(player);
+        }
+
+        public delegate void VisualGameHelperHandler(int nbMillisecond, StateType state);
+        public event VisualGameHelperHandler OnVisualGameHelperChangedDelegate;
+
+        public void OnVisualGameHelperChanged(int nbMillisecond, StateType state)
+        {
+            Debug.Log("GameEventManager > OnVisualGameHelperChanged");
+            OnVisualGameHelperChangedDelegate(nbMillisecond, state);
+        }
+
     }
 }

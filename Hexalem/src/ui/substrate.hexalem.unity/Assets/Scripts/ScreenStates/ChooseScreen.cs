@@ -6,7 +6,6 @@ namespace Assets.Scripts
 {
     internal class ChooseScreen : ScreenBaseState
     {
-        //private FlowController flowController;
         private Button _btnTraining;
         private Button _btnVsAi;
         private Button _btnPvp;
@@ -32,6 +31,7 @@ namespace Assets.Scripts
                 Debug.Log($"[Training] Start new game");
                 FlowController.ChangeScreenState(ScreenState.MainScreen);
 
+                //GameEventManager.OnStartGame("training");
                 GameEventManager.OnStartGame("training");
             });
 

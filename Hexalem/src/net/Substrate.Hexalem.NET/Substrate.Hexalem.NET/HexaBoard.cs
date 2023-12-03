@@ -316,7 +316,15 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool Place((int, int) coords, HexaTile chooseTile)
         {
-           var index = ToIndex(coords);
+            if (!CanPlace(coords)) return false;
+
+            Value[ToIndex(coords).Value] = chooseTile;
+            return true;
+        }
+
+        public bool CanPlace((int, int) coords)
+        {
+            var index = ToIndex(coords);
 
             if (index == null)
             {
@@ -325,12 +333,11 @@ namespace Substrate.Hexalem
 
             if (Value[index.Value] != 0x00)
             {
-                Log.Warning("Try to put a new tile {tileType} on a non empty tile map (index = {tileMapIndex})", chooseTile.TileType, index.Value);
+                Log.Warning("Unable to play on a non empty tile map (index = {tileMapIndex})", index.Value);
 
                 return false;
             }
 
-            Value[index.Value] = chooseTile;
             return true;
         }
 

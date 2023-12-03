@@ -1,13 +1,11 @@
 using Assets.Scripts;
 using Substrate.Hexalem;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static UnityEditor.PlayerSettings;
+using static Assets.Scripts.ScreenStates.MainScreenState;
 
 public class GameManager : MonoBehaviour
 {
@@ -43,35 +41,17 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager called");
 
-        for (int i = 0; i < _selection.transform.childCount; i++)
-        {
-            Destroy(_selection.transform.GetChild(i).GetChild(0).gameObject);
-        }
+        
 
         for (int i = 0; i < _playerGrid.transform.childCount; i++)
         {
             Destroy(_playerGrid.transform.GetChild(i).GetChild(0).gameObject);
         }
 
-        GameEventManager.startNewGameDelegate += StartNewGame;
+        GameEventManager.StartNewGameDelegate += StartNewGame;
     }
 
-    private void GetRessourcesElement()
-    {
-        var visualTreeAsset = Resources.Load<VisualTreeAsset>($"UI/Screens/MainScreenUI");
-        _mainInstance = visualTreeAsset.Instantiate();
-    }
-
-    private void setRessourceWater(int value)
-    {
-        var waterLabel = _mainInstance.Q<Label>("TopBound/VelResources/VelResourceElementWater/VelResouceImg/LblResourceWater");
-        waterLabel.text = value.ToString();
-    }
-
-
-
-    // Update is called once per frame
-    void Update()
+    void HandleSelectedTileFromSelection()
     {
         if (HexaGame != null && Input.GetMouseButtonDown(0))
         {
@@ -83,26 +63,78 @@ public class GameManager : MonoBehaviour
                 if (hit.transform.name.StartsWith("selection_"))
                 {
                     //SceneManager.LoadScene("SceneTwo");
-                    _selectionIndex = int.Parse(hit.transform.name.Remove("selection_".Length));
+                    var idx = new String(hit.transform.name.Where(Char.IsDigit).ToArray());
+                    _selectionIndex = int.Parse(idx);
                     Debug.Log($"Selection tile num {_selectionIndex} clicked !");
+
+                    var mr = _selection.transform.GetChild(_selectionIndex.Value).GetChild(0).gameObject.GetComponent<MeshRenderer>();
+                    mr.material.color = Color.red;
                 }
             }
         }
     }
 
+    /// <summary>
+    /// Put a selected tile on the board
+    /// </summary>
+    public void HandlePutSelectionTileOnBoard()
+    {
+        // If we have currently selected a selection tile, we can put it on the map
+        if (HexaGame != null && _selectionIndex != null && Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                //Select stage    
+                if (hit.transform.name.StartsWith("board_"))
+                {
+                    var idx = new String(hit.transform.name.Where(Char.IsDigit).ToArray());
+                    var boardIndex = int.Parse(idx);
+                    var currentBoard = HexaGame.HexaTuples[HexaGame.PlayerTurn].board;
+                    //_playerGrid.transform.GetChild(boardIndex).GetChild(0).gameObject = _playerGrid.transform.GetChild(_selectionIndex.Value).GetChild(0).gameObject;
+
+                    
+                    // Is it possible to play on this tile ?
+                    if (currentBoard.CanPlace(currentBoard.ToCoords(boardIndex))) {
+                        Debug.Log($"Play tile selection num {_selectionIndex.Value} on tile board num {boardIndex}");
+
+                        HexaGame = Game.ChooseAndPlace(1, HexaGame, HexaGame.PlayerTurn, _selectionIndex.Value, HexaGame.HexaTuples[HexaGame.PlayerTurn].board.ToCoords(boardIndex));
+
+                        _selectionIndex = null;
+
+                        LoadSelection(HexaGame.UnboundTiles);
+                        LoadMap(HexaGame.HexaTuples[HexaGame.PlayerTurn].board);
+                    } else
+                    {
+                        Debug.Log($"Unable to play tile selection num {_selectionIndex.Value} on tile board num {boardIndex}");
+                    }
+                    
+                }
+            }
+        }
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        HandleSelectedTileFromSelection();
+        HandlePutSelectionTileOnBoard();
+    }
+
     void StartNewGame(string gameType)
     {
-        GetRessourcesElement();
-
         if (gameType == "training")
         {
             Debug.Log("Start a new training game");
 
             HexaGame = Game.CreateGame(1, new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
-            InitSelection(HexaGame.UnboundTiles);
-            LoadMap(HexaGame.HexaTuples[0].board);
 
-            //setRessourceWater(10);
+            LoadSelection(HexaGame.UnboundTiles);
+            LoadMap(HexaGame.HexaTuples[HexaGame.PlayerTurn].board);
+
+            GameEventManager.GetInstance().OnRessourcesChanged(HexaGame.HexaTuples[HexaGame.PlayerTurn].player);
+            GameEventManager.GetInstance().OnVisualGameHelperChanged(1000, StateType.GameStarted);
 
         }
         else if (gameType == "local")
@@ -115,33 +147,29 @@ public class GameManager : MonoBehaviour
             Debug.Log("Start a new Pvp game");
 
         }
-
-        //InitSelection();
-        //Debug.Log($"Selection tile = {_selectionTile.name} / {_selectionTile.ToString()})");
-
-        //var nbChildren = GameObject.FindGameObjectWithTag("SelectionTag").transform.childCount;
-
-        //Debug.Log($"Selection has {nbChildren} elements");
-        //_selections.Add(Instantiate(_selectionTile, new Vector3(8.0f, 0, 0), Quaternion.identity));
-        //var newChild = Instantiate(_selectionTile, _selectionTile.transform.position, Quaternion.identity);
-        //newChild.transform.parent = _selections.transform;
-
-        //Debug.Log($"New child parent = {newChild.transform.parent}");
-
-        //nbChildren = GameObject.FindGameObjectWithTag("SelectionTag").transform.childCount;
-        //Debug.Log($"Selection has now {nbChildren} elements");
-
-        //Debug.Log("Tiles have been generated");
     }
 
-    public void InitSelection(List<HexaTile> tiles)
+    public void LoadSelection(List<HexaTile> tiles)
     {
+        // Clear the selection before build a new one
+        for (int i = 0; i < _playerGrid.transform.childCount; i++)
+        {
+            if(_playerGrid.transform.GetChild(i).childCount > 0)
+            {
+                Destroy(_playerGrid.transform.GetChild(i).GetChild(0).gameObject);
+            }
+        }
+
+
         for (int i = 0; i < tiles.Count; i++)
         {
             var selectionTile = Instantiate(GetTile(tiles[i]), _prefabPosition, Quaternion.identity);
 
             selectionTile.transform.parent = _selection.transform.GetChild(i);
             selectionTile.transform.localPosition = _prefabPosition;
+
+            selectionTile.name = $"selection_{i}";
+            //var dragAndDrop = selectionTile.AddComponent<Assets.Scripts.Shared.DragAndDrop>();
         }
     }
 
@@ -164,6 +192,14 @@ public class GameManager : MonoBehaviour
 
     public void LoadMap(HexaBoard board)
     {
+        for (int i = 0; i < _selection.transform.childCount; i++)
+        {
+            if (_selection.transform.GetChild(i).childCount > 0)
+            {
+                Destroy(_selection.transform.GetChild(i).GetChild(0).gameObject);
+            }
+        }
+
         for (int i = 0; i < board.Value.Length; i++)
         {
             var tile = (HexaTile)board.Value[i];
@@ -172,6 +208,8 @@ public class GameManager : MonoBehaviour
 
             boardTile.transform.parent = _playerGrid.transform.GetChild(i);
             boardTile.transform.localPosition = _prefabPosition;
+
+            boardTile.name = $"board_{i}";
         }
     }
 }
