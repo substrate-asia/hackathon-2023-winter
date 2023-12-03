@@ -7,10 +7,16 @@ using System.Linq;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static UnityEditor.PlayerSettings;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject _playerGrid;
+
+    [SerializeField]
     private GameObject _selection;
+
     public GameObject EmptyTile;
     public GameObject HomeTile;
     public GameObject GrassTile;
@@ -20,13 +26,16 @@ public class GameManager : MonoBehaviour
     public GameObject DesertTile;
     public GameObject CaveTile;
 
-    private Vector3 _initialPosition;
+    private Vector3 _prefabPosition;
+
+    private int? _selectionIndex = null;
 
     private TemplateContainer _mainInstance;
     public static HexaGame HexaGame;
 
     public GameManager()
     {
+        _prefabPosition = new Vector3(0, 0, 0);
     }
 
     // Start is called before the first frame update
@@ -34,12 +43,14 @@ public class GameManager : MonoBehaviour
     {
         Debug.Log("GameManager called");
 
-        _selection = GameObject.FindGameObjectWithTag("SelectionTag");
-        _initialPosition = _selection.transform.GetChild(0).transform.position;
-
         for (int i = 0; i < _selection.transform.childCount; i++)
         {
-            Destroy(_selection.transform.GetChild(i).gameObject);
+            Destroy(_selection.transform.GetChild(i).GetChild(0).gameObject);
+        }
+
+        for (int i = 0; i < _playerGrid.transform.childCount; i++)
+        {
+            Destroy(_playerGrid.transform.GetChild(i).GetChild(0).gameObject);
         }
 
         GameEventManager.startNewGameDelegate += StartNewGame;
@@ -53,7 +64,7 @@ public class GameManager : MonoBehaviour
 
     private void setRessourceWater(int value)
     {
-        var waterLabel = _mainInstance.Q<Label>("LblResourceWater");
+        var waterLabel = _mainInstance.Q<Label>("TopBound/VelResources/VelResourceElementWater/VelResouceImg/LblResourceWater");
         waterLabel.text = value.ToString();
     }
 
@@ -62,7 +73,21 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (HexaGame != null && Input.GetMouseButtonDown(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                //Select stage    
+                if (hit.transform.name.StartsWith("selection_"))
+                {
+                    //SceneManager.LoadScene("SceneTwo");
+                    _selectionIndex = int.Parse(hit.transform.name.Remove("selection_".Length));
+                    Debug.Log($"Selection tile num {_selectionIndex} clicked !");
+                }
+            }
+        }
     }
 
     void StartNewGame(string gameType)
@@ -75,14 +100,17 @@ public class GameManager : MonoBehaviour
 
             HexaGame = Game.CreateGame(1, new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
             InitSelection(HexaGame.UnboundTiles);
+            LoadMap(HexaGame.HexaTuples[0].board);
 
-            setRessourceWater(10);
+            //setRessourceWater(10);
 
-        } else if(gameType == "local")
+        }
+        else if (gameType == "local")
         {
             Debug.Log("Start a new local game (vs bots)");
 
-        } else
+        }
+        else
         {
             Debug.Log("Start a new Pvp game");
 
@@ -108,15 +136,12 @@ public class GameManager : MonoBehaviour
 
     public void InitSelection(List<HexaTile> tiles)
     {
-        for(int i = 0; i < tiles.Count; i++)
+        for (int i = 0; i < tiles.Count; i++)
         {
-            var selectionTile = Instantiate(GetTile(tiles[i]), _initialPosition, Quaternion.identity);
-            
-            selectionTile.transform.localScale = new Vector3(GameConstant.TileRatio, GameConstant.TileRatio, GameConstant.TileRatio);
+            var selectionTile = Instantiate(GetTile(tiles[i]), _prefabPosition, Quaternion.identity);
 
-            selectionTile.transform.position = new Vector3((_initialPosition.x - 0.76f) * i, _initialPosition.y, (_initialPosition.z + 0.46f) * i);
-
-            selectionTile.transform.parent = _selection.transform;
+            selectionTile.transform.parent = _selection.transform.GetChild(i);
+            selectionTile.transform.localPosition = _prefabPosition;
         }
     }
 
@@ -124,6 +149,7 @@ public class GameManager : MonoBehaviour
     {
         switch (tile.TileType)
         {
+            case TileType.None: return EmptyTile;
             case TileType.Home: return HomeTile;
             case TileType.Grass: return GrassTile;
             case TileType.Water: return WaterTile;
@@ -136,7 +162,16 @@ public class GameManager : MonoBehaviour
         throw new InvalidOperationException($"Tile {tile} is not mapped to prefab tiles");
     }
 
-    public void LoadMap()
+    public void LoadMap(HexaBoard board)
     {
+        for (int i = 0; i < board.Value.Length; i++)
+        {
+            var tile = (HexaTile)board.Value[i];
+
+            var boardTile = Instantiate(GetTile(tile), _prefabPosition, Quaternion.identity);
+
+            boardTile.transform.parent = _playerGrid.transform.GetChild(i);
+            boardTile.transform.localPosition = _prefabPosition;
+        }
     }
 }
