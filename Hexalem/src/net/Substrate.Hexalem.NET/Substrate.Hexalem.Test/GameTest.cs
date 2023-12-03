@@ -139,8 +139,14 @@ namespace Substrate.Hexalem.Test
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
 
+            // make sure to set ressources
+            hexaPlayers[0][RessourceType.Mana] = 1;
+            hexaPlayers[0][RessourceType.Gold] = 1;
+
             Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-3, -3)), Is.False);
 
+            Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(hexaPlayers[0][RessourceType.Gold], Is.EqualTo(1));
         }
 
         [Test]
@@ -160,6 +166,38 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (-1, -1)), Is.False);
 
+        }
+
+        [Test]
+        public void Game_WhenPlayedATile_ShouldSucceedButNoMoreMana()
+        {
+            // testing all checks before changing the states
+
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+
+            // make sure to set ressources
+            hexaPlayers[0][RessourceType.Mana] = 1;
+            hexaPlayers[0][RessourceType.Gold] = 1;
+
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-1, -1)), Is.True);
+
+            Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(0));
+            Assert.That(hexaPlayers[0][RessourceType.Gold], Is.EqualTo(1));
+
+            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+
+            // Can't play anymore because no more mana
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (0, -1)), Is.False);
+
+            // Make sure no tile got placed
+            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[0, -1], Is.EqualTo(0x00));
+
+            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+
+            Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(1));
         }
 
         [Test]

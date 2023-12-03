@@ -199,12 +199,16 @@ namespace Substrate.Hexalem
             var hexaBoard = HexaTuples[playerIndex].board;
             var chooseTile = UnboundTiles[selectionIndex];
 
-            // check if player has enough mana
-            if (hexaPlayer[RessourceType.Mana] == 0)
-            {
-                Log.Error("Player {playerNum} does not have enough mana to play (current mana = {manaValue}", PlayerTurn, hexaPlayer[RessourceType.Mana]);
+            var tileCost = GetTileCost(chooseTile);
 
-                return false;
+            // check if player has enough ressources
+            foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
+            {
+                if (hexaPlayer[ressourceType] < tileCost[(int)ressourceType])
+                {
+                    Log.Error("Player {playerId} does not have enough {ressourceType} ({currentValue}) to place {tileType} (required {requiredValue})", PlayerTurn, ressourceType, hexaPlayer[ressourceType], chooseTile.TileType, tileCost[(int)ressourceType]);
+                    return false;
+                }
             }
 
             // check if tile can be placed
@@ -214,26 +218,48 @@ namespace Substrate.Hexalem
                 {
                     return false;
                 }
-            } 
-            catch(InvalidMapCoordinate ex)
+            }
+            catch (InvalidMapCoordinate ex)
             {
                 Log.Error(ex.Message);
                 return false;
             }
 
-            // on a successful place do the storage changes
-            hexaPlayer[RessourceType.Mana] -= 1; // Todo : change by mana cost instead of 1
+            // remove ressources from player
+            foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
+            {
+                hexaPlayer[ressourceType] -= tileCost[(int)ressourceType];
+            }
 
             UnboundTiles.RemoveAt(selectionIndex);
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
 
-            // Set Patterns (can be optimized to only set around the played tile)
-            //hexaBoard.SetPatterns();
-            hexaBoard.SetPatterns(coords);
-
             return true;
         }
 
+        /// <summary>
+        /// Get the cost of a tile
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        internal byte[] GetTileCost(HexaTile tile)
+        {
+            var result = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+
+            if (tile.TileType != TileType.Empty)
+            {
+                result[(byte)RessourceType.Mana] = 1;
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Upgrade a tile
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="coords"></param>
+        /// <returns></returns>
         internal bool UpgradeTile(byte playerIndex, (int q, int r) coords)
         {
             if (!EnsureCurrentPlayer(playerIndex))
@@ -260,15 +286,14 @@ namespace Substrate.Hexalem
                 hexaPlayer[RessourceType.Humans] < humansRequired)
             {
                 Log.Warning("Player {playerId} does not have enough Gold ({currentGold}) or Humans ({currentHuman}) to upgrade {tileRarity} (required {goldRequired} gold and {humanRequired})", PlayerTurn, hexaPlayer[RessourceType.Gold], hexaPlayer[RessourceType.Humans], existingTile.TileRarity, goldRequired, humansRequired);
-
                 return false;
             }
 
-            // Upgrade tile to next level
-            var canUpgrade = existingTile.Upgrade();
-
-            if (!canUpgrade)
+            // Upgrade tile to next level, if failed return
+            if (!existingTile.Upgrade())
+            {
                 return false;
+            }
 
             HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
             hexaPlayer[RessourceType.Gold] -= (byte)goldRequired;
