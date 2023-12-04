@@ -91,12 +91,19 @@ Once the player has created or joined a game he has three possible actions he ca
   - Choose Requirements, each tile has a cost assigned. Depending on the Tile type and the Tile Rarity, prices can vary, the minimum price for a tile is 1 Mana.
   - Place Requirements, tiles can not be placed without having a connection to another tile, and you can only place the tile in a space.
 
-- **Upgrade**: ... 
-- **Finish Turn**: ...
-
-### Player Views
+- **Upgrade**: Tiles can be upgraded in rarity, by fulfilling certain resource requirements, as example, the home tile can be upgraded to allocate more places for humans. 
+  - Upgrade Requirements, each tile has an upgrade cost map, if it is able to be upgraded
+ 
+- **Finish Turn**: Finish turn can be called to prematurely end the player's turn, or it can be used to call out an opponent player who is not finishing his turn in time. Calling out an opponent successfully will penalize him to a certain extent.
 
 #### Winning Conditions
+
+**Win**
+- **Human Threshold**: (MVP only) Reaching a certain amount of Humans previous to the opponents.
+- **Finnish Opponents Turn**: (MVP only)  Successfully finishing an opponent's turn, which was over time.
+
+**Draw**
+- **Full-grid**: If the grid is full, the game ends, and is concluded as a draw.
 
 
 #### Resource Generation
@@ -111,6 +118,8 @@ Once the player has created or joined a game he has three possible actions he ca
 #### Human Dynamics
 - Human needs: Consuming food and water for growth; using gold for resource procurement.
 - Societal advancement: Building structures enhances mana generation, with wood as a key construction material.
+
+#### UI & UX Views
 
 #### Art and Sound Design
 - **Visuals**: A vibrant, hexagonally-themed art style, rich in elemental and mystical motifs.
