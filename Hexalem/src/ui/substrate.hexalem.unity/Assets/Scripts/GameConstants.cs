@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     public static class GameConstant
     {
-
+        public const float TileRatio = 0.3599393f;
         public static StyleColor ColorMythical => new StyleColor(new Color32(211, 194, 42, 255));
         public static StyleColor ColorLegendary => new StyleColor(new Color32(211, 116, 42, 255));
         public static StyleColor ColorEpic => new StyleColor(new Color32(165, 95, 255, 255));
@@ -25,6 +25,7 @@ namespace Assets.Scripts
 
         public static StyleColor ColorOrange => new StyleColor(new Color32(248, 156, 121, 255));
         public static StyleColor ColorGreen => new StyleColor(new Color32(111, 207, 151, 255));
+        public static StyleColor ColorRed => new StyleColor(new Color32(255, 0, 0, 255));
 
         public static StyleColor ColorTransparent => new StyleColor(new Color32(0, 0, 0, 0));
 
@@ -38,6 +39,10 @@ namespace Assets.Scripts
         public static StyleColor FontLight => new StyleColor(new Color32(255, 255, 255, 255));
         public static StyleColor FontGrey => new StyleColor(new Color32(127, 127, 127, 255));
         public static StyleColor FontDark => new StyleColor(new Color32(0, 0, 0, 255));
+
+        public static StyleColor ColorUnselected => new StyleColor(new Color32(200, 175, 150, 255));
+
+        public static StyleColor ColorSelected => new StyleColor(new Color32(150, 200, 150, 255));
 
 
         public static string BalanceFormatter(BigInteger bigInteger)

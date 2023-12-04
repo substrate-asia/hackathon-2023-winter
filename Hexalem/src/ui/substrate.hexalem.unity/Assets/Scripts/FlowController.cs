@@ -1,3 +1,4 @@
+using Assets.Scripts.ScreensSubState;
 using Assets.Scripts.ScreenStates;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -9,12 +10,15 @@ namespace Assets.Scripts
     public enum ScreenState
     {
         StartScreen,
-        MainScreen
+        MainScreen,
+        HistoryScreen,
+        AccountScreen
     }
 
     public enum ScreenSubState
     {
-        Dashboard
+        Choose,
+        Play
     }
 
     public class FlowController : MonoBehaviour
@@ -49,13 +53,17 @@ namespace Assets.Scripts
             CacheData = new CacheData();
 
             // Initialize states
-            _stateDictionary.Add(ScreenState.StartScreen, new LoginScreen(this));
+            _stateDictionary.Add(ScreenState.StartScreen, new StartScreen(this));
+            _stateDictionary.Add(ScreenState.HistoryScreen, new HistoryScreen(this));
+            _stateDictionary.Add(ScreenState.AccountScreen, new AccountScreen(this));
+
             var mainScreen = new MainScreenState(this);
             _stateDictionary.Add(ScreenState.MainScreen, mainScreen);
 
             var mainScreenSubStates = new Dictionary<ScreenSubState, ScreenBaseState>
             {
-                { ScreenSubState.Dashboard, new MainDashboardSubState(this, mainScreen) },
+                { ScreenSubState.Choose, new MainChooseSubState(this, mainScreen) },
+                { ScreenSubState.Play, new MainPlaySubState(this, mainScreen) },
             };
 
             _subStateDictionary.Add(ScreenState.MainScreen, mainScreenSubStates);
@@ -66,6 +74,8 @@ namespace Assets.Scripts
         /// </summary>
         private void Start()
         {
+            Debug.Log("Start flow controller");
+
             var root = GetComponent<UIDocument>().rootVisualElement;
             VelContainer = root.Q<VisualElement>("VelContainer");
 
@@ -77,12 +87,6 @@ namespace Assets.Scripts
 
             // initialize the client in the network manager
             Network.InitializeClient();
-
-            // load the initial wallet
-            if (!Network.LoadWallet())
-            {
-                Debug.Log("Failed to load initial wallet");
-            }
 
             // call insital flow state
             ChangeScreenState(ScreenState.StartScreen);

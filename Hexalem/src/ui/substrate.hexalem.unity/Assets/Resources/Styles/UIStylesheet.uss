@@ -39,9 +39,8 @@
 }
 
 .font-regular {
-    -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
-    flex-shrink: 0;
-    -unity-font: url('project://database/Assets/UI%20Toolkit/UnityThemes/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=849f2d35a0c094a47a10ee1eec7bcd48&type=3#NotInter-Regular');
+    -unity-font: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=a030da70dd538874b9641d9acae2aa5d&type=3#NotInter-Regular');
+    -unity-font-definition: initial;
 }
 
 .font-color {
