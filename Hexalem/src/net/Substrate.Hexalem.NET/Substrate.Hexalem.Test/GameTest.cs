@@ -51,7 +51,7 @@ namespace Substrate.Hexalem.Test
             var indexSelection = 1;
             var selectedTile = hexaGame.UnboundTiles[indexSelection];
             // Player coordinate move
-            var coordinate = (-2, -2);
+            var coordinate = (1, 0);
 
 
             // Players should have 1 mana when start
@@ -150,6 +150,16 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
+        public void Game_WhenPlayOnNotAdjectingCoordinate_ShouldNotSucceed()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-2, -2)), Is.False);
+
+        }
+
+        [Test]
         public void Game_WhenPlayOnAlreadyFilledTile_ShouldNotSucceed()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
@@ -157,14 +167,14 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-1, -1)), Is.True);
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (0, -1)), Is.True);
 
             Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
 
             // It is just a one player game, so it is always Player 1 turn
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (-1, -1)), Is.False);
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (0, -1)), Is.False);
 
         }
 
@@ -182,7 +192,7 @@ namespace Substrate.Hexalem.Test
             hexaPlayers[0][RessourceType.Mana] = 1;
             hexaPlayers[0][RessourceType.Gold] = 1;
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-1, -1)), Is.True);
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (0, -1)), Is.True);
 
             Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(0));
             Assert.That(hexaPlayers[0][RessourceType.Gold], Is.EqualTo(1));
@@ -190,10 +200,10 @@ namespace Substrate.Hexalem.Test
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
             // Can't play anymore because no more mana
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (0, -1)), Is.False);
+            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (1, 0)), Is.False);
 
             // Make sure no tile got placed
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[0, -1], Is.EqualTo(0x00));
+            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[1, 0], Is.EqualTo(0x00));
 
             Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
 

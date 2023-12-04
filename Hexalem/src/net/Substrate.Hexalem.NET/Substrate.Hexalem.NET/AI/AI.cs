@@ -69,7 +69,7 @@ namespace Substrate.Hexalem.NET.AI
 
                 var currentTile = (HexaTile)playerBoard[i];
 
-                if (currentTile.CanUpgrade() && player.CanUpgrade(currentTile))
+                if (player.CanUpgrade(currentTile))
                 {
                     upgradableTile.Add(playerBoard.ToCoords(i));
                 }

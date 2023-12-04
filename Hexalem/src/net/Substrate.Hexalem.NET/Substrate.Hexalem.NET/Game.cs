@@ -71,7 +71,7 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         public static HexaGame? Upgrade(uint blockNumber, HexaGame hexaGame, byte playerIndex, (int, int) coords)
         {
-            if (!hexaGame.UpgradeTile(playerIndex, coords))
+            if (!hexaGame.Upgrade(playerIndex, coords))
             {
                 return null;
             }

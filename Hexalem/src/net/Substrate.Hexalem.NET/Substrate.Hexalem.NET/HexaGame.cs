@@ -127,10 +127,6 @@ namespace Substrate.Hexalem
             Log.Information("Next round : reset turn to 0 and increase board round (now = {hbt})", HexBoardRound);
         }
 
-        /// <summary>
-        ///
-        /// </summary>
-        /// <param name="blockNumber"></param>
         public void PostMove(uint blockNumber)
         {
             HexaTuples.ForEach(p => { p.player.PostMove(blockNumber); p.board.PostMove(blockNumber); });
@@ -149,26 +145,40 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        ///
+        /// Can choose and place a tile on the board
         /// </summary>
-        /// <param name="blockNumber"></param>
-        /// <param name="selectBase"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="coords"></param>
         /// <returns></returns>
-        internal List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
+        public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
-            var values = Enum.GetValues(typeof(TileType))
-                .Cast<TileType>()
-                .Where(v => (int)v > 1).ToArray();
-
-            var offSet = (byte)(blockNumber % 32);
-            var result = new List<HexaTile>();
-            for (int i = 0; i < selectBase; i++)
+            // check if correct player
+            if (!EnsureCurrentPlayer(playerIndex))
             {
-                var rawTile = Id[(offSet + selectBase) % 32];
-
-                result.Add(new HexaTile(values[rawTile % values.Length], TileRarity.Normal, TilePattern.Normal));
+                return false;
             }
-            return result;
+
+            if (!EnsureValidSelection(selectionIndex))
+            {
+                return false;
+            }
+
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var tile = UnboundTiles[selectionIndex];
+
+            if (!EnsureRessourcesToPlay(player, tile))
+            {
+                return false;
+            }
+
+            if (!EnsureValidCoords(board, coords))
+            {
+                return false;
+            }
+
+            return board.CanPlace(coords);
         }
 
         /// <summary>
@@ -180,54 +190,24 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
-            // check if correct player
-            if (!EnsureCurrentPlayer(playerIndex))
+            if (!CanChooseAndPlace(playerIndex, selectionIndex, coords))
             {
                 return false;
             }
 
-            // check if selection is valid
-            if (selectionIndex < 0 || selectionIndex >= UnboundTiles.Count)
-            {
-                Log.Error(LogMessages.InvalidTileSelection(selectionIndex));
+            var (player, board) = HexaTuples[PlayerTurn];
 
-                return false;
-            }
+            var tile = UnboundTiles[selectionIndex];
 
-            var hexaPlayer = HexaTuples[playerIndex].player;
-            var hexaBoard = HexaTuples[playerIndex].board;
-            var chooseTile = UnboundTiles[selectionIndex];
-
-            var tileCost = GetTileCost(chooseTile);
-
-            // check if player has enough ressources
-            foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
-            {
-                if (hexaPlayer[ressourceType] < tileCost[(int)ressourceType])
-                {
-                    Log.Error("Player {playerId} does not have enough {ressourceType} ({currentValue}) to place {tileType} (required {requiredValue})", PlayerTurn, ressourceType, hexaPlayer[ressourceType], chooseTile.TileType, tileCost[(int)ressourceType]);
-                    return false;
-                }
-            }
+            var tileCost = GameConfig.TileCost(tile);
 
             // check if tile can be placed
-            try
-            {
-                if (!hexaBoard.Place(coords, chooseTile))
-                {
-                    return false;
-                }
-            }
-            catch (InvalidMapCoordinate ex)
-            {
-                Log.Error(ex.Message);
-                return false;
-            }
+            board.Place(coords, tile);
 
             // remove ressources from player
             foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
             {
-                hexaPlayer[ressourceType] -= tileCost[(int)ressourceType];
+                player[ressourceType] -= tileCost[(int)ressourceType];
             }
 
             UnboundTiles.RemoveAt(selectionIndex);
@@ -236,23 +216,13 @@ namespace Substrate.Hexalem
             return true;
         }
 
+
         /// <summary>
-        /// Get the cost of a tile
+        /// Can upgrade a tile
         /// </summary>
-        /// <param name="tile"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="coords"></param>
         /// <returns></returns>
-        internal byte[] GetTileCost(HexaTile tile)
-        {
-            var result = new byte[Enum.GetValues(typeof(RessourceType)).Length];
-
-            if (tile.TileType != TileType.Empty)
-            {
-                result[(byte)RessourceType.Mana] = 1;
-            }
-
-            return result;
-        }
-
         public bool CanUpgrade(byte playerIndex, (int q, int r) coords)
         {
             if (!EnsureCurrentPlayer(playerIndex))
@@ -268,7 +238,7 @@ namespace Substrate.Hexalem
                 return false;
             }
 
-            if (!EnsureRessourcesToPlay(player, tile))
+            if (!EnsureRessourcesToUpgrade(player, tile))
             {
                 return false;
             }
@@ -282,7 +252,7 @@ namespace Substrate.Hexalem
         /// <param name="playerIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
-        internal bool UpgradeTile(byte playerIndex, (int q, int r) coords)
+        internal bool Upgrade(byte playerIndex, (int q, int r) coords)
         {
             if (!CanUpgrade(playerIndex, coords))
             {
@@ -335,20 +305,10 @@ namespace Substrate.Hexalem
             return true;
         }
 
-        //internal void UpdateRound(uint blockNumber)
-        //{
-        //    Log.Information($"BlockNumber = {blockNumber} - End of round {HexBoardRound}, add {GameConfig.FREE_MANA_PER_ROUND} mana to each player and start a new round");
-
-        //    // add 1 mana to all players
-        //    HexaTuples.ForEach(p =>
-        //    {
-        //        p.Item1[RessourceType.Mana] += GameConfig.FREE_MANA_PER_ROUND;
-        //    });
-
-        //    PlayerTurn = 0;
-        //    HexBoardRound += 1;
-        //}
-
+        /// <summary>
+        /// Check if a player has won the game
+        /// </summary>
+        /// <returns></returns>
         public bool IsGameWon()
         {
             var player = HexaTuples[PlayerTurn].player;
@@ -362,6 +322,30 @@ namespace Substrate.Hexalem
 
             return false;
         }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="selectBase"></param>
+        /// <returns></returns>
+        internal List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
+        {
+            var values = Enum.GetValues(typeof(TileType))
+                .Cast<TileType>()
+                .Where(v => (int)v > 1).ToArray();
+
+            var offSet = (byte)(blockNumber % 32);
+            var result = new List<HexaTile>();
+            for (int i = 0; i < selectBase; i++)
+            {
+                var rawTile = Id[(offSet + selectBase) % 32];
+
+                result.Add(new HexaTile(values[rawTile % values.Length], TileRarity.Normal, TilePattern.Normal));
+            }
+            return result;
+        }
+
 
         internal void CalcRewards(uint blockNumber, byte playerIndex)
         {
@@ -501,7 +485,7 @@ namespace Substrate.Hexalem
         /// <param name="player"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
-        private bool EnsureRessourcesToPlay(HexaPlayer player, HexaTile tile)
+        private bool EnsureRessourcesToUpgrade(HexaPlayer player, HexaTile tile)
         {
             // Check if player have enought ressources to upgrade
             var goldRequired = GameConfig.GoldCostForUpgrade(tile.TileRarity);
@@ -509,7 +493,63 @@ namespace Substrate.Hexalem
             if (player[RessourceType.Gold] < goldRequired
              || player[RessourceType.Humans] < humansRequired)
             {
-                Log.Error(LogMessages.MissingRessourcesToPlay(player, tile, goldRequired, humansRequired));
+                Log.Error(LogMessages.MissingRessourcesToUpgrade(player, tile, goldRequired, humansRequired));
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        private bool EnsureRessourcesToPlay(HexaPlayer player, HexaTile tile)
+        {
+            var tileCost = GameConfig.TileCost(tile);
+
+            // check if player has enough ressources
+            foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
+            {
+                if (player[ressourceType] < tileCost[(int)ressourceType])
+                {
+                    Log.Error(LogMessages.MissingRessourcesToPlay(player, tile, ressourceType, tileCost[(int)ressourceType]));
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Ensure that the selection index is valid
+        /// </summary>
+        /// <param name="selectionIndex"></param>
+        /// <returns></returns>
+        private bool EnsureValidSelection(int selectionIndex)
+        {
+            if (selectionIndex < 0 || selectionIndex >= UnboundTiles.Count)
+            {
+                Log.Error(LogMessages.InvalidTileSelection(selectionIndex));
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Ensure that the coords are valid
+        /// </summary>
+        /// <param name="board"></param>
+        /// <param name="coords"></param>
+        /// <returns></returns>
+        private bool EnsureValidCoords(HexaBoard board, (int q, int r) coords)
+        {
+            if (!board.IsValidHex(coords.q, coords.r))
+            {
+                Log.Error(LogMessages.InvalidCoords(coords.q, coords.r));
                 return false;
             }
 
