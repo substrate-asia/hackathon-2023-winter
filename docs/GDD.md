@@ -107,10 +107,53 @@ Once the player has created or joined a game he has three possible actions he ca
 
 
 #### Resource Generation
-- Tiles and their combinations yield resources each round.
-- Example Patterns:
-  - Mountain: 1 Gold per round; 3 connected Mountains form a Goldmine, yielding 5 Gold per round.
-  - River: 1 Water per round; 3 connected Rivers form a Lake, yielding 3 Water and 2 Food per round.
+Tiles and their patterns yield resources each round.
+- **Empty**: The empty tile has no resources allocated, it only offers a place where a player can allocate a tile.
+- **Home**: The home tile is the only tile that is not being used in formations. The Rarity of the Home tile decides how many Humnans it can take.
+  - Primary Resource: Human
+  - Rarity: limits the max. amount of Humans living in that home.
+    - Normal: 1 Human
+    - Rare: 3 Human
+    - Epic: 6 Human
+    - Legendary: 9 Humans
+ - Per Round
+  - Mana: 1 + (Humans / 3)
+- **Grass**
+ - Primary Resource: Food
+ - Per Round
+  - Food: 1
+- **Water**
+ - Primary Resource: Water
+ - Per Round
+  - Water: 1
+- **Mountain**
+ - Primary Resource: Stone
+ - Secondary Resource: Water
+ - Per Round
+  - Stone: Needs Humans to Harvest
+- **Forest** 
+ - Primary Resource: Wood
+ - Secondary Resource: Food
+ - Per Round
+  - Wood: Needs Humans to Harvest
+  - Food: Needs Humans to Hunt
+- **Desert**
+ - Primary Resource: ?
+ - Secondary Resource: Gold
+ - Negative Resource: Water
+ - Per Round
+  - Water: -1
+- **Cave**
+ - Primary Resource: Stone
+ - Secondary Resource: Gold
+ - Per Round
+  - Gold: Needs Humans to Harvest
+
+#### Formations & Patterns
+
+A formation is a pattern represented in the honeycomb structure of 7 hexagon tiles.
+
+![image](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/c07ae79d-9223-4ed5-a837-78a264010622)
 
 #### Metrics
 - Tracking metrics include the number of tiles placed, resources gathered, tile patterns created, and human population size.
@@ -126,10 +169,6 @@ Once the player has created or joined a game he has three possible actions he ca
 - **Sound**: An immersive soundtrack, blending mystical tunes with nature-inspired sound effects.
 
 ---
-
-
-
-
 
 ### Technical Integration
 
