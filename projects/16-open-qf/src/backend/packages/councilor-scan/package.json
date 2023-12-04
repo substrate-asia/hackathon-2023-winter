@@ -1,0 +1,12 @@
+{
+  "name": "@open-qf/councilor-scan",
+  "version": "1.0.0",
+  "main": "index.js",
+  "dependencies": {
+    "@osn/scan-common": "0.6.4",
+    "dotenv": "^16.3.1",
+    "@open-qf/mongo": "1.0.0",
+    "@open-qf/common": "1.0.0",
+    "mongodb": "6.1.0"
+  }
+}
