@@ -1,54 +1,56 @@
-## 基本资料
+## Basic information
 
-项目名称：
+project name: Talent-Chain
 
-项目立项日期 (哪年哪月)：
+Project establishment date: 11/2023
 
-## 项目整体简介
+## Overall introduction to the project
 
-项目简介，英文提交。包括但不限于：
-
-- 项目背景/原由/要解决的问题 (如有其他附件，可放到 `docs` 目录内。英文提交)。
-- 项目介绍
-- 项目Demo
-- 技术架构
-- 项目 logo (如有)，这 logo 会印制在文宣，会场海报或贴子上。
-- 项目的启始的commit，对于全新的项目可以是一个开源框架的clone，比如区块链clone自substrate-node-template, react
-框架等，请给出说明。对于成熟项目可以是一个branch，要求在2023年11月1号之后生成，说明有哪些功能是已经有了的
-
-## 黑客松期间计划完成的事项
-
-- 请团队在报名那一周 git clone 这个代码库并创建团队目录，在 readme 里列出黑客松期间内打算完成的代码功能点。并提交 PR 到本代码库。例子如下 (这只是一个 nft 项目的例子，请根据团队项目自身定义具体工作)：
-
-**区块链端**
-
-- `pallet-nft`
-  - [ ] NFT 创建及数据结构定义 (`fn create_nft()`)
-  - [ ] NFT 转帐函数 (`fn transfer()`)
-  - [ ] NFT 销毁函数 (`fn burn_token()`)
-
-**客户端**
-
-- web 端
-  - [ ] 用户注册页面
-  - [ ] NFT 产品创建流程
-  - [ ] NFT 产品购买流程
-
-- hybrid (react-native)
-  - [ ] 用户注册页面
-  - [ ] NFT 产品创建流程
-  - [ ] NFT 产品购买流程
+### Problem statement
+Some people are very talented but unknown, and some people are incompetent but deceive many people by bragging.
+This project hopes to allow talents to demonstrate their talents to potential users through a decentralized approach 
+and obtain corresponding benefits. Users can use the data on the chain to discover their true talents and talents 
+that suit them, so as to obtain guidance or help.
 
 
-## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
+### What is Talent-Chain?
 
-- 2023年12月22日上午11:59前，在本栏列出黑客松期间最终完成的功能点。
-- 把相关代码放在 `src` 目录里，并在本栏列出在黑客松期间完成的开发工作及代码结构。我们将对这些目录/档案作重点技术评审。
-- Demo 视频，ppt等大文件不要提交。可以在readme中存放它们的链接地址
+Talent-Chain aimed at revolutionizing the way talents display their expertise in the world of finance and professional commentary. Our project addresses the issue of decentralized talent showcasing, providing a platform for individuals to submit,for examble, their predictions on securities, cryptocurrencies, and professional insights to the blockchain. Through this platform, users can become fans of specific talents, acquire NFTs issued by these talents, and subsequently receive rewards released by the talents through the NFTs, thereby gaining control over valuable content.
+Project Brief:
+Our project seeks to create a decentralized ecosystem where talents can showcase their expertise and insights in the fields of securities, cryptocurrencies, and professional commentary. By leveraging blockchain technology, talents will have the opportunity to submit their predictions and insights directly to the chain, allowing users to engage with and support their favorite talents. Through this engagement, users can obtain NFTs issued by the talents, which can then be used to access rewards and exclusive content released by the talents.
+This project aims to empower talents by providing them with a direct channel to display their expertise, while also offering users the opportunity to engage with and benefit from the valuable insights provided by these talents. Through the use of NFTs and blockchain technology, we aim to create a transparent and rewarding ecosystem that benefits both talents and their supporters.
+We are excited to embark on this journey and look forward to creating a platform that revolutionizes the way talents are showcased and rewarded in the decentralized landscape of finance and professional commentary.
 
-## 队员信息
+### Demo
 
-包含参赛者名称及介绍
-在团队中担任的角色
-GitHub 帐号
-微信账号（如有请留下，方便及时联系）
+TBD
+
+### Architecture
+
+- Talent substrate chain
+    - Open/End diff kind of campaign for talent show     
+    - Talent submit the Action to pallet
+    - Offchian workder get result from specified URL
+    - Issue NFT for talent
+- Content Website.
+    - Talent publishes restricted access content on the website
+    - Users access content through permissioned NFTs 
+
+![talent-chain structure](docs/arch.png)
+
+### Logo
+
+TBD
+
+## Tasks Planned for the Hackathon
+
+- Complete the code for the substrate chain part, and the website will be completed by recruiting personnel in the second phase.
+
+## Things accomplished during the hackathon (submitted before preliminary review at 11:59 am on December 22, 2023)
+
+TBD
+
+## Team information
+
+- Jerry Yu, Blockchain Engineer, [Github](https://github.com/jerry-yu).
+- Alex Li, Project Manager, [Github](https://github.com/alexli2311).
