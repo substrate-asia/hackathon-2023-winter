@@ -252,6 +252,18 @@
   2. 云服务赋能web3开发者 - Aleck Xiao (亚马逊云科技解决方案架构师)
   3. Tanssi-Appchain让一切变得简单 - Augusto Collado (Tanssi开发者关系工程师)
 
+- **Workshop #5**
+
+  2023年11月26日 20:00 - 21:30 UTC +8
+  1. How to use XCM - Francisco Aguirre (Parity Core XCM Developer)
+  2. Explore the potential of AA (Account Abstraction) in Polkadot - Suvi Dong (Parity Engineer)
+
+- **Workshop #6**
+
+  2023年12月2日 20:00 - 21:30 UTC +8
+  1. 如何创建一个具有吸引力的Pitch Deck？- Henri (Hashkey Capital 高级加密货币研究经理)
+  2. 香港的web3发展和数码港web3支持和倡议 - Rachel Lee (数码港金融科技高级经理)
+
 ## 联络
 
 对黑客松有任何疑问，可以下方法联系我们:
