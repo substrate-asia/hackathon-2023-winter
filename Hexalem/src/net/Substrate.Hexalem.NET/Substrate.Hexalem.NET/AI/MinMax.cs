@@ -1,10 +1,7 @@
 ﻿using Serilog;
-using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using static System.Collections.Specialized.BitVector32;
 
 namespace Substrate.Hexalem.NET.AI
 {
@@ -41,13 +38,13 @@ namespace Substrate.Hexalem.NET.AI
                 if (bestAction.PlayTileAt != null)
                 {
                     Log.Information("[AI {_index} MinMax] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, bestAction.SelectionIndex, SelectionTiles(initialState)[bestAction.SelectionIndex.Value], bestAction.PlayTileAt.Value.q, bestAction.PlayTileAt.Value.r);
-                } else if(bestAction.UpgradeTileAt != null)
+                }
+                else if (bestAction.UpgradeTileAt != null)
                 {
                     var tileUpgraded = (HexaTile)initialState.HexaTuples[initialState.PlayerTurn].board[bestAction.UpgradeTileAt.Value.q, bestAction.UpgradeTileAt.Value.r];
                     Log.Information("[AI {_index} MinMax] choose tu upgrade tile ({typeTile}) at ({r},{q})", _index, tileUpgraded, bestAction.UpgradeTileAt.Value.q, bestAction.UpgradeTileAt.Value.r);
                 }
             }
-            
 
             return bestAction;
         }
@@ -98,11 +95,10 @@ namespace Substrate.Hexalem.NET.AI
             var canUpgradeTile = upgradableTiles.Any();
 
             // No action are available => we are stuck
-            if(!canPlayTile && !canUpgradeTile)
+            if (!canPlayTile && !canUpgradeTile)
                 return possibleActions;
 
-
-            for(int i = 0; i < selectionTiles.Count; i++)
+            for (int i = 0; i < selectionTiles.Count; i++)
             {
                 // Each tile that can be bought from the selection has to be put on the map
                 foreach (var emptyTile in emptyMapTiles)
@@ -122,16 +118,15 @@ namespace Substrate.Hexalem.NET.AI
 
         private HexaGame ApplyAction(HexaGame state, PlayAction action)
         {
-            if(action.PlayTileAt != null)
+            if (action.PlayTileAt != null)
             {
                 state = Game.ChooseAndPlace(1, state, (byte)_index, action.SelectionIndex!.Value, action.PlayTileAt!.Value);
             }
 
-            if(action.UpgradeTileAt != null)
+            if (action.UpgradeTileAt != null)
             {
                 state = Game.Upgrade(1, state, (byte)_index, action.UpgradeTileAt.Value);
             }
-            
 
             return state;
         }
@@ -158,17 +153,22 @@ namespace Substrate.Hexalem.NET.AI
                 stoneScore(hexaPlayer.WinningCondition.WinningCondition) * newStone +
                 goldScore(hexaPlayer.WinningCondition.WinningCondition) * newGold;
 
-
             Log.Debug("\t[MinMax evaluation] Score = {score}", score);
             return score;
         }
 
         private int manaScore(WinningCondition wc) => 5;
+
         private int humanScore(WinningCondition wc) => wc == WinningCondition.HumanThreshold ? 8 : 5;
+
         private int waterScore(WinningCondition wc) => 1;
+
         private int foodScore(WinningCondition wc) => 1;
+
         private int woodScore(WinningCondition wc) => 1;
+
         private int stoneScore(WinningCondition wc) => 1;
+
         private int goldScore(WinningCondition wc) => wc == WinningCondition.GoldThreshold ? 8 : 5;
     }
 }

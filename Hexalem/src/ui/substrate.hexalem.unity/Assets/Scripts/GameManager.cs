@@ -62,10 +62,47 @@ public class GameManager : MonoBehaviour
                     _selectionIndex = int.Parse(idx);
                     Debug.Log($"Selection tile num {_selectionIndex} clicked !");
 
+
                     var mr = _selection.transform.GetChild(_selectionIndex.Value).GetChild(0).gameObject.GetComponent<MeshRenderer>();
-                    mr.material.color = Color.red;
+
+                    if (!TileAlreadySelected(mr))
+                        SelectTile(mr);
+                    else
+                    {
+                        UnselectTile(mr);
+                        _selectionIndex = null;
+                    }
                 }
             }
+        }
+
+        bool TileAlreadySelected(MeshRenderer mr)
+        {
+            return mr.material.color == GameConstant.ColorTileSelected;
+        }
+
+        void UnselectAll()
+        {
+            for(int i = 0; i < _selection.transform.childCount; i++)
+            {
+                if(_selection.transform.GetChild(i).childCount > 0)
+                {
+                    UnselectTile(_selection.transform.GetChild(i).GetChild(0).gameObject.GetComponent<MeshRenderer>());
+                }
+            }
+        }
+
+        void SelectTile(MeshRenderer mr)
+        {
+            UnselectAll();
+
+            mr.material.color = new Color(150, 200, 150, 150);
+
+        }
+
+        void UnselectTile(MeshRenderer mr)
+        {
+            mr.material.color = new Color(1, 1, 1, 1);
         }
     }
 

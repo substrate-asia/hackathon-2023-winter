@@ -1,5 +1,4 @@
-﻿using Serilog;
-using Substrate.Hexalem.NET.GameException;
+﻿using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
 
@@ -115,6 +114,7 @@ namespace Substrate.Hexalem
             {
                 throw new InvalidMapCoordinate($"Hex coordinates (${q}; ${r}) are out of range");
             }
+
             int index = q + _maxDistanceFromCenter + (r + _maxDistanceFromCenter) * _sideLength;
 
             return index;
@@ -335,20 +335,11 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Place a tile on the board
+        /// Check if a tile can be placed on the board
         /// </summary>
         /// <param name="coords"></param>
-        /// <param name="chooseTile"></param>
         /// <returns></returns>
-        internal bool Place((int, int) coords, HexaTile chooseTile)
-        {
-            if (!CanPlace(coords)) return false;
-
-            Value[ToIndex(coords).Value] = chooseTile;
-            return true;
-        }
-
-        public bool CanPlace((int, int) coords)
+        internal bool CanPlace((int, int) coords)
         {
              var index = ToIndex(coords);
 
@@ -357,12 +348,38 @@ namespace Substrate.Hexalem
                 return false;
             }
 
+            // Check if the tile is empty
             if (Value[index.Value] != 0x00)
             {
-                Log.Warning("Unable to play on a non empty tile map (index = {tileMapIndex})", index.Value);
-
                 return false;
             }
+
+            // Check if the tile is not surrounded by empty tiles
+            var neighbours = GetNeighbors(coords);
+            if (!neighbours.Exists(p => p.HasValue && this[p.Value.q, p.Value.r] != 0x00))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Place a tile on the board
+        /// </summary>
+        /// <param name="coords"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        internal bool Place((int, int) coords, HexaTile tile)
+        {
+            if (!CanPlace(coords))
+            {
+                return false;
+            }
+
+            var index = ToIndex(coords);
+
+            Value[index.Value] = tile;
 
             return true;
         }

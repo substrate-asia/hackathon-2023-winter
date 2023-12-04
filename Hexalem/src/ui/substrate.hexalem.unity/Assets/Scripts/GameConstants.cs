@@ -43,6 +43,7 @@ namespace Assets.Scripts
         public static StyleColor ColorUnselected => new StyleColor(new Color32(200, 175, 150, 255));
 
         public static StyleColor ColorSelected => new StyleColor(new Color32(150, 200, 150, 255));
+        public static Color ColorTileSelected => new Color(150, 200, 150, 150);
 
 
         public static string BalanceFormatter(BigInteger bigInteger)
