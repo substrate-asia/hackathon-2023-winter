@@ -116,8 +116,8 @@ Tiles and their patterns yield resources each round.
     - Rare: 3 Human
     - Epic: 6 Human
     - Legendary: 9 Humans
- - Per Round
-  - Mana: 1 + (Humans / 3)
+  - Per Round
+    - Mana: 1 + (Humans / 3)
 - **Grass**
   - Primary Resource: Food
   - Per Round
