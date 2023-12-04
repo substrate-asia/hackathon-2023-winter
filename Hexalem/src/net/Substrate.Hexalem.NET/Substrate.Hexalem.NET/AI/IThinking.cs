@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-
-namespace Substrate.Hexalem.NET.AI
+﻿namespace Substrate.Hexalem.NET.AI
 {
     //public interface IThinking
     //{

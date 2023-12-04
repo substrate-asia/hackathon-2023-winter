@@ -1,8 +1,6 @@
 ﻿using Serilog;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace Substrate.Hexalem.NET.AI
 {
@@ -38,7 +36,7 @@ namespace Substrate.Hexalem.NET.AI
                 Log.Warning("[AI {index}] have full board !", _index);
                 return PlayAction.CannotPlay();
             }
-            
+
             if (!canUpgradeTile)
             {
                 Log.Debug("[AI {index}] have nothing to upgrade !", _index);
@@ -53,26 +51,24 @@ namespace Substrate.Hexalem.NET.AI
                 _ => throw new InvalidOperationException("Unexpected error...")
             };
 
-            if(selectedMove == "play")
+            if (selectedMove == "play")
             {
                 var selectedTileIndex = _random.Next(buyableTiles.Count);
                 var tileCoords = freeMapTiles[_random.Next(freeMapTiles.Count)];
 
                 Log.Information("[AI {_index} Random] choose tile num {num} ({typeTile}) to play at ({r},{q})", _index, selectedTileIndex, buyableTiles[selectedTileIndex], tileCoords.q, tileCoords.r);
 
-
                 return PlayAction.Play(selectedTileIndex, tileCoords);
-            } else
+            }
+            else
             {
                 var upgradableTilesIndex = _random.Next(upgradableTiles.Count);
                 var tileCoords = upgradableTiles[upgradableTilesIndex];
 
                 Log.Information("[AI {_index} Random] choose to upgrade tile ({r},{q})", _index, tileCoords.q, tileCoords.r);
 
-
                 return PlayAction.Upgrade(tileCoords);
             }
-            
         }
     }
 }

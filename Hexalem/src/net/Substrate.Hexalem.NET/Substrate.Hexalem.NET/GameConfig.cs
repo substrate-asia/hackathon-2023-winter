@@ -108,6 +108,5 @@ namespace Substrate.Hexalem.NET
 
             return result;
         }
-
     }
 }

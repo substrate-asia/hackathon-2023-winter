@@ -153,7 +153,6 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
-            // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
             {
                 return false;
@@ -215,7 +214,6 @@ namespace Substrate.Hexalem
 
             return true;
         }
-
 
         /// <summary>
         /// Can upgrade a tile
@@ -345,7 +343,6 @@ namespace Substrate.Hexalem
             }
             return result;
         }
-
 
         internal void CalcRewards(uint blockNumber, byte playerIndex)
         {
@@ -501,7 +498,7 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="player"></param>
         /// <param name="tile"></param>

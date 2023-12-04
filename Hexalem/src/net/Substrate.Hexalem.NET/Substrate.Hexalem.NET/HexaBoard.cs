@@ -1,8 +1,6 @@
-﻿using Serilog;
-using Substrate.Hexalem.NET.GameException;
+﻿using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Substrate.Hexalem
 {

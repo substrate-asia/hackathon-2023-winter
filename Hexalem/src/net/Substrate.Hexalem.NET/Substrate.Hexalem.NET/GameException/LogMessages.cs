@@ -1,13 +1,8 @@
-﻿using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Substrate.Hexalem.NET.GameException
+﻿namespace Substrate.Hexalem.NET.GameException
 {
     public static class LogMessages
     {
-        public static string InvalidPlayerTurn(byte currentPlayerIndex, byte realPlayerTurn) 
+        public static string InvalidPlayerTurn(byte currentPlayerIndex, byte realPlayerTurn)
             => $"Player num ${currentPlayerIndex} try to play while it is the turn of player ${realPlayerTurn}";
 
         public static string InvalidTileSelection(int selectionIndex)

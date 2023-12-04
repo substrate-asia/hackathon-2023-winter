@@ -28,7 +28,7 @@ namespace Substrate.Hexalem.NET.AI
         private readonly int _explorationParameter;
         private readonly System.Random _random = new System.Random();
 
-        public MonteCarlo(int index ,int explorationParameter = 2) : base(index)
+        public MonteCarlo(int index, int explorationParameter = 2) : base(index)
         {
             _explorationParameter = explorationParameter;
         }
