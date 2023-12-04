@@ -1,19 +1,21 @@
-﻿using Substrate.Hexalem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Substrate.Integration;
 using System.Numerics;
-using System.Timers;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
-using static Assets.Scripts.GameEventManager;
 
 namespace Assets.Scripts.ScreenStates
 {
     public class MainScreenState : ScreenBaseState
     {
-        private VisualElement _bottomBound;
-        private Label? currentHelperLabel;
+        private Label _lblAccount;
+        private Label _lblAddress;
+        private Label _lblToken;
+
+        private Label _lblNodeVersion;
+        private Label _lblNodeUrl;
+        private Label _lblConnection;
+        private Label _lblBlockNumber;
 
         public MainScreenState(FlowController _flowController)
             : base(_flowController) { }
@@ -32,82 +34,78 @@ namespace Assets.Scripts.ScreenStates
             instance.style.height = new Length(98, LengthUnit.Percent);
 
             var topBound = instance.Q<VisualElement>("TopBound");
-            var list = topBound.Query<VisualElement>("VelResourceElement");
+
+            _lblAccount = topBound.Query<Label>("LblAccount");
+            _lblAddress = topBound.Query<Label>("LblAddress");
+            _lblToken = topBound.Query<Label>("LblToken");
+
+            _lblNodeVersion = topBound.Query<Label>("LblNodeVersion");
+            _lblNodeUrl = topBound.Query<Label>("LblNodeUrl");
+            _lblConnection = topBound.Query<Label>("LblConnection");
+            _lblBlockNumber = topBound.Query<Label>("LblBlockNumber");
 
             // add container
             FlowController.VelContainer.Add(instance);
 
-            FlowController.VelContainer.Q<Label>("LblResourceWater").text = "100";
-            //FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.Dashboard);
+            FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.Choose);
 
-            GameEventManager.OnRessourcesChangedDelegate += OnRessourcesChanged;
-            GameEventManager.OnVisualGameHelperChangedDelegate += OnDisplayHelper;
+            // subscribe to connection changes
+            Network.ConnectionStateChanged += OnConnectionStateChanged;
+            Storage.OnNextBlocknumber += UpdateBlocknumber;
+
+            // connect to substrate node
+            Network.Client.ConnectAsync(true, true, CancellationToken.None);
         }
 
-        public void OnRessourcesChanged(HexaPlayer player)
-        {
-            UnityMainThreadDispatcher.Instance().Enqueue(() =>
-            {
-                FlowController.VelContainer.Q<Label>("LblResourceWater").text = player[RessourceType.Water].ToString();
-                FlowController.VelContainer.Q<Label>("LblResourceMana").text = player[RessourceType.Mana].ToString();
-                FlowController.VelContainer.Q<Label>("LblResourceHuman").text = player[RessourceType.Humans].ToString();
-                FlowController.VelContainer.Q<Label>("LblResourceWood").text = player[RessourceType.Wood].ToString();
-                FlowController.VelContainer.Q<Label>("LblResourceStone").text = player[RessourceType.Stone].ToString();
-                FlowController.VelContainer.Q<Label>("LblResourceGold").text = player[RessourceType.Gold].ToString();
-                FlowController.VelContainer.Q<Label>("LblResourceFood").text = player[RessourceType.Food].ToString();
-            });
-        }
-
-        /// <summary>
-        /// Display helper on screen during <paramref name="nbMillisecond"/> milliseconds
-        /// </summary>
-        /// <param name="nbMillisecond"></param>
-        /// <param name="state"></param>
-        public void OnDisplayHelper(int nbMillisecond, StateType state)
-        {
-            var timer = new Timer();
-            timer.Interval = nbMillisecond;
-
-            if (currentHelperLabel != null) return; // This is really bad, but let's keep going and a queue later...
-
-            switch (state)
-            {
-                case StateType.GameStarted:
-                    currentHelperLabel = FlowController.VelContainer.Q<Label>("LblGameStarted");
-                    
-                    break;
-                case StateType.CalcReward:
-                    currentHelperLabel = FlowController.VelContainer.Q<Label>("LblCalcReward");
-                    break;
-            }
-
-            UnityMainThreadDispatcher.Instance().Enqueue(() =>
-            {
-                currentHelperLabel.style.display = DisplayStyle.Flex;
-                //FlowController.Invoke(nameof(DisableHelper), (float)nbMillisecond / 1000);
-            });
-
-            timer.Elapsed += DisableHelper;
-            timer.Start();
-        }
-
-        private void DisableHelper(object sender, ElapsedEventArgs e)
-        {
-            UnityMainThreadDispatcher.Instance().Enqueue(() =>
-            {
-                currentHelperLabel.style.display = DisplayStyle.None;
-            });
-        }
+        
 
         public override void ExitState()
         {
             Debug.Log($"[{this.GetType().Name}] ExitState");
+
+            // unsubscribe from event
+            Network.ConnectionStateChanged -= OnConnectionStateChanged;
+            Storage.OnNextBlocknumber -= UpdateBlocknumber;
         }
 
-        public enum StateType
+        private void OnConnectionStateChanged(bool IsConnected)
         {
-            GameStarted,
-            CalcReward
+            if (IsConnected)
+            {
+                _lblConnection.text = "CONNECTED";
+                _lblConnection.style.color = GameConstant.ColorGreen;
+            }
+            else
+            {
+                _lblConnection.text = "DISCONNECTED";
+                _lblConnection.style.color = GameConstant.ColorRed;
+            }
+        }
+
+        private void UpdateBlocknumber(uint blocknumber)
+        {
+            _lblBlockNumber.text = blocknumber.ToString();
+
+            if (Network.Client.Account != null)
+            {
+                _lblAccount.text = Network.CurrentAccountType.Value.ToString();
+                Debug.Log(Network.Client.Account.Value);
+                var address = Network.Client.Account.Value;
+                _lblAddress.text = address.Substring(0, 6) + " ... " + address.Substring(20, 6);
+            }
+            else
+            {
+                _lblAccount.text = "...";
+            }
+
+            if (Storage.AccountInfo != null && Storage.AccountInfo.Data != null)
+            {
+                _lblToken.text = GameConstant.BalanceFormatter(BigInteger.Divide(Storage.AccountInfo.Data.Free, new BigInteger(SubstrateNetwork.DECIMALS))) + " HEXA";
+            }
+            else
+            {
+                _lblToken.text = ".";
+            }
         }
     }
 }

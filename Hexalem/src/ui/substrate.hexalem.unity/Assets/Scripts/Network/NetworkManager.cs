@@ -1,4 +1,6 @@
 using Schnorrkel.Keys;
+using Substrate.Integration.Helper;
+using Substrate.Integration;
 using Substrate.NET.Wallet;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Rpc;
@@ -11,6 +13,14 @@ using UnityEngine;
 
 namespace Assets.Scripts
 {
+    public enum AccountType
+    {
+        Alice,
+        Bob,
+        Charlie,
+        Dave
+    }
+
     public delegate void ExtrinsicStateUpdate(string subscriptionId, ExtrinsicStatus extrinsicUpdate);
 
     public class NetworkManager : Singleton<NetworkManager>
@@ -21,21 +31,26 @@ namespace Assets.Scripts
         public event ConnectionStateChangedHandler ConnectionStateChanged;
         public event ExtrinsicCheckHandler ExtrinsicCheck;
 
-        private const string BIGBALLZ = "math purchase spawn allow identify fade tube science jelly degree language boss";
-
         public MiniSecret MiniSecretAlice => new MiniSecret(Utils.HexToByteArray("0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a"), ExpandMode.Ed25519);
         public Account Alice => Account.Build(KeyType.Sr25519, MiniSecretAlice.ExpandToSecret().ToBytes(), MiniSecretAlice.GetPair().Public.Key);
 
-        private readonly string _nodeUrl = "wss://...";
-        
-        //private readonly string _nodeUrl = "wss://rpc-rococo.bajun.network";
-        //private readonly NetworkType _networkType = NetworkType.Live;
-        //private readonly string _nodeUrl = "wss://rpc-parachain.bajun.network";
+        public MiniSecret MiniSecretBob => new MiniSecret(Utils.HexToByteArray("0x398f0c28f98885e046333d4a41c19cee4c37368a9832c6502f6cfd182e2aef89"), ExpandMode.Ed25519);
+        public Account Bob => Account.Build(KeyType.Sr25519, MiniSecretBob.ExpandToSecret().ToBytes(), MiniSecretBob.GetPair().Public.Key);
 
-        //private SubstrateNetwork _client;
-        //public SubstrateNetwork Client => _client;
+        public MiniSecret MiniSecretCharlie => new MiniSecret(Utils.HexToByteArray("0xbc1ede780f784bb6991a585e4f6e61522c14e1cae6ad0895fb57b9a205a8f938"), ExpandMode.Ed25519);
+        public Account Charlie => Account.Build(KeyType.Sr25519, MiniSecretCharlie.ExpandToSecret().ToBytes(), MiniSecretCharlie.GetPair().Public.Key);
 
-        public Wallet Wallet { get; private set; }
+        public MiniSecret MiniSecretDave => new MiniSecret(Utils.HexToByteArray("0x868020ae0687dda7d57565093a69090211449845a7e11453612800b663307246"), ExpandMode.Ed25519);
+        public Account Dave => Account.Build(KeyType.Sr25519, MiniSecretDave.ExpandToSecret().ToBytes(), MiniSecretDave.GetPair().Public.Key);
+
+        private readonly string _nodeUrl = "ws://127.0.0.1:9944";
+
+        private readonly NetworkType _networkType = NetworkType.Live;
+
+        public AccountType? CurrentAccountType { get; private set; }
+
+        private SubstrateNetwork _client;
+        public SubstrateNetwork Client => _client;
 
         private bool? _lastConnectionState = null;
 
@@ -48,7 +63,6 @@ namespace Assets.Scripts
         public void Start()
         {
             InvokeRepeating(nameof(UpdateNetworkState), 0.0f, 2.0f);
-
             InvokeRepeating(nameof(UpdatedExtrinsic), 0.0f, 3.0f);
         }
 
@@ -60,17 +74,17 @@ namespace Assets.Scripts
 
         private void UpdateNetworkState()
         {
-            //if (_client == null)
-            //{
-            //    return;
-            //}
+            if (_client == null)
+            {
+                return;
+            }
 
-            //var connectionState = _client.IsConnected;
-            //if (_lastConnectionState == null || _lastConnectionState != connectionState)
-            //{
-            //    ConnectionStateChanged?.Invoke(connectionState);
-            //    _lastConnectionState = connectionState;
-            //}
+            var connectionState = _client.IsConnected;
+            if (_lastConnectionState == null || _lastConnectionState != connectionState)
+            {
+                ConnectionStateChanged?.Invoke(connectionState);
+                _lastConnectionState = connectionState;
+            }
         }
 
         private void UpdatedExtrinsic()
@@ -78,67 +92,32 @@ namespace Assets.Scripts
             ExtrinsicCheck?.Invoke();
         }
 
-        public bool LoadWallet(string walletName = null)
+        public bool ChangeAccount(AccountType accountType)
         {
-            if (walletName == null && Wallet != null && Wallet.IsStored)
+            CurrentAccountType = accountType;
+
+            switch (accountType)
             {
-                Debug.Log($"No wallet name, but we have an active walet loaded.");
-                return false;
+                case AccountType.Alice:
+                    Client.Account = Alice;
+                    break;
+
+                case AccountType.Bob:
+                    Client.Account = Bob;
+                    break;
+
+                case AccountType.Charlie:
+                    Client.Account = Charlie;
+                    break;
+
+                case AccountType.Dave:
+                    Client.Account = Dave;
+                    break;
+
+                default:
+                    Client.Account = Alice;
+                    break;
             }
-
-            var walletNames = WalletFiles().Where(p => Wallet.IsValidWalletName(p));
-
-            if (!walletNames.Any() || (walletName != null && !walletNames.Contains(walletName)))
-            {
-                return false;
-            }
-
-            if (walletName == null)
-            {
-                walletName = walletNames.ElementAt(0);
-                //Debug.Log($"Selected the first element {walletName} from existing wallets");
-                if (PlayerPrefs.HasKey("NetworkManager.WalletRef"))
-                {
-                    var playerPrefsWallet = PlayerPrefs.GetString("NetworkManager.WalletRef");
-                    if (walletNames.Contains(playerPrefsWallet))
-                    {
-                        walletName = playerPrefsWallet;
-                        //Debug.Log($"Set wallet to {walletName} from player prefs");
-                    }
-                }
-            }
-
-            if (!Wallet.Load(walletName, out Wallet wallet))
-            {
-                Debug.Log($"Couldn't load wallet {walletName}");
-                return false;
-            }
-
-            ChangeWallet(wallet);
-
-            return true;
-        }
-
-        public bool ChangeWallet(Wallet wallet)
-        {
-            if (wallet == null)
-            {
-                return false;
-            }
-
-            //Debug.Log($"Loading {wallet.FileName} wallet with account {wallet.Account}");
-
-            //Wallet = wallet;
-            
-            //// TODO: is this really needed? To hold two times the account?
-            //Client.Account = Wallet.Account;
-
-            //// save if we change wallet to a new one
-            //if (PlayerPrefs.GetString("NetworkManager.WalletRef") != wallet.FileName)
-            //{
-            //    PlayerPrefs.SetString("NetworkManager.WalletRef", Wallet.FileName);
-            //    PlayerPrefs.Save();
-            //}
 
             return true;
         }
@@ -167,12 +146,12 @@ namespace Assets.Scripts
         // Start is called before the first frame update
         public void InitializeClient()
         {
-            //if (_client != null)
-            //{
-            //    return;
-            //}
+            if (_client != null)
+            {
+                return;
+            }
 
-            //_client = new SubstrateNetwork(null, _networkType, _nodeUrl);
+            _client = new SubstrateNetwork(null, _networkType, _nodeUrl);
         }
     }
 }

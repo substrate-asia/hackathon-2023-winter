@@ -74,6 +74,21 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
+        /// Check if player can do anything
+        /// </summary>
+        /// <returns></returns>
+        public bool CanPlay()
+        {
+            return this[RessourceType.Mana] > 0;
+        }
+
+        public bool CanBuy(HexaTile tile)
+        {
+            // For now, every tile cost 1 mana, but need to adapt wit Rosta cost material
+            return this[RessourceType.Mana] > 0;
+        }
+
+        /// <summary>
         /// Check if player has enough ressources to upgrade tile
         /// </summary>
         /// <param name="tileRarity"></param>

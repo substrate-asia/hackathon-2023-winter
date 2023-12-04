@@ -1,9 +1,6 @@
-using Assets.Scripts;
 using Substrate.Hexalem;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using static Assets.Scripts.ScreenStates.MainScreenState;
+using static Assets.Scripts.ScreensSubState.MainPlaySubState;
 
 namespace Assets.Scripts
 {
