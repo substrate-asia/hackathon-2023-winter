@@ -1,4 +1,6 @@
-﻿using Substrate.Hexalem.Integration.Model;
+﻿using Serilog;
+using Substrate.Hexalem.Integration.Model;
+using Substrate.Hexalem.NET;
 using System;
 using System.Linq;
 
@@ -92,9 +94,33 @@ namespace Substrate.Hexalem
             return Value == v.Value;
         }
 
+        /// <summary>
+        /// Determine if a tile can be upgrade
+        /// </summary>
+        /// <returns></returns>
+        internal bool CanUpgrade()
+        {
+            if (TileRarity == TileRarity.Legendary)
+            {
+                Log.Debug($"{nameof(TileRarity.Legendary)} cannot be upgrade");
+                return false;
+            }
+
+            var upgradable = GameConfig.UpgradableTypeTile();
+
+            if (!upgradable.Any(x => x == TileType))
+            {
+                Log.Debug("{TileType} cannot be upgrade", TileType);
+                return false;
+            }
+
+            return true;
+        }
+
         internal void Upgrade()
         {
-            TileRarity += 1;
+            if (CanUpgrade())
+                TileRarity += 1;
         }
 
         public HexaTile Clone()
