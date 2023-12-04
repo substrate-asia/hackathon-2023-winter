@@ -119,35 +119,35 @@ Tiles and their patterns yield resources each round.
  - Per Round
   - Mana: 1 + (Humans / 3)
 - **Grass**
- - Primary Resource: Food
- - Per Round
-  - Food: 1
+  - Primary Resource: Food
+  - Per Round
+    - Food: 1
 - **Water**
- - Primary Resource: Water
- - Per Round
-  - Water: 1
+  - Primary Resource: Water
+  - Per Round
+    - Water: 1
 - **Mountain**
- - Primary Resource: Stone
- - Secondary Resource: Water
- - Per Round
-  - Stone: Needs Humans to Harvest
+  - Primary Resource: Stone
+  - Secondary Resource: Water
+  - Per Round
+    - Stone: Needs Humans to Harvest
 - **Forest** 
- - Primary Resource: Wood
- - Secondary Resource: Food
- - Per Round
-  - Wood: Needs Humans to Harvest
-  - Food: Needs Humans to Hunt
+  - Primary Resource: Wood
+  - Secondary Resource: Food
+  - Per Round
+    - Wood: Needs Humans to Harvest
+    - Food: Needs Humans to Hunt
 - **Desert**
- - Primary Resource: ?
- - Secondary Resource: Gold
- - Negative Resource: Water
- - Per Round
-  - Water: -1
+  - Primary Resource: ?
+  - Secondary Resource: Gold
+  - Negative Resource: Water
+  - Per Round
+    - Water: -1
 - **Cave**
- - Primary Resource: Stone
- - Secondary Resource: Gold
- - Per Round
-  - Gold: Needs Humans to Harvest
+  - Primary Resource: Stone
+  - Secondary Resource: Gold
+  - Per Round
+    - Gold: Needs Humans to Harvest
 
 #### Formations & Patterns
 
