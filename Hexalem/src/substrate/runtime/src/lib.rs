@@ -7,7 +7,7 @@
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use pallet_grandpa::AuthorityId as GrandpaId;
-use pallet_hexalem::{GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer, TileType};
+use pallet_hexalem::{GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer, TileType, TilePattern, TileRarity};
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
 use sp_api::impl_runtime_apis;
@@ -66,17 +66,44 @@ pub type Balance = u128;
 pub struct HexalemTile {
 	// I was lazy to optimize it now, but it will be easy to lower this to u8 in the future
 	tile_type: TileType,
+	tile_pattern: TilePattern,
+	tile_rarity: TileRarity,
 	tile_level: u8,
 	formations: [bool; 3],
 }
 
 impl GetTileInfo for HexalemTile {
+
 	fn get_type(&self) -> TileType {
 		self.tile_type
 	}
 
+	fn set_type(&mut self, value: TileType) -> () {
+		self.tile_type = value;
+	}
+
 	fn get_level(&self) -> u8 {
 		self.tile_level
+	}
+
+	fn set_level(&mut self, level: u8) -> () {
+		self.tile_level = level;
+	}
+
+	fn get_pattern(&self) -> TilePattern {
+		self.tile_pattern
+	}
+
+	fn set_pattern(&mut self, value: TilePattern) -> () {
+		self.tile_pattern = value;
+	}
+
+	fn get_rarity(&self) -> TileRarity {
+		self.tile_rarity
+	}
+
+	fn set_rarity(&mut self, value: TileRarity) -> () {
+		self.tile_rarity = value;
 	}
 
 	fn get_formation_flags(&self) -> [bool; 3] {
@@ -94,15 +121,11 @@ impl GetTileInfo for HexalemTile {
 	fn set_formation_flag_3(&mut self, value: bool) -> () {
 		self.formations[2] = value;
 	}
-
-	fn set_level(&mut self, level: u8) -> () {
-		self.tile_level = level;
-	}
 }
 
 impl Default for HexalemTile {
 	fn default() -> Self {
-		Self { tile_type: TileType::Empty, tile_level: 1, formations: [false; 3] }
+		Self { tile_type: TileType::Empty, tile_pattern: TilePattern::Normal, tile_rarity: TileRarity::Normal, tile_level: 1, formations: [false; 3] }
 	}
 }
 
@@ -337,7 +360,9 @@ parameter_types! {
 	pub const HexalemAllTileOffers: [TileOffer<Runtime>; 16] = [
 		TileOffer {
 			tile_to_buy: HexalemTile {
-				tile_type: TileType::Tree,
+				tile_type: TileType::Forest,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3]
 			},
@@ -349,7 +374,9 @@ parameter_types! {
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
-				tile_type: TileType::Tree,
+				tile_type: TileType::Forest,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3]
 			},
@@ -360,7 +387,9 @@ parameter_types! {
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
-				tile_type: TileType::Tree,
+				tile_type: TileType::Forest,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3]
 			},
@@ -372,6 +401,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Mountain,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -383,6 +414,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Mountain,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -394,6 +427,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Mountain,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -406,6 +441,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Grass,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -417,6 +454,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Grass,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -428,6 +467,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Grass,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -440,6 +481,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Water,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -451,6 +494,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Water,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -462,6 +507,8 @@ parameter_types! {
 		TileOffer {
 			tile_to_buy: HexalemTile{
 				tile_type: TileType::Water,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -473,7 +520,9 @@ parameter_types! {
 
 		TileOffer {
 			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
+				tile_type: TileType::Cave,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -484,7 +533,9 @@ parameter_types! {
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
+				tile_type: TileType::Cave,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -495,7 +546,9 @@ parameter_types! {
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
+				tile_type: TileType::Cave,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -506,7 +559,9 @@ parameter_types! {
 		},
 		TileOffer {
 			tile_to_buy: HexalemTile{
-				tile_type: TileType::House,
+				tile_type: TileType::Cave,
+				tile_pattern: TilePattern::Normal,
+				tile_rarity: TileRarity::Normal,
 				tile_level: 1,
 				formations: [false; 3],
 			},
@@ -518,6 +573,8 @@ parameter_types! {
 	];
 	pub const HexalemHomeTile: HexalemTile = HexalemTile {
 		tile_type: TileType::Home,
+		tile_pattern: TilePattern::Normal,
+		tile_rarity: TileRarity::Normal,
 		tile_level: 1,
 		formations: [false; 3],
 	};
