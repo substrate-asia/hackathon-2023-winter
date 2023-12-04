@@ -120,7 +120,6 @@ Once the player has created or joined a game he has three possible actions he ca
 **Draw**
 - **Full-grid**: If the grid is full, the game ends, and is concluded as a draw.
 
-
 #### Resource Generation
 Tiles and their patterns yield resources each round.
 - **Empty**: The empty tile has no resources allocated, it only offers a place where a player can allocate a tile.
@@ -170,8 +169,8 @@ A formation is a pattern represented in the honeycomb structure of 7 hexagon til
 
 ![image](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/c07ae79d-9223-4ed5-a837-78a264010622)
 
-#### Metrics
-- Tracking metrics include the number of tiles placed, resources gathered, tile patterns created, and human population size.
+#### Metrics & Board evaluation
+Tracking metrics include the number of tiles placed, resources gathered, tile patterns created, and human population size. After each turn, the player board is evaluated and changes are calculated.
 
 #### Human Dynamics
 - Human needs: Consuming food and water for growth; using gold for resource procurement.
