@@ -1,3 +1,65 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* colors */
+    --accent-blue100a: rgb(33, 114, 201 / 0.32);
+    --accent-blue200a: rgb(33, 114, 201 / 0.46);
+    --accent-blue25a: rgb(33, 114, 201 / 0.1);
+    --accent-blue300a: rgb(33, 114, 201 / 0.62);
+    --accent-blue400a: rgb(33, 114, 201 / 0.8);
+    --accent-blue500a: rgb(33, 114, 201);
+    --accent-blue50a: rgb(33, 114, 201 / 0.2);
+    --accent-green100a: rgb(76, 175, 80 / 0.32);
+    --accent-green200a: rgb(76, 175, 80 / 0.46);
+    --accent-green25a: rgb(76, 175, 80 / 0.1);
+    --accent-green300a: rgb(76, 175, 80 / 0.62);
+    --accent-green400a: rgb(76, 175, 80 / 0.8);
+    --accent-green500a: rgb(76, 175, 80);
+    --accent-green50a: rgb(76, 175, 80 / 0.2);
+    --accent-red100a: rgb(211, 61, 70 / 0.32);
+    --accent-red200a: rgb(211, 61, 70 / 0.46);
+    --accent-red25a: rgb(211, 61, 70 / 0.1);
+    --accent-red300a: rgb(211, 61, 70 / 0.62);
+    --accent-red400a: rgb(211, 61, 70 / 0.8);
+    --accent-red500a: rgb(211, 61, 70);
+    --accent-red50a: rgb(211, 61, 70 / 0.2);
+    --accent-yellow100a: rgb(226, 157, 22 / 0.32);
+    --accent-yellow200a: rgb(226, 157, 22 / 0.46);
+    --accent-yellow25a: rgb(226, 157, 22 / 0.1);
+    --accent-yellow300a: rgb(226, 157, 22 / 0.62);
+    --accent-yellow400a: rgb(226, 157, 22 / 0.8);
+    --accent-yellow500a: rgb(226, 157, 22);
+    --accent-yellow50a: rgb(226, 157, 22 / 0.2);
+    --brand-purple100a: rgb(108, 79, 242 / 0.32);
+    --brand-purple200a: rgb(108, 79, 242 / 0.46);
+    --brand-purple25a: rgb(108, 79, 242 / 0.1);
+    --brand-purple300a: rgb(108, 79, 242 / 0.62);
+    --brand-purple400a: rgb(108, 79, 242 / 0.8);
+    --brand-purple500a: rgb(108, 79, 242);
+    --brand-purple50a: rgb(108, 79, 242 / 0.2);
+    --brand-turquoise100a: rgb(0, 200, 187 / 0.32);
+    --brand-turquoise200a: rgb(0, 200, 187 / 0.46);
+    --brand-turquoise25a: rgb(0, 200, 187 / 0.1);
+    --brand-turquoise300a: rgb(0, 200, 187 / 0.62);
+    --brand-turquoise400a: rgb(0, 200, 187 / 0.8);
+    --brand-turquoise500a: rgb(0, 200, 187);
+    --brand-turquoise50a: rgb(0, 200, 187 / 0.2);
+    --neutral-gray0: rgb(255, 255, 255);
+    --neutral-gray100: rgb(242, 244, 247);
+    --neutral-gray1000: rgb(0, 0, 0);
+    --neutral-gray200: rgb(234, 236, 240);
+    --neutral-gray25: rgb(252, 252, 253);
+    --neutral-gray300: rgb(208, 213, 221);
+    --neutral-gray400: rgb(152, 162, 179);
+    --neutral-gray50: rgb(249, 250, 251);
+    --neutral-gray500: rgb(102, 112, 133);
+    --neutral-gray600: rgb(71, 84, 103);
+    --neutral-gray700: rgb(52, 64, 84);
+    --neutral-gray800: rgb(23, 34, 51);
+    --neutral-gray900: rgb(16, 24, 40);
+    --neutral-gray950: rgb(13, 19, 33);
+  }
+}

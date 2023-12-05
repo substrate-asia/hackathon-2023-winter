@@ -1,5 +1,14 @@
-import Document from "next/document";
+import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheet } from "styled-components";
+import { light } from "styles/colors";
+
+function buildColorTokens(theme) {
+  if (!theme) return "";
+
+  return Object.keys(theme)
+    .map((k) => `${k}: ${theme[k]}`)
+    .join(";");
+}
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx) {
@@ -26,5 +35,25 @@ export default class MyDocument extends Document {
     } finally {
       sheet.seal();
     }
+  }
+
+  render() {
+    return (
+      <Html>
+        <Head>
+          <style
+            dangerouslySetInnerHTML={{
+              __html: `
+                :root {${buildColorTokens(light)}}
+              `,
+            }}
+          />
+        </Head>
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    );
   }
 }
