@@ -53,6 +53,10 @@ Actually as mentioned before, dShips is a proof of concept, conformed by a smart
 
 ![Asset 1](https://github.com/geraBarboni/hackathon-2023-winter/assets/63870012/0820c586-0fac-4875-987c-c757afe31029)
 
+### Demo
+
+[https://www.youtube.com/watch?v=221j6GkPvd4](https://www.youtube.com/watch?v=221j6GkPvd4)
+
 ### The start of the project commit
 
 For a brand new project can be a clone of an open source framework, such as blockchain clone from substrate-node-template, react framework, etc., please give a description. For mature projects it can be a BRANCH, which is required to be generated after November 1, 2023, state what features are already available
@@ -65,10 +69,11 @@ For a brand new project can be a clone of an open source framework, such as bloc
 **Smart Contract**
 
 - [ ] Create a shipment
-- [ ] Verify deliverymen
-- [ ] Assign yourself as a delivery person
+- [ ] Verify carrier
+- [ ] Assign yourself as a carrier
 - [ ] Indicate package status
 - [ ] Deliver package
+- [ ] Generate ZK Proof
 
 **Client**
 
@@ -78,9 +83,19 @@ For a brand new project can be a clone of an open source framework, such as bloc
 
 ## Things accomplished during the Hackathon (submitted by 11:59am Dec 22, 2023 initial review)
 
-- By December 22, 2023, 11:59 AM, list in this column the feature points that were finalized during the hackathon.
-- Place the relevant code in the `src` directory and list in this column the development work done during the hackathon and the code structure. We will do a focused technical review of these directories/files.
-- Demo videos, ppts and other large files should not be submitted. You can store their link addresses in the readme
+**Smart Contract**
+
+- [ ] Create a shipment
+- [ ] Verify carrier
+- [ ] Assign yourself as a carrier
+- [ ] Indicate package status
+- [ ] Deliver package
+
+**Client**
+
+- [ ] Admin dashboard
+- [ ] Carrier dashboard
+- [ ] Receiver dashboard
 
 ## Things that are planned after the hackathon
 
@@ -95,6 +110,6 @@ For a brand new project can be a clone of an open source framework, such as bloc
 
 ## Team Information
 
-Gera Barboni
-Product Designer / Front-End Developer / Smart contract Developer
-[https://github.com/geraBarboni](https://github.com/geraBarboni)
+- Gera Barboni
+- Product Designer / Front-End Developer / Smart contract Developer
+- [https://github.com/geraBarboni](https://github.com/geraBarboni)
