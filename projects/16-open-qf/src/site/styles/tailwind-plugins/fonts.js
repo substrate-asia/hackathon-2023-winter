@@ -3,21 +3,21 @@ const plugin = require("tailwindcss/plugin");
 module.exports = plugin(({ addComponents }) => {
   addComponents({
     ".text64bold": {
-      "font-family": "Montserrat",
+      "font-family": "var(--font-montserrat)",
       "font-size": "64px",
       "font-weight": "700",
       "line-height": "64px",
       "letter-spacing": "0",
     },
     ".text36bold": {
-      "font-family": "Montserrat",
+      "font-family": "var(--font-montserrat)",
       "font-size": "36px",
       "font-weight": "700",
       "line-height": "36px",
       "letter-spacing": "0",
     },
     ".text24bold": {
-      "font-family": "Montserrat",
+      "font-family": "var(--font-montserrat)",
       "font-size": "24px",
       "font-weight": "700",
       "line-height": "24px",

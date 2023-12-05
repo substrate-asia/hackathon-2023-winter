@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
+import { Inter, Montserrat } from "next/font/google";
 import NProgress from "nprogress";
 import Router from "next/router";
 import store from "@/store";
@@ -37,6 +37,11 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-montserrat",
+});
+
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -46,7 +51,9 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
-          <main className={cn(inter.className, inter.variable)}>
+          <main
+            className={cn(inter.className, inter.variable, montserrat.variable)}
+          >
             <Component {...pageProps} />
           </main>
         </ThemeProvider>
