@@ -22,6 +22,7 @@
     "@reduxjs/toolkit": "^1.6.1",
     "@svgr/webpack": "^6.3.1",
     "bignumber.js": "^9.0.1",
+    "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.1",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.6.1",
@@ -50,7 +51,8 @@
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
     "socket.io-client": "^4.6.1",
-    "styled-components": "^5.3.1"
+    "styled-components": "^5.3.1",
+    "tailwind-merge": "^2.1.0"
   },
   "devDependencies": {
     "@osn/eslint-config": "^1.0.1",

@@ -6,6 +6,7 @@ import Router from "next/router";
 import "nprogress/nprogress.css";
 import "semantic-ui-css/semantic.min.css";
 import "styles/globals.css";
+import { cn } from "utils";
 
 NProgress.configure({
   minimum: 0.3,
@@ -27,7 +28,10 @@ Router.events.on(
   (url, { shallow }) => !shallow && NProgress.done(),
 );
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -37,7 +41,7 @@ function MyApp({ Component, pageProps }) {
         <meta name="viewport" content="width=device-width, user-scalable=no" />
       </Head>
 
-      <main className={inter.className}>
+      <main className={cn(inter.className, inter.variable)}>
         <Component {...pageProps} />
       </main>
     </>

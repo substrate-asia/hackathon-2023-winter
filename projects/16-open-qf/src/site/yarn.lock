@@ -1492,6 +1492,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.23.5":
+  version: 7.23.5
+  resolution: "@babel/runtime@npm:7.23.5"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: 164d9802424f06908e62d29b8fd3a87db55accf82f46f964ac481dcead11ff7df8391e3696e5fa91a8ca10ea8845bf650acd730fa88cf13f8026cd8d5eec6936
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.18.10, @babel/template@npm:^7.18.6, @babel/template@npm:^7.3.3":
   version: 7.18.10
   resolution: "@babel/template@npm:7.18.10"
@@ -4818,6 +4827,13 @@ __metadata:
   version: 1.2.1
   resolution: "clsx@npm:1.2.1"
   checksum: 30befca8019b2eb7dbad38cff6266cf543091dae2825c856a62a8ccf2c3ab9c2907c4d12b288b73101196767f66812365400a227581484a05f968b0307cfaf12
+  languageName: node
+  linkType: hard
+
+"clsx@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "clsx@npm:2.0.0"
+  checksum: a2cfb2351b254611acf92faa0daf15220f4cd648bdf96ce369d729813b85336993871a4bf6978ddea2b81b5a130478339c20d9d0b5c6fc287e5147f0c059276e
   languageName: node
   linkType: hard
 
@@ -10734,6 +10750,7 @@ __metadata:
     autoprefixer: ^10.4.16
     babel-jest: ^27.2.2
     bignumber.js: ^9.0.1
+    clsx: ^2.0.0
     copy-to-clipboard: ^3.3.1
     eslint: ^8.38.0
     eslint-config-next: ^13.3.0
@@ -10774,6 +10791,7 @@ __metadata:
     semantic-ui-react: ^2.0.3
     socket.io-client: ^4.6.1
     styled-components: ^5.3.1
+    tailwind-merge: ^2.1.0
     tailwindcss: ^3.3.6
   languageName: unknown
   linkType: soft
@@ -11192,6 +11210,15 @@ __metadata:
   version: 3.2.4
   resolution: "symbol-tree@npm:3.2.4"
   checksum: 6e8fc7e1486b8b54bea91199d9535bb72f10842e40c79e882fc94fb7b14b89866adf2fd79efa5ebb5b658bc07fb459ccce5ac0e99ef3d72f474e74aaf284029d
+  languageName: node
+  linkType: hard
+
+"tailwind-merge@npm:^2.1.0":
+  version: 2.1.0
+  resolution: "tailwind-merge@npm:2.1.0"
+  dependencies:
+    "@babel/runtime": ^7.23.5
+  checksum: b864935b891274f804ab6cc85b937e4b6288c12cc5d03d11a674ad7c0e7346d700eb9f80fb3cc9b391d2d412032c96435c843d6875980cb111c48e453bfde57d
   languageName: node
   linkType: hard
 
