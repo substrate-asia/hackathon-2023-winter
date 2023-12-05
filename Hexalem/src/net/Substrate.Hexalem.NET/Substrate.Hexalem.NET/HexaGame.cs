@@ -521,15 +521,14 @@ namespace Substrate.Hexalem
 
         internal void Evaluate(HexaBoard hexaBoard, HexaPlayer player)
         {
-            SimpleBoardStats boardStats = hexaBoard.SimpleStats();
+            var boardStats = hexaBoard.Stats();
 
             // https://www.simplypsychology.org/maslow.html
 
-            player[RessourceType.Mana] += (byte)(boardStats.Homes * 1); // 1 Mana from Home
+            player[RessourceType.Mana] += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
             player[RessourceType.Mana] += (byte)(player[RessourceType.Humans] / 2); // 1 Mana from 2 Humans
 
             // Additional pattern logic
-            // none
 
             // Physiological needs: breathing, food, water, shelter, clothing, sleep
             byte foodAndWaterEaten = (byte)Math.Min(
@@ -540,43 +539,33 @@ namespace Substrate.Hexalem
             player[RessourceType.Humans] = (byte)(
                 Math.Min(
                     foodAndWaterEaten,
-                    boardStats.Homes * GameConfig.HOME_PER_HUMANS
+                    boardStats[TileType.Home] * GameConfig.HOME_PER_HUMANS
                 )
             );
 
             // Additional pattern logic
-            // none
 
-
-            player[RessourceType.Water] += (byte)(boardStats.Waters * GameConfig.WATER_PER_WATER);
+            player[RessourceType.Water] += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
 
             // Additional pattern logic
-            player[RessourceType.Water] += (byte)(boardStats.Rivers * 3);
-            player[RessourceType.Water] += boardStats.ExtremeMountains;
 
-
-            player[RessourceType.Food] += (byte)(boardStats.Grass * GameConfig.FOOD_PER_GRASS);
+            player[RessourceType.Food] += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
 
             // Additional pattern logic
-            player[RessourceType.Food] += (byte)(boardStats.Farms * 3);
 
             // 1 tree needs 2 humans for 1 (First tree needs just 1 human)
-            player[RessourceType.Wood] += (byte)Math.Min(boardStats.Trees, (player[RessourceType.Humans] + 1) / 2);
+            player[RessourceType.Wood] += (byte)Math.Min(boardStats[TileType.Tree], (player[RessourceType.Humans] + 1) / 2);
 
             // Additional pattern logic
-            player[RessourceType.Wood] += (byte)(boardStats.Forrests * 3);
-
 
             // 1 Mountain needs 2 humans
-            player[RessourceType.Stone] += (byte)Math.Min(boardStats.Mountains, player[RessourceType.Humans] / 2);
+            player[RessourceType.Stone] += (byte)Math.Min(boardStats[TileType.Mountain], player[RessourceType.Humans] / 2);
 
             // 1 Cave can create wood for 4 humans, but need 2 humans for 1
             /// Not implemented
             // result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
 
             // Additional pattern logic
-
-            player[RessourceType.Stone] += (byte)(boardStats.Mountains * 3);
         }
 
         /// <summary>

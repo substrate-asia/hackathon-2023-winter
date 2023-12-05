@@ -123,14 +123,14 @@ pub mod pallet {
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
 	pub enum TileType {
-        Empty = 0,
-        Home = 1,
-        Grass = 2,
-        Water = 3,
-        Mountain = 4,
-        Forest = 5,
-        Desert = 6,
-        Cave = 7
+		Empty = 0,
+		Home = 1,
+		Grass = 2,
+		Water = 3,
+		Mountain = 4,
+		Forest = 5,
+		Desert = 6,
+		Cave = 7,
 	}
 
 	impl TileType {
@@ -154,6 +154,17 @@ pub mod pallet {
 		Delta = 1,
 		Line = 2,
 		Ypsilon = 3,
+	}
+
+	impl TilePattern {
+		pub fn from_u8(value: u8) -> Self {
+			match value {
+				1 => TilePattern::Delta,
+				2 => TilePattern::Line,
+				3 => TilePattern::Ypsilon,
+				_ => TilePattern::Normal,
+			}
+		}
 	}
 
 	#[derive(
@@ -199,35 +210,6 @@ pub mod pallet {
 		game_id: GameId,          // Game key
 	}
 
-	pub struct BoardStats {
-		pub trees: u8,
-		pub mountains: u8,
-		pub waters: u8,
-		pub grass: u8,
-		pub homes: u8,
-
-		pub forrests: u8,
-		pub rivers: u8,
-		pub extreme_mountains: u8,
-		pub farms: u8,
-	}
-
-	impl Default for BoardStats {
-		fn default() -> Self {
-			Self {
-				trees: 0,
-				mountains: 0,
-				waters: 0,
-				homes: 0,
-				grass: 0,
-				forrests: 0,
-				rivers: 0,
-				extreme_mountains: 0,
-				farms: 0,
-			}
-		}
-	}
-
 	impl<T: Config> HexBoard<T> {
 		fn new(size: usize, game_id: GameId) -> Result<HexBoard<T>, sp_runtime::DispatchError> {
 			let mut new_hex_grid: HexGrid<T> = vec![Default::default(); size]
@@ -247,6 +229,63 @@ pub mod pallet {
 				hex_grid: new_hex_grid,
 				game_id,
 			})
+		}
+
+		pub fn get_stats(&self) -> BoardStats {
+			let mut stats = BoardStats::default();
+
+			for tile in self.hex_grid.clone() {
+				let tile_type = tile.get_type();
+				stats.set_tiles(tile_type, stats.get_tiles(tile_type).saturating_add(1));
+
+				stats.set_levels(tile_type, tile.get_level(), stats.get_levels(tile_type, tile.get_level()).saturating_add(1));
+
+				stats.set_patterns(tile_type, tile.get_pattern(), stats.get_patterns(tile_type, tile.get_pattern()).saturating_add(1));
+			}
+
+			stats
+		}
+	}
+
+	pub struct BoardStats {
+		tiles: [u8; 8],
+		levels: [u8; 32],
+		patterns: [u8; 64],
+	}
+
+	impl Default for BoardStats {
+		fn default() -> Self {
+			Self {
+				tiles: [0; 8],
+				levels: [0; 32],
+				patterns: [0; 64],
+			}
+		}
+	}
+	
+	impl BoardStats {
+		pub fn get_tiles(&self, tile_type: TileType) -> u8 {
+			self.tiles[tile_type as usize]
+		}
+
+		pub fn set_tiles(&mut self, tile_type: TileType, value: u8) -> () {
+			self.tiles[tile_type as usize] = value;
+		}
+
+		pub fn get_levels(&self, tile_type: TileType, level: u8) -> u8 {
+			self.levels[(tile_type as usize).saturating_mul(8).saturating_add(level as usize)]
+		}
+
+		pub fn set_levels(&mut self, tile_type: TileType, level: u8, value: u8) -> () {
+			self.levels[(tile_type as usize).saturating_mul(8).saturating_add(level as usize)] = value;
+		}
+
+		pub fn get_patterns(&self, tile_type: TileType, pattern: TilePattern) -> u8 {
+			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)]
+		}
+
+		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
+			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -540,7 +579,7 @@ pub mod pallet {
 
 			for option_tile in neighbours {
 				match option_tile {
-					Some((q, r)) => Self::check_formation(&mut hex_board, &q, &r)?,
+					Some((q, r)) => Self::set_patterns(&mut hex_board, (q, r))?,
 					None => (),
 				}
 			}
@@ -625,7 +664,7 @@ pub mod pallet {
 
 			Ok(())
 		}
-		
+
 		#[pallet::call_index(4)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn root_delete_game(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
@@ -663,9 +702,7 @@ impl<T: Config> Pallet<T> {
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
 		for i in 0..game.selection_size {
-			new_selection.push(
-				selection_base[((i + offset) % 32) as usize].clone() % 16,
-			);
+			new_selection.push(selection_base[((i + offset) % 32) as usize].clone() % 16);
 		}
 
 		// Casting
@@ -776,61 +813,180 @@ impl<T: Config> Pallet<T> {
 		Ok(())
 	}
 
-	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
-		let mut board_stats: BoardStats = Default::default();
+	fn set_patterns(
+		hex_board: &mut HexBoard<T>,
+		tile_coords: (i8, i8),
+	) -> Result<(), sp_runtime::DispatchError> {
+		let grid_length: usize = hex_board.hex_grid.len();
+		let max_distance: i8 = Self::max_distance_from_center(&grid_length);
+		let side_length: i8 = Self::side_length(&grid_length);
 
-		for tile in &hex_board.hex_grid {
-			match tile.get_type() {
-				TileType::Home => {
-					board_stats.homes = board_stats.homes.saturating_add(1);
-				},
-				TileType::Grass => {
-					board_stats.grass = board_stats.grass.saturating_add(1);
-					let flags = tile.get_formation_flags();
-					if flags[0] {
-						board_stats.farms = board_stats.farms.saturating_add(1);
-					}
-					if flags[1] {
-						board_stats.farms = board_stats.farms.saturating_add(1);
-					}
-				},
-				TileType::Water => {
-					board_stats.waters = board_stats.waters.saturating_add(1);
-					let flags = tile.get_formation_flags();
-					if flags[0] {
-						board_stats.rivers = board_stats.rivers.saturating_add(1);
-					}
-					if flags[1] {
-						board_stats.rivers = board_stats.rivers.saturating_add(1);
-					}
-				},
-				TileType::Mountain => {
-					board_stats.mountains = board_stats.mountains.saturating_add(1);
-					let flags = tile.get_formation_flags();
-					if flags[0] {
-						board_stats.extreme_mountains =
-							board_stats.extreme_mountains.saturating_add(1);
-					}
-					if flags[1] {
-						board_stats.extreme_mountains =
-							board_stats.extreme_mountains.saturating_add(1);
-					}
-				},
-				TileType::Forest => {
-					board_stats.trees = board_stats.trees.saturating_add(1);
-					let flags = tile.get_formation_flags();
-					if flags[0] {
-						board_stats.forrests = board_stats.forrests.saturating_add(1);
-					}
-					if flags[1] {
-						board_stats.forrests = board_stats.forrests.saturating_add(1);
-					}
-				},			
-				TileType::Desert =>  todo!(),
-				TileType::Cave =>  todo!(),
-				_ => (), // TileType::Empty doesn't need to be evaluated ...
+		let mut impact_tiles: Vec<i8> = vec![Self::coords_to_index(
+			&max_distance,
+			&side_length,
+			&tile_coords.0,
+			&tile_coords.1,
+		)];
+
+		for neighbour in
+			Self::get_neighbouring_tiles(&max_distance, &tile_coords.0, &tile_coords.1)?
+		{
+			match neighbour {
+				Some(value) => impact_tiles.push(Self::coords_to_index(
+					&max_distance,
+					&side_length,
+					&value.0,
+					&value.1,
+				)),
+				None => (),
 			};
 		}
+
+		for index in impact_tiles {
+			Self::set_pattern_around_tile(
+				hex_board,
+				index.saturated_into(),
+				&max_distance,
+				&side_length,
+			)?;
+		}
+
+		Ok(())
+	}
+
+	fn set_pattern_around_tile(
+		hex_board: &mut HexBoard<T>,
+		index: u8,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> Result<(), sp_runtime::DispatchError> {
+		let tile = hex_board.hex_grid[index as usize];
+
+		if tile.get_pattern() == TilePattern::Normal {
+			return Ok(())
+		}
+
+		let (q, r) = Self::index_to_coords(index, side_length, max_distance)?;
+		let neighbours = Self::get_neighbouring_tiles(max_distance, &q, &r)?;
+
+		let mut n: Vec<Option<(u8, T::Tile)>> = vec![Some((index, tile))];
+
+		for neighbour in neighbours {
+			match neighbour {
+				Some(value) => {
+					let neighbour_index: u8 =
+						Self::coords_to_index(&max_distance, &side_length, &value.0, &value.1)
+							.saturated_into();
+					n.push(Some((neighbour_index, hex_board.hex_grid[neighbour_index as usize])));
+				},
+				None => n.push(None),
+			}
+		}
+
+		let pattern = Self::get_pattern(n);
+
+		match pattern {
+			Some((p, indexes)) => {
+				for i in indexes {
+					hex_board.hex_grid[i as usize].set_pattern(p);
+				}
+			},
+			None => (),
+		}
+		Ok(())
+	}
+
+	fn get_pattern(n: Vec<Option<(u8, T::Tile)>>) -> Option<(TilePattern, Vec<u8>)> {
+		// Delta
+		match Self::match_same_tile(n[0], n[1], n[2]) {
+			Some(v) => return Some((TilePattern::Delta, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[2], n[3]) {
+			Some(v) => return Some((TilePattern::Delta, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[3], n[4]) {
+			Some(v) => return Some((TilePattern::Delta, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[4], n[5]) {
+			Some(v) => return Some((TilePattern::Delta, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[5], n[6]) {
+			Some(v) => return Some((TilePattern::Delta, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[6], n[1]) {
+			Some(v) => return Some((TilePattern::Delta, v)),
+			None => (),
+		};
+
+		// Line
+		match Self::match_same_tile(n[0], n[1], n[4]) {
+			Some(v) => return Some((TilePattern::Line, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[2], n[5]) {
+			Some(v) => return Some((TilePattern::Line, v)),
+			None => (),
+		};
+		match Self::match_same_tile(n[0], n[3], n[6]) {
+			Some(v) => return Some((TilePattern::Line, v)),
+			None => (),
+		};
+
+		// ypsilon
+		match Self::match_same_tile_4(n[0], n[1], n[3], n[5]) {
+			Some(v) => return Some((TilePattern::Line, v)),
+			None => (),
+		};
+		match Self::match_same_tile_4(n[0], n[2], n[4], n[6]) {
+			Some(v) => return Some((TilePattern::Line, v)),
+			None => (),
+		};
+
+		None
+	}
+
+	fn match_same_tile(
+		n1: Option<(u8, T::Tile)>,
+		n2: Option<(u8, T::Tile)>,
+		n3: Option<(u8, T::Tile)>,
+	) -> Option<Vec<u8>> {
+		match (n1, n2, n3) {
+			(Some((index1, tile1)), Some((index2, tile2)), Some((index3, tile3))) =>
+				if tile1.same(&tile2) && tile1.same(&tile3){
+					Some(vec![index1, index2, index3])
+				}
+				else {
+					None
+				}
+			_ => None,
+		}
+	}
+
+	fn match_same_tile_4(
+		n1: Option<(u8, T::Tile)>,
+		n2: Option<(u8, T::Tile)>,
+		n3: Option<(u8, T::Tile)>,
+		n4: Option<(u8, T::Tile)>,
+	) -> Option<Vec<u8>> {
+		match (n1, n2, n3, n4) {
+			(Some((index1, tile1)), Some((index2, tile2)), Some((index3, tile3)), Some((index4, tile4))) =>
+				if tile1.same(&tile2) && tile1.same(&tile3) && tile1.same(&tile4){
+					Some(vec![index1, index2, index3, index4])
+				}
+				else {
+					None
+				}
+			_ => None,
+		}
+	}
+
+	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
+		let board_stats: BoardStats = hex_board.get_stats();
 
 		let food_and_water_eaten = cmp::min(
 			hex_board.food.saturating_mul(T::FoodPerHuman::get()),
@@ -838,281 +994,32 @@ impl<T: Config> Pallet<T> {
 		);
 
 		let number_of_humans = cmp::min(
-			board_stats.homes.saturating_add(food_and_water_eaten),
-			board_stats.homes.saturating_mul(T::HomePerHumans::get()),
+			board_stats.get_tiles(TileType::Home).saturating_add(food_and_water_eaten),
+			board_stats.get_tiles(TileType::Home).saturating_mul(T::HomePerHumans::get()),
 		);
 
 		hex_board.mana = hex_board
 			.mana
 			.saturating_add(number_of_humans / 2)
-			.saturating_add(board_stats.homes);
+			.saturating_add(board_stats.get_tiles(TileType::Home));
 
 		hex_board.water = hex_board
 			.water
-			.saturating_add(board_stats.waters)
-			.saturating_add(board_stats.rivers.saturating_mul(3))
-			.saturating_add(board_stats.extreme_mountains)
+			.saturating_add(board_stats.get_tiles(TileType::Water))
 			.saturating_sub(food_and_water_eaten);
 
 		hex_board.food = hex_board
 			.food
-			.saturating_add(board_stats.grass)
-			.saturating_add(board_stats.farms.saturating_mul(3))
+			.saturating_add(board_stats.get_tiles(TileType::Grass))
 			.saturating_sub(food_and_water_eaten);
 
 		hex_board.wood = hex_board
 			.wood
-			.saturating_add(cmp::min(board_stats.trees, (number_of_humans + 1) / 2))
-			.saturating_add(board_stats.forrests.saturating_mul(3));
+			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Forest), (number_of_humans + 1) / 2));
 
 		hex_board.stone = hex_board
 			.stone
-			.saturating_add(cmp::min(board_stats.mountains, number_of_humans / 2))
-			.saturating_add(board_stats.extreme_mountains.saturating_mul(3));
-	}
-
-	fn check_formation(
-		hex_board: &mut HexBoard<T>,
-		tile_q: &i8,
-		tile_r: &i8,
-	) -> Result<(), sp_runtime::DispatchError> {
-		let grid_length: usize = hex_board.hex_grid.len();
-		let max_distance: i8 = Self::max_distance_from_center(&grid_length);
-		let side_length: i8 = Self::side_length(&grid_length);
-
-		let tile_index: i8 = Self::coords_to_index(&max_distance, &side_length, tile_q, tile_r);
-
-		match hex_board.hex_grid[tile_index as usize].get_type() {
-			TileType::Empty => (),
-
-			TileType::Home => todo!(),
-
-			TileType::Grass => {
-				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
-
-				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
-				{
-					Some((TileType::Water, TileType::Grass)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
-				}
-
-				match Self::get_reverse_delta_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::Grass, TileType::Water)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
-				}
-			},
-
-			TileType::Water => {
-				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
-
-				match Self::get_line_right_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::Water, TileType::Water)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
-				}
-
-				match Self::get_line_left_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::Water, TileType::Water)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
-				}
-			},
-
-			TileType::Mountain => {
-				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
-
-				match Self::get_ypsilon_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::Mountain, TileType::Mountain, TileType::Mountain)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
-				}
-
-				match Self::get_reverse_ypsilon_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::Mountain, TileType::Mountain, TileType::Mountain)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
-				}
-			},
-
-			TileType::Forest => {
-				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
-
-				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
-				{
-					Some((TileType::Forest, TileType::Forest)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
-				}
-
-				match Self::get_reverse_delta_position(
-					&hex_board,
-					&neighbours,
-					&max_distance,
-					&side_length,
-				) {
-					Some((TileType::Forest, TileType::Forest)) =>
-						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
-					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
-				}
-			},
-
-			TileType::Desert => todo!(),
-
-			TileType::Cave => todo!(),
-		};
-
-		Ok(())
-	}
-
-	fn get_delta_position(
-		hex_board: &HexBoard<T>,
-		neighbours: &Vec<Option<(i8, i8)>>,
-		max_distance: &i8,
-		side_length: &i8,
-	) -> Option<(TileType, TileType)> {
-		match (neighbours[0], neighbours[1]) {
-			(Some((q1, r1)), Some((q2, r2))) => {
-				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
-				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
-
-				let tile1 = hex_board.hex_grid[tile1_index as usize];
-				let tile2 = hex_board.hex_grid[tile2_index as usize];
-
-				Some((tile1.get_type(), tile2.get_type()))
-			},
-			_ => None,
-		}
-	}
-
-	fn get_reverse_delta_position(
-		hex_board: &HexBoard<T>,
-		neighbours: &Vec<Option<(i8, i8)>>,
-		max_distance: &i8,
-		side_length: &i8,
-	) -> Option<(TileType, TileType)> {
-		match (neighbours[1], neighbours[2]) {
-			(Some((q1, r1)), Some((q2, r2))) => {
-				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
-				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
-
-				let tile1 = hex_board.hex_grid[tile1_index as usize];
-				let tile2 = hex_board.hex_grid[tile2_index as usize];
-
-				Some((tile1.get_type(), tile2.get_type()))
-			},
-			_ => None,
-		}
-	}
-
-	fn get_ypsilon_position(
-		hex_board: &HexBoard<T>,
-		neighbours: &Vec<Option<(i8, i8)>>,
-		max_distance: &i8,
-		side_length: &i8,
-	) -> Option<(TileType, TileType, TileType)> {
-		match (neighbours[0], neighbours[2], neighbours[4]) {
-			(Some((q1, r1)), Some((q2, r2)), Some((q3, r3))) => {
-				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
-				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
-				let tile3_index = Self::coords_to_index(&max_distance, &side_length, &q3, &r3);
-
-				let tile1 = hex_board.hex_grid[tile1_index as usize];
-				let tile2 = hex_board.hex_grid[tile2_index as usize];
-				let tile3 = hex_board.hex_grid[tile3_index as usize];
-
-				Some((tile1.get_type(), tile2.get_type(), tile3.get_type()))
-			},
-			_ => None,
-		}
-	}
-
-	fn get_reverse_ypsilon_position(
-		hex_board: &HexBoard<T>,
-		neighbours: &Vec<Option<(i8, i8)>>,
-		max_distance: &i8,
-		side_length: &i8,
-	) -> Option<(TileType, TileType, TileType)> {
-		match (neighbours[1], neighbours[3], neighbours[5]) {
-			(Some((q1, r1)), Some((q2, r2)), Some((q3, r3))) => {
-				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
-				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
-				let tile3_index = Self::coords_to_index(&max_distance, &side_length, &q3, &r3);
-
-				let tile1 = hex_board.hex_grid[tile1_index as usize];
-				let tile2 = hex_board.hex_grid[tile2_index as usize];
-				let tile3 = hex_board.hex_grid[tile3_index as usize];
-
-				Some((tile1.get_type(), tile2.get_type(), tile3.get_type()))
-			},
-			_ => None,
-		}
-	}
-
-	fn get_line_right_position(
-		hex_board: &HexBoard<T>,
-		neighbours: &Vec<Option<(i8, i8)>>,
-		max_distance: &i8,
-		side_length: &i8,
-	) -> Option<(TileType, TileType)> {
-		match (neighbours[0], neighbours[3]) {
-			(Some((q1, r1)), Some((q2, r2))) => {
-				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
-				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
-
-				let tile1 = hex_board.hex_grid[tile1_index as usize];
-				let tile2 = hex_board.hex_grid[tile2_index as usize];
-
-				Some((tile1.get_type(), tile2.get_type()))
-			},
-			_ => None,
-		}
-	}
-
-	fn get_line_left_position(
-		hex_board: &HexBoard<T>,
-		neighbours: &Vec<Option<(i8, i8)>>,
-		max_distance: &i8,
-		side_length: &i8,
-	) -> Option<(TileType, TileType)> {
-		match (neighbours[2], neighbours[5]) {
-			(Some((q1, r1)), Some((q2, r2))) => {
-				let tile1_index = Self::coords_to_index(&max_distance, &side_length, &q1, &r1);
-				let tile2_index = Self::coords_to_index(&max_distance, &side_length, &q2, &r2);
-
-				let tile1 = hex_board.hex_grid[tile1_index as usize];
-				let tile2 = hex_board.hex_grid[tile2_index as usize];
-
-				Some((tile1.get_type(), tile2.get_type()))
-			},
-			_ => None,
-		}
+			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Mountain), number_of_humans / 2));
 	}
 
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
@@ -1192,20 +1099,17 @@ impl<T: Config> Pallet<T> {
 
 // Custom trait for Tile definition
 pub trait GetTileInfo {
-
 	fn get_level(&self) -> u8;
 	fn set_level(&mut self, level: u8) -> ();
 
 	fn get_type(&self) -> TileType;
 
-	//fn get_pattern(&self) -> TilePattern;
-	//fn set_pattern(&mut self, value: TilePattern) -> ();
+	fn get_pattern(&self) -> TilePattern;
+	fn set_pattern(&mut self, value: TilePattern) -> ();
 
-	fn get_formation_flags(&self) -> [bool; 3];
-
-	fn set_formation_flag_1(&mut self, value: bool) -> ();
-	fn set_formation_flag_2(&mut self, value: bool) -> ();
-	fn set_formation_flag_3(&mut self, value: bool) -> ();
+	fn same(&self, other: &Self) -> bool {
+		self.get_type() == other.get_type()
+	}
 }
 
 // Custom trait for MaterialCost definition

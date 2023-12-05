@@ -78,20 +78,12 @@ impl GetTileInfo for HexalemTile {
 		self.0 = (self.0 & 0x3F) | ((level & 0x3) << 6);
 	}
 
-	fn get_formation_flags(&self) -> [bool; 3] {
-		[(self.0 & 0x1) != 0, (self.0 & 0x2) != 0, (self.0 & 0x4) != 0]
+	fn get_pattern(&self) -> TilePattern {
+		TilePattern::from_u8(self.0 & 0x7)
 	}
 
-	fn set_formation_flag_1(&mut self, value: bool) -> () {
-		self.0 = (self.0 & 0xFE) | value as u8
-	}
-
-	fn set_formation_flag_2(&mut self, value: bool) -> () {
-		self.0 = (self.0 & 0xFD) | ((value as u8) << 1)
-	}
-
-	fn set_formation_flag_3(&mut self, value: bool) -> () {
-		self.0 = (self.0 & 0xFB) | ((value as u8) << 2)
+	fn set_pattern(&mut self, value: TilePattern) -> () {
+		self.0 = (self.0 & 0xF8) | (value as u8 & 0x7)
 	}
 }
 

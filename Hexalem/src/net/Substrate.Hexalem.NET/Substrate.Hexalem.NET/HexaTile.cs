@@ -90,7 +90,7 @@ namespace Substrate.Hexalem
                 return false;
             }
 
-            return Value == v.Value;
+            return TileType == v.TileType;
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Substrate.Hexalem
 
         public override string ToString()
         {
-            return $"{TileType} - {TileRarity} - {FormationFlags[0]}, {FormationFlags[1]}, {FormationFlags[2]}";
+            return $"{TileType} - {TileRarity} - {TilePattern}";
         }
     }
 
@@ -157,24 +157,10 @@ namespace Substrate.Hexalem
         /// <summary>
         /// 3 bits
         /// </summary>
-        public bool[] FormationFlags
+        public TilePattern TilePattern
         {
-            get => new bool[3] { (Value & 0x1) != 0, (Value & 0x2) != 0, (Value & 0x4) != 0 };
-        }
-
-        public bool SetFormationFlag1
-        {
-            set => Value = (byte)((Value & 0xFE) | (value ? 1 : 0));
-        }
-
-        public bool SetFormationFlag2
-        {
-            set => Value = (byte)((Value & 0xFD) | (value ? 2 : 0));
-        }
-
-        public bool SetFormationFlag3
-        {
-            set => Value = (byte)((Value & 0xFB) | (value ? 4 : 0));
+            get => (TilePattern)(Value & 0x7);
+            set => Value = (byte)((Value & 0xF8) | (byte)value & 0x7);
         }
     }
 }
