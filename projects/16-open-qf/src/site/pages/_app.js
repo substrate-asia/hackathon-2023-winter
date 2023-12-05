@@ -2,11 +2,15 @@ import Head from "next/head";
 import { Inter } from "next/font/google";
 import NProgress from "nprogress";
 import Router from "next/router";
+import store from "@/store";
+import theme from "@/styles/light";
+import { Provider } from "react-redux";
 
 import "nprogress/nprogress.css";
 import "semantic-ui-css/semantic.min.css";
 import "styles/globals.css";
 import { cn } from "utils";
+import { ThemeProvider } from "styled-components";
 
 NProgress.configure({
   minimum: 0.3,
@@ -40,10 +44,13 @@ function MyApp({ Component, pageProps }) {
         <title>OpenSquare Network Quadratic Funding</title>
         <meta name="viewport" content="width=device-width, user-scalable=no" />
       </Head>
-
-      <main className={cn(inter.className, inter.variable)}>
-        <Component {...pageProps} />
-      </main>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <main className={cn(inter.className, inter.variable)}>
+            <Component {...pageProps} />
+          </main>
+        </ThemeProvider>
+      </Provider>
     </>
   );
 }
