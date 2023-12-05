@@ -1,4 +1,5 @@
-import { Footer, Header } from "@osn/common-ui";
+import { Footer } from "@osn/common-ui";
+import Header from "../header";
 
 export default function AppLayout({ children }) {
   return (
