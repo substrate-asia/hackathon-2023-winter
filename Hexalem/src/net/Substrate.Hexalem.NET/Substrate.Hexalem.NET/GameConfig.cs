@@ -90,22 +90,5 @@ namespace Substrate.Hexalem.NET
                     throw new InvalidOperationException($"Rarity {rarity} not supported...");
             }
         }
-
-        /// <summary>
-        /// Get the cost of a tile
-        /// </summary>
-        /// <param name="tile"></param>
-        /// <returns></returns>
-        public static byte[] TileCost(HexaTile tile)
-        {
-            var result = new byte[Enum.GetValues(typeof(RessourceType)).Length];
-
-            if (tile.TileType != TileType.Empty)
-            {
-                result[(byte)RessourceType.Mana] = 1;
-            }
-
-            return result;
-        }
     }
 }

@@ -20,112 +20,112 @@ namespace Substrate.Hexalem
             new TileOffer {
                 TileToBuy = new HexaTile(104), // Tree, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(104), // Tree, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(104), // Tree, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType = RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(96), // Mountain, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(96), // Mountain, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(96), // Mountain, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(80), // Grass, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
              new TileOffer {
                 TileToBuy = new HexaTile(80), // Grass, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
               new TileOffer {
                 TileToBuy = new HexaTile(80), // Grass, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(88), // Water, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(88), // Water, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(88), // Water, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType = RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(72), // Home, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(72), // Home, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 2,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(72), // Home, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType =  RessourceType.Mana,
                     Cost = 3,
                 }
             },
             new TileOffer {
                 TileToBuy = new HexaTile(72), // Home, level 1
                 TileCost = new MaterialCost {
-                    MaterialType = Material.Mana,
+                    MaterialType = RessourceType.Mana,
                     Cost = 3,
                 }
             },
@@ -320,9 +320,9 @@ namespace Substrate.Hexalem
 
             var (player, board) = HexaTuples[PlayerTurn];
 
-            var tile = UnboundTileOffers[selectionIndex];
+            var tileOffer = ALL_TILE_OFFERS[UnboundTileOffers[selectionIndex]];
 
-            if (!EnsureRessourcesToPlay(player, tile))
+            if (!EnsureRessourcesToPlay(player, tileOffer))
             {
                 return false;
             }
@@ -351,19 +351,18 @@ namespace Substrate.Hexalem
 
             var (player, board) = HexaTuples[PlayerTurn];
 
-            var tile = UnboundTileOffers[selectionIndex];
+            var tileOffer = ALL_TILE_OFFERS[UnboundTileOffers[selectionIndex]];
 
-
-            var tileCost = GameConfig.TileCost(tile);
+            HexaTile tile = tileOffer.TileToBuy;
 
             // check if tile can be placed
             board.Place(coords, tile);
 
             // remove ressources from player
-            foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
-            {
-                player[ressourceType] -= tileCost[(int)ressourceType];
-            }
+            var tileCost = tileOffer.TileCost;
+
+            player[tileCost.MaterialType] -= tileCost.Cost;
+            
 
             UnboundTileOffers.RemoveAt(selectionIndex);
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
@@ -643,18 +642,15 @@ namespace Substrate.Hexalem
         /// <param name="player"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
-        private bool EnsureRessourcesToPlay(HexaPlayer player, HexaTile tile)
+        private bool EnsureRessourcesToPlay(HexaPlayer player, TileOffer tileOffer)
         {
-            var tileCost = GameConfig.TileCost(tile);
+            var tileCost = tileOffer.TileCost;
 
-            // check if player has enough ressources
-            foreach (RessourceType ressourceType in Enum.GetValues(typeof(RessourceType)))
+
+            if (player[tileCost.MaterialType] < tileCost.Cost)
             {
-                if (player[ressourceType] < tileCost[(int)ressourceType])
-                {
-                    Log.Error(LogMessages.MissingRessourcesToPlay(player, tile, ressourceType, tileCost[(int)ressourceType]));
-                    return false;
-                }
+                Log.Error(LogMessages.MissingRessourcesToPlay(player, tileOffer.TileToBuy, tileCost.MaterialType, tileCost.Cost));
+                return false;
             }
 
             return true;

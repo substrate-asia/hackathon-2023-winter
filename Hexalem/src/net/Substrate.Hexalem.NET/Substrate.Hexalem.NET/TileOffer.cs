@@ -9,19 +9,8 @@ namespace Substrate.Hexalem.NET
 
 	public class MaterialCost
 	{
-		public Material MaterialType { get; set; }
+		public RessourceType MaterialType { get; set; }
 		public byte Cost { get; set; } // MaterialCost
 	}
-
-	public enum Material
-	{
-        Mana,
-        Humans,
-        Water,
-        Food,
-        Wood,
-        Stone,
-        Gold,
-    }
 }
 
