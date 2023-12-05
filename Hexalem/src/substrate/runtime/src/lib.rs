@@ -7,7 +7,7 @@
 include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use pallet_grandpa::AuthorityId as GrandpaId;
-use pallet_hexalem::{GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer, TileType};
+use pallet_hexalem::{GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileOffer, TileType, TilePattern, TileRarity};
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
 use sp_api::impl_runtime_apis;
@@ -74,6 +74,10 @@ impl GetTileInfo for HexalemTile {
 		(self.0 >> 6) & 0x3
 	}
 
+	fn set_level(&mut self, level: u8) -> () {
+		self.0 = (self.0 & 0x3F) | ((level & 0x3) << 6);
+	}
+
 	fn get_formation_flags(&self) -> [bool; 3] {
 		[(self.0 & 0x1) != 0, (self.0 & 0x2) != 0, (self.0 & 0x4) != 0]
 	}
@@ -88,21 +92,6 @@ impl GetTileInfo for HexalemTile {
 
 	fn set_formation_flag_3(&mut self, value: bool) -> () {
 		self.0 = (self.0 & 0xFB) | ((value as u8) << 2)
-	}
-
-	fn set_level(&mut self, level: u8) -> () {
-		self.0 = (self.0 & 0x3F) | ((level & 0x3) << 6);
-	}
-
-	fn build(tile_type: TileType, level: u8, formations: [bool; 3]) -> Self {
-		let byte = (level & 0x3) << 6 |
-			(tile_type as u8 & 0x7) << 3 |
-			0 as u8 & 0x7 |
-			formations[0] as u8 |
-			((formations[1] as u8) << 1) |
-			((formations[2] as u8) << 2);
-
-		Self(byte)
 	}
 }
 
@@ -419,7 +408,6 @@ parameter_types! {
 				material_cost: 2,
 			}
 		},
-
 		TileOffer {
 			tile_to_buy: HexalemTile(72), // Home, level 1
 			tile_cost: HexalemMaterialCost {

@@ -123,14 +123,14 @@ pub mod pallet {
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
 	pub enum TileType {
-		Empty = 0,
-		Home = 1,
-		Grass = 2,
-		Water = 3,
-		Mountain = 4,
-		Tree = 5,
-		Desert = 6,
-		Cave = 7,
+        Empty = 0,
+        Home = 1,
+        Grass = 2,
+        Water = 3,
+        Mountain = 4,
+        Forest = 5,
+        Desert = 6,
+        Cave = 7
 	}
 
 	impl TileType {
@@ -140,7 +140,7 @@ pub mod pallet {
 				2 => TileType::Grass,
 				3 => TileType::Water,
 				4 => TileType::Mountain,
-				5 => TileType::Tree,
+				5 => TileType::Forest,
 				6 => TileType::Desert,
 				7 => TileType::Cave,
 				_ => TileType::Empty,
@@ -160,7 +160,7 @@ pub mod pallet {
 		Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound,
 	)]
 	#[scale_info(skip_type_params(T))]
-	pub struct TTileOffer<T: Config> {
+	pub struct TileOffer<T: Config> {
 		pub tile_to_buy: T::Tile,
 		pub tile_cost: T::MaterialCost,
 	}
@@ -555,6 +555,14 @@ pub mod pallet {
 
 		#[pallet::call_index(2)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn upgrade(origin: OriginFor<T>, _place_index: u8) -> DispatchResult {
+			let _who: T::AccountId = ensure_signed(origin)?;
+
+			todo!()
+		}
+
+		#[pallet::call_index(3)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn finish_turn(origin: OriginFor<T>) -> DispatchResult {
 			let who: T::AccountId = ensure_signed(origin)?;
 
@@ -617,7 +625,8 @@ pub mod pallet {
 
 			Ok(())
 		}
-		#[pallet::call_index(3)]
+		
+		#[pallet::call_index(4)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn root_delete_game(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
 			ensure_root(origin)?;
@@ -775,14 +784,14 @@ impl<T: Config> Pallet<T> {
 				TileType::Home => {
 					board_stats.homes = board_stats.homes.saturating_add(1);
 				},
-				TileType::Tree => {
-					board_stats.trees = board_stats.trees.saturating_add(1);
+				TileType::Grass => {
+					board_stats.grass = board_stats.grass.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.forrests = board_stats.forrests.saturating_add(1);
+						board_stats.farms = board_stats.farms.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.forrests = board_stats.forrests.saturating_add(1);
+						board_stats.farms = board_stats.farms.saturating_add(1);
 					}
 				},
 				TileType::Water => {
@@ -807,19 +816,19 @@ impl<T: Config> Pallet<T> {
 							board_stats.extreme_mountains.saturating_add(1);
 					}
 				},
-				TileType::Desert => (),
-				TileType::Cave => (),
-				TileType::Grass => {
-					board_stats.grass = board_stats.grass.saturating_add(1);
+				TileType::Forest => {
+					board_stats.trees = board_stats.trees.saturating_add(1);
 					let flags = tile.get_formation_flags();
 					if flags[0] {
-						board_stats.farms = board_stats.farms.saturating_add(1);
+						board_stats.forrests = board_stats.forrests.saturating_add(1);
 					}
 					if flags[1] {
-						board_stats.farms = board_stats.farms.saturating_add(1);
+						board_stats.forrests = board_stats.forrests.saturating_add(1);
 					}
-				},
-				_ => (),
+				},			
+				TileType::Desert =>  todo!(),
+				TileType::Cave =>  todo!(),
+				_ => (), // TileType::Empty doesn't need to be evaluated ...
 			};
 		}
 
@@ -875,13 +884,15 @@ impl<T: Config> Pallet<T> {
 
 		match hex_board.hex_grid[tile_index as usize].get_type() {
 			TileType::Empty => (),
-			TileType::Home => (), // todo
-			TileType::Tree => {
+
+			TileType::Home => todo!(),
+
+			TileType::Grass => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
 				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
 				{
-					Some((TileType::Tree, TileType::Tree)) =>
+					Some((TileType::Water, TileType::Grass)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
 				}
@@ -892,11 +903,12 @@ impl<T: Config> Pallet<T> {
 					&max_distance,
 					&side_length,
 				) {
-					Some((TileType::Tree, TileType::Tree)) =>
+					Some((TileType::Grass, TileType::Water)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
+
 			TileType::Water => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
@@ -922,6 +934,7 @@ impl<T: Config> Pallet<T> {
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
+
 			TileType::Mountain => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
@@ -947,14 +960,13 @@ impl<T: Config> Pallet<T> {
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
-			TileType::Desert => todo!(),
-			TileType::Cave => (),
-			TileType::Grass => {
+
+			TileType::Forest => {
 				let neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 
 				match Self::get_delta_position(&hex_board, &neighbours, &max_distance, &side_length)
 				{
-					Some((TileType::Water, TileType::Grass)) =>
+					Some((TileType::Forest, TileType::Forest)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_1(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_1(false),
 				}
@@ -965,11 +977,15 @@ impl<T: Config> Pallet<T> {
 					&max_distance,
 					&side_length,
 				) {
-					Some((TileType::Grass, TileType::Water)) =>
+					Some((TileType::Forest, TileType::Forest)) =>
 						hex_board.hex_grid[tile_index as usize].set_formation_flag_2(true),
 					_ => hex_board.hex_grid[tile_index as usize].set_formation_flag_2(false),
 				}
 			},
+
+			TileType::Desert => todo!(),
+
+			TileType::Cave => todo!(),
 		};
 
 		Ok(())
@@ -1176,21 +1192,20 @@ impl<T: Config> Pallet<T> {
 
 // Custom trait for Tile definition
 pub trait GetTileInfo {
+
 	fn get_level(&self) -> u8;
+	fn set_level(&mut self, level: u8) -> ();
 
 	fn get_type(&self) -> TileType;
+
+	//fn get_pattern(&self) -> TilePattern;
+	//fn set_pattern(&mut self, value: TilePattern) -> ();
 
 	fn get_formation_flags(&self) -> [bool; 3];
 
 	fn set_formation_flag_1(&mut self, value: bool) -> ();
-
 	fn set_formation_flag_2(&mut self, value: bool) -> ();
-
 	fn set_formation_flag_3(&mut self, value: bool) -> ();
-
-	fn set_level(&mut self, level: u8) -> ();
-
-	fn build(tile_type: TileType, level: u8, formations: [bool; 3]) -> Self;
 }
 
 // Custom trait for MaterialCost definition
