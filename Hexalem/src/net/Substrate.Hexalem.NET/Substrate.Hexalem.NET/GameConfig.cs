@@ -46,48 +46,48 @@ namespace Substrate.Hexalem.NET
         /// <summary>
         /// Gold cost to upgrade a tile
         /// </summary>
-        /// <param name="rarity"></param>
+        /// <param name="level"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static int GoldCostForUpgrade(TileRarity rarity)
+        public static int GoldCostForUpgrade(byte level)
         {
-            switch (rarity)
+            switch (level)
             {
-                case TileRarity.Normal: // Normal to rare
+                case 0: // Normal to rare
                     return 5;
 
-                case TileRarity.Rare: // Rare to Epic
+                case 1: // Rare to Epic
                     return 10;
 
-                case TileRarity.Epic: // Epic to Legendary
+                case 2: // Epic to Legendary
                     return 15;
 
                 default:
-                    throw new InvalidOperationException($"Rarity {rarity} not supported...");
+                    throw new InvalidOperationException($"Level {level} not supported...");
             }
         }
 
         /// <summary>
         /// Minimum human to upgrade a tile
         /// </summary>
-        /// <param name="rarity"></param>
+        /// <param name="level"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static int MininumHumanToUpgrade(TileRarity rarity)
+        public static int MininumHumanToUpgrade(byte level)
         {
-            switch (rarity)
+            switch (level)
             {
-                case TileRarity.Normal: // Normal to rare
+                case 0: // Normal to rare
                     return 3;
 
-                case TileRarity.Rare: // Rare to Epic
+                case 1: // Rare to Epic
                     return 5;
 
-                case TileRarity.Epic: // Epic to Legendary
+                case 2: // Epic to Legendary
                     return 8;
 
                 default:
-                    throw new InvalidOperationException($"Rarity {rarity} not supported...");
+                    throw new InvalidOperationException($"Level {level} not supported...");
             }
         }
     }

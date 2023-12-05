@@ -12,15 +12,6 @@
         Cave = 7,
     }
 
-    public enum TileRarity
-    {
-        Normal = 0,
-        Rare = 1,
-        Epic = 2,
-        Legendary = 3,
-        // Mythic = 5, // ...
-    }
-
     public enum TilePattern
     {
         Normal = 0,

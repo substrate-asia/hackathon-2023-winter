@@ -14,18 +14,18 @@ namespace Substrate.Hexalem
 
         public byte Value { get; set; }
 
-        public HexaTile(TileType hexTileType, TileRarity hexTileRarity, TilePattern hexTilePattern)
+        public HexaTile(TileType hexTileType, byte hexTileLevel, TilePattern hexTilePattern)
         {
-            build(hexTileType, hexTileRarity, hexTilePattern);
+            build(hexTileType, hexTileLevel, hexTilePattern);
         }
 
-        private void build(TileType hexTileType, TileRarity hexTileRarity, TilePattern hexTilePattern)
+        private void build(TileType hexTileType, byte hexTileLevel, TilePattern hexTilePattern)
         {
-            var rarity = ((byte)hexTileRarity & 0x3) << 6;
+            var level = ((byte)hexTileLevel & 0x3) << 6;
             var type = ((byte)hexTileType & 0x7) << 3;
             var pattern = ((byte)hexTilePattern & 0x7);
 
-            Value = (byte)(rarity | type | pattern);
+            Value = (byte)(level | type | pattern);
         }
 
         public HexaTile(byte value)
@@ -67,12 +67,10 @@ namespace Substrate.Hexalem
                     // TODO : add cave
             }
 
-            var values = Enum.GetValues(typeof(TileRarity)).Cast<TileRarity>().ToArray();
-            var titleRarity = (TileRarity)values[tileTypeSharp.TileLevel];
-
+            // TODO : Hadle levels
             // TODO : handle formation ?
 
-            build(tileType, titleRarity, TilePattern.Normal);
+            //build(tileType, titleLevel, TilePattern.Normal);
         }
 
         /// <summary>
@@ -99,9 +97,9 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool CanUpgrade()
         {
-            if (TileRarity == TileRarity.Legendary)
+            if (TileLevel == 3)
             {
-                Log.Debug($"{nameof(TileRarity.Legendary)} cannot be upgrade");
+                Log.Debug($"Can not upgrade past level {3}");
                 return false;
             }
 
@@ -119,7 +117,7 @@ namespace Substrate.Hexalem
         internal void Upgrade()
         {
             if (CanUpgrade())
-                TileRarity += 1;
+                TileLevel += 1;
         }
 
         public HexaTile Clone()
@@ -130,7 +128,7 @@ namespace Substrate.Hexalem
 
         public override string ToString()
         {
-            return $"{TileType} - {TileRarity} - {TilePattern}";
+            return $"{TileType} - {TileLevel} - {TilePattern}";
         }
     }
 
@@ -139,10 +137,10 @@ namespace Substrate.Hexalem
         /// <summary>
         /// 2 bits
         /// </summary>
-        public TileRarity TileRarity
+        public byte TileLevel
         {
-            get => (TileRarity)((Value >> 6) & 0x3);
-            set => Value = (byte)((Value & 0x3F) | (((byte)value & 0x3) << 6));
+            get => (byte)((Value >> 6) & 0x3);
+            set => Value = (byte)((Value & 0x3F) | ((value & 0x3) << 6));
         }
 
         /// <summary>

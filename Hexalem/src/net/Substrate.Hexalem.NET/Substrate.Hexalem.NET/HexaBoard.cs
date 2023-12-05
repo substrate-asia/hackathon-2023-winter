@@ -60,7 +60,7 @@ namespace Substrate.Hexalem
 
         public void Init(uint blockNumber)
         {
-            this[Value.Length / 2] = new HexaTile(TileType.Home, TileRarity.Normal, TilePattern.Normal);
+            this[Value.Length / 2] = new HexaTile(TileType.Home, 0 /* Lowest level */, TilePattern.Normal);
         }
 
         public void NextRound(uint blockNumber)
@@ -403,7 +403,7 @@ namespace Substrate.Hexalem
                 // avoid counting none tiles twice
                 if (t.TileType != TileType.Empty)
                 {
-                    result[t.TileType, t.TileRarity] += 1;
+                    result[t.TileType, t.TileLevel] += 1;
                     
                     result[t.TileType, t.TilePattern] += 1;
                 }

@@ -114,14 +114,6 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
-	pub enum TileRarity {
-		Normal = 0,
-		Rare = 1,
-		Epic = 2,
-		Legendary = 3,
-	}
-
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
 	pub enum TileType {
 		Empty = 0,
 		Home = 1,

@@ -426,8 +426,8 @@ namespace Substrate.Hexalem
             existingTile.Upgrade();
 
             HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
-            player[RessourceType.Gold] -= (byte)GameConfig.GoldCostForUpgrade(existingTile.TileRarity);
-            player[RessourceType.Humans] -= (byte)GameConfig.MininumHumanToUpgrade(existingTile.TileRarity);
+            player[RessourceType.Gold] -= (byte)GameConfig.GoldCostForUpgrade(existingTile.TileLevel);
+            player[RessourceType.Humans] -= (byte)GameConfig.MininumHumanToUpgrade(existingTile.TileLevel);
 
             return true;
         }
@@ -509,7 +509,7 @@ namespace Substrate.Hexalem
             {
                 var rawTile = Id[(offSet + selectBase) % 32];
 
-                result.Add(new HexaTile(values[rawTile % values.Length], TileRarity.Normal, TilePattern.Normal));
+                result.Add(new HexaTile(values[rawTile % values.Length], 0 /* Level 0 */, TilePattern.Normal));
             }
             return result;
         }
@@ -597,7 +597,7 @@ namespace Substrate.Hexalem
             var upgradableTileTypes = GameConfig.UpgradableTypeTile();
 
             if (tile.TileType == TileType.Empty
-             || tile.TileRarity == TileRarity.Legendary
+             || tile.TileLevel == 3 /* Highest level */
              || !upgradableTileTypes.Contains(tile.TileType))
             {
                 Log.Error(LogMessages.InvalidTileToUpgrade(tile));
@@ -616,8 +616,8 @@ namespace Substrate.Hexalem
         private bool EnsureRessourcesToUpgrade(HexaPlayer player, HexaTile tile)
         {
             // Check if player have enought ressources to upgrade
-            var goldRequired = GameConfig.GoldCostForUpgrade(tile.TileRarity);
-            var humansRequired = GameConfig.MininumHumanToUpgrade(tile.TileRarity);
+            var goldRequired = GameConfig.GoldCostForUpgrade(tile.TileLevel);
+            var humansRequired = GameConfig.MininumHumanToUpgrade(tile.TileLevel);
             if (player[RessourceType.Gold] < goldRequired
              || player[RessourceType.Humans] < humansRequired)
             {

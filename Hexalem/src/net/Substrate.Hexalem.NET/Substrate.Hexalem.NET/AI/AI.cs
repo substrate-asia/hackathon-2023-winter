@@ -61,7 +61,7 @@ namespace Substrate.Hexalem.NET.AI
                  * An upgradable tile have to :
                  *  Be a non empty tile
                  *  Be a valid upgradable tile (defined in Game configuration)
-                 *  Lower than epic rarity
+                 *  Lower level than 3
                  *  Have enough ressources to pay the upgrade
                  */
 
