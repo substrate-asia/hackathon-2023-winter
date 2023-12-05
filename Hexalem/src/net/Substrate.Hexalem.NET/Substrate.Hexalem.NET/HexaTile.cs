@@ -1,7 +1,6 @@
 ﻿using Serilog;
 using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
-using Substrate.NetApi.Model.Meta;
 using System;
 using System.Linq;
 
@@ -10,6 +9,7 @@ namespace Substrate.Hexalem
     public partial class HexaTile
     {
         public static implicit operator byte(HexaTile p) => p.Value;
+
         public static implicit operator HexaTile(byte p) => new HexaTile(p);
 
         public byte Value { get; set; }
@@ -35,27 +35,32 @@ namespace Substrate.Hexalem
 
         public HexaTile(TileSharp tileTypeSharp)
         {
-            var tileType = TileType.None;
+            var tileType = TileType.Empty;
             switch (tileTypeSharp.TileType)
             {
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Empty:
-                    tileType = TileType.None;
+                    tileType = TileType.Empty;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Tree:
                     tileType = TileType.Tree;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Water:
                     tileType = TileType.Water;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Mountain:
                     tileType = TileType.Mountain;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Desert:
                     tileType = TileType.Desert;
                     break;
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Home:
                     tileType = TileType.Home;
                     break;
+
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Grass:
                     tileType = TileType.Grass;
                     break;
@@ -110,13 +115,11 @@ namespace Substrate.Hexalem
 
             return true;
         }
-        internal bool Upgrade()
-        {
-            if (!CanUpgrade())
-                return false;
 
-            TileRarity += 1;
-            return true;
+        internal void Upgrade()
+        {
+            if (CanUpgrade())
+                TileRarity += 1;
         }
 
         public HexaTile Clone()
@@ -174,5 +177,4 @@ namespace Substrate.Hexalem
             set => Value = (byte)((Value & 0xFB) | (value ? 4 : 0));
         }
     }
-
 }

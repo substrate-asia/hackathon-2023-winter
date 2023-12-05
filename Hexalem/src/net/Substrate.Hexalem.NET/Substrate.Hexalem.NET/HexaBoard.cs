@@ -1,4 +1,4 @@
-﻿using Serilog;
+
 using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.GameException;
 using System;
@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace Substrate.Hexalem
 {
-
     public class HexaBoard : IHexaBase
     {
         // Implicit operator to convert a HexGrid to a byte[]
@@ -41,7 +40,6 @@ namespace Substrate.Hexalem
             _maxDistanceFromCenter = (_sideLength - 1) / 2;
         }
 
-
         public GridSize CalcGridSize()
         {
             switch (Value.Length)
@@ -71,7 +69,6 @@ namespace Substrate.Hexalem
 
         public void PostMove(uint blockNumber)
         {
-
         }
 
         internal HexaBoard Clone()
@@ -119,6 +116,7 @@ namespace Substrate.Hexalem
             {
                 throw new InvalidMapCoordinate($"Hex coordinates (${q}; ${r}) are out of range");
             }
+
             int index = q + _maxDistanceFromCenter + (r + _maxDistanceFromCenter) * _sideLength;
 
             return index;
@@ -169,20 +167,165 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Set the level of a hex tile in the grid
+        /// Set patterns only around a tile and it's impacting neighbours
         /// </summary>
-        /// <param name="i"></param>
-        /// <param name="hexTileLevel"></param>
-        private void SetTileLevel(int i, TileRarity hexTileLevel)
+        /// <param name="tileCoords"></param>
+        /// <returns></returns>
+        public List<List<int>> SetPatterns((int, int) tileCoords)
         {
-            if (Value.Length <= i || Value[i] == 0x00)
+            List<int> impactTiles = new List<int>() { ToIndex(tileCoords).Value };
+            foreach (var neighbour in GetNeighbors(tileCoords))
             {
-                return;
+                var neighbourIndex = ToIndex(neighbour);
+                if (neighbourIndex != null)
+                {
+                    impactTiles.Add(neighbourIndex.Value);
+                }
             }
-            var hexaTile = ((HexaTile)Value[i]);
-            hexaTile.TileRarity = hexTileLevel;
 
-            Value[i] = hexaTile;
+            List<List<int>> result = new List<List<int>>();
+            foreach (var i in impactTiles)
+            {
+                var patternResult = SetPatternAroundTile(i);
+                if (patternResult != null)
+                {
+                    result.Add(patternResult);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Set patterns on the whole grid
+        /// </summary>
+        /// <returns></returns>
+        public List<List<int>> SetPatterns()
+        {
+            List<List<int>> result = new List<List<int>>();
+            for (int i = 0; i < Value.Length; i++)
+            {
+                var patternResult = SetPatternAroundTile(i);
+                if (patternResult != null)
+                {
+                    result.Add(patternResult);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="tileIndex"></param>
+        /// <returns></returns>
+        /// <exception cref="NotSupportedException"></exception>
+        internal List<int> SetPatternAroundTile(int tileIndex)
+        {
+            HexaTile t = Value[tileIndex];
+            if (t == null || t.TilePattern != TilePattern.Normal)
+            {
+                return null;
+            }
+
+            var coords = ToCoords(tileIndex);
+            List<(int, int)?> neighbours = GetNeighbors(coords);
+            List<(int, HexaTile)?> n = new List<(int, HexaTile)?>() { (tileIndex, t) };
+            foreach (var neighbour in neighbours)
+            {
+                var index = ToIndex(neighbour);
+                if (index == null)
+                {
+                    n.Add(null);
+                    continue;
+                }
+
+                n.Add((index.Value, (HexaTile)Value[index.Value]));
+            }
+
+            if (n.Count != 7)
+            {
+                throw new NotSupportedException("Not the correct amount of neighbours to process!");
+            }
+
+            (TilePattern, int[])? pattern = GetPattern(n);
+
+            if (pattern == null)
+            {
+                return null;
+            }
+
+            var list = new List<int>();
+            foreach (var index in pattern.Value.Item2)
+            {
+                var hexaTile = (HexaTile)Value[tileIndex];
+                hexaTile.TilePattern = pattern.Value.Item1;
+                Value[tileIndex] = hexaTile;
+                list.Add(index);
+            }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Get the pattern of a hex tile in the grid
+        /// </summary>
+        /// <param name="n"></param>
+        /// <returns></returns>
+        internal (TilePattern pattern, int[] indices)? GetPattern(List<(int indice, HexaTile tile)?> n)
+        {
+            // delta
+            if (n[1] != null && n[2] != null && n[1].Value.tile.Same(n[2].Value.tile) && n[0].Value.tile.Same(n[2].Value.tile))
+            {
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[1].Value.indice, n[2].Value.indice });
+            }
+            else if (n[2] != null && n[3] != null && n[2].Value.tile.Same(n[3].Value.tile) && n[0].Value.tile.Same(n[3].Value.tile))
+            {
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[2].Value.indice, n[3].Value.indice });
+            }
+            else if (n[3] != null && n[4] != null && n[3].Value.tile.Same(n[4].Value.tile) && n[0].Value.tile.Same(n[4].Value.tile))
+            {
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[3].Value.indice, n[4].Value.indice });
+            }
+            else if (n[4] != null && n[5] != null && n[4].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
+            {
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[4].Value.indice, n[5].Value.indice });
+            }
+            else if (n[5] != null && n[6] != null && n[5].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
+            {
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[5].Value.indice, n[6].Value.indice });
+            }
+            else if (n[6] != null && n[1] != null && n[6].Value.tile.Same(n[1].Value.tile) && n[0].Value.tile.Same(n[1].Value.tile))
+            {
+                return (TilePattern.Delta, new[] { n[0].Value.indice, n[6].Value.indice, n[1].Value.indice });
+            }
+            else
+            // line
+            if (n[1] != null && n[4] != null && n[1].Value.tile.Same(n[4].Value.tile) && n[0].Value.tile.Same(n[4].Value.tile))
+            {
+                return (TilePattern.Line, new[] { n[0].Value.indice, n[1].Value.indice, n[4].Value.indice });
+            }
+            else if (n[2] != null && n[5] != null && n[2].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
+            {
+                return (TilePattern.Line, new[] { n[0].Value.indice, n[2].Value.indice, n[5].Value.indice });
+            }
+            else if (n[3] != null && n[6] != null && n[3].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
+            {
+                return (TilePattern.Line, new[] { n[0].Value.indice, n[3].Value.indice, n[6].Value.indice });
+            }
+            else
+            // ypsilon
+            if (n[1] != null && n[3] != null && n[5] != null && n[1].Value.tile.Same(n[3].Value.tile) && n[1].Value.tile.Same(n[5].Value.tile) && n[0].Value.tile.Same(n[5].Value.tile))
+            {
+                return (TilePattern.Ypsilon, new[] { n[0].Value.indice, n[1].Value.indice, n[3].Value.indice, n[5].Value.indice });
+            }
+            else if (n[2] != null && n[4] != null && n[6] != null && n[2].Value.tile.Same(n[4].Value.tile) && n[2].Value.tile.Same(n[6].Value.tile) && n[0].Value.tile.Same(n[6].Value.tile))
+            {
+                return (TilePattern.Ypsilon, new[] { n[0].Value.indice, n[2].Value.indice, n[4].Value.indice, n[6].Value.indice });
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -194,28 +337,51 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Place a tile on the board
+        /// Check if a tile can be placed on the board
         /// </summary>
         /// <param name="coords"></param>
-        /// <param name="chooseTile"></param>
         /// <returns></returns>
-        internal bool Place((int, int) coords, HexaTile chooseTile)
+        internal bool CanPlace((int, int) coords)
         {
-           var index = ToIndex(coords);
+             var index = ToIndex(coords);
 
             if (index == null)
             {
                 return false;
             }
 
+            // Check if the tile is empty
             if (Value[index.Value] != 0x00)
             {
-                Log.Warning("Try to put a new tile {tileType} on a non empty tile map (index = {tileMapIndex})", chooseTile.TileType, index.Value);
-
                 return false;
             }
 
-            Value[index.Value] = chooseTile;
+            // Check if the tile is not surrounded by empty tiles
+            var neighbours = GetNeighbors(coords);
+            if (!neighbours.Exists(p => p.HasValue && this[p.Value.q, p.Value.r] != 0x00))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Place a tile on the board
+        /// </summary>
+        /// <param name="coords"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        internal bool Place((int, int) coords, HexaTile tile)
+        {
+            if (!CanPlace(coords))
+            {
+                return false;
+            }
+
+            var index = ToIndex(coords);
+
+            Value[index.Value] = tile;
 
             return true;
         }
@@ -415,7 +581,7 @@ namespace Substrate.Hexalem
                 result[t.TileType] += 1; // total
 
                 // avoid counting none tiles twice
-                if (t.TileRarity != TileRarity.None)
+                if (t.TileType != TileType.Empty)
                 {
                     result[t.TileType, t.TileRarity] += 1;
                     /// Does not work right now...

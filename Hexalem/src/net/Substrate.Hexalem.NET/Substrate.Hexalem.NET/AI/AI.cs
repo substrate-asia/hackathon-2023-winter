@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
 
 namespace Substrate.Hexalem.NET.AI
 {
@@ -69,7 +67,7 @@ namespace Substrate.Hexalem.NET.AI
 
                 var currentTile = (HexaTile)playerBoard[i];
 
-                if (currentTile.CanUpgrade() && player.CanUpgrade(currentTile))
+                if (player.CanUpgrade(currentTile))
                 {
                     upgradableTile.Add(playerBoard.ToCoords(i));
                 }

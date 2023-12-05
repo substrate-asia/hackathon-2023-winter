@@ -12,6 +12,7 @@ namespace Assets.Scripts
             Done
         }
 
+        protected GameEventManager GameEventManager => GameEventManager.GetInstance();
         protected FlowController FlowController { get; private set; }
 
         protected ScreenBaseState ParentState { get; private set; }
@@ -19,6 +20,7 @@ namespace Assets.Scripts
         protected NetworkManager Network => NetworkManager.GetInstance();
 
         protected StorageManager Storage => StorageManager.GetInstance();
+
 
         protected ScreenBaseState(FlowController flowController, ScreenBaseState parentState = null)
         {

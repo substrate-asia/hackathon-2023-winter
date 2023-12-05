@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Threading;
 
 namespace Substrate.Hexalem.NET
 {
@@ -21,6 +19,7 @@ namespace Substrate.Hexalem.NET
 
         // Default player ressources
         public const byte DEFAULT_MANA = 1;
+
         public const byte DEFAULT_HUMANS = 1;
         public const byte DEFAULT_WATER = 0;
         public const byte DEFAULT_FOOD = 0;
@@ -35,39 +34,78 @@ namespace Substrate.Hexalem.NET
         public const int DEFAULT_WINNING_CONDITION_GOLD = 10;
         public const int DEFAULT_WINNING_CONDITION_HUMAN = 7;
 
+        /// <summary>
+        /// Upgradeable tile type
+        /// </summary>
+        /// <returns></returns>
         public static List<TileType> UpgradableTypeTile()
         {
             return new List<TileType>() { TileType.Home }; // For now, only home can be upgrade
         }
 
+        /// <summary>
+        /// Gold cost to upgrade a tile
+        /// </summary>
+        /// <param name="rarity"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static int GoldCostForUpgrade(TileRarity rarity)
         {
-            switch(rarity)
+            switch (rarity)
             {
                 case TileRarity.Normal: // Normal to rare
                     return 5;
+
                 case TileRarity.Rare: // Rare to Epic
                     return 10;
+
                 case TileRarity.Epic: // Epic to Legendary
                     return 15;
+
                 default:
                     throw new InvalidOperationException($"Rarity {rarity} not supported...");
             }
         }
 
+        /// <summary>
+        /// Minimum human to upgrade a tile
+        /// </summary>
+        /// <param name="rarity"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
         public static int MininumHumanToUpgrade(TileRarity rarity)
         {
             switch (rarity)
             {
                 case TileRarity.Normal: // Normal to rare
                     return 3;
+
                 case TileRarity.Rare: // Rare to Epic
                     return 5;
+
                 case TileRarity.Epic: // Epic to Legendary
                     return 8;
+
                 default:
                     throw new InvalidOperationException($"Rarity {rarity} not supported...");
             }
+        }
+
+        /// <summary>
+        /// Get the cost of a tile
+        /// </summary>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        public static byte[] TileCost(HexaTile tile)
+        {
+            var result = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+
+            if (tile.TileType != TileType.Empty)
+            {
+                result[(byte)RessourceType.Mana] = 1;
+            }
+
+            return result;
         }
     }
 }

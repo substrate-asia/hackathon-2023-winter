@@ -1,0 +1,27 @@
+#VelTabs {
+    flex-direction: row;
+    background-color: rgb(229, 223, 223);
+    font-size: 12px;
+    -unity-font-style: bold;
+    font-size: 14px;
+}
+
+.tab {
+    flex-grow: 1;
+    padding-top: 4px;
+    padding-right: 4px;
+    padding-bottom: 4px;
+    padding-left: 4px;
+}
+
+.currentlySelectedTab {
+    background-color: rgb(173, 166, 166);
+}
+
+.unselectedContent {
+    display: none;
+}
+
+.GameMenuButton {
+    background-color: rgb(255, 255, 255);
+}

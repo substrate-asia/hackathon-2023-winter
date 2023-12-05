@@ -245,7 +245,7 @@ namespace Substrate.Hexalem.Tests
 
             // Assert
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Delta pattern");
-            Assert.That(pattern.Value.rarity, Is.EqualTo(TileRarity.Rare), "Pattern should be Delta");
+            Assert.That(pattern.Value.pattern, Is.EqualTo(TilePattern.Delta), "Pattern should be Delta");
             CollectionAssert.AreEqual(new[] { 15, 1, 6 }, pattern.Value.indices, "Indices should match Delta pattern");
         }
 
@@ -271,7 +271,7 @@ namespace Substrate.Hexalem.Tests
 
             // Assert
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Line pattern");
-            Assert.That(pattern.Value.Item1, Is.EqualTo(TileRarity.Epic), "Pattern should be Line");
+            Assert.That(pattern.Value.pattern, Is.EqualTo(TilePattern.Line), "Pattern should be Line");
             CollectionAssert.AreEqual(new[] { 15, 1, 6 }, pattern.Value.Item2, "Indices should match Line pattern");
         }
 
@@ -297,7 +297,7 @@ namespace Substrate.Hexalem.Tests
 
             // Assert
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Ypsilon pattern");
-            Assert.That(pattern.Value.Item1, Is.EqualTo(TileRarity.Legendary), "Pattern should be Ypsilon");
+            Assert.That(pattern.Value.pattern, Is.EqualTo(TilePattern.Ypsilon), "Pattern should be Ypsilon");
             CollectionAssert.AreEqual(new[] { 15, 1, 6, 7 }, pattern.Value.Item2, "Indices should match Ypsilon pattern");
         }
 
@@ -321,7 +321,7 @@ namespace Substrate.Hexalem.Tests
 
             var stats = hexaBoard.Stats();
 
-            Assert.That(stats[TileType.None], Is.EqualTo((int)GridSize.Medium - nbTilesNotEmpty));
+            Assert.That(stats[TileType.Empty], Is.EqualTo((int)GridSize.Medium - nbTilesNotEmpty));
 
             // Home
             Assert.That(stats[TileType.Home], Is.EqualTo(1));

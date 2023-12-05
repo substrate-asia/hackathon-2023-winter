@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET;
 using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -11,7 +9,13 @@ namespace Substrate.Hexalem
 {
     public static class Game
     {
-        
+        /// <summary>
+        /// Create a new game
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="players"></param>
+        /// <param name="gridSize"></param>
+        /// <returns></returns>
         public static HexaGame CreateGame(uint blockNumber, List<HexaPlayer> players, GridSize gridSize)
         {
             Random random = new Random();
@@ -44,10 +48,10 @@ namespace Substrate.Hexalem
         /// <param name="coords"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, 
-            (int,int) coords)
+        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex,
+            (int, int) coords)
         {
-            if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords)) 
+            if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords))
             {
                 return null;
             }
@@ -57,9 +61,17 @@ namespace Substrate.Hexalem
             return hexaGame;
         }
 
+        /// <summary>
+        /// Player upgrade a tile
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="coords"></param>
+        /// <returns></returns>
         public static HexaGame? Upgrade(uint blockNumber, HexaGame hexaGame, byte playerIndex, (int, int) coords)
         {
-            if (!hexaGame.UpgradeTile(playerIndex, coords))
+            if (!hexaGame.Upgrade(playerIndex, coords))
             {
                 return null;
             }
@@ -69,6 +81,13 @@ namespace Substrate.Hexalem
             return hexaGame;
         }
 
+        /// <summary>
+        /// Player finish his turn or win the game by call a late opponent
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
         public static HexaGame? FinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
         {
             // Update game turn information
@@ -82,7 +101,7 @@ namespace Substrate.Hexalem
             Log.Debug("Rewards calculated for player {index}", playerIndex);
 
             // Does the current player win ?
-            if(hexaGame.IsGameWon())
+            if (hexaGame.IsGameWon())
             {
                 return hexaGame;
             }
@@ -97,6 +116,5 @@ namespace Substrate.Hexalem
 
             return hexaGame;
         }
-
     }
 }

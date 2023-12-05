@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Substrate.Hexalem.NET
+﻿namespace Substrate.Hexalem.NET
 {
     public class GameResult
     {
-        private GameResult() { }
+        private GameResult()
+        { }
 
         public GameEnd GameEnd { get; set; }
-        public HexaPlayer? Winner {  get; set; }
+        public HexaPlayer? Winner { get; set; }
 
         public static GameResult PlayerWinByReachingWinCondition(HexaPlayer winner)
         {
