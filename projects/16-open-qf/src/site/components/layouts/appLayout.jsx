@@ -2,9 +2,9 @@ import { Footer, Header } from "@osn/common-ui";
 
 export default function AppLayout({ children }) {
   return (
-    <div className="h-full min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Header />
-      {children}
+      <main className="flex-1">{children}</main>
       <Footer />
     </div>
   );

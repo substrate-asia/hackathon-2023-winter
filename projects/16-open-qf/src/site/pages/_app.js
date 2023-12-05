@@ -4,7 +4,7 @@ import Router from "next/router";
 
 import "nprogress/nprogress.css";
 import "semantic-ui-css/semantic.min.css";
-import "../styles/globals.css";
+import "styles/globals.css";
 
 NProgress.configure({
   minimum: 0.3,
