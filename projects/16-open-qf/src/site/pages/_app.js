@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { Inter } from "next/font/google";
 import NProgress from "nprogress";
 import Router from "next/router";
 
@@ -26,6 +27,8 @@ Router.events.on(
   (url, { shallow }) => !shallow && NProgress.done(),
 );
 
+const inter = Inter({ subsets: ["latin"] });
+
 function MyApp({ Component, pageProps }) {
   return (
     <>
@@ -33,7 +36,10 @@ function MyApp({ Component, pageProps }) {
         <title>OpenSquare Network Quadratic Funding</title>
         <meta name="viewport" content="width=device-width, user-scalable=no" />
       </Head>
-      <Component {...pageProps} />
+
+      <main className={inter.className}>
+        <Component {...pageProps} />
+      </main>
     </>
   );
 }
