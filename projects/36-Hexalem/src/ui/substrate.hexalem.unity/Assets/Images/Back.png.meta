@@ -1,5 +1,9 @@
 fileFormatVersion: 2
+<<<<<<<< HEAD:projects/36-Hexalem/src/ui/substrate.hexalem.unity/Assets/Images/Back.png.meta
 guid: 0c289eef71584a844b725fed4f22927b
+========
+guid: 8645487001c169742b0be701e7bf4a08
+>>>>>>>> 5c2951a (added more to the unity):projects/36-Hexalem/src/ui/substrate.hexalem.unity/Assets/Images/double_frame.png.meta
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
