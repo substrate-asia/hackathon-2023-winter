@@ -368,6 +368,9 @@ namespace Substrate.Hexalem
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
 
             Played = true;
+            
+            // Update board patterns after successfully placing a tile
+            _ = board.SetPatterns(coords);
 
             return true;
         }
