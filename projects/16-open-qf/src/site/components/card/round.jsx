@@ -5,6 +5,31 @@ import Card from ".";
 import { Button } from "../button";
 import Link from "next/link";
 
+export function RoundCardMetadata({ data }) {
+  return (
+    <div
+      className={cn(
+        "flex items-baseline justify-between",
+        "max-sm:block max-sm:space-y-4",
+      )}
+    >
+      <div>
+        <Link href={`/project/${data.id}`} className="hover:underline">
+          <h3 className="text20semibold text-text-primary">{data.title}</h3>
+        </Link>
+        <p className="mt-1 text14medium text-text-link">
+          {dayjs(data.startDate).format("YYYY/MM/DD")} -
+          {dayjs(data.endDate).format("YYYY/MM/DD")}
+        </p>
+      </div>
+
+      <div>
+        <Tag>{data.type}</Tag>
+      </div>
+    </div>
+  );
+}
+
 export default function RoundCard({ data = {} }) {
   return (
     <div>
@@ -17,33 +42,9 @@ export default function RoundCard({ data = {} }) {
         head={
           <>
             <div>
-              <div
-                className={cn(
-                  "flex items-baseline justify-between",
-                  "max-sm:block max-sm:space-y-4",
-                )}
-              >
-                <div>
-                  <Link
-                    href={`/explore/${data.id}`}
-                    className="hover:underline"
-                  >
-                    <h3 className="text20semibold text-text-primary">
-                      {data.title}
-                    </h3>
-                  </Link>
-                  <p className="mt-1 text14medium text-text-link">
-                    {dayjs(data.startDate).format("YYYY/MM/DD")} -
-                    {dayjs(data.endDate).format("YYYY/MM/DD")}
-                  </p>
-                </div>
+              <RoundCardMetadata data={data} />
 
-                <div>
-                  <Tag>{data.type}</Tag>
-                </div>
-              </div>
-
-              <p className="mt-4 text-text-secondary text14medium">
+              <p className="mt-4 text-text-secondary text14medium line-clamp-3">
                 {data.description}
               </p>
             </div>
