@@ -7,6 +7,7 @@ let db = null;
 let tipCol = null;
 let tipBeneficiaryCol = null;
 let tipFinderCol = null;
+let proposalBeneficiaryCol = null;
 
 async function initTreasuryScanDb() {
   db = new ScanDb(
@@ -18,6 +19,7 @@ async function initTreasuryScanDb() {
   tipCol = await db.createCol("tip");
   tipBeneficiaryCol = await db.createCol("tipBeneficiary");
   tipFinderCol = await db.createCol("tipFinder");
+  proposalBeneficiaryCol = await db.createCol("proposalBeneficiary");
   _createIndexes().then(() => console.log("DB indexes created!"));
 }
 
@@ -29,6 +31,7 @@ async function _createIndexes() {
 
   await tipBeneficiaryCol.createIndex({ address: 1 }, { unique: true });
   await tipFinderCol.createIndex({ address: 1 }, { unique: true });
+  await proposalBeneficiaryCol.createIndex({ address: 1 }, { unique: true });
   // TODO: create indexes for better query performance
 }
 
@@ -53,6 +56,11 @@ async function getTipFinderCol() {
   return tipFinderCol;
 }
 
+async function getProposalBeneficiaryCol() {
+  await makeSureInit(proposalBeneficiaryCol);
+  return proposalBeneficiaryCol;
+}
+
 function getTreasuryDb() {
   return db;
 }
@@ -63,4 +71,5 @@ module.exports = {
   getTipCol,
   getTipBeneficiaryCol,
   getTipFinderCol,
+  getProposalBeneficiaryCol,
 }

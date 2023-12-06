@@ -10,8 +10,7 @@ const { handleBlock } = require("./scan");
 
 async function main() {
   const blockHeights = [
-    15476217,
-    15759917,
+    18316800,
   ];
 
   for (const height of blockHeights) {

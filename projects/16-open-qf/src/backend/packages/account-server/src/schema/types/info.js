@@ -2,6 +2,7 @@ const addressInfo = /* GraphQL */ `
   type AddressInfo {
     isTipFinder: Boolean!
     isTipBeneficiary: Boolean!
+    isProposalBeneficiary: Boolean!
     fellowshipRank1: Boolean!
     fellowshipRank2: Boolean!
     fellowshipRank3: Boolean!

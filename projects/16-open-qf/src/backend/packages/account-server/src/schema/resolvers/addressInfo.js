@@ -1,5 +1,5 @@
 const {
-  treasury: { getTipFinderCol, getTipBeneficiaryCol }
+  treasury: { getTipFinderCol, getTipBeneficiaryCol, getProposalBeneficiaryCol }
 } = require("@open-qf/mongo");
 const { utils: { isValidAddress } } = require("@open-qf/common");
 const { chains } = require("../../consts");
@@ -74,10 +74,18 @@ async function addressInfo(_, _args) {
   const beneficiaryCol = await getTipBeneficiaryCol();
   const maybeInDbBeneficiary = await beneficiaryCol.findOne({ address });
 
+  const proposalBeneficiaryCol = await getProposalBeneficiaryCol();
+  const maybeInDbProposalBeneficiary = await proposalBeneficiaryCol.findOne({ address });
+
   const apis = checkAndGetApis(chains.collectives);
   const fellowship = await queryFromApis(apis, getMemberFromOneApi, [address]);
 
-  return { isTipFinder: !!maybeInDbFinder, isTipBeneficiary: !!maybeInDbBeneficiary, ...fellowship };
+  return {
+    isTipFinder: !!maybeInDbFinder,
+    isTipBeneficiary: !!maybeInDbBeneficiary,
+    isProposalBeneficiary: !!maybeInDbProposalBeneficiary,
+    ...fellowship,
+  };
 }
 
 module.exports = {
