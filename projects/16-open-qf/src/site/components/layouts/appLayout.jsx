@@ -4,7 +4,7 @@ import { cn } from "@/utils";
 
 export default function AppLayout({ children, backdrop }) {
   return (
-    <div className="min-h-screen flex flex-col bg-fill-bg-secondary">
+    <div className="min-h-screen flex flex-col">
       <Header />
       <div
         className={cn(

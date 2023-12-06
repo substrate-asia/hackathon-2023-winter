@@ -63,3 +63,7 @@
     --neutral-gray950: rgb(13, 19, 33);
   }
 }
+
+body {
+  @apply bg-fill-bg-secondary;
+}
