@@ -2,9 +2,9 @@ const {
   treasury: { getTipFinderCol, getTipBeneficiaryCol }
 } = require("@open-qf/mongo");
 const { utils: { isValidAddress } } = require("@open-qf/common");
-const { checkAndGetApis } = require("@open-qf/node-api/src/common/checkAndGetApis");
 const { chains } = require("../../consts");
-const { queryFromApis } = require("@open-qf/node-api/src/common/queryFromApis");
+const { checkAndGetApis } = require("../../common/checkAndGetApis");
+const { queryFromApis } = require("../../common/queryFromApis");
 
 const fellowshipRankDefault = {
   fellowshipRank1: false,

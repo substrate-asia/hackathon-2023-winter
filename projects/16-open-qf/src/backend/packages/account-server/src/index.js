@@ -3,7 +3,7 @@ require("dotenv").config();
 const { createYoga } = require("graphql-yoga");
 const { createServer } = require("http");
 const { schema } = require("./schema");
-const { createChainApis } = require("@open-qf/node-api/src/apis");
+const { createChainApis } = require("./apis");
 
 const port = parseInt(process.env.PORT) || 6011;
 
