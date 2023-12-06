@@ -1,5 +1,4 @@
 const chains = {
-  polkadot: "polkadot",
   collectives: "collectives",
 };
 
