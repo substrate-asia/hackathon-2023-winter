@@ -19,112 +19,112 @@ namespace Substrate.Hexalem
     {
         public static TileOffer[] ALL_TILE_OFFERS = new TileOffer[16] {
             new TileOffer {
-                TileToBuy = new HexaTile(104), // Tree, level 1
+                TileToBuy = new HexaTile(40), // Tree, level 0
                 TileCost = new MaterialCost {
                     MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(104), // Tree, level 1
+                TileToBuy = new HexaTile(40), // Tree, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(104), // Tree, level 1
+                TileToBuy = new HexaTile(40), // Tree, level 0
                 TileCost = new MaterialCost {
                     MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(96), // Mountain, level 1
+                TileToBuy = new HexaTile(32), // Mountain, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(96), // Mountain, level 1
+                TileToBuy = new HexaTile(32), // Mountain, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(96), // Mountain, level 1
+                TileToBuy = new HexaTile(32), // Mountain, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(80), // Grass, level 1
+                TileToBuy = new HexaTile(16), // Grass, level 0
                 TileCost = new MaterialCost {
                     MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
              new TileOffer {
-                TileToBuy = new HexaTile(80), // Grass, level 1
+                TileToBuy = new HexaTile(16), // Grass, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
               new TileOffer {
-                TileToBuy = new HexaTile(80), // Grass, level 1
+                TileToBuy = new HexaTile(16), // Grass, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(88), // Water, level 1
+                TileToBuy = new HexaTile(24), // Water, level 0
                 TileCost = new MaterialCost {
                     MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(88), // Water, level 1
+                TileToBuy = new HexaTile(24), // Water, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(88), // Water, level 1
+                TileToBuy = new HexaTile(24), // Water, level 0
                 TileCost = new MaterialCost {
                     MaterialType = RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(72), // Home, level 1
+                TileToBuy = new HexaTile(8), // Home, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(72), // Home, level 1
+                TileToBuy = new HexaTile(8), // Home, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(72), // Home, level 1
+                TileToBuy = new HexaTile(8), // Home, level 0
                 TileCost = new MaterialCost {
                     MaterialType =  RessourceType.Mana,
                     Cost = 1,
                 }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(72), // Home, level 1
+                TileToBuy = new HexaTile(72), // Home, level 0
                 TileCost = new MaterialCost {
                     MaterialType = RessourceType.Mana,
                     Cost = 1,
@@ -543,65 +543,67 @@ namespace Substrate.Hexalem
 
         internal byte Evaluate(RessourceType resourceType, HexaPlayer player, HexaBoardStats boardStats)
         {
-            
             // https://www.simplypsychology.org/maslow.html
             byte result = 0;
 
             switch (resourceType)
             {
                 case RessourceType.Mana:
-                    player[RessourceType.Mana] += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
-                    player[RessourceType.Mana] += (byte)(player[RessourceType.Humans] / 2); // 1 Mana from 2 Humans
-
+                    result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
+                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Humans:
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
-                    byte foodAndWaterEaten = (byte)Math.Min(
-                        player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS,
-                        player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS
-                    );
+                    result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
 
-                    player[RessourceType.Humans] = (byte)(
-                        Math.Min(
-                            foodAndWaterEaten,
-                            boardStats[TileType.Home] * GameConfig.HOME_PER_HUMANS
-                        )
-                    );
+                    var homeWeighted = 0;
+                    for(byte level = 0; level < 4; level ++)
+                    {
+                        homeWeighted += (int)(level + 1) * boardStats[TileType.Home, level];
+                    }
+                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
 
                     // Additional pattern logic
                     break;
+
                 case RessourceType.Water:
-                    player[RessourceType.Water] += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
+                    result += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Food:
-                    player[RessourceType.Food] += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
+                    result += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
+                    result += (byte)(boardStats[TileType.Tree] * GameConfig.FOOD_PER_TREE);
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Wood:
-                    // 1 tree needs 2 humans for 1 (First tree needs just 1 human)
-                    player[RessourceType.Wood] += (byte)Math.Min(boardStats[TileType.Tree], (player[RessourceType.Humans] + 1) / 2);
+                    // 1 Tree can create Wood for 6 humans, but need 2 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Tree] * 3, player[RessourceType.Humans] / 2);
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Stone:
-                    // 1 Mountain needs 2 humans
-                    player[RessourceType.Stone] += (byte)Math.Min(boardStats[TileType.Mountain], player[RessourceType.Humans] / 2);
-
-                    break;
-                    // 1 Cave can create wood for 4 humans, but need 2 humans for 1
-                    /// Not implemented
-                    // result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
-
+                    // 1 Mountain can create stone for 16 humans, but need 4 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Mountain] * 4, player[RessourceType.Humans] / 4);
+                    // 1 Cave can create stone for 4 humans, but need 2 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
+                    
                     // Additional pattern logic
+                    break;
+
+                case RessourceType.Gold:
+
+                    // 1 Rare (delta) Cave can create Gold for 1 humans, but need 3 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Cave] * 1, player[RessourceType.Humans] / 3);
+                    // Additional pattern logic
+                    break;
             }
 
             return result;
@@ -673,7 +675,6 @@ namespace Substrate.Hexalem
         private bool EnsureRessourcesToPlay(HexaPlayer player, TileOffer tileOffer)
         {
             var tileCost = tileOffer.TileCost;
-
 
             if (player[tileCost.MaterialType] < tileCost.Cost)
             {

@@ -213,8 +213,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileOffer AllTileOffers()
         {
             var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileOffer();
-            result.Create("0x6800016800026800026000016000026000025000015000015000025800015800015800024800024" +
-                    "80002480003480003");
+            result.Create("0x2800012800022800022000012000022000021000011000011000021800011800011800020800020" +
+                    "80002080003080003");
             return result;
         }
         

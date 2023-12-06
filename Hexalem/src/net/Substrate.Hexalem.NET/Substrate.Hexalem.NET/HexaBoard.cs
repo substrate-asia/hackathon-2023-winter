@@ -276,6 +276,10 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal (TilePattern pattern, int[] indices)? GetPattern(List<(int indice, HexaTile tile)?> n)
         {
+            if (n[0] != null && n[0].Value.tile.TileType == TileType.Empty)
+            {
+                return null;
+            }
             // delta
             if (n[1] != null && n[2] != null && n[1].Value.tile.Same(n[2].Value.tile) && n[0].Value.tile.Same(n[2].Value.tile))
             {

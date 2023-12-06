@@ -17,6 +17,8 @@ pub use pallet::*;
 //#[cfg(feature = "runtime-benchmarks")]
 //mod benchmarking;
 
+use crate::sp_runtime::Percent;
+
 pub mod weights;
 use frame_support::{
 	ensure, sp_runtime, sp_runtime::SaturatedConversion, traits::Get, StorageHasher,
@@ -120,7 +122,7 @@ pub mod pallet {
 		Grass = 2,
 		Water = 3,
 		Mountain = 4,
-		Forest = 5,
+		Tree = 5,
 		Desert = 6,
 		Cave = 7,
 	}
@@ -132,7 +134,7 @@ pub mod pallet {
 				2 => TileType::Grass,
 				3 => TileType::Water,
 				4 => TileType::Mountain,
-				5 => TileType::Forest,
+				5 => TileType::Tree,
 				6 => TileType::Desert,
 				7 => TileType::Cave,
 				_ => TileType::Empty,
@@ -230,9 +232,17 @@ pub mod pallet {
 				let tile_type = tile.get_type();
 				stats.set_tiles(tile_type, stats.get_tiles(tile_type).saturating_add(1));
 
-				stats.set_levels(tile_type, tile.get_level(), stats.get_levels(tile_type, tile.get_level()).saturating_add(1));
+				stats.set_levels(
+					tile_type,
+					tile.get_level(),
+					stats.get_levels(tile_type, tile.get_level()).saturating_add(1),
+				);
 
-				stats.set_patterns(tile_type, tile.get_pattern(), stats.get_patterns(tile_type, tile.get_pattern()).saturating_add(1));
+				stats.set_patterns(
+					tile_type,
+					tile.get_pattern(),
+					stats.get_patterns(tile_type, tile.get_pattern()).saturating_add(1),
+				);
 			}
 
 			stats
@@ -247,14 +257,10 @@ pub mod pallet {
 
 	impl Default for BoardStats {
 		fn default() -> Self {
-			Self {
-				tiles: [0; 8],
-				levels: [0; 32],
-				patterns: [0; 64],
-			}
+			Self { tiles: [0; 8], levels: [0; 32], patterns: [0; 64] }
 		}
 	}
-	
+
 	impl BoardStats {
 		pub fn get_tiles(&self, tile_type: TileType) -> u8 {
 			self.tiles[tile_type as usize]
@@ -269,7 +275,8 @@ pub mod pallet {
 		}
 
 		pub fn set_levels(&mut self, tile_type: TileType, level: u8, value: u8) -> () {
-			self.levels[(tile_type as usize).saturating_mul(8).saturating_add(level as usize)] = value;
+			self.levels[(tile_type as usize).saturating_mul(8).saturating_add(level as usize)] =
+				value;
 		}
 
 		pub fn get_patterns(&self, tile_type: TileType, pattern: TilePattern) -> u8 {
@@ -277,7 +284,8 @@ pub mod pallet {
 		}
 
 		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
-			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
+			self.patterns
+				[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -331,13 +339,16 @@ pub mod pallet {
 		type AllTileOffers: Get<TileOffers<Self>>;
 
 		#[pallet::constant]
-		type WaterPerHuman: Get<u8>;
+		type WaterPerHuman: Get<Percent>;
 
 		#[pallet::constant]
 		type FoodPerHuman: Get<u8>;
 
 		#[pallet::constant]
 		type HomePerHumans: Get<u8>;
+
+		#[pallet::constant]
+		type FoodPerTree: Get<Percent>;
 
 		#[pallet::constant]
 		type HomeTile: Get<Self::Tile>;
@@ -878,17 +889,24 @@ impl<T: Config> Pallet<T> {
 		let pattern = Self::get_pattern(n);
 
 		match pattern {
-			Some((p, indexes)) => {
+			Some((p, indexes)) =>
 				for i in indexes {
 					hex_board.hex_grid[i as usize].set_pattern(p);
-				}
-			},
+				},
 			None => (),
 		}
 		Ok(())
 	}
 
 	fn get_pattern(n: Vec<Option<(u8, T::Tile)>>) -> Option<(TilePattern, Vec<u8>)> {
+		match n[0] {
+			Some((_i, tile)) =>
+				if tile.get_type() == TileType::Empty {
+					return None
+				},
+			None => (),
+		};
+
 		// Delta
 		match Self::match_same_tile(n[0], n[1], n[2]) {
 			Some(v) => return Some((TilePattern::Delta, v)),
@@ -949,12 +967,11 @@ impl<T: Config> Pallet<T> {
 	) -> Option<Vec<u8>> {
 		match (n1, n2, n3) {
 			(Some((index1, tile1)), Some((index2, tile2)), Some((index3, tile3))) =>
-				if tile1.same(&tile2) && tile1.same(&tile3){
+				if tile1.same(&tile2) && tile1.same(&tile3) {
 					Some(vec![index1, index2, index3])
-				}
-				else {
+				} else {
 					None
-				}
+				},
 			_ => None,
 		}
 	}
@@ -966,13 +983,17 @@ impl<T: Config> Pallet<T> {
 		n4: Option<(u8, T::Tile)>,
 	) -> Option<Vec<u8>> {
 		match (n1, n2, n3, n4) {
-			(Some((index1, tile1)), Some((index2, tile2)), Some((index3, tile3)), Some((index4, tile4))) =>
-				if tile1.same(&tile2) && tile1.same(&tile3) && tile1.same(&tile4){
+			(
+				Some((index1, tile1)),
+				Some((index2, tile2)),
+				Some((index3, tile3)),
+				Some((index4, tile4)),
+			) =>
+				if tile1.same(&tile2) && tile1.same(&tile3) && tile1.same(&tile4) {
 					Some(vec![index1, index2, index3, index4])
-				}
-				else {
+				} else {
 					None
-				}
+				},
 			_ => None,
 		}
 	}
@@ -980,38 +1001,61 @@ impl<T: Config> Pallet<T> {
 	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
 		let board_stats: BoardStats = hex_board.get_stats();
 
-		let food_and_water_eaten = cmp::min(
-			hex_board.food.saturating_mul(T::FoodPerHuman::get()),
-			hex_board.water.saturating_mul(T::WaterPerHuman::get()),
-		);
-
-		let number_of_humans = cmp::min(
-			board_stats.get_tiles(TileType::Home).saturating_add(food_and_water_eaten),
-			board_stats.get_tiles(TileType::Home).saturating_mul(T::HomePerHumans::get()),
-		);
-
 		hex_board.mana = hex_board
 			.mana
-			.saturating_add(number_of_humans / 2)
+			.saturating_add(hex_board.humans / 3)
 			.saturating_add(board_stats.get_tiles(TileType::Home));
 
-		hex_board.water = hex_board
-			.water
-			.saturating_add(board_stats.get_tiles(TileType::Water))
-			.saturating_sub(food_and_water_eaten);
+		let food_and_water_eaten = cmp::min(
+			hex_board.food.saturating_mul(T::FoodPerHuman::get()),
+			T::WaterPerHuman::get() * hex_board.water, /* It is safe to multiply Percent, it
+			                                            * will never overflow */
+		);
+
+		let mut home_weighted: u8 = 0;
+
+		for level in 0..4 {
+			home_weighted = home_weighted.saturating_add(
+				(level + 1u8).saturating_mul(board_stats.get_levels(TileType::Home, level)),
+			);
+		}
+
+		let new_humans = cmp::max(
+			cmp::min(
+				board_stats.get_tiles(TileType::Home).saturating_add(food_and_water_eaten),
+				home_weighted.saturating_mul(T::HomePerHumans::get()),
+			),
+			1,
+		);
+
+		hex_board.water = hex_board.water.saturating_add(board_stats.get_tiles(TileType::Water));
 
 		hex_board.food = hex_board
 			.food
 			.saturating_add(board_stats.get_tiles(TileType::Grass))
-			.saturating_sub(food_and_water_eaten);
+			.saturating_add(T::FoodPerTree::get() * board_stats.get_tiles(TileType::Tree));
 
-		hex_board.wood = hex_board
-			.wood
-			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Forest), (number_of_humans + 1) / 2));
+		hex_board.wood = hex_board.wood.saturating_add(cmp::min(
+			board_stats.get_tiles(TileType::Tree).saturating_mul(3),
+			hex_board.humans / 2,
+		));
 
 		hex_board.stone = hex_board
 			.stone
-			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Mountain), number_of_humans / 2));
+			.saturating_add(cmp::min(
+				board_stats.get_tiles(TileType::Mountain) * 4,
+				hex_board.humans / 4,
+			))
+			.saturating_add(cmp::min(
+				board_stats.get_tiles(TileType::Cave) * 2,
+				hex_board.humans / 2,
+			));
+
+		hex_board.gold = hex_board
+			.gold
+			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Cave), hex_board.humans / 3));
+
+		hex_board.humans = hex_board.humans.saturating_add(new_humans);
 	}
 
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
