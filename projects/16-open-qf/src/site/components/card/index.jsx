@@ -8,7 +8,8 @@ export default function Card(props) {
         "border border-fill-bg-primary",
         "bg-fill-bg-primary",
         "shadow-shadow-card-default hover:shadow-shadow-card-hover",
-        "[&_.osn-card]:shadow-none [&_.osn-card]:bg-transparent",
+        "[&_.osn-card]:shadow-none [&_.osn-card]:bg-transparent [&_.osn-card]:h-full [&_.osn-card]:w-full",
+        props.className,
       )}
     >
       <CardBase bordered={false} {...props}></CardBase>
