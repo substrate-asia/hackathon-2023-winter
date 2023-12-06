@@ -34,11 +34,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// </summary>
         private Substrate.NetApi.Model.Types.Primitive.U8 _buyIndex;
         
-        /// <summary>
-        /// >> pay_type
-        /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumPayType _payType;
-        
         public Substrate.NetApi.Model.Types.Primitive.U8 PlaceIndex
         {
             get
@@ -63,18 +58,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumPayType PayType
-        {
-            get
-            {
-                return this._payType;
-            }
-            set
-            {
-                this._payType = value;
-            }
-        }
-        
         public override string TypeName()
         {
             return "Move";
@@ -85,7 +68,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var result = new List<byte>();
             result.AddRange(PlaceIndex.Encode());
             result.AddRange(BuyIndex.Encode());
-            result.AddRange(PayType.Encode());
             return result.ToArray();
         }
         
@@ -96,8 +78,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             PlaceIndex.Decode(byteArray, ref p);
             BuyIndex = new Substrate.NetApi.Model.Types.Primitive.U8();
             BuyIndex.Decode(byteArray, ref p);
-            PayType = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumPayType();
-            PayType.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

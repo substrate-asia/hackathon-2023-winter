@@ -1,3 +1,4 @@
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.GameException;
 
 namespace Substrate.Hexalem.Tests

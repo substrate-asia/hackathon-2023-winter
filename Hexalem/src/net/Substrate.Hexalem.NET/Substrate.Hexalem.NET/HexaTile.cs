@@ -35,42 +35,7 @@ namespace Substrate.Hexalem
 
         public HexaTile(TileSharp tileTypeSharp)
         {
-            var tileType = TileType.Empty;
-            switch (tileTypeSharp.TileType)
-            {
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Empty:
-                    tileType = TileType.Empty;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Tree:
-                    tileType = TileType.Tree;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Water:
-                    tileType = TileType.Water;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Mountain:
-                    tileType = TileType.Mountain;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Desert:
-                    tileType = TileType.Desert;
-                    break;
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.House:
-                    tileType = TileType.Home;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Grass:
-                    tileType = TileType.Grass;
-                    break;
-                    // TODO : add cave
-            }
-
-            // TODO : Hadle levels
-            // TODO : handle formation ?
-
-            //build(tileType, titleLevel, TilePattern.Normal);
+            Value = tileTypeSharp.Value;
         }
 
         /// <summary>

@@ -18,7 +18,6 @@ namespace Substrate.Hexalem.Integration.Model
             PlayerTurn = game.PlayerTurn.Value;
             Played = game.Played.Value;
             Players = ((AccountId32[])game.Players.Value).Select(p => p.ToAddress()).ToArray();
-            SelectionBaseSize = game.SelectionBaseSize.Value;
             Selection = ((U8[])game.Selection.Value).Select(p => p.Value).ToArray();
             SelectionSize = game.SelectionSize.Value;
         }
@@ -30,7 +29,6 @@ namespace Substrate.Hexalem.Integration.Model
         public byte PlayerTurn { get; private set; }
         public bool Played { get; private set; }
         public string[] Players { get; private set; }
-        public byte SelectionBaseSize { get; private set; }
         public byte[] Selection { get; private set; }
         public byte SelectionSize { get; private set; }
     }

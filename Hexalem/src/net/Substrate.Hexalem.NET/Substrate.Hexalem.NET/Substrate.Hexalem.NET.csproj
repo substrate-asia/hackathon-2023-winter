@@ -13,5 +13,4 @@
   <ItemGroup>
     <ProjectReference Include="..\Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj" />
   </ItemGroup>
-
 </Project>

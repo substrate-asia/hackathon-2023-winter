@@ -34,7 +34,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     }
     
     /// <summary>
-    /// >> 137 - Variant[pallet_hexalem.pallet.Material]
+    /// >> 134 - Variant[pallet_hexalem.pallet.Material]
     /// </summary>
     public sealed class EnumMaterial : BaseEnum<Material>
     {

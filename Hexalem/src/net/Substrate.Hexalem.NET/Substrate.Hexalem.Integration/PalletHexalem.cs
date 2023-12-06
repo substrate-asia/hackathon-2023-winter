@@ -95,18 +95,14 @@ namespace Substrate.Integration
         /// <param name="concurrentTasks"></param>
         /// <param name="token"></param>
         /// <returns></returns>
-        public async Task<string?> PlayAsync(Account account, byte placeIndex, byte buyIndex, PayType payType, int concurrentTasks, CancellationToken token)
+        public async Task<string?> PlayAsync(Account account, byte placeIndex, byte buyIndex, int concurrentTasks, CancellationToken token)
         {
             var extrinsicType = $"Hexalem.Play";
-
-            var enumPayType = new EnumPayType();
-            enumPayType.Create(payType);
 
             var moveStruct = new Move
             {
                 PlaceIndex = new U8(placeIndex),
                 BuyIndex = new U8(buyIndex),
-                PayType = enumPayType
             };
 
             var extrinsic = HexalemModuleCalls.Play(moveStruct);

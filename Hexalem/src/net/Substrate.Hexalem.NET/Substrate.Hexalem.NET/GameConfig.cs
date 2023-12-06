@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Substrate.Hexalem.Integration.Model;
 
 namespace Substrate.Hexalem.NET
 {

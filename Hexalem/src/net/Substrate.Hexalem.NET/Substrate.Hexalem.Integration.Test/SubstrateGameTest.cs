@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using Schnorrkel.Keys;
 using Serilog;
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.AI;
 using Substrate.Integration;
 using Substrate.Integration.Client;
@@ -118,10 +119,10 @@ namespace Substrate.Hexalem.Integration.Test
 
             // Tiles have to be set correctly
             Assert.That(aliceBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Empty));
+            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
 
             Assert.That(bobBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Empty));
+            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
 
             var game = await client.GetGameAsync(aliceBoard.GameId, CancellationToken.None);
 

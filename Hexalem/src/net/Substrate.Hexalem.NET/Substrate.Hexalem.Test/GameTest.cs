@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using StreamJsonRpc.Protocol;
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.AI;
 using Substrate.NetApi.Extensions;

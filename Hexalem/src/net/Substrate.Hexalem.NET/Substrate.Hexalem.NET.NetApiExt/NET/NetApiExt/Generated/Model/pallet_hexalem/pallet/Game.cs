@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 125 - Composite[pallet_hexalem.pallet.Game]
+    /// >> 124 - Composite[pallet_hexalem.pallet.Game]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Game : BaseType
@@ -53,11 +53,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// >> players
         /// </summary>
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 _players;
-        
-        /// <summary>
-        /// >> selection_base_size
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _selectionBaseSize;
         
         /// <summary>
         /// >> selection
@@ -141,18 +136,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 SelectionBaseSize
-        {
-            get
-            {
-                return this._selectionBaseSize;
-            }
-            set
-            {
-                this._selectionBaseSize = value;
-            }
-        }
-        
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1 Selection
         {
             get
@@ -191,7 +174,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             result.AddRange(PlayerTurn.Encode());
             result.AddRange(Played.Encode());
             result.AddRange(Players.Encode());
-            result.AddRange(SelectionBaseSize.Encode());
             result.AddRange(Selection.Encode());
             result.AddRange(SelectionSize.Encode());
             return result.ToArray();
@@ -212,8 +194,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             Played.Decode(byteArray, ref p);
             Players = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5();
             Players.Decode(byteArray, ref p);
-            SelectionBaseSize = new Substrate.NetApi.Model.Types.Primitive.U8();
-            SelectionBaseSize.Decode(byteArray, ref p);
             Selection = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1();
             Selection.Decode(byteArray, ref p);
             SelectionSize = new Substrate.NetApi.Model.Types.Primitive.U8();

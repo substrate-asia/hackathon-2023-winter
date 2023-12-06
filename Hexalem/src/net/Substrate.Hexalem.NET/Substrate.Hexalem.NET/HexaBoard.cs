@@ -1,4 +1,5 @@
 
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.GameException;
 using System;

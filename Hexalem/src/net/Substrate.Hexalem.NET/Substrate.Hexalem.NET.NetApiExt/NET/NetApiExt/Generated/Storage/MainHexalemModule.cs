@@ -122,13 +122,35 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
+        /// >> upgrade
+        /// Contains a variant per dispatchable extrinsic that this pallet has.
+        /// </summary>
+        public static Method Upgrade(Substrate.NetApi.Model.Types.Primitive.U8 place_index)
+        {
+            System.Collections.Generic.List<byte> byteArray = new List<byte>();
+            byteArray.AddRange(place_index.Encode());
+            return new Method(8, "HexalemModule", 2, "upgrade", byteArray.ToArray());
+        }
+        
+        /// <summary>
         /// >> finish_turn
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
         public static Method FinishTurn()
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
-            return new Method(8, "HexalemModule", 2, "finish_turn", byteArray.ToArray());
+            return new Method(8, "HexalemModule", 3, "finish_turn", byteArray.ToArray());
+        }
+        
+        /// <summary>
+        /// >> root_delete_game
+        /// Contains a variant per dispatchable extrinsic that this pallet has.
+        /// </summary>
+        public static Method RootDeleteGame(Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8 game_id)
+        {
+            System.Collections.Generic.List<byte> byteArray = new List<byte>();
+            byteArray.AddRange(game_id.Encode());
+            return new Method(8, "HexalemModule", 4, "root_delete_game", byteArray.ToArray());
         }
     }
     
@@ -191,9 +213,48 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileOffer AllTileOffers()
         {
             var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileOffer();
-            result.Create("0x0101000000040101010000000402010100000002020301000000050103010000000502030100000" +
-                    "00302060100000003010601000000030206010000000303020100000002010201000000020202010" +
-                    "00000020305010000000402050100000004030501000000050205010000000503");
+            result.Create("0x6800016800026800026000016000026000025000015000015000025800015800015800024800024" +
+                    "80002480003480003");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> WaterPerHuman
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 WaterPerHuman()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x01");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> FoodPerHuman
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 FoodPerHuman()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x01");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> HomePerHumans
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 HomePerHumans()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x03");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> HomeTile
+        /// </summary>
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile HomeTile()
+        {
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
+            result.Create("0x48");
             return result;
         }
     }

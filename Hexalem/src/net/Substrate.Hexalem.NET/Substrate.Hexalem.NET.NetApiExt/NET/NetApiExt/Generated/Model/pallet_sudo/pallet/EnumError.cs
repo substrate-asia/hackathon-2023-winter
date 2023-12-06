@@ -22,7 +22,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet
     }
     
     /// <summary>
-    /// >> 123 - Variant[pallet_sudo.pallet.Error]
+    /// >> 122 - Variant[pallet_sudo.pallet.Error]
     /// Error for the Sudo pallet
     /// </summary>
     public sealed class EnumError : BaseEnum<Error>
