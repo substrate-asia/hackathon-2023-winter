@@ -307,9 +307,9 @@ namespace Substrate.Hexalem.Tests
         public void SetPattern_DeltaPattern_ReturnsBoardWithSetPatterns()
         {
             var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
-            hexaBoard[6] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[7] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[11] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[6] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
+            hexaBoard[7] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
+            hexaBoard[11] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
 
             // Act
             var patterns = hexaBoard.SetPatterns((-1, -1));
