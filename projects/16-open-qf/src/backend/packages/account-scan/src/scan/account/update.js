@@ -27,8 +27,11 @@ async function handleBlockAccounts(indexer) {
     const promise = saveAccountCreated(address, indexer, bulk);
     promises.push(promise);
   }
-  await Promise.all(promises);
-  await bulk.execute();
+
+  if (promises.length <= 0) {
+    await Promise.all(promises);
+    await bulk.execute();
+  }
 }
 
 module.exports = {
