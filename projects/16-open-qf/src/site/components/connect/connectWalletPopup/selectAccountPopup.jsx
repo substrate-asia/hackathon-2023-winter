@@ -1,4 +1,4 @@
-import noop from "lodash.noop";
+import { noop } from "lodash-es";
 import Modal from "@osn/common-ui/es/Modal";
 import { Button } from "@/components/button";
 import { PROJECT_NAME } from "@/utils/constants";

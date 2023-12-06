@@ -3,13 +3,14 @@ import dayjs from "dayjs";
 import Tag from "../tag";
 import Card from ".";
 import { Button } from "../button";
+import Link from "next/link";
 
 export default function RoundCard({ data = {} }) {
   return (
     <div>
       <div
         className={cn("sm:hidden", "h-[120px] w-full bg-fill-bg-tertiary")}
-      ></div>
+      />
 
       <Card
         bordered={false}
@@ -23,9 +24,14 @@ export default function RoundCard({ data = {} }) {
                 )}
               >
                 <div>
-                  <h3 className="text20semibold text-text-primary">
-                    {data.title}
-                  </h3>
+                  <Link
+                    href={`/explore/${data.id}`}
+                    className="hover:underline"
+                  >
+                    <h3 className="text20semibold text-text-primary">
+                      {data.title}
+                    </h3>
+                  </Link>
                   <p className="mt-1 text14medium text-text-link">
                     {dayjs(data.startDate).format("YYYY/MM/DD")} -
                     {dayjs(data.endDate).format("YYYY/MM/DD")}
