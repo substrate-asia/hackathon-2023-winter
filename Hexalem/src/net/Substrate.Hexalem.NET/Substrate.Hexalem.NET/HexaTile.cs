@@ -57,7 +57,7 @@ namespace Substrate.Hexalem
                 case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Desert:
                     tileType = TileType.Desert;
                     break;
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.Home:
+                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileType.House:
                     tileType = TileType.Home;
                     break;
 
