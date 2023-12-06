@@ -17,16 +17,9 @@ module.exports = plugin(({ addComponents }) => {
       "letter-spacing": "0",
     },
     ".text24bold": {
-      "font-family": "var(--font-montserrat)",
-      "font-size": "24px",
-      "font-weight": "700",
-      "line-height": "24px",
-      "letter-spacing": "0",
-    },
-    ".text24semibold": {
       "font-family": "var(--font-inter)",
       "font-size": "24px",
-      "font-weight": "600",
+      "font-weight": "700",
       "line-height": "36px",
       "letter-spacing": "0",
     },
