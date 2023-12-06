@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/index.js",
   "dependencies": {
-    "@osn/scan-common": "0.6.4"
+    "@osn/scan-common": "0.6.4",
+    "lodash.isempty": "^4.4.0"
   }
 }
