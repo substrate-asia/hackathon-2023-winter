@@ -24,6 +24,7 @@
     "bignumber.js": "^9.0.1",
     "clsx": "^2.0.0",
     "copy-to-clipboard": "^3.3.1",
+    "dayjs": "^1.11.10",
     "ethereum-blockies-base64": "^1.0.2",
     "ethers": "^5.6.1",
     "http-proxy": "^1.18.1",
