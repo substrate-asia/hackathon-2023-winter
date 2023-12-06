@@ -9,7 +9,10 @@ export default function ConnectWalletButton() {
     <>
       <Button onClick={() => setShowConnectPopup(true)}>Connect Wallet</Button>
       {showConnectPopup && (
-        <ConnectWalletPopup onClose={() => setShowConnectPopup(false)} />
+        <ConnectWalletPopup
+          open={showConnectPopup}
+          setOpen={setShowConnectPopup}
+        />
       )}
     </>
   );

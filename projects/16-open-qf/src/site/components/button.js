@@ -1,10 +1,8 @@
-import styled from "styled-components";
 import { Button as ButtonBase } from "@osn/common-ui";
+import tw from "tailwind-styled-components";
 
-export const Button = styled(ButtonBase)`
-  :hover {
-    border-color: ${({ theme }) => theme.fillBgBrandSecondary};
-  }
-  background-color: ${({ theme }) => theme.fillBgBrandSecondary};
-  color: ${({ theme }) => theme.textPrimaryContrast};
+export const Button = tw(ButtonBase)`
+  hover:!border-fill-bg-brand-secondary
+  !bg-fill-bg-brand-secondary
+  !text-text-primary-contrast
 `;
