@@ -247,6 +247,8 @@ namespace Substrate.Hexalem.Tests
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Delta pattern");
             Assert.That(pattern.Value.pattern, Is.EqualTo(TilePattern.Delta), "Pattern should be Delta");
             CollectionAssert.AreEqual(new[] { 15, 1, 6 }, pattern.Value.indices, "Indices should match Delta pattern");
+
+
         }
 
         [Test]
@@ -299,6 +301,23 @@ namespace Substrate.Hexalem.Tests
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Ypsilon pattern");
             Assert.That(pattern.Value.pattern, Is.EqualTo(TilePattern.Ypsilon), "Pattern should be Ypsilon");
             CollectionAssert.AreEqual(new[] { 15, 1, 6, 7 }, pattern.Value.Item2, "Indices should match Ypsilon pattern");
+        }
+
+        [Test]
+        public void SetPattern_DeltaPattern_ReturnsBoardWithSetPatterns()
+        {
+            var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
+            hexaBoard[6] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[7] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[11] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+
+            // Act
+            var patterns = hexaBoard.SetPatterns((-1, -1));
+
+            // Assert
+            Assert.That(patterns, Is.Not.Null, "Pattern should not be null for Delta pattern");
+            Assert.That(patterns.Count, Is.EqualTo(3), "Should have three tiles as pattern");
+            Assert.That(((HexaTile)hexaBoard[6]).TilePattern, Is.EqualTo(TilePattern.Delta), "Should be delta pattern");
         }
 
         [Test]

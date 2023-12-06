@@ -508,7 +508,7 @@ namespace Substrate.Hexalem
             var result = new List<HexaTile>();
             for (int i = 0; i < selectBase; i++)
             {
-                var rawTile = Id[(offSet + selectBase) % 32];
+                var rawTile = Id[(offSet + selectBase + i) % 32];
 
                 result.Add(new HexaTile(values[rawTile % values.Length], 0 /* Level 0 */, TilePattern.Normal));
             }
