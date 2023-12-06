@@ -15,9 +15,12 @@ Users can subscribe to other accounts anonymously through our platform.
 - Xers attempts to use Moonbase Alpha and IPFS to record all data on our platform.
 - Xers would use Twitter as login authentication.
 ### Architecture
-Twitter API - Login Authentication
-Smart Contract (Moonbeam - Moonbase Alpha) - Different contracts for saving the post(&comment) cids for particular memberships, following, and followers data of each account.
-IPFS/Helia - Saving the posts and comments.
+- Twitter API
+Login Authentication
+- Smart Contract (Moonbeam - Moonbase Alpha)
+Different contracts for saving the post(&comment) cids - for particular memberships, following, and followers data of each account.
+- IPFS/Helia
+Saving the posts and comments.
 
 ## Demo
 -TODO
