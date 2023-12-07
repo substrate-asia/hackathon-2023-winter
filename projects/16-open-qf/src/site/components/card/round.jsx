@@ -14,7 +14,7 @@ export function RoundCardMetadata({ data }) {
       )}
     >
       <div>
-        <Link href={`/project/${data.id}`} className="hover:underline">
+        <Link href={`/rounds/${data.id}`} className="hover:underline">
           <h3 className="text20semibold text-text-primary">{data.title}</h3>
         </Link>
         <p className="mt-1 text14medium text-text-link">
