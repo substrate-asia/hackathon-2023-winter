@@ -367,5 +367,13 @@ namespace Substrate.Hexalem.Tests
 
             Assert.That(stats[TileType.Water, TilePattern.Delta], Is.EqualTo(3));
         }
+
+        [Test]
+        public void CanPlace_WithNeighbors_ShouldWork()
+        {
+            var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
+            hexaBoard[0, 0] = new HexaTile(TileType.Home, TileRarity.Normal, TilePattern.Normal);
+            Assert.That(hexaBoard.CanPlace((1, 0)));
+        }
     }
 }

@@ -41,7 +41,7 @@ namespace Substrate.Hexalem
         /// </summary>
         public bool IsEmpty()
         {
-            return Value == 0x00;
+            return TileType == TileType.Empty;
         }
 
         /// <summary>
@@ -63,11 +63,17 @@ namespace Substrate.Hexalem
         /// Determine if a tile can be upgrade
         /// </summary>
         /// <returns></returns>
-        internal bool CanUpgrade()
+        public bool CanUpgrade()
         {
             if (TileLevel == 3)
             {
                 Log.Debug($"Can not upgrade past level {3}");
+                return false;
+            }
+
+            if(TileType == TileType.Empty)
+            {
+                Log.Debug($"{nameof(TileType.Empty)} cannot be upgrade");
                 return false;
             }
 

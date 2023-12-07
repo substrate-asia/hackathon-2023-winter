@@ -1,17 +1,21 @@
 using Assets.Scripts;
+using Assets.Scripts.Shared;
 using Substrate.Hexalem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static Assets.Scripts.ScreensSubState.MainPlaySubState;
 using static Assets.Scripts.ScreenStates.MainScreenState;
+using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _playerGrid;
+    private List<MeshRenderer> _tileDefaultMesh;
 
     [SerializeField]
     private GameObject _selection;
@@ -28,6 +32,7 @@ public class GameManager : MonoBehaviour
     private Vector3 _prefabPosition;
 
     private int? _selectionIndex = null;
+    private int? _boardIndex = null;
     public static HexaGame HexaGame;
 
     public GameManager()
@@ -38,109 +43,82 @@ public class GameManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("GameManager called");
-
-        for (int i = 0; i < _playerGrid.transform.childCount; i++)
-        {
-            Destroy(_playerGrid.transform.GetChild(i).GetChild(0).gameObject);
-        }
-
         GameEventManager.StartNewGameDelegate += StartNewGame;
+        GameEventManager.ZoomHandlerDelegate += OnTileDetails;
     }
 
-    void HandleSelectedTileFromSelection()
+    public void OnZoom(bool zoomIn)
     {
-        if (HexaGame != null && Input.GetMouseButtonDown(0))
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    Debug.Log("Zoom !");
+
+        //    transform.LookAt(_playerGrid.transform.GetChild(12).GetChild(0).gameObject.transform);
+
+        //    Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 4, 6);
+        //    //float fov = Camera.main.fieldOfView;
+        //    //fov += Input.GetAxis("Mouse ScrollWheel") * 10f;
+        //    //fov = Mathf.Clamp(fov, 10f, 90f);
+        //    //Camera.main.fieldOfView = fov;
+        //}
+    }
+
+    void HandleSelectionAction()
+    {
+        var selectionIndex = TilesHelper.GetTargetIndex("selection_");
+
+        if (selectionIndex != null)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                if(hit.transform.name.StartsWith("selection_"))
-                {
-                    var idx = new String(hit.transform.name.Where(Char.IsDigit).ToArray());
-                    _selectionIndex = int.Parse(idx);
-                    Debug.Log($"Selection tile num {_selectionIndex} clicked !");
-
-
-                    var mr = _selection.transform.GetChild(_selectionIndex.Value).GetChild(0).gameObject.GetComponent<MeshRenderer>();
-
-                    if (!TileAlreadySelected(mr))
-                        SelectTile(mr);
-                    else
-                    {
-                        UnselectTile(mr);
-                        _selectionIndex = null;
-                    }
-                }
-            }
-        }
-
-        bool TileAlreadySelected(MeshRenderer mr)
-        {
-            return mr.material.color == GameConstant.ColorTileSelected;
-        }
-
-        void UnselectAll()
-        {
-            for(int i = 0; i < _selection.transform.childCount; i++)
-            {
-                if(_selection.transform.GetChild(i).childCount > 0)
-                {
-                    UnselectTile(_selection.transform.GetChild(i).GetChild(0).gameObject.GetComponent<MeshRenderer>());
-                }
-            }
-        }
-
-        void SelectTile(MeshRenderer mr)
-        {
-            UnselectAll();
-
-            mr.material.color = new Color(150, 200, 150, 150);
-
-        }
-
-        void UnselectTile(MeshRenderer mr)
-        {
-            mr.material.color = new Color(1, 1, 1, 1);
+            _selectionIndex = selectionIndex;
+            Debug.Log($"Selection tile num {_selectionIndex} clicked !");
         }
     }
 
     /// <summary>
     /// Put a selected tile on the board
     /// </summary>
-    public void HandlePutSelectionTileOnBoard()
+    public void HandleBoardAction()
     {
-        // If we have currently selected a selection tile, we can put it on the map
-        if (HexaGame != null && _selectionIndex != null && Input.GetMouseButtonDown(0))
+        var boardIndex = TilesHelper.GetTargetIndex("board_");
+
+        if(boardIndex != null)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            _boardIndex = boardIndex;
+            Debug.Log($"Board tile num {_boardIndex.Value} clicked !");
+
+            var currentBoard = HexaGame.HexaTuples[HexaGame.PlayerTurn].board;
+            var tile = (HexaTile)currentBoard[_boardIndex.Value];
+
+            // If we have currently selected a selection tile, we can put it on the map
+            if (_selectionIndex != null)
             {
-                if(hit.transform.name.StartsWith("board_"))
+                Debug.Log($"Play tile selection num {_selectionIndex.Value} on tile board num {_boardIndex}");
+
+                HexaGame = Game.ChooseAndPlace(1, HexaGame, HexaGame.PlayerTurn, _selectionIndex.Value, HexaGame.HexaTuples[HexaGame.PlayerTurn].board.ToCoords(_boardIndex.Value));
+
+                _selectionIndex = null;
+
+                DrawSelection(HexaGame.UnboundTiles, HexaGame.HexaTuples[HexaGame.PlayerTurn].player);
+                DrawBoard(HexaGame.HexaTuples[HexaGame.PlayerTurn].board);
+                PlayerPlayed();
+            }
+            else if (tile.CanUpgrade())
+            {
+                Debug.Log($"Upgrade tile board num {_boardIndex.Value}");
+
+                var mr = _playerGrid.transform.GetChild(_boardIndex.Value).GetChild(0).gameObject.GetComponent<MeshRenderer>();
+
+                if (!TileAlreadySelected(mr))
+                    SelectTile(_playerGrid, mr);
+                else
                 {
-                    var idx = new String(hit.transform.name.Where(Char.IsDigit).ToArray());
-                    var boardIndex = int.Parse(idx);
-                    var currentBoard = HexaGame.HexaTuples[HexaGame.PlayerTurn].board;
-                    
-                    // Is it possible to play on this tile ?
-                    if (currentBoard.CanPlace(currentBoard.ToCoords(boardIndex))) {
-                        Debug.Log($"Play tile selection num {_selectionIndex.Value} on tile board num {boardIndex}");
-
-                        HexaGame = Game.ChooseAndPlace(1, HexaGame, HexaGame.PlayerTurn, _selectionIndex.Value, HexaGame.HexaTuples[HexaGame.PlayerTurn].board.ToCoords(boardIndex));
-
-                        _selectionIndex = null;
-
-                        DrawSelection(HexaGame.UnboundTiles, HexaGame.HexaTuples[HexaGame.PlayerTurn].player);
-                        DrawBoard(HexaGame.HexaTuples[HexaGame.PlayerTurn].board);
-                        PlayerPlayed();
-                    } else
-                    {
-                        Debug.Log($"Unable to play tile selection num {_selectionIndex.Value} on tile board num {boardIndex}");
-                    }
-                    
+                    Debug.Log($"Unselect tile {_boardIndex.Value}");
+                    UnselectTile(_boardIndex.Value, mr);
+                    _boardIndex = null;
                 }
+            } else
+            {
+                Debug.Log($"Else... {_boardIndex}");
             }
         }
     }
@@ -148,8 +126,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        HandleSelectedTileFromSelection();
-        HandlePutSelectionTileOnBoard();
+        HandleSelectionAction();
+        HandleBoardAction();
     }
 
     void StartNewGame(string gameType)
@@ -237,11 +215,17 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        _tileDefaultMesh = new List<MeshRenderer>();
+
         for (int i = 0; i < board.Value.Length; i++)
         {
             var tile = (HexaTile)board.Value[i];
 
             var boardTile = Instantiate(GetTile(tile), _prefabPosition, Quaternion.identity);
+            _tileDefaultMesh.Add(boardTile.GetComponent<MeshRenderer>());
+
+            // We don't draw tiles where we cannot play
+            if (tile.IsEmpty() && !board.CanPlace(board.ToCoords(i))) continue;
 
             boardTile.transform.parent = _playerGrid.transform.GetChild(i);
             boardTile.transform.localPosition = _prefabPosition;
@@ -254,7 +238,7 @@ public class GameManager : MonoBehaviour
     {
         switch (tile.TileType)
         {
-            case TileType.None: return EmptyTile;
+            case TileType.Empty: return EmptyTile;
             case TileType.Home: return HomeTile;
             case TileType.Grass: return GrassTile;
             case TileType.Water: return WaterTile;
@@ -266,4 +250,37 @@ public class GameManager : MonoBehaviour
 
         throw new InvalidOperationException($"Tile {tile} is not mapped to prefab tiles");
     }
+
+    #region Tile Mesh
+
+    public bool TileAlreadySelected(MeshRenderer mr)
+    {
+        return mr.material.color == GameConstant.ColorTileSelected;
+    }
+
+    public void UnselectAll(GameObject _grid)
+    {
+        for (int i = 0; i < _grid.transform.childCount; i++)
+        {
+            if (_grid.transform.GetChild(i).childCount > 0)
+            {
+                UnselectTile(i, _grid.transform.GetChild(i).GetChild(0).gameObject.GetComponent<MeshRenderer>());
+            }
+        }
+    }
+
+    public void SelectTile(GameObject _grid, MeshRenderer mr)
+    {
+        UnselectAll(_grid);
+
+        mr.material.color = GameConstant.ColorTileSelected;
+
+    }
+
+    public void UnselectTile(int i, MeshRenderer mr)
+    {
+        mr.material.color = _tileDefaultMesh[i].material.color;
+    }
+
+    #endregion
 }
