@@ -7,12 +7,14 @@ const {
   }
 } = require("@osn/scan-common");
 const { handleBlock } = require("./scan");
+const { treasury: { initTreasuryScanDb } } = require("@open-qf/mongo");
 
 async function main() {
   const blockHeights = [
-    18316800,
+    18478038,
   ];
 
+  await initTreasuryScanDb();
   for (const height of blockHeights) {
     await setSpecHeights([height - 1]);
     const [block] = await fetchBlocks([height], true);
