@@ -32,50 +32,35 @@ export function RoundCardMetadata({ data }) {
 
 export default function RoundCard({ data = {} }) {
   return (
-    <div>
-      <div
-        className={cn("sm:hidden", "h-[120px] w-full bg-fill-bg-tertiary")}
-      />
+    <Card
+      cover={<>{/* cover */}</>}
+      bordered={false}
+      head={
+        <>
+          <div>
+            <RoundCardMetadata data={data} />
 
-      <Card
-        bordered={false}
-        head={
-          <>
-            <div>
-              <RoundCardMetadata data={data} />
-
-              <p className="mt-4 text-text-secondary text14medium line-clamp-3">
-                {data.description}
-              </p>
-            </div>
-          </>
-        }
-        prefix={
-          <>
-            <div className="osn-card-prefix max-sm:hidden">
-              <div className="w-[216px] h-[216px] bg-fill-bg-tertiary"></div>
-            </div>
-          </>
-        }
-      >
-        <div
-          className={cn(
-            "grid grid-cols-4 gap-4",
-            "max-sm:flex max-sm:flex-col",
-          )}
-        >
-          <FooterItem
-            label="Matching Pool"
-            content={`${data.matchingPool} DOT`}
-          />
-          <FooterItem label="Contributors" content={data.contributors} />
-          <FooterItem label="Program Funders" content={data.programFunders} />
-          <div className={cn("flex items-end justify-end")}>
-            <Button className="max-sm:w-full">Apply</Button>
+            <p className="mt-4 text-text-secondary text14medium line-clamp-3">
+              {data.description}
+            </p>
           </div>
+        </>
+      }
+    >
+      <div
+        className={cn("grid grid-cols-4 gap-4", "max-sm:flex max-sm:flex-col")}
+      >
+        <FooterItem
+          label="Matching Pool"
+          content={`${data.matchingPool} DOT`}
+        />
+        <FooterItem label="Contributors" content={data.contributors} />
+        <FooterItem label="Program Funders" content={data.programFunders} />
+        <div className={cn("flex items-end justify-end")}>
+          <Button className="max-sm:w-full">Apply</Button>
         </div>
-      </Card>
-    </div>
+      </div>
+    </Card>
   );
 }
 
