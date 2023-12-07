@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Substrate.Hexalem.Integration.Model;
 
 namespace Substrate.Hexalem.NET
 {
@@ -13,7 +14,7 @@ namespace Substrate.Hexalem.NET
 
         public const double WATER_PER_WATER = 1;
         public const double FOOD_PER_GRASS = 1;
-        public const double FOOD_PER_FOREST = 0.5;
+        public const double FOOD_PER_TREE = 0.5;
 
         public const int GAME_STORAGE_SIZE = 16;
         public const int PLAYER_STORAGE_SIZE = 8;
@@ -47,66 +48,49 @@ namespace Substrate.Hexalem.NET
         /// <summary>
         /// Gold cost to upgrade a tile
         /// </summary>
-        /// <param name="rarity"></param>
+        /// <param name="level"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static int GoldCostForUpgrade(TileRarity rarity)
+        public static int GoldCostForUpgrade(byte level)
         {
-            switch (rarity)
+            switch (level)
             {
-                case TileRarity.Normal: // Normal to rare
+                case 0: // Normal to rare
                     return 5;
 
-                case TileRarity.Rare: // Rare to Epic
+                case 1: // Rare to Epic
                     return 10;
 
-                case TileRarity.Epic: // Epic to Legendary
+                case 2: // Epic to Legendary
                     return 15;
 
                 default:
-                    throw new InvalidOperationException($"Rarity {rarity} not supported...");
+                    throw new InvalidOperationException($"Level {level} not supported...");
             }
         }
 
         /// <summary>
         /// Minimum human to upgrade a tile
         /// </summary>
-        /// <param name="rarity"></param>
+        /// <param name="level"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public static int MininumHumanToUpgrade(TileRarity rarity)
+        public static int MininumHumanToUpgrade(byte level)
         {
-            switch (rarity)
+            switch (level)
             {
-                case TileRarity.Normal: // Normal to rare
+                case 0: // Normal to rare
                     return 3;
 
-                case TileRarity.Rare: // Rare to Epic
+                case 1: // Rare to Epic
                     return 5;
 
-                case TileRarity.Epic: // Epic to Legendary
+                case 2: // Epic to Legendary
                     return 8;
 
                 default:
-                    throw new InvalidOperationException($"Rarity {rarity} not supported...");
+                    throw new InvalidOperationException($"Level {level} not supported...");
             }
-        }
-
-        /// <summary>
-        /// Get the cost of a tile
-        /// </summary>
-        /// <param name="tile"></param>
-        /// <returns></returns>
-        public static byte[] TileCost(HexaTile tile)
-        {
-            var result = new byte[Enum.GetValues(typeof(RessourceType)).Length];
-
-            if (tile.TileType != TileType.Empty)
-            {
-                result[(byte)RessourceType.Mana] = 1;
-            }
-
-            return result;
         }
     }
 }

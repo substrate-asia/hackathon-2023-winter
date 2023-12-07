@@ -34,7 +34,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
     }
     
     /// <summary>
-    /// >> 117 - Variant[hexalem_runtime.RuntimeCall]
+    /// >> 116 - Variant[hexalem_runtime.RuntimeCall]
     /// </summary>
     public sealed class EnumRuntimeCall : BaseEnumExt<RuntimeCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_timestamp.pallet.EnumCall, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.pallet.EnumCall, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_utility.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumCall>
     {

@@ -1,4 +1,5 @@
 ﻿using System;
+using Substrate.Hexalem.Integration.Model;
 
 namespace Substrate.Hexalem
 {
@@ -6,7 +7,7 @@ namespace Substrate.Hexalem
     {
         public byte[] Value;
 
-        public HexaBoardRarityStats Rarity { get; }
+        public HexaBoardLevelStats Level { get; }
         public HexaBoardPatternStats Pattern { get; }
 
         public const int StorageSize = 64;
@@ -16,12 +17,12 @@ namespace Substrate.Hexalem
         {
         }
 
-        protected HexaBoardStats(byte[] resultType, byte[] resultRarity, byte[] resultPattern)
+        protected HexaBoardStats(byte[] resultType, byte[] resultLevel, byte[] resultPattern)
         {
             _maxTileTypes = Enum.GetValues(typeof(TileType)).Length;
             Value = resultType;
 
-            Rarity = new HexaBoardRarityStats(resultRarity);
+            Level = new HexaBoardLevelStats(resultLevel);
             Pattern = new HexaBoardPatternStats(resultPattern);
         }
 
@@ -31,10 +32,10 @@ namespace Substrate.Hexalem
             set => Value[(int)tileType] = value;
         }
 
-        public byte this[TileType tileType, TileRarity tileRarity]
+        public byte this[TileType tileType, byte tileLevel]
         {
-            get => Rarity[tileType, tileRarity];
-            set => Rarity[tileType, tileRarity] = value;
+            get => Level[tileType, tileLevel];
+            set => Level[tileType, tileLevel] = value;
         }
 
         public byte this[TileType tileType, TilePattern tilePattern]
@@ -44,25 +45,25 @@ namespace Substrate.Hexalem
         }
     }
 
-    internal class HexaBoardRarityStats
+    internal class HexaBoardLevelStats
     {
         public byte[] Value;
         private readonly int _maxTileTypes;
 
-        public HexaBoardRarityStats() : this(new byte[HexaBoardStats.StorageSize])
+        public HexaBoardLevelStats() : this(new byte[HexaBoardStats.StorageSize])
         {
         }
 
-        public HexaBoardRarityStats(byte[] result)
+        public HexaBoardLevelStats(byte[] result)
         {
             Value = result;
             _maxTileTypes = Enum.GetValues(typeof(TileType)).Length;
         }
 
-        public byte this[TileType tileType, TileRarity tileRarity]
+        public byte this[TileType tileType, byte tileLevel]
         {
-            get => Value[(int)tileType * _maxTileTypes + (int)tileRarity];
-            set => Value[(int)tileType * _maxTileTypes + (int)tileRarity] = value;
+            get => Value[(int)tileType * _maxTileTypes + (int)tileLevel];
+            set => Value[(int)tileType * _maxTileTypes + (int)tileLevel] = value;
         }
     }
 

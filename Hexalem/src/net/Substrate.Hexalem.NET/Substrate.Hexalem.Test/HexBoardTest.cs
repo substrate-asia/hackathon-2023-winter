@@ -1,3 +1,4 @@
+using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.GameException;
 
 namespace Substrate.Hexalem.Tests
@@ -18,7 +19,7 @@ namespace Substrate.Hexalem.Tests
             // Initialize with a small-sized grid for testing
             _hexGridSmall = new HexaBoard(new byte[(int)GridSize.Small]);
 
-            _defaultTile = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            _defaultTile = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
         }
 
         [Test]
@@ -231,9 +232,9 @@ namespace Substrate.Hexalem.Tests
             // Arrange
             var neighbors = new List<(int, HexaTile)?>
             {
-                (15, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
-                (1, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
-                (6, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (15, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
+                (1, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
+                (6, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
                 null,
                 null,
                 null,
@@ -259,11 +260,11 @@ namespace Substrate.Hexalem.Tests
             // Arrange
             var neighbors = new List<(int, HexaTile)?>
             {
-                (15, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
-                (1, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (15, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
+                (1, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
                 null,
                 null,
-                (6, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (6, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
                 null,
                 null
             };
@@ -285,12 +286,12 @@ namespace Substrate.Hexalem.Tests
             // Arrange
             var neighbors = new List<(int, HexaTile)?>
             {
-                (15, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
-                (1, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (15, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
+                (1, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
                 null,
-                (6, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (6, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
                 null,
-                (7, new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal)),
+                (7, new HexaTile(TileType.Grass, 0, TilePattern.Normal)),
                 null
             };
 
@@ -307,9 +308,9 @@ namespace Substrate.Hexalem.Tests
         public void SetPattern_DeltaPattern_ReturnsBoardWithSetPatterns()
         {
             var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
-            hexaBoard[6] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[7] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[11] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[6] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
+            hexaBoard[7] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
+            hexaBoard[11] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
 
             // Act
             var patterns = hexaBoard.SetPatterns((-1, -1));
@@ -331,12 +332,12 @@ namespace Substrate.Hexalem.Tests
             hexaBoard.Init(0);
 
             // Set up the board with some tiles
-            hexaBoard[0] = new HexaTile(TileType.Grass, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[1] = new HexaTile(TileType.Water, TileRarity.Normal, TilePattern.Normal);
-            hexaBoard[2] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Delta);
-            hexaBoard[3] = new HexaTile(TileType.Water, TileRarity.Rare, TilePattern.Delta);
-            hexaBoard[7] = new HexaTile(TileType.Water, TileRarity.Epic, TilePattern.Delta);
-            hexaBoard[22] = new HexaTile(TileType.Mountain, TileRarity.Epic, TilePattern.Normal);
+            hexaBoard[0] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
+            hexaBoard[1] = new HexaTile(TileType.Water, 0, TilePattern.Normal);
+            hexaBoard[2] = new HexaTile(TileType.Water, 1, TilePattern.Delta);
+            hexaBoard[3] = new HexaTile(TileType.Water, 1, TilePattern.Delta);
+            hexaBoard[7] = new HexaTile(TileType.Water, 2, TilePattern.Delta);
+            hexaBoard[22] = new HexaTile(TileType.Mountain, 2, TilePattern.Normal);
 
             var stats = hexaBoard.Stats();
 
@@ -344,29 +345,29 @@ namespace Substrate.Hexalem.Tests
 
             // Home
             Assert.That(stats[TileType.Home], Is.EqualTo(1));
-            Assert.That(stats[TileType.Home, TileRarity.Normal], Is.EqualTo(1));
-            Assert.That(stats[TileType.Home, TileRarity.Rare], Is.EqualTo(0));
-            Assert.That(stats[TileType.Home, TileRarity.Epic], Is.EqualTo(0));
+            Assert.That(stats.Level[TileType.Home, 0], Is.EqualTo(1));
+            Assert.That(stats.Level[TileType.Home, 1], Is.EqualTo(0));
+            Assert.That(stats.Level[TileType.Home, 2], Is.EqualTo(0));
 
             // Grass
             Assert.That(stats[TileType.Grass], Is.EqualTo(1));
-            Assert.That(stats[TileType.Grass, TileRarity.Normal], Is.EqualTo(1));
-            Assert.That(stats[TileType.Grass, TileRarity.Rare], Is.EqualTo(0));
-            Assert.That(stats[TileType.Grass, TileRarity.Epic], Is.EqualTo(0));
+            Assert.That(stats.Level[TileType.Grass, 0], Is.EqualTo(1));
+            Assert.That(stats.Level[TileType.Grass, 1], Is.EqualTo(0));
+            Assert.That(stats.Level[TileType.Grass, 2], Is.EqualTo(0));
 
             // Mountain
             Assert.That(stats[TileType.Mountain], Is.EqualTo(1));
 
-            Assert.That(stats[TileType.Mountain, TileRarity.Normal], Is.EqualTo(0));
-            Assert.That(stats[TileType.Mountain, TileRarity.Rare], Is.EqualTo(0));
-            Assert.That(stats[TileType.Mountain, TileRarity.Epic], Is.EqualTo(1));
+            Assert.That(stats.Level[TileType.Mountain, 0], Is.EqualTo(0));
+            Assert.That(stats.Level[TileType.Mountain, 1], Is.EqualTo(0));
+            Assert.That(stats.Level[TileType.Mountain, 2], Is.EqualTo(1));
 
             // Watter
             Assert.That(stats[TileType.Water], Is.EqualTo(4));
 
-            Assert.That(stats[TileType.Water, TileRarity.Normal], Is.EqualTo(1));
-            Assert.That(stats[TileType.Water, TileRarity.Rare], Is.EqualTo(2));
-            Assert.That(stats[TileType.Water, TileRarity.Epic], Is.EqualTo(1));
+            Assert.That(stats.Level[TileType.Water, 0], Is.EqualTo(1));
+            Assert.That(stats.Level[TileType.Water, 1], Is.EqualTo(2));
+            Assert.That(stats.Level[TileType.Water, 2], Is.EqualTo(1));
             
             Assert.That(stats[TileType.Water, TilePattern.Delta], Is.EqualTo(3));
         }

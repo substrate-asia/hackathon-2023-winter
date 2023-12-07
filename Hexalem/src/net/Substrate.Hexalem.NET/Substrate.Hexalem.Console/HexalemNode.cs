@@ -157,7 +157,6 @@ namespace Substrate.Hexalem.Console
                 AliceAccount,
                 (byte)hexaGame.HexaTuples[hexaGame.PlayerTurn].board.ToIndex(move.PlayTileAt).Value,
                 (byte)move.SelectionIndex!.Value,
-                NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.PayType.Mana,
                 _concurrentTask,
                 CancellationToken.None);
 

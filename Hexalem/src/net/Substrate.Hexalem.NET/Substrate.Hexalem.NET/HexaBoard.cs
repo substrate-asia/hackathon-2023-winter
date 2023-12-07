@@ -1,4 +1,7 @@
-﻿using Substrate.Hexalem.NET.GameException;
+
+using Substrate.Hexalem.Integration.Model;
+using Substrate.Hexalem.NET;
+using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
 
@@ -58,7 +61,7 @@ namespace Substrate.Hexalem
 
         public void Init(uint blockNumber)
         {
-            this[Value.Length / 2] = new HexaTile(TileType.Home, TileRarity.Normal, TilePattern.Normal);
+            this[Value.Length / 2] = new HexaTile(TileType.Home, 0 /* Lowest level */, TilePattern.Normal);
         }
 
         public void NextRound(uint blockNumber)
@@ -273,6 +276,10 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal (TilePattern pattern, int[] indices)? GetPattern(List<(int indice, HexaTile tile)?> n)
         {
+            if (n[0] != null && n[0].Value.tile.TileType == TileType.Empty)
+            {
+                return null;
+            }
             // delta
             if (n[1] != null && n[2] != null && n[1].Value.tile.Same(n[2].Value.tile) && n[0].Value.tile.Same(n[2].Value.tile))
             {
@@ -401,7 +408,8 @@ namespace Substrate.Hexalem
                 // avoid counting none tiles twice
                 if (t.TileType != TileType.Empty)
                 {
-                    result[t.TileType, t.TileRarity] += 1;
+                    result[t.TileType, t.TileLevel] += 1;
+                    
                     result[t.TileType, t.TilePattern] += 1;
                 }
             }

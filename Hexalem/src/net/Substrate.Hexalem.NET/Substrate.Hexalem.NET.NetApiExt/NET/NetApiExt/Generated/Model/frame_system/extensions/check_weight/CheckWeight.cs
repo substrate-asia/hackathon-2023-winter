@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.extension
     
     
     /// <summary>
-    /// >> 152 - Composite[frame_system.extensions.check_weight.CheckWeight]
+    /// >> 149 - Composite[frame_system.extensions.check_weight.CheckWeight]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class CheckWeight : BaseType

@@ -35,13 +35,20 @@ namespace Substrate.Hexalem.NET.AI
         /// <returns></returns>
         protected List<HexaTile> SelectionTiles(HexaGame hexGame)
         {
-            // Each tile cost 1 mana
-            if (hexGame.HexaTuples[hexGame.PlayerTurn].player[RessourceType.Mana] == 0)
+            var tilesTobuy = new List<HexaTile>();
+
+            foreach (byte index in hexGame.UnboundTileOffers)
             {
-                return new List<HexaTile>();
+                var tileOffer = HexaGame.ALL_TILE_OFFERS[index];
+
+
+                if (hexGame.HexaTuples[hexGame.PlayerTurn].player[tileOffer.TileCost.MaterialType] >= tileOffer.TileCost.Cost)
+                {
+                    tilesTobuy.Add(tileOffer.TileToBuy);
+                }
             }
 
-            return hexGame.UnboundTiles;
+            return tilesTobuy;
         }
 
         /// <summary>
@@ -61,7 +68,7 @@ namespace Substrate.Hexalem.NET.AI
                  * An upgradable tile have to :
                  *  Be a non empty tile
                  *  Be a valid upgradable tile (defined in Game configuration)
-                 *  Lower than epic rarity
+                 *  Lower level than 3
                  *  Have enough ressources to pay the upgrade
                  */
 

@@ -40,16 +40,12 @@ namespace Substrate.Integration.Call
         /// <param name="payType"></param>
         /// <param name="amount"></param>
         /// <returns></returns>
-        public static EnumRuntimeCall HexalemPlay(byte placeIndex, byte buyIndex, PayType payType, BigInteger amount)
+        public static EnumRuntimeCall HexalemPlay(byte placeIndex, byte buyIndex, BigInteger amount)
         {
-            var enumPayType = new EnumPayType();
-            enumPayType.Create(payType);
-
             var moveStruct = new Move
             {
                 PlaceIndex = new U8(placeIndex),
                 BuyIndex = new U8(buyIndex),
-                PayType = enumPayType
             };
             var enumPalletCall = new EnumCall();
             enumPalletCall.Create(Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Call.play, moveStruct);

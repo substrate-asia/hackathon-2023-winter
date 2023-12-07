@@ -18,60 +18,26 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
     
     
     /// <summary>
-    /// >> 130 - Composite[hexalem_runtime.HexalemTile]
+    /// >> 129 - Composite[hexalem_runtime.HexalemTile]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class HexalemTile : BaseType
     {
         
         /// <summary>
-        /// >> tile_type
+        /// >> value
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumTileType _tileType;
+        private Substrate.NetApi.Model.Types.Primitive.U8 _value;
         
-        /// <summary>
-        /// >> tile_level
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _tileLevel;
-        
-        /// <summary>
-        /// >> formations
-        /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr3Bool _formations;
-        
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumTileType TileType
+        public Substrate.NetApi.Model.Types.Primitive.U8 Value
         {
             get
             {
-                return this._tileType;
+                return this._value;
             }
             set
             {
-                this._tileType = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 TileLevel
-        {
-            get
-            {
-                return this._tileLevel;
-            }
-            set
-            {
-                this._tileLevel = value;
-            }
-        }
-        
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr3Bool Formations
-        {
-            get
-            {
-                return this._formations;
-            }
-            set
-            {
-                this._formations = value;
+                this._value = value;
             }
         }
         
@@ -83,21 +49,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
         public override byte[] Encode()
         {
             var result = new List<byte>();
-            result.AddRange(TileType.Encode());
-            result.AddRange(TileLevel.Encode());
-            result.AddRange(Formations.Encode());
+            result.AddRange(Value.Encode());
             return result.ToArray();
         }
         
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            TileType = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumTileType();
-            TileType.Decode(byteArray, ref p);
-            TileLevel = new Substrate.NetApi.Model.Types.Primitive.U8();
-            TileLevel.Decode(byteArray, ref p);
-            Formations = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr3Bool();
-            Formations.Decode(byteArray, ref p);
+            Value = new Substrate.NetApi.Model.Types.Primitive.U8();
+            Value.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

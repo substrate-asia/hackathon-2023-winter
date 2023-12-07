@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system
     
     
     /// <summary>
-    /// >> 52 - Composite[frame_system.LastRuntimeUpgradeInfo]
+    /// >> 51 - Composite[frame_system.LastRuntimeUpgradeInfo]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class LastRuntimeUpgradeInfo : BaseType

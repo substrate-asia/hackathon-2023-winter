@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bo
     
     
     /// <summary>
-    /// >> 47 - Composite[bounded_collections.bounded_vec.BoundedVecT1]
+    /// >> 46 - Composite[bounded_collections.bounded_vec.BoundedVecT1]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class BoundedVecT1 : BaseType

@@ -18,7 +18,7 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         public static HexaGame CreateGame(uint blockNumber, List<HexaPlayer> players, GridSize gridSize)
         {
-            Random random = new Random();
+            Random random = new Random((int)blockNumber);
 
             var randomHash = new byte[32];
             random.NextBytes(randomHash);

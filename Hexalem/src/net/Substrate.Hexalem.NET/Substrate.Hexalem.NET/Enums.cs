@@ -1,34 +1,5 @@
 ﻿namespace Substrate.Hexalem
 {
-    public enum TileType
-    {
-        Empty = 0,
-        Home = 1,
-        Grass = 2,
-        Water = 3,
-        Mountain = 4,
-        Forest = 5,
-        Desert = 6,
-        Cave = 7,
-    }
-
-    public enum TileRarity
-    {
-        Normal = 0,
-        Rare = 1,
-        Epic = 2,
-        Legendary = 3,
-        // Mythic = 5, // ...
-    }
-
-    public enum TilePattern
-    {
-        Normal = 0,
-        Delta = 1,
-        Line = 2,
-        Ypsilon = 3
-    }
-
     public enum GridSize
     {
         /// <summary>
