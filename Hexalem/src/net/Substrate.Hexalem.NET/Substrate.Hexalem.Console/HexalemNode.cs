@@ -1,16 +1,9 @@
 ﻿using Schnorrkel.Keys;
 using Serilog;
-using Substrate.Hexalem.NET;
 using Substrate.Hexalem.NET.AI;
 using Substrate.Integration;
-using Substrate.NET.Wallet.Keyring;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Substrate.Hexalem.Console
 {
@@ -20,6 +13,7 @@ namespace Substrate.Hexalem.Console
     internal class HexalemNode
     {
         private Account? _alice;
+
         public Account AliceAccount
         {
             get
@@ -37,6 +31,7 @@ namespace Substrate.Hexalem.Console
         }
 
         private Account? _bob;
+
         public Account BobAccount
         {
             get
@@ -49,6 +44,7 @@ namespace Substrate.Hexalem.Console
         }
 
         private Account? _charlie;
+
         public Account CharlieAccount
         {
             get
@@ -106,6 +102,7 @@ namespace Substrate.Hexalem.Console
                                 _state.Remove(sender);
                                 await PlayTurnAsync(token);
                                 break;
+
                             case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.MovePlayed:
                                 _state.Remove(sender);
                                 await FinishTurnAsync(token);
@@ -152,7 +149,6 @@ namespace Substrate.Hexalem.Console
             var move = bot.FindBestAction(hexaGame, 0);
             hexaGame = Game.ChooseAndPlace((await _client.GetBlocknumberAsync(CancellationToken.None)).Value, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
 
-
             var playSubscription = await _client.PlayAsync(
                 AliceAccount,
                 (byte)hexaGame.HexaTuples[hexaGame.PlayerTurn].board.ToIndex(move.PlayTileAt).Value,
@@ -167,8 +163,6 @@ namespace Substrate.Hexalem.Console
         {
             var finishTurnSubscription = await _client.FinishTurnAsync(AliceAccount, _concurrentTask, token);
             _state.Add(finishTurnSubscription, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.NewTurn);
-
         }
     }
 }
-

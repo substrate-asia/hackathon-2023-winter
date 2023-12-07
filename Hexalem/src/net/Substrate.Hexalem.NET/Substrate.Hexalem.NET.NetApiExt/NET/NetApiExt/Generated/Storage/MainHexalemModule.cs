@@ -221,10 +221,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// <summary>
         /// >> WaterPerHuman
         /// </summary>
-        public Substrate.NetApi.Model.Types.Primitive.U8 WaterPerHuman()
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent WaterPerHuman()
         {
-            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
-            result.Create("0x01");
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent();
+            result.Create("0x32");
             return result;
         }
         
@@ -245,6 +245,16 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             var result = new Substrate.NetApi.Model.Types.Primitive.U8();
             result.Create("0x03");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> FoodPerTree
+        /// </summary>
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent FoodPerTree()
+        {
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent();
+            result.Create("0x32");
             return result;
         }
         

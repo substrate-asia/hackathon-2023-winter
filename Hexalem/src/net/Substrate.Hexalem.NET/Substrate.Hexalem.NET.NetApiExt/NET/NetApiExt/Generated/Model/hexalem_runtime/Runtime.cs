@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
     
     
     /// <summary>
-    /// >> 151 - Composite[hexalem_runtime.Runtime]
+    /// >> 152 - Composite[hexalem_runtime.Runtime]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Runtime : BaseType
