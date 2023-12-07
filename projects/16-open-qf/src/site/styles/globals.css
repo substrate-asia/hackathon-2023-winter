@@ -64,6 +64,10 @@
   }
 }
 
+html {
+  /* override semantic ui */
+  font-size: unset;
+}
 body {
   @apply bg-fill-bg-secondary;
 }
