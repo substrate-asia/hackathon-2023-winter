@@ -4,9 +4,9 @@ import { RoundCardMetadata } from "@/components/card/round";
 
 export default function RoundProjectInfo({ data }) {
   return (
-    <div className="flex gap-5 max-sm:flex-col">
+    <div className="grid grid-cols-3 gap-5 max-sm:grid-cols-1">
       <Card
-        className="flex-1"
+        className="col-span-2"
         head={
           <div>
             <RoundCardMetadata data={data} />
@@ -32,7 +32,7 @@ export default function RoundProjectInfo({ data }) {
         </div>
       </Card>
 
-      <div className="w-[392px] max-w-full">
+      <div className="col-span-1">
         <Card className="text-center h-full">
           <div className="w-full h-full flex gap-2 flex-col items-center justify-center">
             <div className="">
