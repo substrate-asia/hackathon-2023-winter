@@ -6,7 +6,7 @@ import QRCode from "react-qr-code";
 const ShowCode = ({ ship }) => {
   const [showCode, setShowCode] = useState(false);
   return (
-    <div className="h-full flex flex-col justify-between">
+    <div className="h-full max-h-96 flex flex-col justify-between">
       <QRCode
         className="p-1 my-5"
         size={256}
