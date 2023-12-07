@@ -1,5 +1,5 @@
-using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Integration.Model;
 
 namespace Substrate.Hexalem.Tests
 {
@@ -84,7 +84,6 @@ namespace Substrate.Hexalem.Tests
         [Test]
         public void IsValidHex_InvalidCoordinates_ReturnsFalse()
         {
-
             Assert.That(_hexGridMedium.IsValidHex(-10, 10), Is.False);
         }
 
@@ -114,7 +113,6 @@ namespace Substrate.Hexalem.Tests
 
             var calculatedCoord = _hexGridMedium.ToCoords(index);
             Assert.That(calculatedCoord, Is.EqualTo((q, r)));
-
         }
 
         [Test]
@@ -248,8 +246,6 @@ namespace Substrate.Hexalem.Tests
             Assert.That(pattern, Is.Not.Null, "Pattern should not be null for Delta pattern");
             Assert.That(pattern.Value.pattern, Is.EqualTo(TilePattern.Delta), "Pattern should be Delta");
             CollectionAssert.AreEqual(new[] { 15, 1, 6 }, pattern.Value.indices, "Indices should match Delta pattern");
-
-
         }
 
         [Test]
@@ -345,30 +341,30 @@ namespace Substrate.Hexalem.Tests
 
             // Home
             Assert.That(stats[TileType.Home], Is.EqualTo(1));
-            Assert.That(stats.Level[TileType.Home, 0], Is.EqualTo(1));
-            Assert.That(stats.Level[TileType.Home, 1], Is.EqualTo(0));
-            Assert.That(stats.Level[TileType.Home, 2], Is.EqualTo(0));
+            Assert.That(stats[TileType.Home, (byte)0], Is.EqualTo(1));
+            Assert.That(stats[TileType.Home, (byte)1], Is.EqualTo(0));
+            Assert.That(stats[TileType.Home, (byte)2], Is.EqualTo(0));
 
             // Grass
             Assert.That(stats[TileType.Grass], Is.EqualTo(1));
-            Assert.That(stats.Level[TileType.Grass, 0], Is.EqualTo(1));
-            Assert.That(stats.Level[TileType.Grass, 1], Is.EqualTo(0));
-            Assert.That(stats.Level[TileType.Grass, 2], Is.EqualTo(0));
+            Assert.That(stats[TileType.Grass, (byte)0], Is.EqualTo(1));
+            Assert.That(stats[TileType.Grass, (byte)1], Is.EqualTo(0));
+            Assert.That(stats[TileType.Grass, (byte)2], Is.EqualTo(0));
 
             // Mountain
             Assert.That(stats[TileType.Mountain], Is.EqualTo(1));
 
-            Assert.That(stats.Level[TileType.Mountain, 0], Is.EqualTo(0));
-            Assert.That(stats.Level[TileType.Mountain, 1], Is.EqualTo(0));
-            Assert.That(stats.Level[TileType.Mountain, 2], Is.EqualTo(1));
+            Assert.That(stats[TileType.Mountain, (byte)0], Is.EqualTo(0));
+            Assert.That(stats[TileType.Mountain, (byte)1], Is.EqualTo(0));
+            Assert.That(stats[TileType.Mountain, (byte)2], Is.EqualTo(1));
 
             // Watter
             Assert.That(stats[TileType.Water], Is.EqualTo(4));
 
-            Assert.That(stats.Level[TileType.Water, 0], Is.EqualTo(1));
-            Assert.That(stats.Level[TileType.Water, 1], Is.EqualTo(2));
-            Assert.That(stats.Level[TileType.Water, 2], Is.EqualTo(1));
-            
+            Assert.That(stats[TileType.Water, (byte)0], Is.EqualTo(1));
+            Assert.That(stats[TileType.Water, (byte)1], Is.EqualTo(2));
+            Assert.That(stats[TileType.Water, (byte)2], Is.EqualTo(1));
+
             Assert.That(stats[TileType.Water, TilePattern.Delta], Is.EqualTo(3));
         }
     }
