@@ -75,7 +75,7 @@ export default function RoundProjectList({ data = {} }) {
                   <div className="h-6">
                     <div
                       className={cn(
-                        "relative -top-14",
+                        "relative -top-12",
                         "bg-neutral-200",
                         "w-16 h-16 rounded-full border-2 border-stroke-border-default",
                       )}

@@ -34,7 +34,7 @@ export default function RoundProjectInfo({ data }) {
 
       <div className="w-[392px] max-w-full">
         <Card className="text-center h-full">
-          <div className="w-full h-full flex gap-2 flex-col items-center">
+          <div className="w-full h-full flex gap-2 flex-col items-center justify-center">
             <div className="">
               <div className="text14medium text-text-tertiary">
                 Matching Pool
