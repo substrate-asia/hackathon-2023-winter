@@ -3,6 +3,8 @@ const addressInfo = /* GraphQL */ `
     isTipFinder: Boolean!
     isTipBeneficiary: Boolean!
     isProposalBeneficiary: Boolean!
+    isBountyBeneficiary: Boolean!
+    isBountyCurator: Boolean!
     fellowshipRank1: Boolean!
     fellowshipRank2: Boolean!
     fellowshipRank3: Boolean!

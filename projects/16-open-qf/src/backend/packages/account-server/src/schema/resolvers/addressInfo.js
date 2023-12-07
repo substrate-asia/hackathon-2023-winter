@@ -1,5 +1,11 @@
 const {
-  treasury: { getTipFinderCol, getTipBeneficiaryCol, getProposalBeneficiaryCol }
+  treasury: {
+    getTipFinderCol,
+    getTipBeneficiaryCol,
+    getProposalBeneficiaryCol,
+    getBountyBeneficiaryCol,
+    getBountyCuratorCol,
+  }
 } = require("@open-qf/mongo");
 const { utils: { isValidAddress } } = require("@open-qf/common");
 const { chains } = require("../../consts");
@@ -62,28 +68,32 @@ async function getMemberFromOneApi(api, address) {
   return fellowshipRankDefault;
 }
 
+async function isInDb(col, address) {
+  const maybeInDb = await col.findOne({ address });
+  return !!maybeInDb;
+}
+
 async function addressInfo(_, _args) {
   const { address } = _args;
   if (!isValidAddress(address)) {
     return { isTipFinder: false, isTipBeneficiary: false, ...fellowshipRankDefault };
   }
 
-  const finderCol = await getTipFinderCol();
-  const maybeInDbFinder = await finderCol.findOne({ address });
-
-  const beneficiaryCol = await getTipBeneficiaryCol();
-  const maybeInDbBeneficiary = await beneficiaryCol.findOne({ address });
-
-  const proposalBeneficiaryCol = await getProposalBeneficiaryCol();
-  const maybeInDbProposalBeneficiary = await proposalBeneficiaryCol.findOne({ address });
+  const isTipFinder = await isInDb(await getTipFinderCol(), address);
+  const isTipBeneficiary = await isInDb(await getTipBeneficiaryCol(), address);
+  const isProposalBeneficiary = await isInDb(await getProposalBeneficiaryCol(), address);
+  const isBountyBeneficiary = await isInDb(await getBountyBeneficiaryCol(), address);
+  const isBountyCurator = await isInDb(await getBountyCuratorCol(), address);
 
   const apis = checkAndGetApis(chains.collectives);
   const fellowship = await queryFromApis(apis, getMemberFromOneApi, [address]);
 
   return {
-    isTipFinder: !!maybeInDbFinder,
-    isTipBeneficiary: !!maybeInDbBeneficiary,
-    isProposalBeneficiary: !!maybeInDbProposalBeneficiary,
+    isTipFinder,
+    isTipBeneficiary,
+    isProposalBeneficiary,
+    isBountyBeneficiary,
+    isBountyCurator,
     ...fellowship,
   };
 }
