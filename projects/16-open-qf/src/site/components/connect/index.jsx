@@ -1,14 +1,27 @@
-import ConnectWalletButton from "./connectWalletButton";
 import { useSelector } from "react-redux";
-import { accountSelector } from "@/store/reducers/accountSlice";
+import ConnectedAccount from "../user/connectedAccount";
+import ConnectWalletButton from "./connectWalletButton";
+import { useAccount } from "@/context/account";
+import { useState } from "react";
+import ConnectWalletPopup from "./connectWalletPopup";
 
 export default function Connect() {
-  const account = useSelector(accountSelector);
-  console.log(account);
+  const account = useAccount();
+  const [showConnectPopup, setShowConnectPopup] = useState(false);
 
   return (
     <div>
-      <ConnectWalletButton />
+      {account ? (
+        <ConnectedAccount setShowConnectPopup={setShowConnectPopup} />
+      ) : (
+        <ConnectWalletButton setShowConnectPopup={setShowConnectPopup} />
+      )}
+      {showConnectPopup && (
+        <ConnectWalletPopup
+          open={showConnectPopup}
+          setOpen={setShowConnectPopup}
+        />
+      )}
     </div>
   );
 }

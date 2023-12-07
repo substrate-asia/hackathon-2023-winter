@@ -51,7 +51,9 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <Provider store={store}>
         <ThemeProvider theme={light}>
-          <main className={cn(inter.className, inter.variable, montserrat.variable)}>
+          <main
+            className={cn(inter.className, inter.variable, montserrat.variable)}
+          >
             <Component {...pageProps} />
           </main>
         </ThemeProvider>

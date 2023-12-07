@@ -1,8 +1,9 @@
 import { ROUND_LIST_DATA } from "@/fixtures/roundList";
 import RoundCard from "@/components/card/round";
 import ListLayout from "@/components/layouts/listLayout";
+import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 
-export default function HomePage() {
+const HomePage = withCommonPageWrapper(() => {
   return (
     <ListLayout title="Program Rounds" description="How OpenQF Works">
       <div className="space-y-5">
@@ -12,4 +13,14 @@ export default function HomePage() {
       </div>
     </ListLayout>
   );
-}
+});
+
+export default HomePage;
+
+export const getServerSideProps = async (context) => {
+  return {
+    props: {
+      ...loadCommonServerSideProps(context),
+    },
+  };
+};

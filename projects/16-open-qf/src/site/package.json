@@ -24,6 +24,7 @@
     "@svgr/webpack": "^6.3.1",
     "bignumber.js": "^9.0.1",
     "clsx": "^2.0.0",
+    "cookies": "^0.8.0",
     "copy-to-clipboard": "^3.3.1",
     "dayjs": "^1.11.10",
     "ethereum-blockies-base64": "^1.0.2",

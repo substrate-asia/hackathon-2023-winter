@@ -29,5 +29,13 @@ export const light = {
   "--text-secondary-contrast": "var(--neutral-gray400)",
   "--text-tertiary": "var(--neutral-gray400)",
   "--text-tertiary-contrast": "var(--neutral-gray600)",
+  "--shadow-card-default":
+    "0px 0.75px 4px rgba(26, 33, 44, 0.03), 0px 4px 31px rgba(26, 33, 44, 0.04)",
+  "--shadow-card-hover":
+    "0px 0.75px 8px rgba(26, 33, 44, 0.06), 0px 4px 31px rgba(26, 33, 44, 0.08)",
+  "--shadow-popup":
+    "0px 0.75px 8px rgba(26, 33, 44, 0.06), 0px 4px 31px rgba(26, 33, 44, 0.08)",
+  "--shadow-dropdown":
+    "0px 4px 31px rgba(26, 33, 44, 0.06), 0px 0.751293px 8px rgba(26, 33, 44, 0.04)",
   "--text-light-major": "var(--neutral-gray0)",
 };

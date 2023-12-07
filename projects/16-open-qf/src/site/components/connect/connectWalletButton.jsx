@@ -1,19 +1,7 @@
-import { useState } from "react";
 import { Button } from "../button";
-import ConnectWalletPopup from "./connectWalletPopup";
 
-export default function ConnectWalletButton() {
-  const [showConnectPopup, setShowConnectPopup] = useState(false);
-
+export default function ConnectWalletButton({ setShowConnectPopup }) {
   return (
-    <>
-      <Button onClick={() => setShowConnectPopup(true)}>Connect Wallet</Button>
-      {showConnectPopup && (
-        <ConnectWalletPopup
-          open={showConnectPopup}
-          setOpen={setShowConnectPopup}
-        />
-      )}
-    </>
+    <Button onClick={() => setShowConnectPopup(true)}>Connect Wallet</Button>
   );
 }
