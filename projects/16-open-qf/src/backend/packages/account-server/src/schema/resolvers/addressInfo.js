@@ -28,44 +28,11 @@ async function getMemberFromOneApi(api, address) {
 
   const member = await api.query.fellowshipCollective.members(address);
   if (!member.isSome) {
-    return fellowshipRankDefault;
+    return null;
   }
 
   const unwrapped = member.unwrap();
-  const rank = unwrapped.rank.toNumber();
-  if (1 === rank) {
-    return {
-      ...fellowshipRankDefault,
-      fellowshipRank1: true,
-    }
-  } else if (2 === rank) {
-    return {
-      ...fellowshipRankDefault,
-      fellowshipRank2: true,
-    }
-  } else if (3 === rank) {
-    return {
-      ...fellowshipRankDefault,
-      fellowshipRank3: true,
-    }
-  } else if (4 === rank) {
-    return {
-      ...fellowshipRankDefault,
-      fellowshipRank4: true,
-    }
-  } else if (5 === rank) {
-    return {
-      ...fellowshipRankDefault,
-      fellowshipRank5: true,
-    }
-  } else if (6 === rank) {
-    return {
-      ...fellowshipRankDefault,
-      fellowshipRank6: true,
-    }
-  }
-
-  return fellowshipRankDefault;
+  return unwrapped.rank.toNumber();
 }
 
 async function isInDb(col, address) {
@@ -76,7 +43,14 @@ async function isInDb(col, address) {
 async function addressInfo(_, _args) {
   const { address } = _args;
   if (!isValidAddress(address)) {
-    return { isTipFinder: false, isTipBeneficiary: false, ...fellowshipRankDefault };
+    return {
+      isTipFinder: false,
+      isTipBeneficiary: false,
+      isProposalBeneficiary: false,
+      isBountyBeneficiary: false,
+      isBountyCurator: false,
+      fellowshipRank: null,
+    };
   }
 
   const isTipFinder = await isInDb(await getTipFinderCol(), address);
@@ -86,7 +60,7 @@ async function addressInfo(_, _args) {
   const isBountyCurator = await isInDb(await getBountyCuratorCol(), address);
 
   const apis = checkAndGetApis(chains.collectives);
-  const fellowship = await queryFromApis(apis, getMemberFromOneApi, [address]);
+  const fellowshipRank = await queryFromApis(apis, getMemberFromOneApi, [address]);
 
   return {
     isTipFinder,
@@ -94,7 +68,7 @@ async function addressInfo(_, _args) {
     isProposalBeneficiary,
     isBountyBeneficiary,
     isBountyCurator,
-    ...fellowship,
+    fellowshipRank,
   };
 }
 
