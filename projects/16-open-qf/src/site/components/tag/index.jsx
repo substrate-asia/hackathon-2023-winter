@@ -17,6 +17,7 @@ export default function Tag({
         size === "small" && "px-2 py-0.5 text12medium",
         "border border-stroke-action-default bg-fill-bg-primary rounded-full",
         "text-text-primary",
+        "whitespace-nowrap",
         active && "text-text-brand-secondary border-stroke-bg-brand-secondary",
         className,
       )}
