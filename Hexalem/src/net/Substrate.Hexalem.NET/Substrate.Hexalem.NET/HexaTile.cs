@@ -1,7 +1,5 @@
 ﻿using Serilog;
 using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET;
-using System;
 using System.Linq;
 
 namespace Substrate.Hexalem

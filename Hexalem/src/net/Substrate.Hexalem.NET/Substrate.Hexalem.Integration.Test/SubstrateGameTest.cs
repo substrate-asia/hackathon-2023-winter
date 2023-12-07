@@ -2,7 +2,7 @@
 using Schnorrkel.Keys;
 using Serilog;
 using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET.AI;
+using Substrate.Hexalem.Bot;
 using Substrate.Integration;
 using Substrate.Integration.Client;
 using Substrate.NetApi;
@@ -74,7 +74,7 @@ namespace Substrate.Hexalem.Integration.Test
         }
         #endregion
 
-        private AI bot = new NET.AI.Random(0);
+        private RandomAI bot = new RandomAI(0);
         private SubstrateNetwork client;
         private string nodeUri = "ws://127.0.0.1:9944";
 
@@ -82,7 +82,7 @@ namespace Substrate.Hexalem.Integration.Test
         public void SetUp()
         {
             client = new SubstrateNetwork(AliceAccount, Substrate.Integration.Helper.NetworkType.Live, nodeUri);
-            bot = new NET.AI.Random(0);
+            bot = new RandomAI(0);
         }
 
         [Test]

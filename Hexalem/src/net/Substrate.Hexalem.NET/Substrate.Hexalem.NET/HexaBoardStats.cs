@@ -1,9 +1,9 @@
-﻿using System;
-using Substrate.Hexalem.Integration.Model;
+﻿using Substrate.Hexalem.Integration.Model;
+using System;
 
 namespace Substrate.Hexalem
 {
-    internal class HexaBoardStats
+    public class HexaBoardStats
     {
         public byte[] Value;
 
@@ -45,7 +45,7 @@ namespace Substrate.Hexalem
         }
     }
 
-    internal class HexaBoardLevelStats
+    public class HexaBoardLevelStats
     {
         public byte[] Value;
         private readonly int _maxTileTypes;
@@ -67,7 +67,7 @@ namespace Substrate.Hexalem
         }
     }
 
-    internal class HexaBoardPatternStats
+    public class HexaBoardPatternStats
     {
         public byte[] Value;
         private readonly int _maxTileTypes;

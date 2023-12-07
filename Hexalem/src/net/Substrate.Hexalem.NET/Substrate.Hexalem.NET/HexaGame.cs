@@ -1,15 +1,13 @@
 ﻿using Serilog;
+using Substrate.Hexalem.Extensions;
+using Substrate.Hexalem.GameException;
 using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET;
-using Substrate.Hexalem.NET.Extensions;
-using Substrate.Hexalem.NET.GameException;
 using Substrate.Integration.Helper;
 using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
@@ -17,122 +15,7 @@ namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
     {
-        public static TileOffer[] ALL_TILE_OFFERS = new TileOffer[16] {
-            new TileOffer {
-                TileToBuy = new HexaTile(40), // Tree, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(40), // Tree, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(40), // Tree, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(32), // Mountain, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(32), // Mountain, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(32), // Mountain, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(16), // Grass, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-             new TileOffer {
-                TileToBuy = new HexaTile(16), // Grass, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-              new TileOffer {
-                TileToBuy = new HexaTile(16), // Grass, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(24), // Water, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(24), // Water, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(24), // Water, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(8), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(8), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(8), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(72), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
-            },
-        };
-
-        public byte[] Id { get; set; }
+         public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
 
@@ -289,7 +172,6 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal List<byte> RefillSelection(uint blockNumber, int selectBase)
         {
-
             var offSet = (byte)(blockNumber % 32);
             var result = new List<byte>();
             for (int i = UnboundTileOffers.Count(); i < selectBase; i++)
@@ -301,7 +183,6 @@ namespace Substrate.Hexalem
 
             return result;
         }
-    
 
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
@@ -321,7 +202,7 @@ namespace Substrate.Hexalem
 
             var (player, board) = HexaTuples[PlayerTurn];
 
-            var tileOffer = ALL_TILE_OFFERS[UnboundTileOffers[selectionIndex]];
+            var tileOffer = GameConfig.TILE_COSTS[UnboundTileOffers[selectionIndex]];
 
             if (!EnsureRessourcesToPlay(player, tileOffer))
             {
@@ -352,7 +233,7 @@ namespace Substrate.Hexalem
 
             var (player, board) = HexaTuples[PlayerTurn];
 
-            var tileOffer = ALL_TILE_OFFERS[UnboundTileOffers[selectionIndex]];
+            var tileOffer = GameConfig.TILE_COSTS[UnboundTileOffers[selectionIndex]];
 
             HexaTile tile = tileOffer.TileToBuy;
 
@@ -363,13 +244,12 @@ namespace Substrate.Hexalem
             var tileCost = tileOffer.TileCost;
 
             player[tileCost.MaterialType] -= tileCost.Cost;
-            
 
             UnboundTileOffers.RemoveAt(selectionIndex);
             Log.Debug("UnboundTile num {num} succesfully removed", selectionIndex);
 
             Played = true;
-            
+
             // Update board patterns after successfully placing a tile
             _ = board.SetPatterns(coords);
 
@@ -541,7 +421,7 @@ namespace Substrate.Hexalem
             hexaPlayer[RessourceType.Gold] += newGold;
         }
 
-        internal byte Evaluate(RessourceType resourceType, HexaPlayer player, HexaBoardStats boardStats)
+        public static byte Evaluate(RessourceType resourceType, HexaPlayer player, HexaBoardStats boardStats)
         {
             // https://www.simplypsychology.org/maslow.html
             byte result = 0;
@@ -560,7 +440,7 @@ namespace Substrate.Hexalem
                     result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
 
                     var homeWeighted = 0;
-                    for(byte level = 0; level < 4; level ++)
+                    for (byte level = 0; level < 4; level++)
                     {
                         homeWeighted += (int)(level + 1) * boardStats[TileType.Home, level];
                     }
@@ -594,7 +474,7 @@ namespace Substrate.Hexalem
                     result += (byte)Math.Min(boardStats[TileType.Mountain] * 4, player[RessourceType.Humans] / 4);
                     // 1 Cave can create stone for 4 humans, but need 2 humans for 1
                     result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
-                    
+
                     // Additional pattern logic
                     break;
 

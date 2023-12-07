@@ -1,4 +1,4 @@
-﻿namespace Substrate.Hexalem.NET
+﻿namespace Substrate.Hexalem
 {
     public partial class HexaWinningCondition
     {

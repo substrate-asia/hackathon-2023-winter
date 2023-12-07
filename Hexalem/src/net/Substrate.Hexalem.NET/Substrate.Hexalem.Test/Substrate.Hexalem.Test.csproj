@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Substrate.Hexalem.Bot\Substrate.Hexalem.Bot.csproj" />
     <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj" />
   </ItemGroup>
 

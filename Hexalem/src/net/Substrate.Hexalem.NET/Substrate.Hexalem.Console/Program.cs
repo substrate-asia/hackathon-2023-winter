@@ -1,5 +1,4 @@
 ﻿using Serilog;
-using Substrate.Hexalem.NET.AI;
 
 namespace Substrate.Hexalem.Console
 {

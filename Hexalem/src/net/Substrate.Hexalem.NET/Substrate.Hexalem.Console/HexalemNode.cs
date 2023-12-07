@@ -1,6 +1,6 @@
 ﻿using Schnorrkel.Keys;
 using Serilog;
-using Substrate.Hexalem.NET.AI;
+using Substrate.Hexalem.Bot;
 using Substrate.Integration;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
@@ -145,7 +145,7 @@ namespace Substrate.Hexalem.Console
 
             Log.Information($"HexaGame instance : {hexaGame}");
 
-            AI bot = new NET.AI.Random(0);
+            RandomAI bot = new RandomAI(0);
             var move = bot.FindBestAction(hexaGame, 0);
             hexaGame = Game.ChooseAndPlace((await _client.GetBlocknumberAsync(CancellationToken.None)).Value, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
 

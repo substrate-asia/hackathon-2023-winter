@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Substrate.Hexalem.NET.AI
+namespace Substrate.Hexalem.Bot
 {
-    public class MonteCarlo : AI
+    public class MonteCarlo : Strategy
     {
         public override string AiName => "MonteCarlo";
 
@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.AI
         }
 
         private readonly int _explorationParameter;
-        private readonly System.Random _random = new System.Random();
+        private readonly Random _random = new Random();
 
         public MonteCarlo(int index, int explorationParameter = 2) : base(index)
         {
@@ -35,7 +35,7 @@ namespace Substrate.Hexalem.NET.AI
 
         public override PlayAction FindBestAction(HexaGame initialState, int iterations)
         {
-            var root = new Node(initialState, default(PlayAction), null);
+            var root = new Node(initialState, default, null);
 
             for (int i = 0; i < iterations; i++)
             {
@@ -62,7 +62,7 @@ namespace Substrate.Hexalem.NET.AI
 
             var selectedNode = node.Children
                 .OrderBy(child =>
-                    (child.Score / child.Visits) +
+                    child.Score / child.Visits +
                     _explorationParameter * Math.Sqrt(logTotalVisits / child.Visits))
                 .Last();
 

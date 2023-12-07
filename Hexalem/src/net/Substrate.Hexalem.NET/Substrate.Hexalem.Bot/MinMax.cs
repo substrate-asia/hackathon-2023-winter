@@ -3,9 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Substrate.Hexalem.NET.AI
+namespace Substrate.Hexalem.Bot
 {
-    public class MinMax : AI
+    public class MinMax : Strategy
     {
         private readonly int _maxDepth;
         private PlayAction? bestAction;
@@ -136,13 +136,13 @@ namespace Substrate.Hexalem.NET.AI
             var hexaPlayer = state.HexaTuples[_index].player;
             var hexaBoardStats = state.HexaTuples[_index].board.Stats();
 
-            var newMana = state.Evaluate(RessourceType.Mana, hexaPlayer, hexaBoardStats);
-            var newHumans = state.Evaluate(RessourceType.Humans, hexaPlayer, hexaBoardStats);
-            var newWater = state.Evaluate(RessourceType.Water, hexaPlayer, hexaBoardStats);
-            var newFood = state.Evaluate(RessourceType.Food, hexaPlayer, hexaBoardStats);
-            var newWood = state.Evaluate(RessourceType.Wood, hexaPlayer, hexaBoardStats);
-            var newStone = state.Evaluate(RessourceType.Stone, hexaPlayer, hexaBoardStats);
-            var newGold = state.Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
+            var newMana = HexaGame.Evaluate(RessourceType.Mana, hexaPlayer, hexaBoardStats);
+            var newHumans = HexaGame.Evaluate(RessourceType.Humans, hexaPlayer, hexaBoardStats);
+            var newWater = HexaGame.Evaluate(RessourceType.Water, hexaPlayer, hexaBoardStats);
+            var newFood = HexaGame.Evaluate(RessourceType.Food, hexaPlayer, hexaBoardStats);
+            var newWood = HexaGame.Evaluate(RessourceType.Wood, hexaPlayer, hexaBoardStats);
+            var newStone = HexaGame.Evaluate(RessourceType.Stone, hexaPlayer, hexaBoardStats);
+            var newGold = HexaGame.Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
 
             var score =
                 manaScore(hexaPlayer.WinningCondition.WinningCondition) * newMana +

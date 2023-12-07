@@ -2,13 +2,13 @@
 using System;
 using System.Linq;
 
-namespace Substrate.Hexalem.NET.AI
+namespace Substrate.Hexalem.Bot
 {
-    public class Random : AI
+    public class RandomAI : Strategy
     {
-        private readonly System.Random _random;
+        private readonly Random _random;
 
-        public Random(int index) : base(index)
+        public RandomAI(int index) : base(index)
         {
             _random = new System.Random();
         }

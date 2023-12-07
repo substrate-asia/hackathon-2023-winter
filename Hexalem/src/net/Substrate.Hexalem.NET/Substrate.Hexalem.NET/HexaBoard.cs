@@ -1,7 +1,5 @@
-
+using Substrate.Hexalem.GameException;
 using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET;
-using Substrate.Hexalem.NET.GameException;
 using System;
 using System.Collections.Generic;
 
@@ -348,7 +346,7 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool CanPlace((int, int) coords)
         {
-             var index = ToIndex(coords);
+            var index = ToIndex(coords);
 
             if (index == null)
             {
@@ -395,7 +393,7 @@ namespace Substrate.Hexalem
         /// Get the stats of the board
         /// </summary>
         /// <returns></returns>
-        internal HexaBoardStats Stats()
+        public HexaBoardStats Stats()
         {
             var result = new HexaBoardStats();
 
@@ -409,7 +407,7 @@ namespace Substrate.Hexalem
                 if (t.TileType != TileType.Empty)
                 {
                     result[t.TileType, t.TileLevel] += 1;
-                    
+
                     result[t.TileType, t.TilePattern] += 1;
                 }
             }

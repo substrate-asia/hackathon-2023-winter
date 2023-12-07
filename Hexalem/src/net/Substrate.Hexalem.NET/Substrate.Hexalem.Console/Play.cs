@@ -1,6 +1,5 @@
 ﻿using Serilog;
-using Substrate.Hexalem.NET;
-using Substrate.Hexalem.NET.AI;
+using Substrate.Hexalem.Bot;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +10,9 @@ namespace Substrate.Hexalem.Console
 {
     public class Play
     {
-        public List<AI> Bots { get; set; }
+        public List<Strategy> Bots { get; set; }
 
-        public Play(List<AI> bots)
+        public Play(List<Strategy> bots)
         {
             Bots = bots;
         }
@@ -71,7 +70,7 @@ namespace Substrate.Hexalem.Console
 
             foreach (var hexaPlayer in hexaPlayers)
             {
-                hexaPlayer.AddWinCondition(AI.ChooseWinningCondition());
+                hexaPlayer.AddWinCondition(Strategy.ChooseWinningCondition());
             }
 
             return hexaPlayers;

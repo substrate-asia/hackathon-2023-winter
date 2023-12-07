@@ -2,16 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Substrate.Hexalem.NET.AI
+namespace Substrate.Hexalem.Bot
 {
-    public abstract class AI
+    public abstract class Strategy
     {
         /// <summary>
         /// Current player index
         /// </summary>
         protected readonly int _index;
 
-        protected AI(int index)
+        protected Strategy(int index)
         {
             _index = index;
         }
@@ -39,8 +39,7 @@ namespace Substrate.Hexalem.NET.AI
 
             foreach (byte index in hexGame.UnboundTileOffers)
             {
-                var tileOffer = HexaGame.ALL_TILE_OFFERS[index];
-
+                var tileOffer = GameConfig.TILE_COSTS[index];
 
                 if (hexGame.HexaTuples[hexGame.PlayerTurn].player[tileOffer.TileCost.MaterialType] >= tileOffer.TileCost.Cost)
                 {

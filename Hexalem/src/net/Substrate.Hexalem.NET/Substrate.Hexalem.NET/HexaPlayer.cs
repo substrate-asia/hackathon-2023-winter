@@ -1,6 +1,4 @@
-﻿using Substrate.Hexalem.NET;
-
-namespace Substrate.Hexalem
+﻿namespace Substrate.Hexalem
 {
     public partial class HexaPlayer : IHexaBase
     {

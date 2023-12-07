@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Substrate.Hexalem.Integration.Model;
+using System;
 using System.Collections.Generic;
-using Substrate.Hexalem.Integration.Model;
 
-namespace Substrate.Hexalem.NET
+namespace Substrate.Hexalem
 {
     public static class GameConfig
     {
@@ -92,5 +92,124 @@ namespace Substrate.Hexalem.NET
                     throw new InvalidOperationException($"Level {level} not supported...");
             }
         }
+
+        /// <summary>
+        /// Tile offer
+        /// </summary>
+        public static TileOffer[] TILE_COSTS = new TileOffer[16] {
+
+            new TileOffer {
+                TileToBuy = new HexaTile(40), // Tree, level 0
+                TileCost = new MaterialCost {
+                    MaterialType = RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(40), // Tree, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(40), // Tree, level 0
+                TileCost = new MaterialCost {
+                    MaterialType = RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(32), // Mountain, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(32), // Mountain, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(32), // Mountain, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(16), // Grass, level 0
+                TileCost = new MaterialCost {
+                    MaterialType = RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+             new TileOffer {
+                TileToBuy = new HexaTile(16), // Grass, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+              new TileOffer {
+                TileToBuy = new HexaTile(16), // Grass, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(24), // Water, level 0
+                TileCost = new MaterialCost {
+                    MaterialType = RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(24), // Water, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(24), // Water, level 0
+                TileCost = new MaterialCost {
+                    MaterialType = RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(8), // Home, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(8), // Home, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(8), // Home, level 0
+                TileCost = new MaterialCost {
+                    MaterialType =  RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+            new TileOffer {
+                TileToBuy = new HexaTile(72), // Home, level 0
+                TileCost = new MaterialCost {
+                    MaterialType = RessourceType.Mana,
+                    Cost = 1,
+                }
+            },
+        };
     }
 }

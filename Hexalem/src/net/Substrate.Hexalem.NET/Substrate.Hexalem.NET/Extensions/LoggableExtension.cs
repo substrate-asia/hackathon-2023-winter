@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 
-namespace Substrate.Hexalem.NET.Extensions
+namespace Substrate.Hexalem.Extensions
 {
     internal static class LoggableExtension
     {
