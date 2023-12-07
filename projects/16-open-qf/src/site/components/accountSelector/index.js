@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import Dropdown from "../styled/Dropdown";
-import AccountItem from "./AccountItem";
+import Dropdown from "../styled/dropdown";
+import AccountItem from "./accountItem";
 
 const Wrapper = styled.div`
   .ui.selection.dropdown .menu {
@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 const DropdownWrapper = styled.div`
   position: relative;
   z-index: 9;
-  height: 64px;
+  height: 60px;
 `;
 
 const AccountSelector = ({

@@ -1,14 +1,6 @@
 import Modal from "@osn/common-ui/es/Modal";
-import {
-  polkadotJs,
-  subWalletJs,
-  talisman,
-  polkagate,
-  nova,
-} from "./constants";
+import { Wallets } from "./constants";
 import WalletExtension from "./walletExtension";
-
-const Wallets = [polkadotJs, subWalletJs, talisman, polkagate, nova];
 
 function WalletsList({ setWalletExtensionType }) {
   return (

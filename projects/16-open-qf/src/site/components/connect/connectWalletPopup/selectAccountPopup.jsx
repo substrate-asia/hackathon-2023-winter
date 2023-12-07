@@ -8,6 +8,26 @@ import { useIsMounted } from "@osn/common";
 import { useDispatch } from "react-redux";
 import AccountSelector from "@/components/accountSelector";
 import { Chains } from "@osn/constants";
+import { Wallets } from "./constants";
+
+function ConnectedExtension({ walletExtensionType }) {
+  const wallet = Wallets.find(
+    (item) => item.extensionName === walletExtensionType,
+  );
+  if (!wallet) {
+    return null;
+  }
+
+  return (
+    <div className="flex justify-between items-center px-[12px] py-[12px] bg-fill-bg-tertiary">
+      <div className="flex items-center gap-[8px]">
+        <wallet.logo className={wallet.title} alt={wallet.title} />
+        <span className="text-text-primary text14medium">{wallet.title}</span>
+      </div>
+      <span className="text12medium text-text-tertiary">Connected</span>
+    </div>
+  );
+}
 
 function ExtensionAccountSelect({
   walletExtensionType,
@@ -70,19 +90,23 @@ export default function SelectAccountPopup({
   const [account, setAccount] = useState();
 
   const footer = (
-    <div>
-      <Button onClick={() => onConnectAccount(account)}>Connect</Button>
-    </div>
+    <Button className="w-full" onClick={() => onConnectAccount(account)}>
+      <span className="text14medium text-text-light-major">Confirm</span>
+    </Button>
   );
 
   return (
     <Modal open={open} setOpen={setOpen} footer={footer}>
       <div className="flex flex-col gap-[20px]">
-        <h2 className="text-2xl font-bold">Connect Wallet</h2>
-        <ExtensionAccountSelect
-          walletExtensionType={walletExtensionType}
-          onSelectAccount={setAccount}
-        />
+        <span className="text16semibold text-text-primary">Connect Wallet</span>
+        <ConnectedExtension walletExtensionType={walletExtensionType} />
+        <div className="flex flex-col gap-[12px]">
+          <span className="text16semibold text-text-primary">Account</span>
+          <ExtensionAccountSelect
+            walletExtensionType={walletExtensionType}
+            onSelectAccount={setAccount}
+          />
+        </div>
       </div>
     </Modal>
   );

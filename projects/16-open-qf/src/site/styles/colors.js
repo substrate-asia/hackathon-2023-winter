@@ -29,4 +29,5 @@ export const light = {
   "--text-secondary-contrast": "var(--neutral-gray400)",
   "--text-tertiary": "var(--neutral-gray400)",
   "--text-tertiary-contrast": "var(--neutral-gray600)",
+  "--text-light-major": "var(--neutral-gray0)",
 };

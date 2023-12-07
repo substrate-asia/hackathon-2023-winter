@@ -53,4 +53,6 @@ const nova = {
   logo: WalletNova,
 };
 
-export { WalletTypes, polkadotJs, subWalletJs, talisman, polkagate, nova };
+const Wallets = [polkadotJs, subWalletJs, talisman, polkagate, nova];
+
+export { WalletTypes, Wallets };

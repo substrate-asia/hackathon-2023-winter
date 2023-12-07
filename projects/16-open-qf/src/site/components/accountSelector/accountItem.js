@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from "react";
 import styled, { css } from "styled-components";
 
-import Avatar from "./Avatar";
-import Address from "./Address";
+import Avatar from "./avatar";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { ChainSS58Format, identityChainMap } from "@osn/constants";
 import { fetchIdentity } from "@osn/common/es/services/identity";
 import { IdentityIcon } from "@osn/common-ui";
 import tw from "tailwind-styled-components";
 
-const TextMinor = tw.p`
-  m-0
+const Address = tw.span`
+  text12medium
   text-text-tertiary
 `;
 
 const ItemWrapper = styled.div`
-  height: 64px;
-  padding: 8px 16px;
   display: flex;
+  height: 60px;
+  padding: 12px 12px;
+  gap: 12px;
   align-items: center;
-  & > div:first-child {
-    margin-right: 16px;
-  }
   ${(p) =>
     p.header &&
     css`
+      max-width: calc(100% - 48px);
       position: absolute;
       top: 0;
       left: 0;
@@ -52,7 +50,7 @@ const IdentityDisplay = ({ identity, displayAccountName, chain }) => {
       <IdentityName>{identity.info.display}</IdentityName>
     </IdentityWrapper>
   ) : (
-    <>{displayAccountName}</>
+    <span className="text-text-primary text14medium">{displayAccountName}</span>
   );
 };
 
@@ -82,16 +80,14 @@ const AccountItem = ({ header, accountName, accountAddress, chain }) => {
 
   return (
     <ItemWrapper header={header}>
-      <Avatar address={accountAddress} size={40} />
-      <div>
+      <Avatar address={accountAddress} size={36} />
+      <div className="flex flex-col w-full overflow-hidden">
         <IdentityDisplay
           identity={identity}
           displayAccountName={displayAccountName}
           chain={chain}
         />
-        <TextMinor>
-          <Address>{address}</Address>
-        </TextMinor>
+        <Address className="truncate">{address}</Address>
       </div>
     </ItemWrapper>
   );

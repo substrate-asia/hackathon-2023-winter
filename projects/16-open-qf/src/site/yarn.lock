@@ -2591,9 +2591,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@osn/common-ui@npm:^1.18.10":
-  version: 1.18.10
-  resolution: "@osn/common-ui@npm:1.18.10"
+"@osn/common-ui@npm:^1.18.11":
+  version: 1.18.11
+  resolution: "@osn/common-ui@npm:1.18.11"
   dependencies:
     "@osn/polkadot-react-identicon": ^1.0.10
     "@popperjs/core": ^2.11.6
@@ -2617,7 +2617,7 @@ __metadata:
     semantic-ui-css: ^2.4.1
     semantic-ui-react: ^2.1.3
     styled-components: ^5.3.1
-  checksum: dae3941616a1fb3233230454a956b4cafd214454e32ce2c3cde314dd8a550c54e1354eabcd4a4b7c2a411cf09e5b72fd26cfc5ce1d527fb52208827838416a30
+  checksum: 1ff8a383b29c78cdbbd6e5951dcb41edf776f14f57d77f86dc90ba2216f6d9dfff93764e25120269f85cb321801207227830b8e2ff950dc6a240ffc443901601
   languageName: node
   linkType: hard
 
@@ -2656,10 +2656,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@osn/icons@npm:^1.41.0":
-  version: 1.41.0
-  resolution: "@osn/icons@npm:1.41.0"
-  checksum: 7013b3e19776b2e89e43fe62c7841878476c4cf1095cc8086e5d9a121ed1a489a2c063a8ae9c84c942d7d2ff9db33ac7f08bd4f27cca427762039cef79546122
+"@osn/icons@npm:^1.42.0":
+  version: 1.42.0
+  resolution: "@osn/icons@npm:1.42.0"
+  checksum: f588a52672ba2638c9ccefe6941022e9b0859ad9254ff0a2e6b1480a24544fe6d4f1df28e5ecf940efd414540c5b29260279d2f5894bd385d5b58bb917d6dedf
   languageName: node
   linkType: hard
 
@@ -10691,10 +10691,10 @@ __metadata:
   resolution: "site@workspace:."
   dependencies:
     "@osn/common": ^1.3.5
-    "@osn/common-ui": ^1.18.10
+    "@osn/common-ui": ^1.18.11
     "@osn/constants": ^1.1.2
     "@osn/eslint-config": ^1.0.1
-    "@osn/icons": ^1.41.0
+    "@osn/icons": ^1.42.0
     "@osn/polkadot-react-identicon": ^1.0.10
     "@osn/previewer": ^0.12.3
     "@osn/rich-text-editor": ^0.1.56
