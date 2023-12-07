@@ -11,7 +11,7 @@ const { treasury: { initTreasuryScanDb } } = require("@open-qf/mongo");
 
 async function main() {
   const blockHeights = [
-    18478038,
+    18353820,
   ];
 
   await initTreasuryScanDb();

@@ -3,13 +3,16 @@ const {
 } = require("@open-qf/mongo");
 const {
   chain: { getBlockIndexer },
-  scan: { oneStepScan },
+  scan: { oneStepScan, handleExtrinsics },
   utils: { sleep },
 } = require("@osn/scan-common");
 const { handleEvents } = require("./events");
+const { handleCall } = require("./calls");
 
 async function handleBlock({ block, events, height }) {
   const blockIndexer = getBlockIndexer(block);
+
+  await handleExtrinsics(block.extrinsics, events, blockIndexer, handleCall);
   await handleEvents(events, blockIndexer, block.extrinsics);
 
   const db = getTreasuryDb();
