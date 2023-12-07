@@ -9,7 +9,7 @@ export function RoundCardMetadata({ data }) {
   return (
     <div
       className={cn(
-        "flex items-baseline justify-between",
+        "flex items-baseline justify-between gap-4",
         "max-sm:block max-sm:space-y-4",
       )}
     >
@@ -34,7 +34,6 @@ export default function RoundCard({ data = {} }) {
   return (
     <Card
       cover={<>{/* cover */}</>}
-      bordered={false}
       head={
         <>
           <div>

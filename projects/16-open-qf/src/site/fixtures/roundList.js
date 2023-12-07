@@ -10,6 +10,20 @@ export const ROUND_LIST_DATA = [
     matchingPool: 100000, // TODO: chain settings
     contributors: 100,
     programFunders: "Polkadot",
+    projects: [
+      {
+        id: 1,
+        title: "Project 1",
+        description:
+          "actual solution sky fog collect camera course rock many that led inch police tongue ought stepped fewer income ranch missing now worse lot is",
+      },
+      {
+        id: 2,
+        title: "Project 2",
+        description:
+          "actual solution sky fog collect camera course rock many that led inch police tongue ought stepped fewer income ranch missing now worse lot is",
+      },
+    ],
   },
   {
     id: 2,
@@ -22,6 +36,7 @@ export const ROUND_LIST_DATA = [
     matchingPool: 1130000, // TODO: chain settings
     contributors: 135,
     programFunders: "Polkadot",
+    projects: [],
   },
   {
     id: 3,
@@ -34,5 +49,6 @@ export const ROUND_LIST_DATA = [
     matchingPool: 100000, // TODO: chain settings
     contributors: 100,
     programFunders: "Polkadot",
+    projects: [],
   },
 ];

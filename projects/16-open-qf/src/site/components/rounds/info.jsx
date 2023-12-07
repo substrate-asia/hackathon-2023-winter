@@ -2,7 +2,7 @@ import Card from "@/components/card";
 import { Button } from "@/components/button";
 import { RoundCardMetadata } from "@/components/card/round";
 
-export default function ExploreProjectInfo({ data }) {
+export default function RoundProjectInfo({ data }) {
   return (
     <div className="flex gap-5 max-sm:flex-col">
       <Card

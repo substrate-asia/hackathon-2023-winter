@@ -2,9 +2,11 @@ import ListLayout from "@/components/layouts/listLayout";
 import { ROUND_LIST_DATA } from "@/fixtures/roundList";
 import { find } from "lodash-es";
 import { useRouter } from "next/router";
-import ExploreProjectInfo from "@/components/project/info";
+import RoundProjectInfo from "@/components/rounds/info";
+import { withCommonPageWrapper } from "@/utils/ssr";
+import RoundProjectList from "@/components/rounds/projectList";
 
-export default function ProjectPage() {
+const RoundPage = withCommonPageWrapper(() => {
   const router = useRouter();
   const id = Number(router.query.id);
 
@@ -12,7 +14,13 @@ export default function ProjectPage() {
 
   return (
     <ListLayout title="Explore Projects" description="How OpenQF Works">
-      <ExploreProjectInfo data={data} />
+      <div className="space-y-5">
+        <RoundProjectInfo data={data} />
+
+        <RoundProjectList data={data} />
+      </div>
     </ListLayout>
   );
-}
+});
+
+export default RoundPage;
