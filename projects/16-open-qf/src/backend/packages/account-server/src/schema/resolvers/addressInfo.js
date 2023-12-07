@@ -12,15 +12,6 @@ const { chains } = require("../../consts");
 const { checkAndGetApis } = require("../../common/checkAndGetApis");
 const { queryFromApis } = require("../../common/queryFromApis");
 
-const fellowshipRankDefault = {
-  fellowshipRank1: false,
-  fellowshipRank2: false,
-  fellowshipRank3: false,
-  fellowshipRank4: false,
-  fellowshipRank5: false,
-  fellowshipRank6: false,
-}
-
 async function getMemberFromOneApi(api, address) {
   if (!api.query.fellowshipCollective?.members) {
     return null;
