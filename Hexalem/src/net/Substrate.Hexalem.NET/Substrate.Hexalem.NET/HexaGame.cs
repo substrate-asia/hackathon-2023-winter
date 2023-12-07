@@ -2,6 +2,7 @@
 using Substrate.Hexalem.Extensions;
 using Substrate.Hexalem.GameException;
 using Substrate.Hexalem.Integration.Model;
+using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Integration.Helper;
 using Substrate.NetApi;
 using System;
@@ -27,72 +28,12 @@ namespace Substrate.Hexalem
         /// <summary>
         /// Tiles that can be bought by players
         /// </summary>
-        public List<byte> UnboundTileOffers { get; private set; }
+        public List<byte> UnboundTileOffers { get; internal set; }
 
-        protected HexaGame()
-        {
-            Value = new byte[GameConfig.GAME_STORAGE_SIZE];
-        }
-
-        public HexaGame(GameSharp game, BoardSharp[] boards) : this()
-        {
-            if (boards.Any(x => Utils.Bytes2HexString(x.GameId) != Utils.Bytes2HexString(game.GameId)))
-                throw new InvalidOperationException($"Error while trying to create an HexaGame instance with different gameId ({game.GameId}/{boards.ToLog()})");
-
-            if (boards.Length != game.Players.Length)
-                throw new InvalidOperationException($"Inconsistent boards count (={boards.Length}) and players count (={game.Players.Length})");
-
-            Id = game.GameId;
-
-            switch (game.State)
-            {
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Matchmaking:
-                    HexBoardState = HexBoardState.Preparing;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Playing:
-                    HexBoardState = HexBoardState.Running;
-                    break;
-
-                case NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.GameState.Finished:
-                    HexBoardState = HexBoardState.Finish;
-                    break;
-            }
-
-            HexBoardRound = game.Round;
-            PlayerTurn = game.PlayerTurn;
-            SelectBase = game.SelectionSize;
-            UnboundTileOffers = game.Selection.Select(x => x).ToList();
-
-            // Assume that board and players are ordered
-            HexaTuples = new List<(HexaPlayer, HexaBoard)>();
-            foreach (var (board, playerAddress) in boards.Zip(game.Players, (b, p) => (b, p)))
-            {
-                var hexTiles = board.HexGrid.Select(x => new HexaTile(x));
-                var currentBoard = new HexaBoard(hexTiles.Select(x => x.Value).ToArray());
-
-                var ressources = new List<byte>()
-                {
-                    board.Mana,
-                    board.Humans,
-                    board.Water,
-                    board.Food,
-                    board.Wood,
-                    board.Stone,
-                    board.Gold
-                };
-
-                var currentPlayer = new HexaPlayer(Utils.GetPublicKeyFrom(playerAddress), ressources.ToArray());
-
-                HexaTuples.Add((currentPlayer, currentBoard));
-            }
-
-            PlayersCount = (byte)HexaTuples.Count;
-        }
-
-        public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples) : this()
+        public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
             Id = id;
+            Value = new byte[GameConfig.GAME_STORAGE_SIZE];
 
             HexaTuples = hexaTuples;
             UnboundTileOffers = new List<byte>();
@@ -395,6 +336,11 @@ namespace Substrate.Hexalem
             return result;
         }
 
+        /// <summary>
+        /// Calculate rewards for a player
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="playerIndex"></param>
         internal void CalcRewards(uint blockNumber, byte playerIndex)
         {
             var hexaPlayer = HexaTuples[playerIndex].player;
@@ -419,74 +365,6 @@ namespace Substrate.Hexalem
             hexaPlayer[RessourceType.Wood] += newWood;
             hexaPlayer[RessourceType.Stone] += newStone;
             hexaPlayer[RessourceType.Gold] += newGold;
-        }
-
-        public static byte Evaluate(RessourceType resourceType, HexaPlayer player, HexaBoardStats boardStats)
-        {
-            // https://www.simplypsychology.org/maslow.html
-            byte result = 0;
-
-            switch (resourceType)
-            {
-                case RessourceType.Mana:
-                    result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
-                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
-
-                    // Additional pattern logic
-                    break;
-
-                case RessourceType.Humans:
-                    // Physiological needs: breathing, food, water, shelter, clothing, sleep
-                    result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
-
-                    var homeWeighted = 0;
-                    for (byte level = 0; level < 4; level++)
-                    {
-                        homeWeighted += (int)(level + 1) * boardStats[TileType.Home, level];
-                    }
-                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
-
-                    // Additional pattern logic
-                    break;
-
-                case RessourceType.Water:
-                    result += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
-
-                    // Additional pattern logic
-                    break;
-
-                case RessourceType.Food:
-                    result += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
-                    result += (byte)(boardStats[TileType.Tree] * GameConfig.FOOD_PER_TREE);
-
-                    // Additional pattern logic
-                    break;
-
-                case RessourceType.Wood:
-                    // 1 Tree can create Wood for 6 humans, but need 2 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Tree] * 3, player[RessourceType.Humans] / 2);
-
-                    // Additional pattern logic
-                    break;
-
-                case RessourceType.Stone:
-                    // 1 Mountain can create stone for 16 humans, but need 4 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Mountain] * 4, player[RessourceType.Humans] / 4);
-                    // 1 Cave can create stone for 4 humans, but need 2 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
-
-                    // Additional pattern logic
-                    break;
-
-                case RessourceType.Gold:
-
-                    // 1 Rare (delta) Cave can create Gold for 1 humans, but need 3 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Cave] * 1, player[RessourceType.Humans] / 3);
-                    // Additional pattern logic
-                    break;
-            }
-
-            return result;
         }
 
         /// <summary>
@@ -633,6 +511,82 @@ namespace Substrate.Hexalem
 
             return log;
         }
+
+        /// <summary>
+        /// Evaluate a ressource type for a player
+        /// </summary>
+        /// <param name="resourceType"></param>
+        /// <param name="player"></param>
+        /// <param name="boardStats"></param>
+        /// <returns></returns>
+        public static byte Evaluate(RessourceType resourceType, HexaPlayer player, HexaBoardStats boardStats)
+        {
+            // https://www.simplypsychology.org/maslow.html
+            byte result = 0;
+
+            switch (resourceType)
+            {
+                case RessourceType.Mana:
+                    result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
+                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
+
+                    // Additional pattern logic
+                    break;
+
+                case RessourceType.Humans:
+                    // Physiological needs: breathing, food, water, shelter, clothing, sleep
+                    result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
+
+                    var homeWeighted = 0;
+                    for (byte level = 0; level < 4; level++)
+                    {
+                        homeWeighted += (int)(level + 1) * boardStats[TileType.Home, level];
+                    }
+                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
+
+                    // Additional pattern logic
+                    break;
+
+                case RessourceType.Water:
+                    result += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
+
+                    // Additional pattern logic
+                    break;
+
+                case RessourceType.Food:
+                    result += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
+                    result += (byte)(boardStats[TileType.Tree] * GameConfig.FOOD_PER_TREE);
+
+                    // Additional pattern logic
+                    break;
+
+                case RessourceType.Wood:
+                    // 1 Tree can create Wood for 6 humans, but need 2 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Tree] * 3, player[RessourceType.Humans] / 2);
+
+                    // Additional pattern logic
+                    break;
+
+                case RessourceType.Stone:
+                    // 1 Mountain can create stone for 16 humans, but need 4 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Mountain] * 4, player[RessourceType.Humans] / 4);
+                    // 1 Cave can create stone for 4 humans, but need 2 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
+
+                    // Additional pattern logic
+                    break;
+
+                case RessourceType.Gold:
+
+                    // 1 Rare (delta) Cave can create Gold for 1 humans, but need 3 humans for 1
+                    result += (byte)Math.Min(boardStats[TileType.Cave] * 1, player[RessourceType.Humans] / 3);
+                    // Additional pattern logic
+                    break;
+            }
+
+            return result;
+        }
+
     }
 
     /// <summary>

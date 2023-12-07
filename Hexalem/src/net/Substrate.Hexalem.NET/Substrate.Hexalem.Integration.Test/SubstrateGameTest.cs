@@ -129,7 +129,7 @@ namespace Substrate.Hexalem.Integration.Test
             Assert.That(game, Is.Not.Null);
 
 
-            var hexaGame = new HexaGame(game, new Integration.Model.BoardSharp[2] { aliceBoard, bobBoard });
+            var hexaGame = Helper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
             Assert.That(hexaGame, Is.Not.Null);
 
             Assert.That(hexaGame.HexaTuples, Is.Not.Null);

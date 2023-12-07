@@ -141,7 +141,7 @@ namespace Substrate.Hexalem.Console
                 throw new InvalidOperationException("Game is not set propertly");
 
             Log.Information("Game and player boards successfully received. Let's build HexaGame instance");
-            var hexaGame = new HexaGame(game, new Integration.Model.BoardSharp[2] { aliceBoard, bobBoard });
+            var hexaGame = Helper.GetHexaGame(game, new Integration.Model.BoardSharp[2] { aliceBoard, bobBoard });
 
             Log.Information($"HexaGame instance : {hexaGame}");
 

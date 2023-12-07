@@ -14,14 +14,14 @@ namespace Substrate.Hexalem
 
         public HexaTile(TileType hexTileType, byte hexTileLevel, TilePattern hexTilePattern)
         {
-            build(hexTileType, hexTileLevel, hexTilePattern);
+            Build(hexTileType, hexTileLevel, hexTilePattern);
         }
 
-        private void build(TileType hexTileType, byte hexTileLevel, TilePattern hexTilePattern)
+        private void Build(TileType hexTileType, byte hexTileLevel, TilePattern hexTilePattern)
         {
-            var level = ((byte)hexTileLevel & 0x3) << 6;
+            var level = (hexTileLevel & 0x3) << 6;
             var type = ((byte)hexTileType & 0x7) << 3;
-            var pattern = ((byte)hexTilePattern & 0x7);
+            var pattern = (byte)hexTilePattern & 0x7;
 
             Value = (byte)(level | type | pattern);
         }
@@ -44,6 +44,11 @@ namespace Substrate.Hexalem
             return Value == 0x00;
         }
 
+        /// <summary>
+        /// Same tile type
+        /// </summary>
+        /// <param name="v"></param>
+        /// <returns></returns>
         internal bool Same(HexaTile? v)
         {
             if (v == null)
@@ -68,7 +73,7 @@ namespace Substrate.Hexalem
 
             var upgradable = GameConfig.UpgradableTypeTile();
 
-            if (!upgradable.Any(x => x == TileType))
+            if (!upgradable.Exists(x => x == TileType))
             {
                 Log.Debug("{TileType} cannot be upgrade", TileType);
                 return false;
@@ -77,10 +82,15 @@ namespace Substrate.Hexalem
             return true;
         }
 
+        /// <summary>
+        /// Upgrade a tile
+        /// </summary>
         internal void Upgrade()
         {
             if (CanUpgrade())
+            {
                 TileLevel += 1;
+            }
         }
 
         public HexaTile Clone()
