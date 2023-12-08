@@ -5,12 +5,14 @@ const {
 let db = null;
 
 let roundCol = null;
+let projectCol = null;
 
 async function initQfServerDb() {
   db = new ScanDb(getEnvOrThrow("MONGO_QF_SERVER_URL"), getEnvOrThrow("MONGO_QF_SERVER_NAME"),);
   await db.init();
 
   roundCol = await db.createCol("round");
+  projectCol = await db.createCol("project");
   _createIndexes().then(() => console.log("DB indexes created!"));
 }
 
@@ -32,6 +34,11 @@ async function getRoundCol() {
   return roundCol;
 }
 
+async function getProjectCol() {
+  await makeSureInit(projectCol);
+  return projectCol;
+}
+
 function getQfServerDb() {
   return db;
 }
@@ -39,4 +46,5 @@ function getQfServerDb() {
 module.exports = {
   getQfServerDb,
   getRoundCol,
+  getProjectCol,
 }
