@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 using static Assets.Scripts.ScreensSubState.MainPlaySubState;
 using static Assets.Scripts.ScreenStates.MainScreenState;
+using static UnityEditor.PlayerSettings;
 using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
@@ -79,12 +80,12 @@ public class GameManager : MonoBehaviour
         if(zoomIn)
         {
             Debug.Log("Zoom in !");
-            Camera.main.orthographicSize++;
+            Unity3DZoomFit.ZoomFit(Camera.main, target);
         }
         else
         {
             Debug.Log("Zoom out !");
-            Camera.main.orthographicSize--;
+            Camera.main.transform.position = _initialCameraPosition;
         }
     }
 
