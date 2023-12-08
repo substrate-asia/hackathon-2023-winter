@@ -10,10 +10,13 @@ const {
     isUseMetaDb,
   }
 } = require("@osn/scan-common");
-const { councilor: { initCouncilorScanDb } } = require("@open-qf/mongo");
+const {
+  role: { initRoleScanDb },
+} = require("@open-qf/mongo");
+const { scan } = require("./scan");
 
 async function main() {
-  await initCouncilorScanDb();
+  await initRoleScanDb();
   await subscribeChainHeight();
   if (isUseMetaDb()) {
     await updateSpecs();

@@ -1,5 +1,5 @@
 {
-  "name": "@open-qf/councilor-scan",
+  "name": "@open-qf/role-scan",
   "version": "1.0.0",
   "main": "index.js",
   "dependencies": {

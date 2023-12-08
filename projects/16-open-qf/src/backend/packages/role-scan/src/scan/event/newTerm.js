@@ -2,10 +2,12 @@ const {
   consts: { ElectionsPhragmenEvents, Modules },
   env: { currentChain }
 } = require("@osn/scan-common");
-const { councilor: { getAddressCol } } = require("@open-qf/mongo");
+const {
+  role: { getCouncilorCol },
+} = require("@open-qf/mongo");
 
 async function saveAccountCreated(address, indexer, bulk) {
-  const col = await getAddressCol();
+  const col = await getCouncilorCol();
   const maybeInDb = await col.findOne({ address });
   if (maybeInDb) {
     return;
@@ -34,7 +36,7 @@ async function handleElectionNewTerm(event, indexer) {
     return
   }
 
-  const col = await getAddressCol();
+  const col = await getCouncilorCol();
   const bulk = col.initializeUnorderedBulkOp();
   let promises = [];
   for (const [account, balance] of event.data[0]) {
