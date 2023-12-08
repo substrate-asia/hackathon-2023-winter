@@ -1,6 +1,7 @@
 import { ServerSidePropsProvider } from "@/context/serverSideProps";
 import { loadAccount } from "./loadAccount";
 import { AccountProvider } from "@/context/account";
+import { NodeProvider } from "@/context/node";
 
 export function loadCommonServerSideProps(context) {
   return {
@@ -12,7 +13,7 @@ export function CommonPageWrapper({ children, ...props }) {
   return (
     <AccountProvider account={props.account}>
       <ServerSidePropsProvider serverSideProps={props}>
-        {children}
+        <NodeProvider>{children}</NodeProvider>
       </ServerSidePropsProvider>
     </AccountProvider>
   );

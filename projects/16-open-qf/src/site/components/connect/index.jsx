@@ -1,9 +1,9 @@
-import { useSelector } from "react-redux";
 import ConnectedAccount from "../user/connectedAccount";
 import ConnectWalletButton from "./connectWalletButton";
 import { useAccount } from "@/context/account";
 import { useState } from "react";
 import ConnectWalletPopup from "./connectWalletPopup";
+import NodeSelect from "../nodeSelect";
 
 export default function Connect() {
   const account = useAccount();
@@ -12,7 +12,10 @@ export default function Connect() {
   return (
     <div>
       {account ? (
-        <ConnectedAccount setShowConnectPopup={setShowConnectPopup} />
+        <div className="flex gap-[16px]">
+          <ConnectedAccount setShowConnectPopup={setShowConnectPopup} />
+          <NodeSelect small />
+        </div>
       ) : (
         <ConnectWalletButton setShowConnectPopup={setShowConnectPopup} />
       )}
