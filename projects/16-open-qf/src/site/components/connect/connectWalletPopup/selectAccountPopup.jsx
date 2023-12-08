@@ -9,6 +9,7 @@ import { useDispatch } from "react-redux";
 import AccountSelector from "@/components/accountSelector";
 import { Chains } from "@osn/constants";
 import { Wallets } from "./constants";
+import { newErrorToast } from "@/store/reducers/toastSlice";
 
 function ConnectedExtension({ walletExtensionType }) {
   const wallet = Wallets.find(
@@ -58,7 +59,7 @@ function ExtensionAccountSelect({
           setAccounts(extensionAccounts);
         }
       } catch (e) {
-        // dispatch(newErrorToast(e.message));
+        dispatch(newErrorToast(e.message));
       }
     },
     [dispatch, injectedWeb3, setAccounts, isMounted],

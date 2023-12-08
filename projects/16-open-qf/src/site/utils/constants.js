@@ -42,3 +42,10 @@ export const DEFAULT_POLKADOT_NODES = [
 ];
 
 export const PROJECT_NAME = "OpenSquare-OpenQF";
+
+export const TOAST_TYPES = {
+  SUCCESS: "Success",
+  ERROR: "Error",
+  INFO: "Info",
+  PENDING: "Pending",
+};
