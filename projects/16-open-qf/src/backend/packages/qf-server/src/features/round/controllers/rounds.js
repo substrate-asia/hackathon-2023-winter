@@ -9,9 +9,9 @@ async function getRounds(ctx) {
   }
 
   const col = await getRoundCol();
-  // todo: add sort by id desc
   const items = await col
     .find({}, { projection: { _id: 0 } })
+    .sort({ id: -1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
