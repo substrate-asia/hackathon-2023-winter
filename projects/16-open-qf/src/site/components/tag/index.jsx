@@ -1,5 +1,4 @@
 import { cn } from "@/utils";
-import { noop } from "lodash-es";
 
 export default function Tag({
   children,
