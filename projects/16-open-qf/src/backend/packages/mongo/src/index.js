@@ -3,6 +3,7 @@ const treasury = require("./treasury");
 const utils = require("./utils");
 const qf = require("./qf");
 const role = require("./role");
+const common = require("./common");
 
 module.exports = {
   account,
@@ -10,4 +11,5 @@ module.exports = {
   treasury,
   utils,
   qf,
+  common,
 }

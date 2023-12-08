@@ -5,6 +5,7 @@ const {
 
 let db = null;
 let councilorCol = null;
+let validatorCol = null;
 
 async function initRoleScanDb() {
   db = new ScanDb(
@@ -14,6 +15,7 @@ async function initRoleScanDb() {
   await db.init();
 
   councilorCol = await db.createCol("councilor");
+  validatorCol = await db.createCol("validator");
   _createIndexes().then(() => console.log("DB indexes created!"));
 }
 
@@ -41,8 +43,14 @@ async function getCouncilorCol() {
   return councilorCol;
 }
 
+async function getValidatorCol() {
+  await makeSureInit(validatorCol);
+  return validatorCol;
+}
+
 module.exports = {
   initRoleScanDb,
   getRoleDb,
   getCouncilorCol,
+  getValidatorCol,
 };

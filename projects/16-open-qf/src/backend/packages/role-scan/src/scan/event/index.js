@@ -1,4 +1,5 @@
 const { handleElectionNewTerm } = require("./newTerm");
+const { handleNewSession } = require("./session/newSession");
 
 async function handleEvents(events = [], extrinsics = [], blockIndexer) {
   for (let sort = 0; sort < events.length; sort++) {
@@ -17,6 +18,7 @@ async function handleEvents(events = [], extrinsics = [], blockIndexer) {
     }
 
     await handleElectionNewTerm(event, indexer, extrinsic);
+    await handleNewSession(event, indexer);
   }
 }
 
