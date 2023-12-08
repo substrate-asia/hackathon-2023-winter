@@ -21,7 +21,8 @@ public class GameManager : MonoBehaviour
     private GameObject _selection;
 
     public GameObject EmptyTile;
-    public GameObject HomeTile;
+    public GameObject HomeTileStandard;
+    public GameObject HomeTileRare;
     public GameObject GrassTile;
     public GameObject WaterTile;
     public GameObject MountainTile;
@@ -33,6 +34,7 @@ public class GameManager : MonoBehaviour
 
     private int? _selectionIndex = null;
     private int? _boardIndex = null;
+    private Vector3 _initialCameraPosition;
     public static HexaGame HexaGame;
 
     public GameManager()
@@ -44,23 +46,46 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         GameEventManager.StartNewGameDelegate += StartNewGame;
-        GameEventManager.ZoomHandlerDelegate += OnTileDetails;
+        GameEventManager.ZoomHandlerDelegate += OnZoom;
+        GameEventManager.UpgradeTileHandlerDelegate += OnUpgradeTile;
+    }
+
+    public void OnUpgradeTile((int, int) coords)
+    {
+        var tile = (HexaTile)HexaGame.HexaTuples[HexaGame.PlayerTurn].board[coords.Item1, coords.Item2];
+        if(tile.CanUpgrade())
+        {
+            HexaGame = Game.Upgrade(1, HexaGame, HexaGame.PlayerTurn, coords);
+
+            Debug.Log($"Tile [{coords.Item1},{coords.Item2}] upgraded to {tile.TileRarity}");
+
+            // After upgrading the tile, close the UI detail
+            GameEventManager.GetInstance().OnTileDetails(false, coords, null, false);
+            DrawBoard(HexaGame.HexaTuples[HexaGame.PlayerTurn].board);
+
+            GameEventManager.GetInstance().OnVisualGame(2000, StateType.TileUpgradeSucceed);
+        }
+        else
+        {
+            Debug.Log($"Not able to upgrade tile on [{coords.Item1} ,{coords.Item2}]");
+        }
     }
 
     public void OnZoom(bool zoomIn)
     {
-        //if (Input.GetMouseButtonDown(0))
-        //{
-        //    Debug.Log("Zoom !");
+        
+        var target = _playerGrid.transform.GetChild(12).GetChild(0).gameObject;
 
-        //    transform.LookAt(_playerGrid.transform.GetChild(12).GetChild(0).gameObject.transform);
-
-        //    Camera.main.orthographicSize = Mathf.Clamp(Camera.main.orthographicSize, 4, 6);
-        //    //float fov = Camera.main.fieldOfView;
-        //    //fov += Input.GetAxis("Mouse ScrollWheel") * 10f;
-        //    //fov = Mathf.Clamp(fov, 10f, 90f);
-        //    //Camera.main.fieldOfView = fov;
-        //}
+        if(zoomIn)
+        {
+            Debug.Log("Zoom in !");
+            Camera.main.orthographicSize++;
+        }
+        else
+        {
+            Debug.Log("Zoom out !");
+            Camera.main.orthographicSize--;
+        }
     }
 
     void HandleSelectionAction()
@@ -75,26 +100,29 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Put a selected tile on the board
+    /// Handle all possible actions on the board :
+    ///     - Put a selected tile on the board
+    ///     - Highlight a selected tile
     /// </summary>
     public void HandleBoardAction()
     {
         var boardIndex = TilesHelper.GetTargetIndex("board_");
 
-        if(boardIndex != null)
+        if (boardIndex != null)
         {
             _boardIndex = boardIndex;
             Debug.Log($"Board tile num {_boardIndex.Value} clicked !");
 
             var currentBoard = HexaGame.HexaTuples[HexaGame.PlayerTurn].board;
             var tile = (HexaTile)currentBoard[_boardIndex.Value];
+            var coords = HexaGame.HexaTuples[HexaGame.PlayerTurn].board.ToCoords(_boardIndex.Value);
 
             // If we have currently selected a selection tile, we can put it on the map
-            if (_selectionIndex != null)
+            if (_selectionIndex != null && currentBoard.CanPlace(coords))
             {
                 Debug.Log($"Play tile selection num {_selectionIndex.Value} on tile board num {_boardIndex}");
 
-                HexaGame = Game.ChooseAndPlace(1, HexaGame, HexaGame.PlayerTurn, _selectionIndex.Value, HexaGame.HexaTuples[HexaGame.PlayerTurn].board.ToCoords(_boardIndex.Value));
+                HexaGame = Game.ChooseAndPlace(1, HexaGame, HexaGame.PlayerTurn, _selectionIndex.Value, coords);
 
                 _selectionIndex = null;
 
@@ -109,14 +137,19 @@ public class GameManager : MonoBehaviour
                 var mr = _playerGrid.transform.GetChild(_boardIndex.Value).GetChild(0).gameObject.GetComponent<MeshRenderer>();
 
                 if (!TileAlreadySelected(mr))
+                {
                     SelectTile(_playerGrid, mr);
+                    GameEventManager.GetInstance().OnTileDetails(true, coords, tile, true);
+                }
                 else
                 {
                     Debug.Log($"Unselect tile {_boardIndex.Value}");
                     UnselectTile(_boardIndex.Value, mr);
+                    GameEventManager.GetInstance().OnTileDetails(false, coords, tile, true);
                     _boardIndex = null;
                 }
-            } else
+            }
+            else
             {
                 Debug.Log($"Else... {_boardIndex}");
             }
@@ -138,11 +171,22 @@ public class GameManager : MonoBehaviour
 
             HexaGame = Game.CreateGame(1, new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
 
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Mana] = 10;
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Humans] = 10;
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Food] = 10;
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Gold] = 10;
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Wood] = 10;
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Stone] = 10;
+            HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Water] = 10;
+
             DrawSelection(HexaGame.UnboundTiles, HexaGame.HexaTuples[HexaGame.PlayerTurn].player);
             DrawBoard(HexaGame.HexaTuples[HexaGame.PlayerTurn].board);
 
+            _initialCameraPosition = Camera.main.transform.position;
+
+
             GameEventManager.GetInstance().OnRessourcesChanged(HexaGame.HexaTuples[HexaGame.PlayerTurn].player);
-            //GameEventManager.GetInstance().OnVisualGameHelperChanged(2000, StateType.GameStarted);
+            GameEventManager.GetInstance().OnVisualGame(2000, StateType.GameStarted);
 
         }
         else if (gameType == "local")
@@ -160,10 +204,10 @@ public class GameManager : MonoBehaviour
     public void PlayerPlayed()
     {
         // Check if player can continue to play
-        if(HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Mana] == 0) // My CanPlay() is not accessible I don't know why ...
+        if (HexaGame.HexaTuples[HexaGame.PlayerTurn].player[RessourceType.Mana] == 0) // My CanPlay() is not accessible I don't know why ...
         {
             HexaGame = Game.FinishTurn(2, HexaGame, HexaGame.PlayerTurn);
-            //GameEventManager.GetInstance().OnVisualGameHelperChanged(2000, StateType.CalcReward);
+            GameEventManager.GetInstance().OnVisualGame(2000, StateType.CalcReward);
         }
     }
 
@@ -221,11 +265,17 @@ public class GameManager : MonoBehaviour
         {
             var tile = (HexaTile)board.Value[i];
 
-            var boardTile = Instantiate(GetTile(tile), _prefabPosition, Quaternion.identity);
-            _tileDefaultMesh.Add(boardTile.GetComponent<MeshRenderer>());
+            // Map tile to prefab
+            var generatedTile = GetTile(tile);
+
+            // Save tile material (for select / unselect purpose)
+            _tileDefaultMesh.Add(generatedTile.GetComponent<MeshRenderer>());
 
             // We don't draw tiles where we cannot play
             if (tile.IsEmpty() && !board.CanPlace(board.ToCoords(i))) continue;
+
+            // Build a new tile
+            var boardTile = Instantiate(generatedTile, _prefabPosition, Quaternion.identity);
 
             boardTile.transform.parent = _playerGrid.transform.GetChild(i);
             boardTile.transform.localPosition = _prefabPosition;
@@ -236,16 +286,23 @@ public class GameManager : MonoBehaviour
 
     public GameObject GetTile(HexaTile tile)
     {
+        GameObject? obj = null;
         switch (tile.TileType)
         {
-            case TileType.Empty: return EmptyTile;
-            case TileType.Home: return HomeTile;
-            case TileType.Grass: return GrassTile;
-            case TileType.Water: return WaterTile;
-            case TileType.Mountain: return MountainTile;
-            case TileType.Forest: return ForestTile;
-            case TileType.Desert: return DesertTile;
-            case TileType.Cave: return CaveTile;
+            case TileType.Empty: obj = EmptyTile; break;
+            case TileType.Home: 
+                obj = (tile.TileRarity == TileRarity.Rare) ? HomeTileRare : HomeTileStandard; break;
+            case TileType.Grass: obj = GrassTile; break;
+            case TileType.Water: obj = WaterTile; break;
+            case TileType.Mountain: obj = MountainTile; break;
+            case TileType.Forest: obj = ForestTile; break;
+            case TileType.Desert: obj = DesertTile; break;
+            case TileType.Cave: obj = CaveTile; break;
+        }
+
+        if (obj != null)
+        {
+            return obj;
         }
 
         throw new InvalidOperationException($"Tile {tile} is not mapped to prefab tiles");
@@ -279,7 +336,7 @@ public class GameManager : MonoBehaviour
 
     public void UnselectTile(int i, MeshRenderer mr)
     {
-        mr.material.color = _tileDefaultMesh[i].material.color;
+        mr.material.color = _tileDefaultMesh[i].sharedMaterial.color;
     }
 
     #endregion

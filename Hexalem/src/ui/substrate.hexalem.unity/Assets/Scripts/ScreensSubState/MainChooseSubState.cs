@@ -42,7 +42,7 @@ namespace Assets.Scripts.ScreensSubState
                 Debug.Log($"[Training] Start new game");
                 FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.Play);
 
-                GameEventManager.OnStartNewGame("training");
+                GameEventManager.GetInstance().OnStartNewGame("training");
             });
 
             _btnVsAi.RegisterCallback((ClickEvent evt) =>

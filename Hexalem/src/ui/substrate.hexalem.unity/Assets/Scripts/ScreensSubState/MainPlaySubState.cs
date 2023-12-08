@@ -20,9 +20,8 @@ namespace Assets.Scripts.ScreensSubState
         TemplateContainer elementInstance;
 
         private Label _currentHelperLabel;
-        private TemplateContainer _tileDetails;
-        private VisualElement _zoomIn;
-        private VisualElement _zoomOut;
+        private VisualElement _toggleZoom;
+        private bool _isZoomed;
 
         public MainPlaySubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent) { }
@@ -30,7 +29,8 @@ namespace Assets.Scripts.ScreensSubState
         public enum StateType
         {
             GameStarted,
-            CalcReward
+            CalcReward,
+            TileUpgradeSucceed
         }
 
         public override void EnterState()
@@ -51,6 +51,8 @@ namespace Assets.Scripts.ScreensSubState
             // add element
             scrollView.Add(elementInstance);
 
+            CallZoom();
+
             GameEventManager.RessourcesChangedDelegate += OnRessourcesChanged;
             GameEventManager.VisualGameDelegate += OnDisplayHelper;
             GameEventManager.TileDetailsHandlerDelegate += OnTileDetails;
@@ -58,17 +60,15 @@ namespace Assets.Scripts.ScreensSubState
 
         public void CallZoom()
         {
-            _zoomIn = FlowController.VelContainer.Q<VisualElement>("ZoomIn");
-            _zoomOut = FlowController.VelContainer.Q<VisualElement>("ZoomOut");
+            _toggleZoom = elementInstance.Q<VisualElement>("ToggleZoom");
+            _isZoomed = false;
+            var zoomLabel = elementInstance.Q<Label>("ToggleZoomLabel");
 
-            _zoomIn.RegisterCallback((ClickEvent ev) =>
+            _toggleZoom.RegisterCallback((ClickEvent ev) =>
             {
-                GameEventManager.OnZoom(true);
-            });
-
-            _zoomOut.RegisterCallback((ClickEvent ev) =>
-            {
-                GameEventManager.OnZoom(false);
+                GameEventManager.GetInstance().OnZoom(!_isZoomed);
+                _isZoomed = !_isZoomed;
+                zoomLabel.text = _isZoomed ? "-" : "+";
             });
         }
 
@@ -81,25 +81,38 @@ namespace Assets.Scripts.ScreensSubState
             GameEventManager.TileDetailsHandlerDelegate -= OnTileDetails;
         }
 
-        public void OnTileDetails(bool show, HexaTile tile)
+        public void OnTileDetails(bool show, (int, int) coords, HexaTile tile, bool canUpgrade)
         {
-            var tileDetailsContainer = FlowController.VelContainer.Q<VisualElement>("VelTileDetails");
-
-            if(show)
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                Debug.Log("Display tile details");
-                tileDetailsContainer.style.display = DisplayStyle.Flex;
+                var tileDetailsContainer = FlowController.VelContainer.Q<VisualElement>("VelTileDetails");
 
-                tileDetailsContainer.Q<Label>("TitleText").text = "blabla";
-                tileDetailsContainer.Q<Label>("TitleText").text = "blabla 2";
-            } else
-            {
-                Debug.Log("Hide tile details");
-                tileDetailsContainer.style.display = DisplayStyle.None;
-            }
+                if (show)
+                {
+                    Debug.Log("Display tile details");
+                    tileDetailsContainer.style.display = DisplayStyle.Flex;
 
-            
+                    tileDetailsContainer.Q<Label>("TitleText").text = "blabla";
+                    tileDetailsContainer.Q<Label>("BodyText").text = $"Tile type : {tile.TileType} / Tile rarity {tile.TileRarity} / Tile pattern {tile.TilePattern}";
+                }
+                else
+                {
+                    Debug.Log("Hide tile details");
+                    tileDetailsContainer.style.display = DisplayStyle.None;
+                }
 
+                var btnUpgradeTile = tileDetailsContainer.Q<UnityEngine.UIElements.Button>("UpgradeTile");
+                if (canUpgrade)
+                {
+                    tileDetailsContainer.Q<UnityEngine.UIElements.Button>("UpgradeTile").RegisterCallback((ClickEvent ev) =>
+                    {
+                        GameEventManager.GetInstance().OnUpgradeTile(coords);
+                    });
+                } else
+                {
+                    btnUpgradeTile.style.opacity = 0.4f;
+                }
+            });
         }
 
         public void OnRessourcesChanged(HexaPlayer player)
@@ -136,6 +149,9 @@ namespace Assets.Scripts.ScreensSubState
                 case StateType.CalcReward:
                     _currentHelperLabel = elementInstance.Q<Label>("LblCalcReward");
                     break;
+                case StateType.TileUpgradeSucceed:
+                    _currentHelperLabel = elementInstance.Q<Label>("LblTileUpgraded");
+                    break;
             }
 
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
@@ -151,8 +167,11 @@ namespace Assets.Scripts.ScreensSubState
         {
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
-                _currentHelperLabel.style.display = DisplayStyle.None;
-                _currentHelperLabel = null;
+                if(_currentHelperLabel != null)
+                {
+                    _currentHelperLabel.style.display = DisplayStyle.None;
+                    _currentHelperLabel = null;
+                }
             });
         }
     }

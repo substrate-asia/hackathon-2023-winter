@@ -16,7 +16,7 @@ namespace Assets.Scripts
         }
 
         public delegate void RessourcesChangedHandler(HexaPlayer player);
-        public event RessourcesChangedHandler RessourcesChangedDelegate;
+        public static event RessourcesChangedHandler RessourcesChangedDelegate;
 
         public void OnRessourcesChanged(HexaPlayer player)
         {
@@ -25,7 +25,7 @@ namespace Assets.Scripts
         }
 
         public delegate void VisualGameHandler(int nbMillisecond, StateType state);
-        public event VisualGameHandler VisualGameDelegate;
+        public static event VisualGameHandler VisualGameDelegate;
 
         public void OnVisualGame(int nbMillisecond, StateType state)
         {
@@ -34,7 +34,7 @@ namespace Assets.Scripts
         }
 
         public delegate void ZoomHandler(bool zoomIn);
-        public event ZoomHandler ZoomHandlerDelegate;
+        public static event ZoomHandler ZoomHandlerDelegate;
 
         public void OnZoom(bool zoomIn)
         {
@@ -46,14 +46,22 @@ namespace Assets.Scripts
             ZoomHandlerDelegate(zoomIn);
         }
 
-        public delegate void TileDetailsHandler(bool show, HexaTile tile);
-        public event TileDetailsHandler TileDetailsHandlerDelegate;
+        public delegate void TileDetailsHandler(bool show, (int, int) coords, HexaTile tile, bool canUpgrade);
+        public static event TileDetailsHandler TileDetailsHandlerDelegate;
 
-        public void OnTileDetails(bool show, HexaTile tile)
+        public void OnTileDetails(bool show, (int, int) coords, HexaTile tile, bool canUpgrade)
         {
             Debug.Log("GameEventManager > OnTileDetailsHandlerChanged");
-            TileDetailsHandlerDelegate(show, tile);
+            TileDetailsHandlerDelegate(show, coords, tile, canUpgrade);
         }
 
+        public delegate void UpgradeTileHandler((int, int) coords);
+        public static event UpgradeTileHandler UpgradeTileHandlerDelegate;
+
+        public void OnUpgradeTile((int, int) coords)
+        {
+            Debug.Log("GameEventManager > OnUpgradeTile");
+            UpgradeTileHandlerDelegate(coords);
+        }
     }
 }

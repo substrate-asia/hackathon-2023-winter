@@ -43,27 +43,25 @@
                 <ui:Label tabindex="-1" text="&lt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="VelPreviousMap" style="align-items: center; justify-content: center; height: auto; align-self: center; flex-direction: column; background-color: rgba(0, 0, 0, 0); font-size: 30px; -unity-font-style: bold;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1;">
-                <ui:VisualElement style="flex-grow: 1; height: 28px; align-items: flex-start; width: 279px; flex-direction: row; justify-content: flex-start;">
-                    <ui:VisualElement name="ZoomIn" style="flex-grow: 1; align-items: center; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; -unity-font-style: bold; font-size: 24px;">
-                        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" />
-                    </ui:VisualElement>
-                    <ui:VisualElement name="ZoomOut" style="flex-grow: 1; align-items: center; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px;">
-                        <ui:Label tabindex="-1" text="-" parse-escape-sequences="true" display-tooltip-when-elided="true" style="font-size: 24px; -unity-font-style: bold;" />
+                <ui:VisualElement name="VelZoom" style="flex-grow: 1; height: 28px; align-items: flex-start; width: 279px; flex-direction: row; justify-content: flex-start;">
+                    <ui:VisualElement name="ToggleZoom" style="flex-grow: 1; align-items: center; padding-top: 4px; padding-right: 4px; padding-bottom: 4px; padding-left: 4px; -unity-font-style: bold; font-size: 24px;">
+                        <ui:Label tabindex="-1" text="+" parse-escape-sequences="true" display-tooltip-when-elided="true" name="ToggleZoomLabel" />
                     </ui:VisualElement>
                 </ui:VisualElement>
                 <ui:Label tabindex="-1" text="Game started !" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblGameStarted" style="display: none; text-overflow: clip; -unity-font-style: bold; font-size: 24px; -unity-text-align: upper-center; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-text-outline-width: 0; letter-spacing: 4px;" />
                 <ui:Label tabindex="-1" text="Rewards calculation&#x9;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblCalcReward" style="display: none; text-overflow: clip; -unity-font-style: bold; font-size: 24px; -unity-text-align: upper-center; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-text-outline-width: 0; letter-spacing: 4px;" />
-                <ui:VisualElement name="TileDetails" style="flex-grow: 1; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; width: 40%; align-items: flex-start; justify-content: flex-start; align-self: flex-end; background-color: rgba(209, 17, 17, 0); height: 200px;">
+                <ui:VisualElement name="VelTileDetails" style="flex-grow: 1; border-top-width: 10px; border-right-width: 10px; border-bottom-width: 10px; border-left-width: 10px; width: 40%; align-items: flex-start; justify-content: flex-start; align-self: flex-end; background-color: rgba(0, 255, 43, 0); height: 200px; -unity-background-scale-mode: stretch-to-fill; display: none;">
                     <ui:VisualElement name="TileDetailsTitle" style="flex-grow: 0; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; background-color: rgba(212, 43, 0, 0); width: 100px;">
                         <ui:Label tabindex="-1" text="Label" parse-escape-sequences="true" display-tooltip-when-elided="true" name="TitleText" />
                     </ui:VisualElement>
                     <ui:VisualElement name="TileDetailBody" style="flex-grow: 1; width: 100px;">
-                        <ui:Label tabindex="-1" text="BodyText" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BodyText" />
                     </ui:VisualElement>
                     <ui:VisualElement name="TileDetailpUgrade" style="flex-grow: 0; flex-shrink: 1;">
-                        <ui:Button text="Upgrade" parse-escape-sequences="true" display-tooltip-when-elided="true" />
+                        <ui:Button text="Upgrade" parse-escape-sequences="true" display-tooltip-when-elided="true" name="UpgradeTile" />
                     </ui:VisualElement>
                 </ui:VisualElement>
+                <ui:Label tabindex="-1" text="Tile succesfully upgraded !" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblTileUpgraded" style="display: none; text-overflow: clip; -unity-font-style: bold; font-size: 24px; -unity-text-align: upper-center; border-top-width: 0; border-right-width: 0; border-bottom-width: 0; border-left-width: 0; border-left-color: rgba(0, 0, 0, 0); border-right-color: rgba(0, 0, 0, 0); border-top-color: rgba(0, 0, 0, 0); border-bottom-color: rgba(0, 0, 0, 0); -unity-text-outline-color: rgba(0, 0, 0, 0); -unity-text-outline-width: 0; letter-spacing: 4px;" />
             </ui:VisualElement>
             <ui:VisualElement name="VelArrowRight" style="flex-grow: 0; background-color: rgba(255, 255, 255, 0.08);">
                 <ui:Label tabindex="-1" text="&gt;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="VelFollowingMap" style="height: 100%; align-self: center; justify-content: center; align-items: center; font-size: 30px; -unity-font-style: bold;" />
