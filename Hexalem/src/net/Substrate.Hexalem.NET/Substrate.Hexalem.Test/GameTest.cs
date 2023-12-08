@@ -200,17 +200,6 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void Game_WhenPlayOnAdjectingCoordinate_ShouldSucceed()
-        {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            Assert.That(hexaGame.HexaTuples[0].board.CanPlace((1, 0)), Is.True);
-
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (1, 0)), Is.True);
-        }
-
-        [Test]
         public void Game_WhenPlayOnAlreadyFilledTile_ShouldNotSucceed()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };

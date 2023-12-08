@@ -1,5 +1,4 @@
 using Serilog;
-using Substrate.Hexalem.NET.GameException;
 using Substrate.Hexalem.GameException;
 using Substrate.Hexalem.Integration.Model;
 using System;

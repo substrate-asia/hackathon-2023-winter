@@ -372,7 +372,7 @@ namespace Substrate.Hexalem.Tests
         public void CanPlace_WithNeighbors_ShouldWork()
         {
             var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
-            hexaBoard[0, 0] = new HexaTile(TileType.Home, TileRarity.Normal, TilePattern.Normal);
+            hexaBoard[0, 0] = new HexaTile(TileType.Home, 0, TilePattern.Normal);
             Assert.That(hexaBoard.CanPlace((1, 0)));
         }
     }
