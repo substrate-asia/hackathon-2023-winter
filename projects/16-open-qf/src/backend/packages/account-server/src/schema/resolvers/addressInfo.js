@@ -5,6 +5,9 @@ const {
     getProposalBeneficiaryCol,
     getBountyBeneficiaryCol,
     getBountyCuratorCol,
+  },
+  role: {
+    getValidatorCol,
   }
 } = require("@open-qf/mongo");
 const { utils: { isValidAddress } } = require("@open-qf/common");
@@ -49,6 +52,7 @@ async function addressInfo(_, _args) {
   const isProposalBeneficiary = await isInDb(await getProposalBeneficiaryCol(), address);
   const isBountyBeneficiary = await isInDb(await getBountyBeneficiaryCol(), address);
   const isBountyCurator = await isInDb(await getBountyCuratorCol(), address);
+  const isValidator = await isInDb(await getValidatorCol(), address);
 
   const apis = checkAndGetApis(chains.collectives);
   const fellowshipRank = await queryFromApis(apis, getMemberFromOneApi, [address]);
@@ -60,6 +64,7 @@ async function addressInfo(_, _args) {
     isBountyBeneficiary,
     isBountyCurator,
     fellowshipRank,
+    isValidator,
   };
 }
 
