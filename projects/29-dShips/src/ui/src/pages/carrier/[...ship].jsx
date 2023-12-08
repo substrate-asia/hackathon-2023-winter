@@ -45,7 +45,7 @@ const index = () => {
   }, [isConnected]);
 
   return (
-    <main className={`h-[94.5vh] ${inter.className}`}>
+    <main className={`min-h-[94.5vh] ${inter.className}`}>
       {data && (
         <div className="rounded-3xl p-6 flex flex-col gap-2 w-11/12 mx-auto h-full bg-schemes-light-surfaceContainerLowest">
           <div className="flex gap-2 items-center">
