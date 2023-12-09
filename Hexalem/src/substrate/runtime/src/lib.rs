@@ -90,7 +90,7 @@ impl GetTileInfo for HexalemTile {
 
 impl Default for HexalemTile {
 	fn default() -> Self {
-		Self(64) // Empty tile
+		Self(0) // Empty tile
 	}
 }
 
