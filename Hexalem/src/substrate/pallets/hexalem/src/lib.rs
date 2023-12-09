@@ -125,6 +125,12 @@ pub mod pallet {
 		Cave = 7,
 	}
 
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
+	pub struct MaterialCost {
+		pub material_type: Material,
+		pub material_cost: MaterialUnit,
+	}
+
 	impl TileType {
 		pub fn from_u8(value: u8) -> Self {
 			match value {
@@ -165,7 +171,7 @@ pub mod pallet {
 	#[scale_info(skip_type_params(T))]
 	pub struct TileCost<T: Config> {
 		pub tile_to_buy: T::Tile,
-		pub cost: T::MaterialCost,
+		pub cost: MaterialCost,
 	}
 
 	// This type will get changed to be more generic, but I did not have time now.
@@ -311,16 +317,6 @@ pub mod pallet {
 			+ Default
 			+ GetTileInfo;
 
-		type MaterialCost: Encode
-			+ Decode
-			+ TypeInfo
-			+ Clone
-			+ Copy
-			+ scale_info::prelude::fmt::Debug
-			+ PartialEq
-			+ MaxEncodedLen
-			+ GetMaterialInfo;
-
 		#[pallet::constant]
 		type TileCosts: Get<[TileCost<Self>; 16]>;
 
@@ -365,6 +361,8 @@ pub mod pallet {
 		// Player played a move
 		MovePlayed { game_id: GameId, player: T::AccountId, move_played: Move },
 
+		TileUpgraded { game_id: GameId, player: T::AccountId, place_index: u8 },
+
 		// New selection has been drawn
 		NewTileSelection { game_id: GameId, selection: TileSelection<T> },
 
@@ -375,7 +373,7 @@ pub mod pallet {
 		NewTurn { game_id: GameId, next_player: T::AccountId },
 
 		// Game has finished
-		GameFinished { game_id: GameId },
+		GameFinished { game_id: GameId /*, winner: T::AccountId */ },
 
 		// Event that is never used. It serves the purpose to expose hidden rust enums
 		ExposeEnums { tile_type: TileType, tile_pattern: TilePattern },
@@ -440,6 +438,15 @@ pub mod pallet {
 
 		// You can not place a tile on another tile, unless it is empty.
 		TileIsNotEmpty,
+
+		// Tile is already on the max level
+		TileOnMaxLevel,
+
+		// Can not level up empty tile
+		CannotLevelUpEmptyTile,
+
+		// This tile can not be leveled up
+		CannotLevelUp,
 	}
 
 	#[pallet::call]
@@ -586,10 +593,52 @@ pub mod pallet {
 
 		#[pallet::call_index(2)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn upgrade(origin: OriginFor<T>, _place_index: u8) -> DispatchResult {
-			let _who: T::AccountId = ensure_signed(origin)?;
+		pub fn upgrade(origin: OriginFor<T>, place_index: u8) -> DispatchResult {
+			let who: T::AccountId = ensure_signed(origin)?;
 
-			todo!()
+			// Ensures that the HexBoard exists
+			let mut hex_board = match HexBoardStorage::<T>::get(&who) {
+				Some(value) => value,
+				None => return Err(Error::<T>::HexBoardNotInitialized.into()),
+			};
+
+			let game_id: GameId = hex_board.game_id.clone();
+
+			// Ensures that the Game exists
+			let game = match GameStorage::<T>::get(&game_id) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()),
+			};
+
+			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
+
+			ensure!(
+				game.players[game.get_player_turn() as usize] == who,
+				Error::<T>::PlayerNotOnTurn
+			);
+
+			ensure!(
+				hex_board.hex_grid.len() > place_index as usize,
+				Error::<T>::PlaceIndexOutOfBounds
+			);
+
+			let tile_to_upgrade: T::Tile = hex_board.hex_grid[place_index as usize];
+
+			let tile_level = tile_to_upgrade.get_level();
+
+			ensure!(tile_level != 3, Error::<T>::TileOnMaxLevel);
+
+			Self::spend_for_tile_upgrade(&mut hex_board, &tile_to_upgrade)?;
+			
+			Self::ensure_enough_humans_for_level_upgrade(&hex_board, &tile_level)?;
+
+			hex_board.hex_grid[place_index as usize].set_level(tile_level.saturating_add(1));
+
+			HexBoardStorage::<T>::set(&who, Some(hex_board));
+
+			Self::deposit_event(Event::TileUpgraded { game_id, player: who, place_index } );
+
+			Ok(())
 		}
 
 		#[pallet::call_index(3)]
@@ -762,41 +811,69 @@ impl<T: Config> Pallet<T> {
 		Ok(selected_offer.tile_to_buy)
 	}
 
+	/// Helper method that determines, how expensive the upgrade for a tile is.
+	fn spend_for_tile_upgrade(
+		hex_board: &mut HexBoard<T>,
+		tile_to_upgrade: &T::Tile,
+	) -> Result<(), sp_runtime::DispatchError> {
+		match (tile_to_upgrade.get_type(), tile_to_upgrade.get_level()) {
+			(TileType::Home, 0) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 5 }, hex_board),
+			(TileType::Home, 1) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 10 }, hex_board),
+			(TileType::Home, 2) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 15 }, hex_board),
+			(TileType::Empty, _) => Err(Error::<T>::CannotLevelUpEmptyTile.into()),
+			_ => Err(Error::<T>::CannotLevelUp.into()),
+		}
+	}
+
+	fn ensure_enough_humans_for_level_upgrade(
+		hex_board: &HexBoard<T>,
+		level: &u8,
+	) -> Result<(), sp_runtime::DispatchError> {
+		match level {
+			0 => ensure!(hex_board.humans >= 3, Error::<T>::NotEnoughPopulation),
+			1 => ensure!(hex_board.humans >= 5, Error::<T>::NotEnoughPopulation),
+			2 => ensure!(hex_board.humans >= 8, Error::<T>::NotEnoughPopulation),
+			_ => return Err(Error::<T>::CannotLevelUp.into()),
+		};
+
+		Ok(())
+	}
+
 	/// Helper method that spends the resources according to MaterialCost
 	fn spend_material(
-		material_cost: &T::MaterialCost,
+		material_cost: &MaterialCost,
 		hex_board: &mut HexBoard<T>,
 	) -> Result<(), sp_runtime::DispatchError> {
-		match material_cost.get_material_type() {
+		match material_cost.material_type {
 			Material::Gold =>
 				hex_board.gold = hex_board
 					.gold
-					.checked_sub(material_cost.get_material_cost())
+					.checked_sub(material_cost.material_cost)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Wood =>
 				hex_board.wood = hex_board
 					.wood
-					.checked_sub(material_cost.get_material_cost())
+					.checked_sub(material_cost.material_cost)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Stone =>
 				hex_board.stone = hex_board
 					.stone
-					.checked_sub(material_cost.get_material_cost())
+					.checked_sub(material_cost.material_cost)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Mana =>
 				hex_board.mana = hex_board
 					.mana
-					.checked_sub(material_cost.get_material_cost())
+					.checked_sub(material_cost.material_cost)
 					.ok_or(Error::<T>::NotEnoughMana)?,
 			Material::Food =>
 				hex_board.food = hex_board
 					.food
-					.checked_sub(material_cost.get_material_cost())
+					.checked_sub(material_cost.material_cost)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Water =>
 				hex_board.water = hex_board
 					.water
-					.checked_sub(material_cost.get_material_cost())
+					.checked_sub(material_cost.material_cost)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Humans => (),
 		};
@@ -1135,15 +1212,6 @@ pub trait GetTileInfo {
 	fn same(&self, other: &Self) -> bool {
 		self.get_type() == other.get_type()
 	}
-}
-
-// Custom trait for MaterialCost definition
-pub trait GetMaterialInfo {
-	/// Gets the material type you have to pay
-	fn get_material_type(&self) -> Material;
-
-	/// Gets the material cost
-	fn get_material_cost(&self) -> MaterialUnit;
 }
 
 trait GameProperties {

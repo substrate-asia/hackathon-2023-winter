@@ -8,7 +8,7 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use sp_runtime::Percent;
 use pallet_grandpa::AuthorityId as GrandpaId;
-use pallet_hexalem::{GetMaterialInfo, GetTileInfo, Material, MaterialUnit, TileCost, TileType, TilePattern};
+use pallet_hexalem::{GetTileInfo, Material, MaterialCost, TileCost, TileType, TilePattern};
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
 use sp_api::impl_runtime_apis;
@@ -91,23 +91,6 @@ impl GetTileInfo for HexalemTile {
 impl Default for HexalemTile {
 	fn default() -> Self {
 		Self(64) // Empty tile
-	}
-}
-
-#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
-pub struct HexalemMaterialCost {
-	// I was lazy to optimize it now, but it will be easy to lower this to u8 in the future
-	material_type: Material,
-	material_cost: MaterialUnit,
-}
-
-impl GetMaterialInfo for HexalemMaterialCost {
-	fn get_material_type(&self) -> Material {
-		self.material_type
-	}
-
-	fn get_material_cost(&self) -> MaterialUnit {
-		self.material_cost
 	}
 }
 
@@ -316,42 +299,42 @@ parameter_types! {
 	pub const HexalemTileCosts: [TileCost<Runtime>; 16] = [
 		TileCost {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(32), // Mountain, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(32), // Mountain, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(32), // Mountain, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
@@ -359,21 +342,21 @@ parameter_types! {
 
 		TileCost {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
@@ -381,49 +364,49 @@ parameter_types! {
 
 		TileCost {
 			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 2,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 3,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
-			cost: HexalemMaterialCost {
+			cost: MaterialCost {
 				material_type: Material::Mana,
 				material_cost: 3,
 			}
@@ -460,7 +443,6 @@ impl pallet_hexalem::Config for Runtime {
 	type MaxHexGridSize = HexalemMaxHexGridSize;
 	type MaxTileSelection = HexalemMaxTileSelection;
 	type Tile = HexalemTile;
-	type MaterialCost = HexalemMaterialCost;
 	type TileCosts = HexalemTileCosts;
 	type WaterPerHuman = HexalemWaterPerHuman;
 	type FoodPerHuman = HexalemFoodPerHuman;
