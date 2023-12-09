@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
     
     
     /// <summary>
-    /// >> 133 - Composite[hexalem_runtime.HexalemMaterialCost]
+    /// >> 135 - Composite[hexalem_runtime.HexalemMaterialCost]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class HexalemMaterialCost : BaseType

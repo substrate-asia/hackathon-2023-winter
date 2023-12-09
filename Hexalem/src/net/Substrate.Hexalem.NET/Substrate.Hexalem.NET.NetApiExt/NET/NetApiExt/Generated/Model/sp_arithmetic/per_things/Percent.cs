@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_thin
     
     
     /// <summary>
-    /// >> 135 - Composite[sp_arithmetic.per_things.Percent]
+    /// >> 137 - Composite[sp_arithmetic.per_things.Percent]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Percent : BaseType

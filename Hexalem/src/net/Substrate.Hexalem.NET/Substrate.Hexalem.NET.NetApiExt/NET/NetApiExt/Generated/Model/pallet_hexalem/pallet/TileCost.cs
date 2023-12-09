@@ -18,10 +18,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 132 - Composite[pallet_hexalem.pallet.TileOffer]
+    /// >> 134 - Composite[pallet_hexalem.pallet.TileCost]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
-    public sealed class TileOffer : BaseType
+    public sealed class TileCost : BaseType
     {
         
         /// <summary>
@@ -30,9 +30,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile _tileToBuy;
         
         /// <summary>
-        /// >> tile_cost
+        /// >> cost
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost _tileCost;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost _cost;
         
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile TileToBuy
         {
@@ -46,28 +46,28 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost TileCost
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost Cost
         {
             get
             {
-                return this._tileCost;
+                return this._cost;
             }
             set
             {
-                this._tileCost = value;
+                this._cost = value;
             }
         }
         
         public override string TypeName()
         {
-            return "TileOffer";
+            return "TileCost";
         }
         
         public override byte[] Encode()
         {
             var result = new List<byte>();
             result.AddRange(TileToBuy.Encode());
-            result.AddRange(TileCost.Encode());
+            result.AddRange(Cost.Encode());
             return result.ToArray();
         }
         
@@ -76,8 +76,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             TileToBuy = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
             TileToBuy.Decode(byteArray, ref p);
-            TileCost = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost();
-            TileCost.Decode(byteArray, ref p);
+            Cost = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost();
+            Cost.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

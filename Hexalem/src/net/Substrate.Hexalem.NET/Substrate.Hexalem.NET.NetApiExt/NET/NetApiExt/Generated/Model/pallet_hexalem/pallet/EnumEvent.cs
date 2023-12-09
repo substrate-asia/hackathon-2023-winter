@@ -29,13 +29,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         NewTurn = 4,
         
         GameFinished = 5,
+        
+        ExposeEnums = 6,
     }
     
     /// <summary>
     /// >> 43 - Variant[pallet_hexalem.pallet.Event]
     /// The `Event` enum of this pallet
     /// </summary>
-    public sealed class EnumEvent : BaseEnumExt<Event, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.NetApi.Model.Types.Primitive.U8, Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32>>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Move>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32>, Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8>
+    public sealed class EnumEvent : BaseEnumExt<Event, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.NetApi.Model.Types.Primitive.U8, Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32>>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Move>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32>, Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumTileType, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumTilePattern>>
     {
     }
 }

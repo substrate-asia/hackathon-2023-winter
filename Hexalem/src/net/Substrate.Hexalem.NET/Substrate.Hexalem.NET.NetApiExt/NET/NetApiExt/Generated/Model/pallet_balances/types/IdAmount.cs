@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.types
     
     
     /// <summary>
-    /// >> 105 - Composite[pallet_balances.types.IdAmount]
+    /// >> 107 - Composite[pallet_balances.types.IdAmount]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class IdAmount : BaseType

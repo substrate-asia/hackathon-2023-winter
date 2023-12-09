@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 124 - Composite[pallet_hexalem.pallet.Game]
+    /// >> 126 - Composite[pallet_hexalem.pallet.Game]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Game : BaseType
