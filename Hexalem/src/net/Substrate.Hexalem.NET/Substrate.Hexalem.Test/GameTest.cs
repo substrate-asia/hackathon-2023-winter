@@ -6,275 +6,260 @@ namespace Substrate.Hexalem.Test
 {
     public class GameTest
     {
-        private HexaBoard _hexGridMedium_Player1;
-        private HexaPlayer _hexPlayer_Player1;
         private readonly int _player1_Index = 0;
-
-        private HexaBoard _hexGridMedium_Player2;
-        private HexaPlayer _hexPlayer_Player2;
         private readonly int _player2_Index = 1;
 
-        private List<Strategy> _bots;
-
-        private byte[] _selectionGenerator;
-        private uint _defaultBlockStart;
+        private Game _game;
 
         [SetUp]
         public void Setup()
         {
-            _hexGridMedium_Player1 = new HexaBoard(new byte[(int)GridSize.Medium]);
-            _hexPlayer_Player1 = new HexaPlayer(new byte[32]);
-
-            _hexGridMedium_Player2 = new HexaBoard(new byte[(int)GridSize.Medium]);
-            _hexPlayer_Player2 = new HexaPlayer(new byte[32]);
-
-            _selectionGenerator = new byte[GameConfig.NB_MAX_UNBOUNDED_TILES].Populate();
-
-            _defaultBlockStart = 1;
         }
 
         [Test]
-        public void RenewSelection_ShouldHaveRandomGeneration()
+        public async Task RenewSelection_ShouldHaveRandomGenerationAsync()
         {
-            var hexaGame = Game.CreateGame(_defaultBlockStart, new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            _ = await _game.CreateGameAsync(GridSize.Medium,CancellationToken.None);
             
             List<List<HexaTile>> hexaTiles = new List<List<HexaTile>>
             {
-                hexaGame.RenewSelection(10, 10),
-                hexaGame.RenewSelection(10, 10),
-                hexaGame.RenewSelection(10, 10),
-                hexaGame.RenewSelection(10, 10),
-                hexaGame.RenewSelection(10, 10)
+                _game.HexaGame.RenewSelection(10, 10),
+                _game.HexaGame.RenewSelection(10, 10),
+                _game.HexaGame.RenewSelection(10, 10),
+                _game.HexaGame.RenewSelection(10, 10),
+                _game.HexaGame.RenewSelection(10, 10)
             };
 
             Assert.IsFalse(hexaTiles.All(x => x.SequenceEqual(hexaTiles.First())));
         }
 
         [Test]
-        public void StandardGameStart_Training_ShouldSucceed()
+        public async Task StandardGameStart_Training_ShouldSucceedAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            _ = await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Player select the second tile
             var indexSelection = 1;
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, indexSelection, (-1, 1));
+            await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, indexSelection, (-1, 1), CancellationToken.None);
 
-            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
             // Allways player 1 index
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, (0, 1));
+            await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, 1), CancellationToken.None);
 
             // Selection is 4
-            Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
+            Assert.That(_game.HexaGame.SelectBase, Is.EqualTo(4));
 
-            Game.FinishTurn(_defaultBlockStart + 6, hexaGame, hexaGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
         }
 
         [Test]
-        public void StandardGameStart_2v2_ShouldSucceed()
+        public async Task StandardGameStart_2v2_ShouldSucceedAsync()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.VsBot(hexaPlayers);
+
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Player select the second tile
             var indexSelection = 1;
-            var selectedTileOffer = GameConfig.TILE_COSTS[hexaGame.UnboundTileOffers[indexSelection]];
+            var selectedTileOffer = GameConfig.TILE_COSTS[_game.HexaGame.UnboundTileOffers[indexSelection]];
             // Player coordinate move
             var coordinate = (1, 0);
 
             // Players should have 1 mana when start
-            Assert.That(hexaGame.HexaTuples[_player1_Index].player[RessourceType.Mana], Is.EqualTo(1));
-            Assert.That(hexaGame.HexaTuples[_player2_Index].player[RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(_game.HexaGame.HexaTuples[_player1_Index].player[RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(_game.HexaGame.HexaTuples[_player2_Index].player[RessourceType.Mana], Is.EqualTo(1));
 
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
             // Unbounded tiles should have normal rarity
-            Assert.That(hexaGame.UnboundTileOffers.All(x => GameConfig.TILE_COSTS[x].TileToBuy.TileLevel == 0), Is.True);
+            Assert.That(_game.HexaGame.UnboundTileOffers.All(x => GameConfig.TILE_COSTS[x].TileToBuy.TileLevel == 0), Is.True);
 
-            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, indexSelection, coordinate);
+            await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, indexSelection, coordinate, CancellationToken.None);
 
             // Player 1 should have now 0 mana
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].player[RessourceType.Mana], Is.EqualTo(0));
+            Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(0));
 
             // Now we should have selectedTile put in the correct coord
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTileOffer.TileToBuy));
+            Assert.That(_game.HexaGame.CurrentPlayerBoard[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTileOffer.TileToBuy));
 
-            Assert.That(hexaGame.SelectBase, Is.EqualTo(2));
+            Assert.That(_game.HexaGame.SelectBase, Is.EqualTo(2));
 
-            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
             // Reward should have given 1 food (because of grass tile) and also 1 mana because of home starting tile
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].player[RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(1));
 
             // Need to find a solution for other ressources
 
             // Now it is Player 2 turn
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player2_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player2_Index));
 
-            selectedTileOffer = GameConfig.TILE_COSTS[hexaGame.UnboundTileOffers[0]];
-            Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, coordinate);
+            selectedTileOffer = GameConfig.TILE_COSTS[_game.HexaGame.UnboundTileOffers[0]];
+            await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, coordinate, CancellationToken.None);
 
             // Now we should have selectedTile put in the correct coord
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTileOffer.TileToBuy));
+            Assert.That(_game.HexaGame.CurrentPlayerBoard[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTileOffer.TileToBuy));
 
             // Selection is 4
-            Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
+            Assert.That(_game.HexaGame.SelectBase, Is.EqualTo(4));
 
-            Game.FinishTurn(_defaultBlockStart + 6, hexaGame, hexaGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
         }
 
         [Test]
-        public void StartInitialize_ShouldHaveValidSetup()
+        public async Task StartInitialize_ShouldHaveValidSetupAsync()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.VsBot(hexaPlayers);
 
-            Assert.That(hexaGame.HexBoardState, Is.EqualTo(HexBoardState.Running), "Initial state should be 'Running'.");
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            Assert.That(hexaGame, Is.Not.Null);
-            Assert.That(hexaGame.HexBoardState, Is.EqualTo(HexBoardState.Running), "Initial state should be 'Running'.");
-            Assert.That(hexaGame.HexBoardRound, Is.EqualTo(0), "Initial round should be 0.");
-            Assert.That(hexaGame.PlayersCount, Is.EqualTo(2), "Initial player count should be 2.");
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(0), "Initial player turn should be 0.");
+            Assert.That(_game.HexaGame.HexBoardState, Is.EqualTo(HexBoardState.Running), "Initial state should be 'Running'.");
 
-            Assert.That(hexaGame.HexaTuples.Count, Is.EqualTo(2));
+            Assert.That(_game.HexaGame, Is.Not.Null);
+            Assert.That(_game.HexaGame.HexBoardState, Is.EqualTo(HexBoardState.Running), "Initial state should be 'Running'.");
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(0), "Initial round should be 0.");
+            Assert.That(_game.HexaGame.PlayersCount, Is.EqualTo(2), "Initial player count should be 2.");
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(0), "Initial player turn should be 0.");
 
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Mana], Is.EqualTo(GameConfig.DEFAULT_MANA));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Humans], Is.EqualTo(GameConfig.DEFAULT_HUMANS));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Water], Is.EqualTo(GameConfig.DEFAULT_WATER));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Food], Is.EqualTo(GameConfig.DEFAULT_FOOD));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Wood], Is.EqualTo(GameConfig.DEFAULT_WOOD));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Stone], Is.EqualTo(GameConfig.DEFAULT_STONE));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Gold], Is.EqualTo(GameConfig.DEFAULT_GOLD));
+            Assert.That(_game.HexaGame.HexaTuples.Count, Is.EqualTo(2));
+
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Mana], Is.EqualTo(GameConfig.DEFAULT_MANA));
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Humans], Is.EqualTo(GameConfig.DEFAULT_HUMANS));
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Water], Is.EqualTo(GameConfig.DEFAULT_WATER));
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Food], Is.EqualTo(GameConfig.DEFAULT_FOOD));
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Wood], Is.EqualTo(GameConfig.DEFAULT_WOOD));
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Stone], Is.EqualTo(GameConfig.DEFAULT_STONE));
+            Assert.That(_game.HexaGame.HexaTuples[0].player[RessourceType.Gold], Is.EqualTo(GameConfig.DEFAULT_GOLD));
         }
 
         [Test]
-        public void GameWrongPlayerTryToPlay_ShouldNotSuceed()
+        public async Task GameWrongPlayerTryToPlay_ShouldNotSuceedAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Player index = 1 => Player 2
-            Assert.That(hexaGame.ChooseAndPlace(1, 1, (-2, -2)), Is.False);
+            Assert.That(_game.HexaGame.ChooseAndPlace(1, 1, (-2, -2)), Is.False);
         }
 
         [Test]
-        public void Game_WhenPlayOnInvalidCoordinate_ShouldNotSucceed()
+        public async Task Game_WhenPlayOnInvalidCoordinate_ShouldNotSucceedAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            var hexaPlayer = new HexaPlayer(new byte[32]);
+            _game = Game.Training(hexaPlayer);
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // make sure to set ressources
-            hexaPlayers[0][RessourceType.Mana] = 1;
-            hexaPlayers[0][RessourceType.Gold] = 1;
+            hexaPlayer[RessourceType.Mana] = 1;
+            hexaPlayer[RessourceType.Gold] = 1;
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-3, -3)), Is.False);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (-3, -3), CancellationToken.None), Is.False);
 
-            Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(1));
-            Assert.That(hexaPlayers[0][RessourceType.Gold], Is.EqualTo(1));
+            Assert.That(hexaPlayer[RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(hexaPlayer[RessourceType.Gold], Is.EqualTo(1));
         }
 
         [Test]
-        public void Game_WhenPlayOnNotAdjectingCoordinate_ShouldNotSucceed()
+        public async Task Game_WhenPlayOnNotAdjectingCoordinate_ShouldNotSucceedAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (-2, -2)), Is.False);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (-2, -2), CancellationToken.None), Is.False);
         }
 
         [Test]
-        public void Game_WhenPlayOnAdjectingCoordinate_ShouldSucceed()
+        public async Task Game_WhenPlayOnAdjectingCoordinate_ShouldSucceedAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            Assert.That(hexaGame.HexaTuples[0].board.CanPlace((1, 0)), Is.True);
+            Assert.That(_game.HexaGame.HexaTuples[0].board.CanPlace((1, 0)), Is.True);
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (1, 0)), Is.True);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (1, 0), CancellationToken.None), Is.True);
         }
 
         [Test]
-        public void Game_WhenPlayOnAlreadyFilledTile_ShouldNotSucceed()
+        public async Task Game_WhenPlayOnAlreadyFilledTile_ShouldNotSucceedAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (0, -1)), Is.True);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (0, -1), CancellationToken.None), Is.True);
 
-            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
             // It is just a one player game, so it is always Player 1 turn
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (0, -1)), Is.False);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, -1), CancellationToken.None), Is.False);
         }
 
         [Test]
-        public void Game_WhenPlayedATile_ShouldSucceedButNoMoreMana()
+        public async Task Game_WhenPlayedATile_ShouldSucceedButNoMoreManaAsync()
         {
-            // testing all checks before changing the states
+            var player = new HexaPlayer(new byte[32]);
+            _game = Game.Training(player);
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
             // make sure to set ressources
-            hexaPlayers[0][RessourceType.Mana] = 1;
-            hexaPlayers[0][RessourceType.Gold] = 1;
+            player[RessourceType.Mana] = 1;
+            player[RessourceType.Gold] = 1;
 
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 1, (0, -1)), Is.True);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (0, -1), CancellationToken.None), Is.True);
 
-            Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(0));
-            Assert.That(hexaPlayers[0][RessourceType.Gold], Is.EqualTo(1));
+            Assert.That(player[RessourceType.Mana], Is.EqualTo(0));
+            Assert.That(player[RessourceType.Gold], Is.EqualTo(1));
 
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
             // Can't play anymore because no more mana
-            Assert.That(hexaGame.ChooseAndPlace(hexaGame.PlayerTurn, 0, (1, 0)), Is.False);
+            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (1, 0), CancellationToken.None), Is.False);
 
             // Make sure no tile got placed
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[1, 0], Is.EqualTo(0x00));
+            Assert.That(_game.HexaGame.CurrentPlayerBoard[1, 0], Is.EqualTo(0x00));
 
-            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Assert.That(hexaPlayers[0][RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(player[RessourceType.Mana], Is.EqualTo(1));
         }
 
         [Test]
-        public void Game_EveryRound_ShouldHaveFreeMana()
+        public async Task Game_EveryRound_ShouldHaveFreeManaAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() {
-                new HexaPlayer(new byte[32])
-            };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            Assert.That(hexGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(1));
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+            Assert.That(_game.HexaGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(1));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(0));
 
             // When a solo player finish a turn, it also finish a round
-            Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(1));
-            Assert.That(hexGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(2));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(1));
+            Assert.That(_game.HexaGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(2));
 
-            Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(2));
-            Assert.That(hexGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(3));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(2));
+            Assert.That(_game.HexaGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(3));
         }
 
         [Test]
-        public void Game_With3Players_ShouldHaveValidTurnsAndRounds()
+        public async Task Game_With3Players_ShouldHaveValidTurnsAndRoundsAsync()
         {
             var hexaPlayers = new List<HexaPlayer>() {
                 new HexaPlayer(new byte[32]),
@@ -282,53 +267,55 @@ namespace Substrate.Hexalem.Test
                 new HexaPlayer(new byte[32])
             };
 
-            var hexGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.VsBot(hexaPlayers);
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(0));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(0));
 
-            Game.FinishTurn(1, hexGame, hexGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Assert.That(hexGame.PlayerTurn, Is.EqualTo(1));
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(1));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(0));
 
-            Game.FinishTurn(2, hexGame, hexGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Assert.That(hexGame.PlayerTurn, Is.EqualTo(2));
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(0));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(2));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(0));
 
-            Game.FinishTurn(3, hexGame, hexGame.PlayerTurn);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Assert.That(hexGame.PlayerTurn, Is.EqualTo(0));
-            Assert.That(hexGame.HexBoardRound, Is.EqualTo(1));
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(0));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo(1));
         }
 
         [Test]
-        public void UpgradeTile_WithEnoughtRessources_ShouldSucceed()
+        public async Task UpgradeTile_WithEnoughtRessources_ShouldSucceedAsync()
         {
             var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             (int q, int r) coords = (0, 0); // Only Home can be upgraded at the moment
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Set ressources
-            hexaGame.HexaTuples.First().player.Value = playerRessources;
+            _game.HexaGame.HexaTuples.First().player.Value = playerRessources;
 
-            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (coords.q, coords.r));
-            Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
+            await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (coords.q, coords.r), CancellationToken.None);
 
-            var standardTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
+
+            var standardTile = (HexaTile)_game.HexaGame!.HexaTuples.First().board[coords.q, coords.r];
             Assert.That(standardTile.TileLevel, Is.EqualTo(0));
 
             // Now let's upgrade the tile
-            hexaGame = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (coords.q, coords.r));
+            await _game.UpgradeAsync(_game.HexaGame.PlayerTurn, (coords.q, coords.r), CancellationToken.None);
 
-            var rareTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
+            var rareTile = (HexaTile)_game.HexaGame!.HexaTuples.First().board[coords.q, coords.r];
             Assert.That(rareTile.TileLevel, Is.EqualTo(1));
 
-            hexaGame = Game.Upgrade(_defaultBlockStart + 3, hexaGame, hexaGame.PlayerTurn, (coords.q, coords.r));
-            var epicTile = (HexaTile)hexaGame!.HexaTuples.First().board[coords.q, coords.r];
+            await _game.UpgradeAsync(_game.HexaGame.PlayerTurn, (coords.q, coords.r), CancellationToken.None);
+            var epicTile = (HexaTile)_game.HexaGame!.HexaTuples.First().board[coords.q, coords.r];
             Assert.That(epicTile.TileLevel, Is.EqualTo(2));
 
             //hexaGame = Game.Upgrade(_defaultBlockStart + 4, hexaGame, hexaGame.PlayerTurn, (coords.q, coords.r));
@@ -337,38 +324,35 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void UpgradeTile_WithNotEnoughRessources_ShouldFail()
+        public async Task UpgradeTile_WithNotEnoughRessources_ShouldFailAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+            await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (-2, -2), CancellationToken.None);
+            await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
-            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, 0, (-2, -2));
-            Game.FinishTurn(2, hexaGame, hexaGame.PlayerTurn);
-
-            var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
-            Assert.That(res, Is.Null);
+            var res = await _game.UpgradeAsync(_game.HexaGame.PlayerTurn, (-2, -2), CancellationToken.None);
+            Assert.That(res, Is.False);
         }
 
         [Test]
-        public void UpgradeTile_WithEmptyTile_ShouldFail()
+        public async Task UpgradeTile_WithEmptyTile_ShouldFailAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var res = Game.Upgrade(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn, (-2, -2));
-            Assert.That(res, Is.Null);
+            var res = await _game.UpgradeAsync(_game.HexaGame.PlayerTurn, (-2, -2), CancellationToken.None);
+            Assert.That(res, Is.False);
         }
 
         [Test]
-        public void RewardsMana_ShouldBeValid()
+        public async Task RewardsMana_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[_game.HexaGame.PlayerTurn];
 
             // One mana from home and not enough human to have more
             Assert.That(HexaGame.Evaluate(RessourceType.Mana, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
@@ -391,13 +375,12 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void RewardsHuman_ShouldBeValid()
+        public async Task RewardsHuman_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[_game.HexaGame.PlayerTurn];
 
             // One human for home when not upgrade
             Assert.That(HexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(1));
@@ -422,13 +405,12 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void RewardsWater_ShouldBeValid()
+        public async Task RewardsWater_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[_game.HexaGame.PlayerTurn];
             tuple.board[4] = new HexaTile(TileType.Water, 0, TilePattern.Normal);
             tuple.board[5] = new HexaTile(TileType.Water, 0, TilePattern.Normal);
 
@@ -437,13 +419,12 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void RewardsFood_ShouldBeValid()
+        public async Task RewardsFood_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[_game.HexaGame.PlayerTurn];
             tuple.board[4] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
             tuple.board[5] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
 
@@ -460,13 +441,12 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void RewardsWood_ShouldBeValid()
+        public async Task RewardsWood_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[_game.HexaGame.PlayerTurn];
 
             tuple.player[RessourceType.Humans] = 1;
 
@@ -495,13 +475,12 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void RewardsStone_ShouldBeValid()
+        public async Task RewardsStone_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[_game.HexaGame.PlayerTurn];
 
             tuple.player[RessourceType.Humans] = 1;
 
@@ -533,13 +512,12 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
-        public void RewardsGold_ShouldBeValid()
+        public async Task RewardsGold_ShouldBeValidAsync()
         {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            _game = Game.Training(new HexaPlayer(new byte[32]));
+            await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            var tuple = hexaGame.HexaTuples[hexaGame.PlayerTurn];
+            var tuple = _game.HexaGame.HexaTuples[index: _game.HexaGame.PlayerTurn];
 
             tuple.player[RessourceType.Humans] = 1;
 

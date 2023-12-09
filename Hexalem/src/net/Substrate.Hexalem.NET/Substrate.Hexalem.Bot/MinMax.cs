@@ -80,7 +80,7 @@ namespace Substrate.Hexalem.Bot
                 return minEval;
             }
 
-            state = Game.FinishTurn(0, state, state.PlayerTurn);
+            //state = Game.FinishTurn(0, state, state.PlayerTurn);
         }
 
         private List<PlayAction> GetPossibleActions(HexaGame state)
@@ -120,12 +120,12 @@ namespace Substrate.Hexalem.Bot
         {
             if (action.PlayTileAt != null)
             {
-                state = Game.ChooseAndPlace(1, state, (byte)_index, action.SelectionIndex!.Value, action.PlayTileAt!.Value);
+                //state = Game.ChooseAndPlace(1, state, (byte)_index, action.SelectionIndex!.Value, action.PlayTileAt!.Value);
             }
 
             if (action.UpgradeTileAt != null)
             {
-                state = Game.Upgrade(1, state, (byte)_index, action.UpgradeTileAt.Value);
+                //state = Game.Upgrade(1, state, (byte)_index, action.UpgradeTileAt.Value);
             }
 
             return state;

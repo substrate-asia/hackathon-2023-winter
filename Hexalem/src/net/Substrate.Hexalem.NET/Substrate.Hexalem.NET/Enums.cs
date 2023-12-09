@@ -51,4 +51,11 @@
         HumanThreshold,
         GoldThreshold,
     }
+
+    public enum GameType
+    {
+        Training,
+        VsBots,
+        Pvp
+    }
 }

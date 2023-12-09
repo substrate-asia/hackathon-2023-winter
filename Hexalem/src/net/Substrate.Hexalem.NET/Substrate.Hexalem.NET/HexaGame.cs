@@ -30,6 +30,18 @@ namespace Substrate.Hexalem
         /// </summary>
         public List<byte> UnboundTileOffers { get; internal set; }
 
+        /// <summary>
+        /// Shortcut to current player board instance
+        /// </summary>
+        /// <returns></returns>
+        public HexaBoard CurrentPlayerBoard => HexaTuples[PlayerTurn].board;
+
+        /// <summary>
+        /// Shortcut to current player instance
+        /// </summary>
+        /// <returns></returns>
+        public HexaPlayer CurrentPlayer => HexaTuples[PlayerTurn].player;
+
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
             Id = id;
@@ -586,7 +598,6 @@ namespace Substrate.Hexalem
 
             return result;
         }
-
     }
 
     /// <summary>

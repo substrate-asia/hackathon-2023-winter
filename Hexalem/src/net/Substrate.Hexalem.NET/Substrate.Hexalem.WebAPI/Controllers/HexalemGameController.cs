@@ -84,7 +84,7 @@ namespace Substrate.Hexalem.WebAPI.Controllers
         }
 
         [HttpGet("Single")]
-        public ActionResult SingleGame(int playerId, string? hash = null)
+        public async Task<ActionResult> SingleGameAsync(int playerId, string? hash = null)
         {
             var config = _context.Configs.FirstOrDefault();
             if (config == null)
@@ -125,11 +125,12 @@ namespace Substrate.Hexalem.WebAPI.Controllers
             }
 
             var hexPlayer = new HexaPlayer(new byte[32]);
-            var hexBoard = Game.CreateGame(CurrentBlockNumber(config.Genesis), new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
+            var game = Game.Training(hexPlayer);
+            await game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var board = new Board()
             {
-                BoardValue = Convert.ToHexString(hexBoard.Value),
+                BoardValue = Convert.ToHexString(game.HexaGame.Value),
                 SelectionBase =  null,
                 SelectionCurrent = null,
                 Players = new List<Player> { inDbPlayer }

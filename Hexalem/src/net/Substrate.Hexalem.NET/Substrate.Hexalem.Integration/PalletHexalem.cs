@@ -111,6 +111,24 @@ namespace Substrate.Integration
         }
 
         /// <summary>
+        /// Upgrade a tile
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="placeIndex"></param>
+        /// <param name="buyIndex"></param>
+        /// <param name="concurrentTasks"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<string?> UpgradeAsync(Account account, byte placeIndex, int concurrentTasks, CancellationToken token)
+        {
+            var extrinsicType = $"Hexalem.Upgrade";
+
+            var extrinsic = HexalemModuleCalls.Upgrade(new U8(placeIndex));
+
+            return await GenericExtrinsicAsync(account, extrinsicType, extrinsic, concurrentTasks, token);
+        }
+
+        /// <summary>
         /// Finish turn
         /// </summary>
         /// <param name="account"></param>

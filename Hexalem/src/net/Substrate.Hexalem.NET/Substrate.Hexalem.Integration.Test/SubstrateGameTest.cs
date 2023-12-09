@@ -75,69 +75,85 @@ namespace Substrate.Hexalem.Integration.Test
         #endregion
 
         private RandomAI bot = new RandomAI(0);
-        private SubstrateNetwork client;
-        private string nodeUri = "ws://127.0.0.1:9944";
+        //private SubstrateNetwork client;
+        private string _nodeUri = "ws://127.0.0.1:9944";
+
+        private Game _game;
+        private List<Account>_players;
+        private SubstrateNetwork _client;
 
         [OneTimeSetUp]
         public void SetUp()
         {
-            client = new SubstrateNetwork(AliceAccount, Substrate.Integration.Helper.NetworkType.Live, nodeUri);
+            //client = new SubstrateNetwork(AliceAccount, Substrate.Integration.Helper.NetworkType.Live, nodeUri);
             bot = new RandomAI(0);
+
+            _players = new List<Account>() { AliceAccount, BobAccount };
+            _client = new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri);
+
+            _game = Game.Pvp(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
         }
 
         [Test]
         public async Task StartNewSubtrateGame_ThenPlay_ShouldSucceedAsync()
         {
+            var token = CancellationToken.None;
+
             var pendingExtrinsic = new List<string>();
             var successEvent = new List<ExtrinsicInfo>();
-            Assert.That(client.IsConnected, Is.EqualTo(false));
+            Assert.That(_client.IsConnected, Is.EqualTo(false));
 
-            bool isConnected = await client.ConnectAsync(true, true, CancellationToken.None);
+            Assert.That(_game.HexaGame, Is.Null);
 
-            Assert.That(isConnected, Is.EqualTo(true));
+            // Create a new game, and wait for extrinsic
+            bool result = await _game.CreateGameAsync(GridSize.Medium, token);
 
-            var players = new List<Account>() { AliceAccount, BobAccount };
-            pendingExtrinsic.Add(
-                await client.CreateGameAsync(AliceAccount, players, (int)GridSize.Medium, 10, CancellationToken.None));
-            Assert.That(pendingExtrinsic.First(), Is.Not.Null);
+            Assert.That(result, Is.True);
+
+
+
+            //var players = new List<Account>() { AliceAccount, BobAccount };
+            //pendingExtrinsic.Add(
+            //    await client.CreateGameAsync(AliceAccount, players, (int)GridSize.Medium, 10, CancellationToken.None));
+            //Assert.That(pendingExtrinsic.First(), Is.Not.Null);
 
             
-            client.ExtrinsicManager.ExtrinsicUpdated += delegate (string sender, ExtrinsicInfo ei) {
-                if(ei.IsSuccess && pendingExtrinsic.Any(x => x == sender))
-                {
-                    pendingExtrinsic.Remove(sender);
-                    successEvent.Add(ei);
-                }
-            };
+            //client.ExtrinsicManager.ExtrinsicUpdated += delegate (string sender, ExtrinsicInfo ei) {
+            //    if(ei.IsSuccess && pendingExtrinsic.Any(x => x == sender))
+            //    {
+            //        pendingExtrinsic.Remove(sender);
+            //        successEvent.Add(ei);
+            //    }
+            //};
 
-            Thread.Sleep(20_000);
+            //Thread.Sleep(20_000);
 
-            Assert.That(successEvent.Count, Is.EqualTo(1));
+            //Assert.That(successEvent.Count, Is.EqualTo(1));
 
-            var aliceBoard = await client.GetBoardAsync(Utils.GetAddressFrom(AliceAccount.Bytes), CancellationToken.None);
-            var bobBoard = await client.GetBoardAsync(Utils.GetAddressFrom(BobAccount.Bytes), CancellationToken.None);
+            //var aliceBoard = await client.GetBoardAsync(Utils.GetAddressFrom(AliceAccount.Bytes), CancellationToken.None);
+            //var bobBoard = await client.GetBoardAsync(Utils.GetAddressFrom(BobAccount.Bytes), CancellationToken.None);
 
-            // Tiles have to be set correctly
-            Assert.That(aliceBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
+            //// Tiles have to be set correctly
+            //Assert.That(aliceBoard, Is.Not.Null);
+            //Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
 
-            Assert.That(bobBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
+            //Assert.That(bobBoard, Is.Not.Null);
+            //Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
 
-            var game = await client.GetGameAsync(aliceBoard.GameId, CancellationToken.None);
+            //var game = await client.GetGameAsync(aliceBoard.GameId, CancellationToken.None);
 
-            Assert.That(game, Is.Not.Null);
+            //Assert.That(game, Is.Not.Null);
 
 
-            var hexaGame = Helper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
-            Assert.That(hexaGame, Is.Not.Null);
+            //var hexaGame = Helper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
+            //Assert.That(hexaGame, Is.Not.Null);
 
-            Assert.That(hexaGame.HexaTuples, Is.Not.Null);
+            Assert.That(_game.HexaGame.HexaTuples, Is.Not.Null);
 
-            var aliceTiles = hexaGame.HexaTuples[0].board.Value.Select(x => (HexaTile)x);
+            var aliceTiles = _game.HexaGame.HexaTuples[0].board.Value.Select(x => (HexaTile)x);
             Assert.IsTrue(aliceTiles.All(x => x.TileType == TileType.Empty));
 
-            var bobTiles = hexaGame.HexaTuples[1].board.Value.Select(x => (HexaTile)x);
+            var bobTiles = _game.HexaGame.HexaTuples[1].board.Value.Select(x => (HexaTile)x);
             Assert.IsTrue(bobTiles.All(x => x.TileType == TileType.Empty));
 
         }
