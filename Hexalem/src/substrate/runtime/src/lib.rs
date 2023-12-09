@@ -308,14 +308,14 @@ parameter_types! {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 		TileCost {
@@ -329,14 +329,14 @@ parameter_types! {
 			tile_to_buy: HexalemTile(32), // Mountain, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(32), // Mountain, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 
@@ -358,7 +358,7 @@ parameter_types! {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 
@@ -380,35 +380,35 @@ parameter_types! {
 			tile_to_buy: HexalemTile(24), // Water, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 2,
+				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 3,
+				material_cost: 1,
 			}
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(8), // Home, level 0
 			cost: MaterialCost {
 				material_type: Material::Mana,
-				material_cost: 3,
+				material_cost: 1,
 			}
 		},
 	];

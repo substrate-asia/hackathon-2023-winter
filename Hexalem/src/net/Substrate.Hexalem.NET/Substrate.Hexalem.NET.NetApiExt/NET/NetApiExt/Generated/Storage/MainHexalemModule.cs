@@ -203,8 +203,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileCost TileCosts()
         {
             var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileCost();
-            result.Create("0x2800012800022800022000012000022000021000011000011000021800011800011800020800020" +
-                    "80002080003080003");
+            result.Create("0x2800012800012800012000012000012000011000011000011000011800011800011800010800010" +
+                    "80001080001080001");
             return result;
         }
         
