@@ -15,28 +15,30 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
 {
     
     
-    public enum Material
+    public enum TileType
     {
         
-        Mana = 0,
+        Empty = 0,
         
-        Humans = 1,
+        Home = 1,
         
-        Water = 2,
+        Grass = 2,
         
-        Food = 3,
+        Water = 3,
         
-        Wood = 4,
+        Mountain = 4,
         
-        Stone = 5,
+        Tree = 5,
         
-        Gold = 6,
+        Desert = 6,
+        
+        Cave = 7,
     }
     
     /// <summary>
-    /// >> 136 - Variant[pallet_hexalem.pallet.Material]
+    /// >> 47 - Variant[pallet_hexalem.pallet.TileType]
     /// </summary>
-    public sealed class EnumMaterial : BaseEnum<Material>
+    public sealed class EnumTileType : BaseEnum<TileType>
     {
     }
 }

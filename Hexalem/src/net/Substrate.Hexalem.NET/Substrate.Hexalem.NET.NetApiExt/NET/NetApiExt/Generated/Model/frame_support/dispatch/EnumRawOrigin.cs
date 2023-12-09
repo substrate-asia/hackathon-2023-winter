@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_support.dispatch
     }
     
     /// <summary>
-    /// >> 120 - Variant[frame_support.dispatch.RawOrigin]
+    /// >> 122 - Variant[frame_support.dispatch.RawOrigin]
     /// </summary>
     public sealed class EnumRawOrigin : BaseEnumExt<RawOrigin, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32, BaseVoid>
     {
