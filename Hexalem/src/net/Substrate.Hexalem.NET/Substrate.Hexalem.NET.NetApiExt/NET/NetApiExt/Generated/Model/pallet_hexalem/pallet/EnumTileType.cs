@@ -17,6 +17,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     public enum TileType
     {
+        
         Empty = 0,
         
         Home = 1,

@@ -55,6 +55,12 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         BadGridSize = 17,
         
         TileIsNotEmpty = 18,
+        
+        TileOnMaxLevel = 19,
+        
+        CannotLevelUpEmptyTile = 20,
+        
+        CannotLevelUp = 21,
     }
     
     /// <summary>

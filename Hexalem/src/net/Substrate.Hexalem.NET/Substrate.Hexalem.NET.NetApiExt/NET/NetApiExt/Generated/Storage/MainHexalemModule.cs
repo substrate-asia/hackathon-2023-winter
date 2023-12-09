@@ -356,5 +356,20 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> TileIsNotEmpty
         /// </summary>
         TileIsNotEmpty,
+        
+        /// <summary>
+        /// >> TileOnMaxLevel
+        /// </summary>
+        TileOnMaxLevel,
+        
+        /// <summary>
+        /// >> CannotLevelUpEmptyTile
+        /// </summary>
+        CannotLevelUpEmptyTile,
+        
+        /// <summary>
+        /// >> CannotLevelUp
+        /// </summary>
+        CannotLevelUp,
     }
 }

@@ -32,7 +32,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// <summary>
         /// >> cost
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost _cost;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.MaterialCost _cost;
         
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile TileToBuy
         {
@@ -46,7 +46,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost Cost
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.MaterialCost Cost
         {
             get
             {
@@ -76,7 +76,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             TileToBuy = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
             TileToBuy.Decode(byteArray, ref p);
-            Cost = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemMaterialCost();
+            Cost = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.MaterialCost();
             Cost.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;

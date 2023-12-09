@@ -13,15 +13,15 @@ using Substrate.NetApi.Model.Types.Metadata.V14;
 using System.Collections.Generic;
 
 
-namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
+namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
 {
     
     
     /// <summary>
-    /// >> 135 - Composite[hexalem_runtime.HexalemMaterialCost]
+    /// >> 135 - Composite[pallet_hexalem.pallet.MaterialCost]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
-    public sealed class HexalemMaterialCost : BaseType
+    public sealed class MaterialCost : BaseType
     {
         
         /// <summary>
@@ -60,7 +60,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
         
         public override string TypeName()
         {
-            return "HexalemMaterialCost";
+            return "MaterialCost";
         }
         
         public override byte[] Encode()
