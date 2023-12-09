@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
+using Substrate.NetApi.Model.Types.Primitive;
 
 namespace Substrate.Hexalem.Integration.Test
 {
@@ -75,7 +76,6 @@ namespace Substrate.Hexalem.Integration.Test
         #endregion
 
         private RandomAI bot = new RandomAI(0);
-        //private SubstrateNetwork client;
         private string _nodeUri = "ws://127.0.0.1:9944";
 
         private Game _game;
@@ -85,7 +85,6 @@ namespace Substrate.Hexalem.Integration.Test
         [OneTimeSetUp]
         public void SetUp()
         {
-            //client = new SubstrateNetwork(AliceAccount, Substrate.Integration.Helper.NetworkType.Live, nodeUri);
             bot = new RandomAI(0);
 
             _players = new List<Account>() { AliceAccount, BobAccount };
@@ -95,12 +94,10 @@ namespace Substrate.Hexalem.Integration.Test
         }
 
         [Test]
-        public async Task StartNewSubtrateGame_ThenPlay_ShouldSucceedAsync()
+        public async Task StartNewSubstrateGame_ThenPlay_ShouldSucceedAsync()
         {
             var token = CancellationToken.None;
 
-            var pendingExtrinsic = new List<string>();
-            var successEvent = new List<ExtrinsicInfo>();
             Assert.That(_client.IsConnected, Is.EqualTo(false));
 
             Assert.That(_game.HexaGame, Is.Null);
@@ -110,52 +107,44 @@ namespace Substrate.Hexalem.Integration.Test
 
             Assert.That(result, Is.True);
 
-
-
-            //var players = new List<Account>() { AliceAccount, BobAccount };
-            //pendingExtrinsic.Add(
-            //    await client.CreateGameAsync(AliceAccount, players, (int)GridSize.Medium, 10, CancellationToken.None));
-            //Assert.That(pendingExtrinsic.First(), Is.Not.Null);
-
-            
-            //client.ExtrinsicManager.ExtrinsicUpdated += delegate (string sender, ExtrinsicInfo ei) {
-            //    if(ei.IsSuccess && pendingExtrinsic.Any(x => x == sender))
-            //    {
-            //        pendingExtrinsic.Remove(sender);
-            //        successEvent.Add(ei);
-            //    }
-            //};
-
-            //Thread.Sleep(20_000);
-
-            //Assert.That(successEvent.Count, Is.EqualTo(1));
-
-            //var aliceBoard = await client.GetBoardAsync(Utils.GetAddressFrom(AliceAccount.Bytes), CancellationToken.None);
-            //var bobBoard = await client.GetBoardAsync(Utils.GetAddressFrom(BobAccount.Bytes), CancellationToken.None);
-
-            //// Tiles have to be set correctly
-            //Assert.That(aliceBoard, Is.Not.Null);
-            //Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
-
-            //Assert.That(bobBoard, Is.Not.Null);
-            //Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
-
-            //var game = await client.GetGameAsync(aliceBoard.GameId, CancellationToken.None);
-
-            //Assert.That(game, Is.Not.Null);
-
-
-            //var hexaGame = Helper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
-            //Assert.That(hexaGame, Is.Not.Null);
-
             Assert.That(_game.HexaGame.HexaTuples, Is.Not.Null);
 
             var aliceTiles = _game.HexaGame.HexaTuples[0].board.Value.Select(x => (HexaTile)x);
-            Assert.IsTrue(aliceTiles.All(x => x.TileType == TileType.Empty));
+            Assert.That(aliceTiles.Where(x => x.TileType == TileType.Empty).Count, Is.EqualTo(((int)GridSize.Medium) - 1));
+            Assert.That(aliceTiles.Where(x => x.TileType == TileType.Home).Count, Is.EqualTo(1));
 
             var bobTiles = _game.HexaGame.HexaTuples[1].board.Value.Select(x => (HexaTile)x);
-            Assert.IsTrue(bobTiles.All(x => x.TileType == TileType.Empty));
+            Assert.That(bobTiles.Where(x => x.TileType == TileType.Empty).Count, Is.EqualTo(((int)GridSize.Medium) - 1));
+            Assert.That(bobTiles.Where(x => x.TileType == TileType.Home).Count, Is.EqualTo(1));
 
+            // Alice start first
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo((byte)0));
+
+            // Alice has 1 mana
+            Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(1));
+            result = await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, 1), CancellationToken.None);
+            Assert.That(result, Is.True);
+            Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(0));
+
+            Assert.That(((HexaTile)_game.HexaGame.CurrentPlayerBoard[0, 1]).IsEmpty(), Is.False);
+
+            result = await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn,CancellationToken.None);
+            Assert.That(result, Is.True);
+
+            // Now it is Bob's turn
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo((byte)1));
+            Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(1));
+            result = await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, 1), CancellationToken.None);
+            Assert.That(result, Is.True);
+            Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(0));
+
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo((byte)0));
+            result = await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
+            Assert.That(result, Is.True);
+
+            // Now it is Alice turn again, and we have a new round
+            Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo((byte)0));
+            Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo((byte)1));
         }
     }
 }

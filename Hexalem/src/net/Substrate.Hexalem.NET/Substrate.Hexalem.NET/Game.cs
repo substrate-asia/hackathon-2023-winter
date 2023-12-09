@@ -62,9 +62,11 @@ namespace Substrate.Hexalem
             GameType = gameType;
             _players = players;
         }
-        protected Game(GameType gameType, List<HexaPlayer> players, SubstrateNetwork substrateNetwork) : this(gameType, players)
+        protected Game(GameType gameType, List<Account> players, SubstrateNetwork substrateNetwork) 
+            : this(gameType, players.Select(x => new HexaPlayer(x.Bytes)).ToList())
         {
             _client = substrateNetwork;
+            _substratePlayers = players;
         }
 
         /// <summary>
@@ -95,9 +97,7 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         public static Game Pvp(SubstrateNetwork substrateNetwork, List<Account> nodePlayers)
         {
-            var players = nodePlayers.Select(x => new HexaPlayer(x.Bytes)).ToList();
-
-            return new Game(GameType.Pvp, players, substrateNetwork);
+            return new Game(GameType.Pvp, nodePlayers, substrateNetwork);
         }
 
         /// <summary>
@@ -157,39 +157,36 @@ namespace Substrate.Hexalem
 
             _client.ExtrinsicManager.ExtrinsicUpdated += async (sender, e) =>
             {
-                if (e.IsSuccess)
+                if(e.IsSuccess && _state.ContainsKey(sender))
                 {
-                    if (_state.ContainsKey(sender))
+                    Log.Information($"{_state[sender]} successfully received !");
+
+                    switch (_state[sender])
                     {
-                        Log.Information($"{_state[sender]} successfully received !");
+                        case InternalGameState.GameCreated:
+                            _state.Remove(sender);
+                            OnGameCreatedAsync(token);
+                            break;
 
-                        switch (_state[sender])
-                        {
-                            case InternalGameState.GameCreated:
-                                _state.Remove(sender);
-                                await OnGameCreatedAsync(token);
-                                break;
+                        case InternalGameState.Play:
+                            _state.Remove(sender);
+                            OnPlayTurnAsync(token);
+                            break;
 
-                            case InternalGameState.Play:
-                                _state.Remove(sender);
-                                await OnPlayTurnAsync(token);
-                                break;
+                        case InternalGameState.Upgrade:
+                            _state.Remove(sender);
+                            OnUpgradeAsync(token);
+                            break;
 
-                            case InternalGameState.Upgrade:
-                                _state.Remove(sender);
-                                await OnUpgradeAsync(token);
-                                break;
+                        case InternalGameState.FinishTurn:
+                            _state.Remove(sender);
+                            OnFinishTurnAsync(token);
+                            break;
 
-                            case InternalGameState.FinishTurn:
-                                _state.Remove(sender);
-                                await OnFinishTurnAsync(token);
-                                break;
-
-                            case InternalGameState.GameFinished:
-                                _state.Remove(sender);
-                                await OnGameFinished(token);
-                                break;
-                        }
+                        case InternalGameState.GameFinished:
+                            _state.Remove(sender);
+                            OnGameFinished(token);
+                            break;
                     }
                 }
             };
@@ -220,7 +217,7 @@ namespace Substrate.Hexalem
             _gameId = boards[0].GameId;
             Log.Information("GameId = {gameId}", Utils.Bytes2HexString(_gameId));
 
-            var game = await _client.GetGameAsync(boards[0].GameId, token);
+            var game = await _client.GetGameAsync(_gameId, token);
 
             if (game == null)
             {
@@ -449,7 +446,7 @@ namespace Substrate.Hexalem
                     return false;
                 }
 
-                _state.Add(finishTurnSubscription, InternalGameState.Upgrade);
+                _state.Add(finishTurnSubscription, InternalGameState.FinishTurn);
                 return await _onChainFinishTurn.Task;
             } else
             {
