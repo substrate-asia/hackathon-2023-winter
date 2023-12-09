@@ -36,9 +36,7 @@ pub mod pallet {
 	pub struct Pallet<T>(_);
 
 	// Tiles to select
-	pub type TileSelection<T> = BoundedVec<TileOfferIndex, <T as Config>::MaxTileSelection>;
-
-	pub type TileSelectionBase<T> = BoundedVec<TileOfferIndex, <T as Config>::MaxTileSelectionBase>;
+	pub type TileSelection<T> = BoundedVec<TileCostIndex, <T as Config>::MaxTileSelection>;
 
 	// Type of AccountId that is going to be used
 	pub type AccountId<T> = <T as frame_system::Config>::AccountId;
@@ -52,8 +50,8 @@ pub mod pallet {
 		Finished, // Ready to reward players
 	}
 
-	// Index used for referencing the TileOffer
-	pub type TileOfferIndex = u8;
+	// Index used for referencing the TileCost
+	pub type TileCostIndex = u8;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
@@ -165,18 +163,9 @@ pub mod pallet {
 		Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound,
 	)]
 	#[scale_info(skip_type_params(T))]
-	pub struct TileOffer<T: Config> {
+	pub struct TileCost<T: Config> {
 		pub tile_to_buy: T::Tile,
-		pub tile_cost: T::MaterialCost,
-	}
-
-	// This type will get changed to be more generic, but I did not have time now.
-	pub type TileOffers<T> = [TileOffer<T>; 16];
-
-	#[derive(Encode, Decode, TypeInfo, PartialEq, Clone, Debug)]
-	pub enum PayType {
-		Material,
-		Mana,
+		pub cost: T::MaterialCost,
 	}
 
 	// This type will get changed to be more generic, but I did not have time now.
@@ -311,9 +300,6 @@ pub mod pallet {
 		#[pallet::constant]
 		type MaxTileSelection: Get<u32>;
 
-		#[pallet::constant]
-		type MaxTileSelectionBase: Get<u32>;
-
 		type Tile: Encode
 			+ Decode
 			+ TypeInfo
@@ -336,7 +322,7 @@ pub mod pallet {
 			+ GetMaterialInfo;
 
 		#[pallet::constant]
-		type AllTileOffers: Get<TileOffers<Self>>;
+		type TileCosts: Get<[TileCost<Self>; 16]>;
 
 		#[pallet::constant]
 		type WaterPerHuman: Get<Percent>;
@@ -390,6 +376,9 @@ pub mod pallet {
 
 		// Game has finished
 		GameFinished { game_id: GameId },
+
+		// Event that is never used. It serves the purpose to expose hidden rust enums
+		ExposeEnums { tile_type: TileType, tile_pattern: TilePattern },
 	}
 
 	// Errors inform users that something went wrong.
@@ -700,7 +689,7 @@ impl<T: Config> Pallet<T> {
 		// Current random source
 		let current_block_number = <frame_system::Pallet<T>>::block_number();
 
-		let mut new_selection: Vec<TileOfferIndex> = Default::default();
+		let mut new_selection: Vec<TileCostIndex> = Default::default();
 
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
@@ -761,14 +750,14 @@ impl<T: Config> Pallet<T> {
 	) -> Result<T::Tile, sp_runtime::DispatchError> {
 		// Select the offer
 		ensure!(selection.len() > index_to_buy, Error::<T>::BuyIndexOutOfBounds);
-		let selected_offer_index: TileOfferIndex = selection.remove(index_to_buy);
+		let selected_offer_index: TileCostIndex = selection.remove(index_to_buy);
 
-		let all_offers = T::AllTileOffers::get();
+		let all_offers = T::TileCosts::get();
 
 		ensure!(all_offers.len() > selected_offer_index as usize, Error::<T>::BuyIndexOutOfBounds);
 		let selected_offer = all_offers[selected_offer_index as usize].clone();
 
-		Self::spend_material(&selected_offer.tile_cost, hex_board)?;
+		Self::spend_material(&selected_offer.cost, hex_board)?;
 
 		Ok(selected_offer.tile_to_buy)
 	}
