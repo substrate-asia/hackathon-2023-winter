@@ -162,7 +162,7 @@ namespace Substrate.Hexalem.Test
             hexaPlayer[RessourceType.Mana] = 1;
             hexaPlayer[RessourceType.Gold] = 1;
 
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (-3, -3), CancellationToken.None), Is.False);
+            Assert.That((await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (-3, -3), CancellationToken.None)).IsSuccess, Is.False);
 
             Assert.That(hexaPlayer[RessourceType.Mana], Is.EqualTo(1));
             Assert.That(hexaPlayer[RessourceType.Gold], Is.EqualTo(1));
@@ -174,7 +174,7 @@ namespace Substrate.Hexalem.Test
             _game = Game.Training(new HexaPlayer(new byte[32]));
             await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (-2, -2), CancellationToken.None), Is.False);
+            Assert.That((await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (-2, -2), CancellationToken.None)).IsSuccess, Is.False);
         }
 
         [Test]
@@ -185,7 +185,7 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(_game.HexaGame.HexaTuples[0].board.CanPlace((1, 0)), Is.True);
 
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (1, 0), CancellationToken.None), Is.True);
+            Assert.That((await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (1, 0), CancellationToken.None)).IsSuccess, Is.True);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (0, -1), CancellationToken.None), Is.True);
+            Assert.That((await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (0, -1), CancellationToken.None)).IsSuccess, Is.True);
 
             await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
@@ -219,7 +219,7 @@ namespace Substrate.Hexalem.Test
             player[RessourceType.Mana] = 1;
             player[RessourceType.Gold] = 1;
 
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (0, -1), CancellationToken.None), Is.True);
+            Assert.That((await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 1, (0, -1), CancellationToken.None)).IsSuccess, Is.True);
 
             Assert.That(player[RessourceType.Mana], Is.EqualTo(0));
             Assert.That(player[RessourceType.Gold], Is.EqualTo(1));
@@ -227,7 +227,7 @@ namespace Substrate.Hexalem.Test
             Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
             // Can't play anymore because no more mana
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (1, 0), CancellationToken.None), Is.False);
+            Assert.That((await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (1, 0), CancellationToken.None)).IsSuccess, Is.False);
 
             // Make sure no tile got placed
             Assert.That(_game.HexaGame.CurrentPlayerBoard[1, 0], Is.EqualTo(0x00));
@@ -333,7 +333,7 @@ namespace Substrate.Hexalem.Test
             await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
 
             var res = await _game.UpgradeAsync(_game.HexaGame.PlayerTurn, (-2, -2), CancellationToken.None);
-            Assert.That(res, Is.False);
+            Assert.That(res.IsSuccess, Is.False);
         }
 
         [Test]
@@ -343,7 +343,7 @@ namespace Substrate.Hexalem.Test
             await _game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var res = await _game.UpgradeAsync(_game.HexaGame.PlayerTurn, (-2, -2), CancellationToken.None);
-            Assert.That(res, Is.False);
+            Assert.That(res.IsSuccess, Is.False);
         }
 
         [Test]

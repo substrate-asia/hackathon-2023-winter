@@ -13,15 +13,15 @@ using Substrate.NetApi.Model.Types.Metadata.V14;
 using System.Collections.Generic;
 
 
-namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
+namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
 {
     
     
     /// <summary>
-    /// >> 135 - Composite[pallet_hexalem.pallet.MaterialCost]
+    /// >> 133 - Composite[hexalem_runtime.HexalemMaterialCost]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
-    public sealed class MaterialCost : BaseType
+    public sealed class HexalemMaterialCost : BaseType
     {
         
         /// <summary>
@@ -46,7 +46,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 MaterialCosts
+        public Substrate.NetApi.Model.Types.Primitive.U8 MaterialCost
         {
             get
             {
@@ -60,14 +60,14 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         public override string TypeName()
         {
-            return "MaterialCost";
+            return "HexalemMaterialCost";
         }
         
         public override byte[] Encode()
         {
             var result = new List<byte>();
             result.AddRange(MaterialType.Encode());
-            result.AddRange(MaterialCosts.Encode());
+            result.AddRange(MaterialCost.Encode());
             return result.ToArray();
         }
         
@@ -76,8 +76,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             MaterialType = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumMaterial();
             MaterialType.Decode(byteArray, ref p);
-            MaterialCosts = new Substrate.NetApi.Model.Types.Primitive.U8();
-            MaterialCosts.Decode(byteArray, ref p);
+            MaterialCost = new Substrate.NetApi.Model.Types.Primitive.U8();
+            MaterialCost.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

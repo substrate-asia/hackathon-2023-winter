@@ -10,14 +10,14 @@ namespace Substrate.Hexalem.Integration.Model
         public byte Value { get; private set; }
 
         public TileSharp(HexalemTile tile) {
-            TileType = (TileType)((tile.Value.Value >> 3) & 0x7);
+            TileType = (byte)((tile.Value.Value >> 3) & 0x7);
             TileLevel = (byte)((tile.Value.Value >> 6) & 0x3);
-            Pattern = (TilePattern)(tile.Value.Value & 0x7);
+            Pattern = (byte)(tile.Value.Value & 0x7);
             Value = tile.Value.Value;
         }
 
-        public TileType TileType { get; private set; }
+        public byte TileType { get; private set; }
         public byte TileLevel { get; private set; }
-        public TilePattern Pattern { get; private set; }
+        public byte Pattern { get; private set; }
     }
 }
