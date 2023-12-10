@@ -65,7 +65,7 @@ There are 7 different resource types:
     - Food is essential for sustaining the human population, allowing them to flourish and grow. It can be obtained from a variety of tiles.
 
 - **Wood**:
-    - Wood is mainly used for constructing and upgrading buildings. The most common tile to harvest wood is the forest tile.
+    - Wood is mainly used for constructing and upgrading buildings. The most common tile to harvest wood is the tree tile.
 
 - **Stone**:
     - Stone is used primarily for building structures and can also be used as a primitive weapon. It is typically harvested from cave and mountain tiles.
@@ -92,8 +92,8 @@ There are 8 different tile types in the game, each with unique characteristics a
 - **Mountain**:
     - Mountain tiles are rich in resources like stone and potentially gold, playing a key role in construction and wealth accumulation.
 
-- **Forest**:
-    - Forest tiles are the primary source of wood, essential for building and upgrading structures.
+- **Tree**:
+    - Tree tiles are the primary source of wood, essential for building and upgrading structures.
 
 - **Desert**:
     - Desert tiles hold potential for hidden resources, with rumors of harboring gold and other valuable materials.
@@ -183,7 +183,7 @@ Tiles and their patterns yield resources each round:
     - Per Round:
         - Stone: Needs Humans to Harvest
 
-- **Forest**:
+- **Tree**:
     - Primary Resource: Wood
     - Secondary Resource: Food
     - Per Round:
