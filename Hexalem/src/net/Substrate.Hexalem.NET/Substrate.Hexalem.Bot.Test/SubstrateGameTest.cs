@@ -115,7 +115,7 @@ namespace Substrate.Hexalem.Integration.Test
             Assert.That(aliceBoard.HexGrid.All(x => x.TileType == (byte)TileType.Empty));
 
             Assert.That(bobBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == (byte)TileType.Empty));
+            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
 
             var game = await client.GetGameAsync(aliceBoard.GameId, CancellationToken.None);
 

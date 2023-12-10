@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
     
     
     /// <summary>
-    /// >> 129 - Composite[hexalem_runtime.HexalemTile]
+    /// >> 131 - Composite[hexalem_runtime.HexalemTile]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class HexalemTile : BaseType

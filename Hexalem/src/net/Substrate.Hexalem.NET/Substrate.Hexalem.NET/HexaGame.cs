@@ -209,7 +209,7 @@ namespace Substrate.Hexalem
             var (player, board) = HexaTuples[PlayerTurn];
 
             var tile = (HexaTile)board[coords.q, coords.r];
-            if (!EnsureUpgradableTile(tile))
+            if (!tile.CanUpgrade())
             {
                 return false;
             }

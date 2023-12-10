@@ -32,6 +32,48 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
+        public void RenewSelection_ShouldHaveRandomGeneration()
+        {
+            var hexaGame = Game.CreateGame(_defaultBlockStart, new List<HexaPlayer>() { new HexaPlayer(new byte[32]) }, GridSize.Medium);
+            
+            List<List<HexaTile>> hexaTiles = new List<List<HexaTile>>
+            {
+                hexaGame.RenewSelection(10, 10),
+                hexaGame.RenewSelection(10, 10),
+                hexaGame.RenewSelection(10, 10),
+                hexaGame.RenewSelection(10, 10),
+                hexaGame.RenewSelection(10, 10)
+            };
+
+            Assert.IsFalse(hexaTiles.All(x => x.SequenceEqual(hexaTiles.First())));
+        }
+
+        [Test]
+        public void StandardGameStart_Training_ShouldSucceed()
+        {
+            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
+            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
+
+            // Player select the second tile
+            var indexSelection = 1;
+            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+
+            hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, indexSelection, (-1, 1));
+
+            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+
+            // Allways player 1 index
+            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
+
+            hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, (0, 1));
+
+            // Selection is 4
+            Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
+
+            Game.FinishTurn(_defaultBlockStart + 6, hexaGame, hexaGame.PlayerTurn);
+        }
+
+        [Test]
         public void StandardGameStart_2v2_ShouldSucceed()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };

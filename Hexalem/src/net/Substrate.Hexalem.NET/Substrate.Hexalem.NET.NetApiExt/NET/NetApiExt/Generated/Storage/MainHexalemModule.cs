@@ -198,23 +198,13 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
-        /// >> MaxTileSelectionBase
+        /// >> TileCosts
         /// </summary>
-        public Substrate.NetApi.Model.Types.Primitive.U32 MaxTileSelectionBase()
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileCost TileCosts()
         {
-            var result = new Substrate.NetApi.Model.Types.Primitive.U32();
-            result.Create("0x20000000");
-            return result;
-        }
-        
-        /// <summary>
-        /// >> AllTileOffers
-        /// </summary>
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileOffer AllTileOffers()
-        {
-            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileOffer();
-            result.Create("0x2800012800022800022000012000022000021000011000011000021800011800011800020800020" +
-                    "80002080003080003");
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileCost();
+            result.Create("0x2800012800012800012000012000012000011000011000011000011800011800011800010800010" +
+                    "80001080001080001");
             return result;
         }
         
@@ -264,7 +254,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile HomeTile()
         {
             var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
-            result.Create("0x48");
+            result.Create("0x08");
             return result;
         }
     }
@@ -366,5 +356,20 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> TileIsNotEmpty
         /// </summary>
         TileIsNotEmpty,
+        
+        /// <summary>
+        /// >> TileOnMaxLevel
+        /// </summary>
+        TileOnMaxLevel,
+        
+        /// <summary>
+        /// >> CannotLevelUpEmptyTile
+        /// </summary>
+        CannotLevelUpEmptyTile,
+        
+        /// <summary>
+        /// >> CannotLevelUp
+        /// </summary>
+        CannotLevelUp,
     }
 }

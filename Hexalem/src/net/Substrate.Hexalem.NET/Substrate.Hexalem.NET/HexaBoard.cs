@@ -1,3 +1,4 @@
+using Serilog;
 using Substrate.Hexalem.GameException;
 using System;
 using System.Collections.Generic;
@@ -343,7 +344,12 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="coords"></param>
         /// <returns></returns>
-        internal bool CanPlace((int, int) coords)
+        /// <summary>
+        /// Check if a tile can be placed on the board
+        /// </summary>
+        /// <param name="coords"></param>
+        /// <returns></returns>
+        public bool CanPlace((int, int) coords)
         {
             var index = ToIndex(coords);
 
@@ -353,8 +359,9 @@ namespace Substrate.Hexalem
             }
 
             // Check if the tile is empty
-            if (Value[index.Value] != 0x00)
+            if (!((HexaTile)Value[index.Value]).IsEmpty())
             {
+                Log.Warning("Unable to play on a non empty tile map (index = {tileMapIndex})", index.Value);
                 return false;
             }
 

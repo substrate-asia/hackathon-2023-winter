@@ -28,7 +28,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet
     }
     
     /// <summary>
-    /// >> 115 - Variant[pallet_sudo.pallet.Call]
+    /// >> 117 - Variant[pallet_sudo.pallet.Call]
     /// Contains a variant per dispatchable extrinsic that this pallet has.
     /// </summary>
     public sealed class EnumCall : BaseEnumExt<Call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight>, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.multiaddress.EnumMultiAddress, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.multiaddress.EnumMultiAddress, Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall>>

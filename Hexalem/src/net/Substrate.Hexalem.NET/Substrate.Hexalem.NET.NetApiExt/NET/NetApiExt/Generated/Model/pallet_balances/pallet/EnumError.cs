@@ -40,7 +40,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.pallet
     }
     
     /// <summary>
-    /// >> 112 - Variant[pallet_balances.pallet.Error]
+    /// >> 114 - Variant[pallet_balances.pallet.Error]
     /// The `Error` enum of this pallet.
     /// </summary>
     public sealed class EnumError : BaseEnum<Error>
