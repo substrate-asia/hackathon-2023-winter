@@ -12,7 +12,7 @@ namespace Substrate.Hexalem
 {
     public partial class HexaGame : IHexaBase
     {
-         public byte[] Id { get; set; }
+        public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
 
@@ -499,6 +499,26 @@ namespace Substrate.Hexalem
             cloneGame.UnboundTileOffers = this.UnboundTileOffers.Select(x => x).ToList();
 
             return cloneGame;
+        }
+
+        public bool IsSame(HexaGame other)
+        {
+            if (other == null)
+                return true;
+
+            // Selection does not count
+            var isEqual = Id.SequenceEqual(other.Id);
+            isEqual = isEqual && Value.SequenceEqual(other.Value);
+            isEqual = isEqual && UnboundTileOffers.SequenceEqual(other.UnboundTileOffers);
+            isEqual = isEqual && HexaTuples.Count == other.HexaTuples.Count;
+
+            for(int i = 0; i < HexaTuples.Count; i++)
+            {
+                isEqual = isEqual && HexaTuples[i].player.Value.SequenceEqual(other.HexaTuples[i].player.Value);
+                isEqual = isEqual && HexaTuples[i].board.Value.SequenceEqual(other.HexaTuples[i].board.Value);
+            }
+
+            return isEqual;
         }
 
         public override string ToString()
