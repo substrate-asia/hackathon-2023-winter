@@ -203,7 +203,8 @@ namespace Substrate.Hexalem.Test
             // It is just a one player game, so it is always Player 1 turn
             Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            Assert.That(await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, -1), CancellationToken.None), Is.False);
+            var res = await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, -1), CancellationToken.None);
+            Assert.That(res.IsSuccess, Is.False);
         }
 
         [Test]

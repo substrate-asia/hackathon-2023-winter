@@ -26,7 +26,7 @@ namespace Substrate.Hexalem
         {
             return new GameWorflowStatus()
             {
-                IsSuccess = false,
+                IsSuccess = true,
                 Message = string.Empty
             };
         }

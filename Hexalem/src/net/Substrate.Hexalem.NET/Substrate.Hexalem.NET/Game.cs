@@ -161,8 +161,6 @@ namespace Substrate.Hexalem
             {
                 if(e.IsSuccess && _state.ContainsKey(sender))
                 {
-                    IEnumerable<NET.NetApiExt.Generated.Model.frame_system.pallet.EnumEvent> systemEvents = Enumerable.Empty<NET.NetApiExt.Generated.Model.frame_system.pallet.EnumEvent>();
-
                     Log.Information($"{_state[sender]} successfully received !");
 
                     string? errorMessage = null;

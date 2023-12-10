@@ -105,7 +105,7 @@ namespace Substrate.Hexalem.Integration.Test
             // Create a new game, and wait for extrinsic
             GameWorflowStatus result = await _game.CreateGameAsync(GridSize.Medium, token);
 
-            Assert.That(result, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
 
             Assert.That(_game.HexaGame.HexaTuples, Is.Not.Null);
 
@@ -123,24 +123,24 @@ namespace Substrate.Hexalem.Integration.Test
             // Alice has 1 mana
             Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(1));
             result = await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, 1), CancellationToken.None);
-            Assert.That(result, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
             Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(0));
 
             Assert.That(((HexaTile)_game.HexaGame.CurrentPlayerBoard[0, 1]).IsEmpty(), Is.False);
 
             result = await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn,CancellationToken.None);
-            Assert.That(result, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
 
             // Now it is Bob's turn
             Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo((byte)1));
             Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(1));
             result = await _game.ChooseAndPlaceAsync(_game.HexaGame.PlayerTurn, 0, (0, 1), CancellationToken.None);
-            Assert.That(result, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
             Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(0));
 
             Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo((byte)0));
             result = await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
-            Assert.That(result, Is.True);
+            Assert.That(result.IsSuccess, Is.True);
 
             // Now it is Alice turn again, and we have a new round
             Assert.That(_game.HexaGame.PlayerTurn, Is.EqualTo((byte)0));
