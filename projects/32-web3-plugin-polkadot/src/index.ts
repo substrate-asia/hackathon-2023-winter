@@ -1,11 +1,16 @@
 import { Web3PluginBase } from "web3";
 
-import { PolkadotAPI } from "./polkadot-api";
-import { BlockHash } from "@polkadot/types/interfaces";
-import { Observable } from "@polkadot/types/types";
+import { BlockHash, BlockNumber } from "@polkadot/types/interfaces";
+import { RpcApiFlattened, RpcApiSimplified } from "./web3js-polkadot-api";
+import { AnyNumber } from "@polkadot/types/types";
 
 
-export class PolkadotPlugin extends Web3PluginBase<PolkadotAPI> {
+
+
+export class PolkadotPlugin 
+  extends Web3PluginBase<RpcApiFlattened> 
+  implements Partial<RpcApiSimplified> 
+{
   public pluginNamespace = "polkadot";
   
   constructor() {
@@ -18,16 +23,42 @@ export class PolkadotPlugin extends Web3PluginBase<PolkadotAPI> {
   public get chain() {
     return {
       getBlock: (hash?: BlockHash | string | Uint8Array) => {
-        const response = this.requestManager.send({
+        return this.requestManager.send({
           method: "chain_getBlock", 
           params: [hash] 
         });
-
-        // A transformation from type:
-        // Promise<Observable<SignedBlock>> that is used by polkadot-types-from-chain,
-        // to the actual type returned by web3, that is Promise<SignedBlock>
-        // a modification might be done later at polkadot-types-from-chain to give the type compatible with web3 directly
-        return response as unknown as typeof response extends Promise<Observable<infer U>> ? Promise<U> : never;
+      },
+      getBlockHash: (blockNumber?: BlockNumber | AnyNumber | undefined) => {
+        return this.requestManager.send({
+          method: "chain_getBlockHash", 
+          params: [blockNumber] 
+        });
+      },
+      getFinalizedHead: () => {
+        return this.requestManager.send({
+          method: "chain_getFinalizedHead"
+        });
+      },
+      getHeader: (hash?: BlockHash | string | Uint8Array) => {
+        return this.requestManager.send({
+          method: "chain_getHeader", 
+          params: [hash] 
+        });
+      },
+      subscribeAllHeads: () => {
+        return this.requestManager.send({
+          method: "chain_subscribeAllHeads"
+        });
+      },
+      subscribeFinalizedHeads: () => {
+        return this.requestManager.send({
+          method: "chain_subscribeFinalizedHeads"
+        });
+      },
+      subscribeNewHeads: () => {
+        return this.requestManager.send({
+          method: "chain_subscribeNewHeads"
+        });
       },
     };
   }

@@ -1,6 +1,6 @@
 {
   "name": "@conx3/web3-plugin-polkadot",
-  "version": "0.0.1-alpha.1",
+  "version": "0.0.1-alpha.2",
   "description": "web3.js plugin for polkadot and substrate nodes' custom RPC methods",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -21,8 +21,7 @@
     "type": "git",
     "url": "git+https://github.com/conx3/web3-plugin-polkadot.git"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "@polkadot/typegen": "^10.11.1",
     "@polkadot/types": "^10.11.1",

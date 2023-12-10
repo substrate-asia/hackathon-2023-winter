@@ -21,8 +21,7 @@ describe("PolkadotPlugin Tests", () => {
     });
 
     it("should call chain.getBlock method", async () => {
-      const hash = "0x6277848db56df4936213f3c82d4b7181291674a9376deb22339dc504d33b8851";
-      const response = await web3.polkadot.chain.getBlock(hash);
+      const response = await web3.polkadot.chain.getBlock();
       // expect response to like:
       // {
       //   "jsonrpc": "2.0",
