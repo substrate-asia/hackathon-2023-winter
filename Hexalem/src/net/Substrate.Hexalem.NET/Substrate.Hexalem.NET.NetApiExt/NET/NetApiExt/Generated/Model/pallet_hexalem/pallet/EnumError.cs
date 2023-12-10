@@ -55,10 +55,16 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         BadGridSize = 17,
         
         TileIsNotEmpty = 18,
+        
+        TileOnMaxLevel = 19,
+        
+        CannotLevelUpEmptyTile = 20,
+        
+        CannotLevelUp = 21,
     }
     
     /// <summary>
-    /// >> 136 - Variant[pallet_hexalem.pallet.Error]
+    /// >> 138 - Variant[pallet_hexalem.pallet.Error]
     /// The `Error` enum of this pallet.
     /// </summary>
     public sealed class EnumError : BaseEnum<Error>

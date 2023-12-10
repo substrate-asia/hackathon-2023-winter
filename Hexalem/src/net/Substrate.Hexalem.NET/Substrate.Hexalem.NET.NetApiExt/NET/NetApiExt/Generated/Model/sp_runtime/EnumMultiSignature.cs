@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime
     }
     
     /// <summary>
-    /// >> 138 - Variant[sp_runtime.MultiSignature]
+    /// >> 140 - Variant[sp_runtime.MultiSignature]
     /// </summary>
     public sealed class EnumMultiSignature : BaseEnumExt<MultiSignature, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.ed25519.Signature, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.sr25519.Signature, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.ecdsa.Signature>
     {

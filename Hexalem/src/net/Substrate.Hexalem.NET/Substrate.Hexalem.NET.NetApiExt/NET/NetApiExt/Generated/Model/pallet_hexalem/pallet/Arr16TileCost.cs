@@ -18,13 +18,13 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 131 - Array
+    /// >> 133 - Array
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Array)]
-    public sealed class Arr16TileOffer : BaseType
+    public sealed class Arr16TileCost : BaseType
     {
         
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileOffer[] _value;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileCost[] _value;
         
         public override int TypeSize
         {
@@ -34,7 +34,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileOffer[] Value
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileCost[] Value
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         public override string TypeName()
         {
-            return string.Format("[{0}; {1}]", new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileOffer().TypeName(), this.TypeSize);
+            return string.Format("[{0}; {1}]", new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileCost().TypeName(), this.TypeSize);
         }
         
         public override byte[] Encode()
@@ -61,15 +61,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            var array = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileOffer[TypeSize];
-            for (var i = 0; i < array.Length; i++) {var t = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileOffer();t.Decode(byteArray, ref p);array[i] = t;};
+            var array = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileCost[TypeSize];
+            for (var i = 0; i < array.Length; i++) {var t = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileCost();t.Decode(byteArray, ref p);array[i] = t;};
             var bytesLength = p - start;
             Bytes = new byte[bytesLength];
             System.Array.Copy(byteArray, start, Bytes, 0, bytesLength);
             Value = array;
         }
         
-        public void Create(Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileOffer[] array)
+        public void Create(Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.TileCost[] array)
         {
             Value = array;
             Bytes = Encode();
