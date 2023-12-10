@@ -52,7 +52,7 @@ namespace Assets.Scripts.ScreenStates
             FlowController.VelContainer.Add(instance);
 
             // load initial sub state
-            FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.Choose);
+            FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.MainChoose);
 
             // subscribe to connection changes
             Network.ConnectionStateChanged += OnConnectionStateChanged;
@@ -69,6 +69,9 @@ namespace Assets.Scripts.ScreenStates
             // unsubscribe from event
             Network.ConnectionStateChanged -= OnConnectionStateChanged;
             Storage.OnNextBlocknumber -= UpdateBlocknumber;
+
+            // remove container
+            FlowController.VelContainer.RemoveAt(1);
         }
 
         private void OnConnectionStateChanged(bool IsConnected)

@@ -60,7 +60,7 @@ namespace Assets.Scripts.ScreenStates
 
         private void OnConnectionStateChanged(bool IsConnected)
         {
-            _btnPlay.SetEnabled(IsConnected);
+            //_btnPlay.SetEnabled(IsConnected);
         }
 
         private void OnBtnTrainClicked(ClickEvent evt)
@@ -70,7 +70,7 @@ namespace Assets.Scripts.ScreenStates
 
         private void OnBtnPlayClicked(EventBase @base)
         {
-            FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.Play);
+            FlowController.ChangeScreenState(ScreenState.PlayScreen);
         }
         private void OnBtnScoreClicked(ClickEvent evt)
         {
