@@ -2,7 +2,6 @@
 using Schnorrkel.Keys;
 
 using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.Bot;
 using Substrate.Integration;
 using Substrate.Integration.Client;
 using Substrate.NetApi;
@@ -15,87 +14,20 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using Substrate.NetApi.Model.Types.Primitive;
+using Substrate.Hexalem.Game;
+using Substrate.Hexalem.Game.Test;
 
 namespace Substrate.Hexalem.Integration.Test
 {
-    public class SubstrateGameTest
+    public class SubstrateGameTest : IntegrationTest
     {
-        #region Accounts
-        private Account? _alice;
-        public Account AliceAccount
-        {
-            get
-            {
-                if (_alice is null)
-                {
-                    //var kp = new Keyring().AddFromJson(File.ReadAllText($"{AppContext.BaseDirectory}/Accounts/json_alice.json"));
-                    //kp.Unlock("alicealice");
-                    //_alice = kp.Account;
-                    _alice = BuildAccount("0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a");
-                }
-
-                return _alice;
-            }
-        }
-
-        private Account? _bob;
-        public Account BobAccount
-        {
-            get
-            {
-                if (_bob is null)
-                    _bob = BuildAccount("0x398f0c28f98885e046333d4a41c19cee4c37368a9832c6502f6cfd182e2aef89");
-
-                return _bob;
-            }
-        }
-
-        private Account? _charlie;
-        public Account CharlieAccount
-        {
-            get
-            {
-                if (_charlie is null)
-                    _charlie = BuildAccount("0xbc1ede780f784bb6991a585e4f6e61522c14e1cae6ad0895fb57b9a205a8f938");
-
-                return _charlie;
-            }
-        }
-
-        private Account BuildAccount(string hexPublicKey)
-        {
-            var miniSecret = new MiniSecret(
-            Utils.HexToByteArray(hexPublicKey),
-            ExpandMode.Ed25519);
-
-            return Account.Build(
-                KeyType.Sr25519,
-                miniSecret.ExpandToSecret().ToBytes(),
-                miniSecret.GetPair().Public.Key);
-        }
-        #endregion
-
-        private RandomAI bot = new RandomAI(0);
-        private string _nodeUri = "ws://127.0.0.1:9944";
-
-        private Game _game;
-        private List<Account>_players;
-        private SubstrateNetwork _client;
-
-        [OneTimeSetUp]
-        public void SetUp()
-        {
-            bot = new RandomAI(0);
-
-            _players = new List<Account>() { AliceAccount, BobAccount };
-            _client = new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri);
-
-            _game = Game.Pvp(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
-        }
+        private GameManager _game;
 
         [Test]
         public async Task StartNewSubstrateGame_ThenPlay_ShouldSucceedAsync()
         {
+            _game = GameManager.Pvp(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
+
             var token = CancellationToken.None;
 
             Assert.That(_client.IsConnected, Is.EqualTo(false));

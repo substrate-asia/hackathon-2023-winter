@@ -1,5 +1,5 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Bot;
+using Substrate.Hexalem.Game;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,14 +11,14 @@ namespace Substrate.Hexalem.Console
     public class Play
     {
         public List<Strategy> Bots { get; set; }
-        private Game _game { get; set; }
+        private GameManager _game { get; set; }
         private List<HexaPlayer> hexaPlayers;
 
         public Play(List<Strategy> bots)
         {
             Bots = bots;
             hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
-            _game = Game.VsBot(hexaPlayers);
+            _game = GameManager.VsBot(hexaPlayers);
         }
 
         public async Task<GameResult> StartGameAsync(CancellationToken token)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Substrate.Hexalem.Game;
 using Substrate.Hexalem.WebAPI.Data;
 using System;
 using System.Collections.Generic;
@@ -125,7 +126,7 @@ namespace Substrate.Hexalem.WebAPI.Controllers
             }
 
             var hexPlayer = new HexaPlayer(new byte[32]);
-            var game = Game.Training(hexPlayer);
+            var game = GameManager.Training(hexPlayer);
             await game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var board = new Board()

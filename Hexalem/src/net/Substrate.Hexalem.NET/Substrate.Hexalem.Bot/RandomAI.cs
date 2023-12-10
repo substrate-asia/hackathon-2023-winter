@@ -2,7 +2,7 @@
 using System;
 using System.Linq;
 
-namespace Substrate.Hexalem.Bot
+namespace Substrate.Hexalem.Game
 {
     public class RandomAI : Strategy
     {
@@ -10,7 +10,7 @@ namespace Substrate.Hexalem.Bot
 
         public RandomAI(int index) : base(index)
         {
-            _random = new System.Random();
+            _random = new Random();
         }
 
         public override string AiName => "Random";

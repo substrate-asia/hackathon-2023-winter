@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Substrate.Hexalem.Bot
+namespace Substrate.Hexalem.Game
 {
     public abstract class Strategy
     {
@@ -106,7 +106,7 @@ namespace Substrate.Hexalem.Bot
             // Player can play if :
             // He can upgrade tiles
             // Or : He can buy tile and put them on the board
-            return !(UpgradableTiles(state).Any() || (SelectionTiles(state).Any() && EmptyMapTiles(state).Any()));
+            return !(UpgradableTiles(state).Any() || SelectionTiles(state).Any() && EmptyMapTiles(state).Any());
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Substrate.Hexalem.Bot
             var values = Enum.GetValues(typeof(WinningCondition))
                 .Cast<WinningCondition>().ToArray();
 
-            return (WinningCondition)new System.Random().Next(values.Length);
+            return (WinningCondition)new Random().Next(values.Length);
         }
     }
 }

@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Substrate.Hexalem.Bot
+namespace Substrate.Hexalem.Game
 {
     public class MinMax : Strategy
     {

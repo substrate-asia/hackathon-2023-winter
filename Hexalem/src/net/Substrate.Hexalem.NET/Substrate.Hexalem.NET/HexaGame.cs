@@ -173,7 +173,7 @@ namespace Substrate.Hexalem
         /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
-        internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
+        public bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
             if (!CanChooseAndPlace(playerIndex, selectionIndex, coords))
             {
@@ -240,7 +240,7 @@ namespace Substrate.Hexalem
         /// <param name="playerIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
-        internal bool Upgrade(byte playerIndex, (int q, int r) coords)
+        public bool Upgrade(byte playerIndex, (int q, int r) coords)
         {
             if (!CanUpgrade(playerIndex, coords))
             {
@@ -268,7 +268,7 @@ namespace Substrate.Hexalem
         /// <param name="blockNumber"></param>
         /// <param name="playerIndex"></param>
         /// <returns></returns>
-        internal bool UpdateTurnState(uint blockNumber, byte playerIndex)
+        public bool UpdateTurnState(uint blockNumber, byte playerIndex)
         {
             // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
@@ -327,7 +327,7 @@ namespace Substrate.Hexalem
         /// <param name="blockNumber"></param>
         /// <param name="selectBase"></param>
         /// <returns></returns>
-        internal List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
+        public List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
         {
             var values = Enum.GetValues(typeof(TileType))
                 .Cast<TileType>()
@@ -349,7 +349,7 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="blockNumber"></param>
         /// <param name="playerIndex"></param>
-        internal void CalcRewards(uint blockNumber, byte playerIndex)
+        public void CalcRewards(uint blockNumber, byte playerIndex)
         {
             var hexaPlayer = HexaTuples[playerIndex].player;
             var hexaBoard = HexaTuples[playerIndex].board;

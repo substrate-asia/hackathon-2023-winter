@@ -11,12 +11,13 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Substrate.Hexalem.Integration.Helper;
+using Substrate.Integration.Helper;
 
-[assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
+[assembly: InternalsVisibleTo("Substrate.Hexalem.Bot.Test")]
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Game
 {
-    public class Game
+    public class GameManager
     {
         public HexaGame HexaGame { get; internal set; }
         public GameType GameType { get; internal set; }
@@ -30,7 +31,7 @@ namespace Substrate.Hexalem
         private readonly int _concurentTask;
         private byte[]? _gameId;
 
-        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainGameCreated ;
+        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainGameCreated;
         private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainPlayed;
         private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainUpgrade;
         private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainFinishTurn;
@@ -44,7 +45,7 @@ namespace Substrate.Hexalem
             FinishTurn,
             GameFinished
         }
-        protected Game()
+        protected GameManager()
         {
             _nodeUri = "ws://127.0.0.1:9944";
             _concurentTask = 10;
@@ -59,12 +60,12 @@ namespace Substrate.Hexalem
             _onGameFinished = new TaskCompletionSource<(bool, GameWorflowStatus)>();
         }
 
-        protected Game(GameType gameType, List<HexaPlayer> players) : this()
+        protected GameManager(GameType gameType, List<HexaPlayer> players) : this()
         {
             GameType = gameType;
             _players = players;
         }
-        protected Game(GameType gameType, List<Account> players, SubstrateNetwork substrateNetwork) 
+        protected GameManager(GameType gameType, List<Account> players, SubstrateNetwork substrateNetwork)
             : this(gameType, players.Select(x => new HexaPlayer(x.Bytes)).ToList())
         {
             _client = substrateNetwork;
@@ -76,9 +77,9 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public static Game Training(HexaPlayer player)
+        public static GameManager Training(HexaPlayer player)
         {
-            return new Game(GameType.Training, new List<HexaPlayer>() { player });
+            return new GameManager(GameType.Training, new List<HexaPlayer>() { player });
         }
 
         /// <summary>
@@ -86,9 +87,9 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public static Game VsBot(List<HexaPlayer> players) // Todo : Add AI in parameters ?
+        public static GameManager VsBot(List<HexaPlayer> players) // Todo : Add AI in parameters ?
         {
-            return new Game(GameType.VsBots, players);
+            return new GameManager(GameType.VsBots, players);
         }
 
         /// <summary>
@@ -97,9 +98,9 @@ namespace Substrate.Hexalem
         /// <param name="substrateNetwork"></param>
         /// <param name="nodePlayers"></param>
         /// <returns></returns>
-        public static Game Pvp(SubstrateNetwork substrateNetwork, List<Account> nodePlayers)
+        public static GameManager Pvp(SubstrateNetwork substrateNetwork, List<Account> nodePlayers)
         {
-            return new Game(GameType.Pvp, nodePlayers, substrateNetwork);
+            return new GameManager(GameType.Pvp, nodePlayers, substrateNetwork);
         }
 
         /// <summary>
@@ -110,11 +111,11 @@ namespace Substrate.Hexalem
         /// <exception cref="InvalidOperationException"></exception>
         private async Task EnsureConnectedAsync(CancellationToken token)
         {
-            if(GameType == GameType.Pvp && !_client!.IsConnected)
+            if (GameType == GameType.Pvp && !_client!.IsConnected)
             {
                 var isConnected = await _client.ConnectAsync(true, true, token);
                 if (isConnected)
-                    Log.Information("Connected to Hexalem node !"); 
+                    Log.Information("Connected to Hexalem node !");
                 else
                     throw new InvalidOperationException("Unable to connect to Hexalem node...");
             }
@@ -122,7 +123,7 @@ namespace Substrate.Hexalem
 
         private void EnsurePlayerIndex(byte playerIndex)
         {
-            if(!(HexaGame != null && HexaGame.PlayerTurn == playerIndex && playerIndex < _players.Count))
+            if (!(HexaGame != null && HexaGame.PlayerTurn == playerIndex && playerIndex < _players.Count))
                 throw new InvalidOperationException($"Invalid {nameof(playerIndex)}");
         }
 
@@ -159,7 +160,7 @@ namespace Substrate.Hexalem
 
             _client.ExtrinsicManager.ExtrinsicUpdated += async (sender, e) =>
             {
-                if(e.IsSuccess && _state.ContainsKey(sender))
+                if (e.IsSuccess && _state.ContainsKey(sender))
                 {
                     Log.Information($"{_state[sender]} successfully received !");
 
@@ -233,7 +234,7 @@ namespace Substrate.Hexalem
                 return LogErrorThenReturn("Game is not set propertly");
             }
 
-            HexaGame = Helper.GetHexaGame(game, boards.ToArray());
+            HexaGame = HexalemWrapper.GetHexaGame(game, boards.ToArray());
             return GameWorflowStatus.Success();
         }
 
@@ -245,7 +246,7 @@ namespace Substrate.Hexalem
         /// <exception cref="InvalidOperationException"></exception>
         private async Task<bool> OnGameCreatedAsync(GameWorflowStatus extrinsicStatus, CancellationToken token)
         {
-            if(extrinsicStatus.IsSuccess)
+            if (extrinsicStatus.IsSuccess)
             {
                 await EnsureConnectedAsync(token);
                 await reloadHexaGameFromStorageAsync(token);
@@ -321,13 +322,13 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         public async Task<GameWorflowStatus> CreateGameAsync(GridSize gridSize, CancellationToken token)
         {
-            if(GameType == GameType.Pvp)
+            if (GameType == GameType.Pvp)
             {
                 await InitOnChainGame(token);
 
                 var gameSubscription = await _client.CreateGameAsync(_substratePlayers[0], _substratePlayers, (int)GridSize.Medium, _concurentTask, token);
 
-                if(string.IsNullOrEmpty(gameSubscription))
+                if (string.IsNullOrEmpty(gameSubscription))
                 {
                     return LogErrorThenReturn($"[{_gameId}] Error while creating a new OnChain game. GameSubscription is empty");
                 }
@@ -361,7 +362,7 @@ namespace Substrate.Hexalem
 
                 return GameWorflowStatus.Success();
             }
-            
+
         }
 
         /// <summary>
@@ -389,9 +390,10 @@ namespace Substrate.Hexalem
 
                 _state.Add(chooseAndPlaceSubscription, InternalGameState.Play);
                 Log.Information("[{gameId}] Played at [{r},{q}], wait for finalized block", _gameId, coords.Item1, coords.Item2);
-                
+
                 return (await _onChainPlayed.Task).extrinsicStatus;
-            } else
+            }
+            else
             {
                 if (!HexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords))
                 {
@@ -402,7 +404,7 @@ namespace Substrate.Hexalem
 
                 return GameWorflowStatus.Success();
             }
-                
+
         }
 
         /// <summary>
@@ -428,7 +430,8 @@ namespace Substrate.Hexalem
 
                 _state.Add(upgradeSubscription, InternalGameState.Upgrade);
                 return (await _onChainUpgrade.Task).extrinsicStatus;
-            } else
+            }
+            else
             {
                 if (!HexaGame.Upgrade(playerIndex, coords))
                 {
@@ -465,7 +468,8 @@ namespace Substrate.Hexalem
 
                 _state.Add(finishTurnSubscription, InternalGameState.FinishTurn);
                 return (await _onChainFinishTurn.Task).extrinsicStatus;
-            } else
+            }
+            else
             {
                 // Update game turn information
                 if (!HexaGame.UpdateTurnState(blockNumber, playerIndex))

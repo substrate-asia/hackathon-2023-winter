@@ -19,11 +19,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.NET.NetAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Integration.Test", "Substrate.Hexalem.Integration.Test\Substrate.Hexalem.Integration.Test.csproj", "{1473BCA5-6956-4D84-B131-423EECCC3614}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Bot", "Substrate.Hexalem.Bot\Substrate.Hexalem.Bot.csproj", "{75F78C98-1379-4848-A80A-946CBF7520B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Game", "Substrate.Hexalem.Bot\Substrate.Hexalem.Game.csproj", "{75F78C98-1379-4848-A80A-946CBF7520B5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Bot.Test", "Substrate.Hexalem.Bot.Test\Substrate.Hexalem.Bot.Test.csproj", "{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Game.Test", "Substrate.Hexalem.Bot.Test\Substrate.Hexalem.Game.Test.csproj", "{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.UnityIntegration", "Substrate.Hexalem.UnityIntegration\Substrate.Hexalem.UnityIntegration.csproj", "{5791D948-8F61-4A4F-BA7D-3A3BF4313855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.UnityIntegration", "Substrate.Hexalem.UnityIntegration\Substrate.Hexalem.UnityIntegration.csproj", "{5791D948-8F61-4A4F-BA7D-3A3BF4313855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
