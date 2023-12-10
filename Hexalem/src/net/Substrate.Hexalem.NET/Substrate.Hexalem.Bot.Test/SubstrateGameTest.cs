@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 using Schnorrkel.Keys;
-using Serilog;
+
 using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.Bot;
 using Substrate.Integration;
@@ -138,6 +138,7 @@ namespace Substrate.Hexalem.Integration.Test
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(_game.HexaGame.CurrentPlayer[RessourceType.Mana], Is.EqualTo(0));
 
+//var hexaGame = Substrate.Integration.Helper.HexalemWrapper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
             Assert.That(_game.HexaGame.HexBoardRound, Is.EqualTo((byte)0));
             result = await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, CancellationToken.None);
             Assert.That(result.IsSuccess, Is.True);

@@ -1,5 +1,4 @@
-﻿using Substrate.Hexalem.Integration.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Substrate.Hexalem

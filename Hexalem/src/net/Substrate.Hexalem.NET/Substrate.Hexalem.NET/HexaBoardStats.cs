@@ -1,5 +1,4 @@
-﻿using Substrate.Hexalem.Integration.Model;
-using System;
+﻿using System;
 
 namespace Substrate.Hexalem
 {

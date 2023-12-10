@@ -1,6 +1,4 @@
-﻿using Substrate.Hexalem.Integration.Model;
-using Substrate.NetApi.Extensions;
-using Substrate.Hexalem.Bot;
+﻿using Substrate.Hexalem.Bot;
 
 namespace Substrate.Hexalem.Test
 {

@@ -1,7 +1,6 @@
 ﻿using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto;
 using Substrate.Integration.Helper;
-using Substrate.NetApi.Model.Types.Base;
 using Substrate.NetApi.Model.Types.Primitive;
 using System.Linq;
 
@@ -9,7 +8,7 @@ namespace Substrate.Hexalem.Integration.Model
 {
     public class GameSharp
     {
-        public GameSharp(byte[] gameId, Game game)
+        public GameSharp(byte[] gameId, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Game game)
         {
             GameId = gameId;
             State = game.State.Value;

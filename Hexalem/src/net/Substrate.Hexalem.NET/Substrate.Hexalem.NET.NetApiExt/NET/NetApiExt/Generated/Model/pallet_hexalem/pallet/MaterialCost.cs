@@ -46,7 +46,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 MaterialCosts
+        public Substrate.NetApi.Model.Types.Primitive.U8 MaterialCostValue
         {
             get
             {
@@ -67,7 +67,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         {
             var result = new List<byte>();
             result.AddRange(MaterialType.Encode());
-            result.AddRange(MaterialCosts.Encode());
+            result.AddRange(MaterialCostValue.Encode());
             return result.ToArray();
         }
         
@@ -76,8 +76,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             MaterialType = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumMaterial();
             MaterialType.Decode(byteArray, ref p);
-            MaterialCosts = new Substrate.NetApi.Model.Types.Primitive.U8();
-            MaterialCosts.Decode(byteArray, ref p);
+            MaterialCostValue = new Substrate.NetApi.Model.Types.Primitive.U8();
+            MaterialCostValue.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

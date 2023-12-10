@@ -1,6 +1,5 @@
 using Serilog;
 using Substrate.Hexalem.GameException;
-using Substrate.Hexalem.Integration.Model;
 using System;
 using System.Collections.Generic;
 
