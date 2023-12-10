@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Substrate.Hexalem.NET.NetApiExt\Substrate.Hexalem.NET.NetApiExt.csproj" />
+    <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj" />
+    <ProjectReference Include="..\Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj" />
   </ItemGroup>
 
 </Project>

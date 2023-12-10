@@ -1,6 +1,4 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Integration.Model;
-using System.Linq;
 
 namespace Substrate.Hexalem
 {
@@ -29,11 +27,6 @@ namespace Substrate.Hexalem
         public HexaTile(byte value)
         {
             Value = value;
-        }
-
-        public HexaTile(TileSharp tileTypeSharp)
-        {
-            Value = tileTypeSharp.Value;
         }
 
         /// <summary>

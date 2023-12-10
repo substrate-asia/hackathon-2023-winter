@@ -1,6 +1,4 @@
-﻿using Substrate.Hexalem.Integration.Model;
-using Substrate.NetApi.Extensions;
-using Substrate.Hexalem.Bot;
+﻿using Substrate.Hexalem.Bot;
 
 namespace Substrate.Hexalem.Test
 {
@@ -28,7 +26,7 @@ namespace Substrate.Hexalem.Test
             _hexGridMedium_Player2 = new HexaBoard(new byte[(int)GridSize.Medium]);
             _hexPlayer_Player2 = new HexaPlayer(new byte[32]);
 
-            _selectionGenerator = new byte[GameConfig.NB_MAX_UNBOUNDED_TILES].Populate();
+            _selectionGenerator = new byte[GameConfig.NB_MAX_UNBOUNDED_TILES];
 
             _defaultBlockStart = 1;
         }

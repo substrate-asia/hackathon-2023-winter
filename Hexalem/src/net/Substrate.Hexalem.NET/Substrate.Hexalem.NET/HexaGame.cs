@@ -1,10 +1,6 @@
 ﻿using Serilog;
 using Substrate.Hexalem.Extensions;
 using Substrate.Hexalem.GameException;
-using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
-using Substrate.Integration.Helper;
-using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +24,7 @@ namespace Substrate.Hexalem
         /// <summary>
         /// Tiles that can be bought by players
         /// </summary>
-        public List<byte> UnboundTileOffers { get; internal set; }
+        public List<byte> UnboundTileOffers { get; set; }
 
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
@@ -497,7 +493,7 @@ namespace Substrate.Hexalem
         {
             string log = $"HexaGame value :";
 
-            log += $"\n\t Id = {Utils.Bytes2HexString(Id)}";
+            log += $"\n\t Id = {string.Join(',', Id)}";
             log += $"\n\t HexBoardState = {HexBoardState}";
             log += $"\n\t HexBoardRound = {HexBoardRound}";
             log += $"\n\t PlayerTurn = {PlayerTurn}";
@@ -506,7 +502,7 @@ namespace Substrate.Hexalem
             log += $"\n\t Nb players = {PlayersCount}";
             for (int i = 0; i < PlayersCount; i++)
             {
-                log += $"\n\t\t Player {i} = {HexaTuples[i].player.Id.ToAddress()}";
+                log += $"\n\t\t Player {i} = {string.Join(',', HexaTuples[i].player.Id)}";
             }
 
             return log;

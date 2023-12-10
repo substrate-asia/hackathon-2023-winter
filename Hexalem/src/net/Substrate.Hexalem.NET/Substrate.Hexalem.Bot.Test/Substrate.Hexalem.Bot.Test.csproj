@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj" />
+    <ProjectReference Include="..\Substrate.Hexalem.Bot\Substrate.Hexalem.Bot.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,19 +1,12 @@
 ﻿using Newtonsoft.Json.Linq;
 using Schnorrkel.Keys;
-using Serilog;
+
 using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.Bot;
 using Substrate.Integration;
 using Substrate.Integration.Client;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Security.Principal;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Substrate.Hexalem.Integration.Test
 {
@@ -119,17 +112,17 @@ namespace Substrate.Hexalem.Integration.Test
 
             // Tiles have to be set correctly
             Assert.That(aliceBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
+            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == (byte)TileType.Empty));
 
             Assert.That(bobBoard, Is.Not.Null);
-            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == TileType.Empty));
+            Assert.That(aliceBoard.HexGrid.All(x => x.TileType == (byte)TileType.Empty));
 
             var game = await client.GetGameAsync(aliceBoard.GameId, CancellationToken.None);
 
             Assert.That(game, Is.Not.Null);
 
 
-            var hexaGame = Helper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
+            var hexaGame = Substrate.Integration.Helper.HexalemWrapper.GetHexaGame(game, new BoardSharp[2] { aliceBoard, bobBoard });
             Assert.That(hexaGame, Is.Not.Null);
 
             Assert.That(hexaGame.HexaTuples, Is.Not.Null);
