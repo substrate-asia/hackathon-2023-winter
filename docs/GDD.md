@@ -112,11 +112,20 @@ There are 4 different tile rarities:
 
 ## Game Play
 
+### Selection
+
+There is a predefined selection of tiles for each game, that is available to be chosen from. In the MVP the raw selection consists of 32 tiles, which can become available in the selection, Once the selection is renewed a part of the raw selection is chosen and offered.
+
+The selection consists of all tile types except the Home tile, In the first round the selection consists of 2 tiles, and each time a player takes one tile of the selection this tile is removed, from the selection. The selection renewal is triggered by the remaining amount of tiles in the selection, and this amount drops below a threshold about its selection base.
+
+Each time the selection is renewed the base is increased by two.
+
+
 ### Turn and Rounds
 
 Hexalem is played in a traditional round-based approach, where each player can use a predefined amount of time for his move. Once he ends his turn the opponent's turn starts.
 
-Players can call Finish Turn, also if an opponent is taking more time than he had allocated, if a player gets his turn finished by another player due to being overtime, he gets a penalty. There are multiple implementations of what a penalty can be.
+Players can call Finish Turn, also if an opponent is taking more time than he had allocated, if a player gets his turn finished by another player due to being over time, he gets a penalty. There are multiple implementations of what a penalty can be.
 
 A round is considered done when all players have done their turn, turn and round are intended to trigger game events, in the game.
 
@@ -129,15 +138,15 @@ Once the player has created or joined a game he has three possible actions he ca
     - Place Requirements: Tiles cannot be placed without having a connection to another tile, and you can only place the tile in a space.
 
 - **Upgrade**: Tiles can be upgraded in rarity, by fulfilling certain resource requirements, as example, the home tile can be upgraded to allocate more places for humans.
-    - Upgrade Requirements: Each tile has an upgrade cost map, if it can be upgraded.
+    - Upgrade Requirements: Each tile has an upgrade cost map if it can be upgraded.
 
 - **Finish Turn**: Finish turn can be called to prematurely end the player's turn, or it can be used to call out an opponent player who is not finishing his turn in time. Calling out an opponent successfully will penalize him to a certain extent.
 
 ### Winning Conditions
 
 #### Win
-- **Human Threshold**: (MVP only) Reaching a certain amount of Humans previous to the opponents.
-- **Finish Opponents Turn**: (MVP only) Successfully finishing an opponent's turn, which was over time.
+- **Human Threshold**: (MVP only) Reaching a certain amount of Humans before the opponents.
+- **Finish Opponent Turn**: (MVP only) Successfully finishing an opponent's turn, which was over time.
 
 #### Draw
 - **Full-grid**: If the grid is full, the game ends, and is concluded as a draw.
@@ -150,7 +159,7 @@ Tiles and their patterns yield resources each round:
 
 - **Home**: The home tile is the only tile that is not being used in formations. The Rarity of the Home tile decides how many Humans it can take.
     - Primary Resource: Human
-    - Rarity: limits the max. amount of Humans living in that home.
+    - Rarity: limits the max—amount of Humans living in that home.
         - Normal: 1 Human
         - Rare: 3 Humans
         - Epic: 6 Humans
