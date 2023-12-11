@@ -45,7 +45,9 @@ async function handleElectionNewTerm(event, indexer) {
     promises.push(promise);
   }
   await Promise.all(promises);
-  await bulk.execute();
+  if (bulk.length > 0) {
+    await bulk.execute();
+  }
 }
 
 module.exports = {
