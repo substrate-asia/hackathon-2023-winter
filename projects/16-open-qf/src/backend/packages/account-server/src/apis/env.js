@@ -2,6 +2,7 @@ const { chains } = require("../consts");
 
 const chainEndpointPrefixMap = {
   [chains.collectives]: "COL",
+  [chains.polkadot]: "DOT",
 };
 
 // [chain, endpoints]

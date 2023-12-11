@@ -7,6 +7,7 @@ const addressInfo = /* GraphQL */ `
     isBountyCurator: Boolean!
     fellowshipRank: Int
     isValidator: Boolean!
+    hasVerifiedIdentity: Boolean!
   }
 `;
 

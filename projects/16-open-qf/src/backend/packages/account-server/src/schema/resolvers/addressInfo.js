@@ -14,6 +14,7 @@ const { utils: { isValidAddress } } = require("@open-qf/common");
 const { chains } = require("../../consts");
 const { checkAndGetApis } = require("../../common/checkAndGetApis");
 const { queryFromApis } = require("../../common/queryFromApis");
+const { queryIdentityVerificationFromOneApi } = require("./identity/query");
 
 async function getMemberFromOneApi(api, address) {
   if (!api.query.fellowshipCollective?.members) {
@@ -56,6 +57,8 @@ async function addressInfo(_, _args) {
 
   const apis = checkAndGetApis(chains.collectives);
   const fellowshipRank = await queryFromApis(apis, getMemberFromOneApi, [address]);
+  const polkadotApis = checkAndGetApis(chains.polkadot);
+  const hasVerifiedIdentity = await queryFromApis(polkadotApis, queryIdentityVerificationFromOneApi, [address]);
 
   return {
     isTipFinder,
@@ -65,6 +68,7 @@ async function addressInfo(_, _args) {
     isBountyCurator,
     fellowshipRank,
     isValidator,
+    hasVerifiedIdentity,
   };
 }
 
