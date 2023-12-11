@@ -22,12 +22,14 @@ namespace Assets.Scripts.ScreenStates
             instance.style.height = new Length(98, LengthUnit.Percent);
 
             var topBound = instance.Q<VisualElement>("TopBound");
-            
+
+
+
             // add container
             FlowController.VelContainer.Add(instance);
 
             // load initial sub state
-            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.Play);
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayView);
         }
 
         public override void ExitState()
