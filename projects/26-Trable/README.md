@@ -27,7 +27,7 @@ Users simply need to select the desired cryptocurrency for payment and complete 
 
 
   <img src="https://github.com/Web3-Club/Trable/assets/76860915/7e5a55f1-1486-4de6-a28e-7080e046f19d" alt="25461702219436_ pic">
-  
+
 ### Basic technical architecture
 
 #### Uniswap V4
@@ -52,7 +52,7 @@ If we have
 
 #### Support for fiat currency payments（支持法币支付）
 
-确保可支付的便利性
+确保旅游产品跨境crypto直接支付的便利性
 
 #### Fast transactions anytime, anywhere（随时随地、快速交易）
 
@@ -60,11 +60,11 @@ If we have
 
 #### Save time and effort, lower loss（省时省力、更低损耗）
 
-结合Uniswap V4降低成本，减少不必要的原始资产的磨损
+结合Uniswap V4 降低多种token的swap成本，减少不必要的原始资产的转换和支付磨损
 
 #### No need to consider personal foreign exchange restrictions（无需考虑个人外汇限制）
 
-不受传统银行限额的影响，更流畅的旅行体验
+不受传统银行外汇限额的影响，更流畅的旅行体验
 
 ### Project demo
 
