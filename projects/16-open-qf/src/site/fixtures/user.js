@@ -16,3 +16,34 @@ export const USER_INFO = {
 export const USER_POWER = {
   score: 49,
 };
+
+export const USER_QFPOWER_ACTIVITIES = [
+  {
+    label: "Fellowship Member",
+    power: 10,
+  },
+  {
+    label: "Active OpenGov Participant",
+    power: 4,
+  },
+  {
+    label: "something cave bad",
+    power: 8,
+  },
+  {
+    label: "complete perfect forest",
+    power: 8,
+  },
+  {
+    label: "last usual pan",
+    power: 8,
+  },
+  {
+    label: "flag note keep",
+    power: 8,
+  },
+  {
+    label: "is porch village",
+    power: 8,
+  },
+];

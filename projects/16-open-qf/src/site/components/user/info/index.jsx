@@ -3,9 +3,20 @@ import Avatar from "../../accountSelector/avatar";
 import Copy from "../../copy";
 import IdentityOrAddr from "../identityOrAddr";
 import QFpowerPie from "./qfpowerPie";
+import { cn } from "@/utils";
 
 export default function UserInfo() {
   const footerItems = [
+    {
+      className: "sm:hidden",
+      title: "QFpower",
+      items: [
+        {
+          label: "Score",
+          value: USER_POWER.score?.toFixed(2),
+        },
+      ],
+    },
     {
       title: "Contributions",
       items: [
@@ -64,16 +75,29 @@ export default function UserInfo() {
           </div>
         </div>
         <QFpowerPie
-          className="w-52 h-36 py-2.5"
+          className="w-52 h-36 py-2.5 max-sm:hidden"
           percentage={USER_POWER.score}
         />
       </div>
-      <div className="flex divide-x">
+      <div
+        className={cn(
+          "flex",
+          "max-sm:divide-none max-sm:flex-col max-sm:gap-y-2",
+        )}
+      >
         {footerItems.map((item) => (
-          <Item key={item.title} title={item.title}>
-            <div className="flex items-center gap-5">
+          <Item key={item.title} title={item.title} className={item.className}>
+            <div
+              className={cn("flex gap-x-5", "max-sm:flex-col max-sm:gap-y-1")}
+            >
               {item.items.map((item) => (
-                <div key={item.label} className="flex items-center gap-1">
+                <div
+                  key={item.label}
+                  className={cn(
+                    "flex items-center gap-1",
+                    "max-sm:justify-between",
+                  )}
+                >
                   <div className="text-text-tertiary text14medium">
                     {item.label}
                   </div>
@@ -90,11 +114,15 @@ export default function UserInfo() {
   );
 }
 
-function Item({ title, children }) {
+function Item({ title, children, className = "" }) {
   return (
-    <div className="space-y-1 px-10 first:pl-0 last:pr-0">
-      <div className="text16semibold text-text-primary">{title}</div>
-      {children}
+    <div className={cn("group flex", className)}>
+      <div className={"space-y-1 w-full"}>
+        <div className="text16semibold text-text-primary">{title}</div>
+        {children}
+      </div>
+
+      <div className="max-sm:hidden mx-10 h-full w-px bg-fill-bg-quaternary group-last:hidden" />
     </div>
   );
 }
