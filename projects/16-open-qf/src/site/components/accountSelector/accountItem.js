@@ -5,7 +5,7 @@ import Avatar from "./avatar";
 import { encodeAddress } from "@polkadot/util-crypto";
 import { ChainSS58Format, identityChainMap } from "@osn/constants";
 import { fetchIdentity } from "@osn/common/es/services/identity";
-import { IdentityIcon } from "@osn/common-ui";
+import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
 import tw from "tailwind-styled-components";
 
 const Address = tw.span`

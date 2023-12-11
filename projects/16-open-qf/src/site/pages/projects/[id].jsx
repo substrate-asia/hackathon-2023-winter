@@ -1,7 +1,8 @@
 import DetailLayout from "@/components/layouts/detailLayout";
+import { withCommonPageWrapper } from "@/utils/ssr";
 import { useRouter } from "next/router";
 
-export default function ProjectPage() {
+const ProjectPage = withCommonPageWrapper(() => {
   const router = useRouter();
   const id = Number(router.query.id);
 
@@ -10,4 +11,6 @@ export default function ProjectPage() {
       <div>id: {id}</div>
     </DetailLayout>
   );
-}
+});
+
+export default ProjectPage;
