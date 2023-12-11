@@ -18,8 +18,11 @@ async function handleNewSession(event, indexer) {
     const promise = await bulkSaveAccount(col, validator, indexer, bulk);
     promises.push(promise);
   }
-  await Promise.all(promises);
-  await bulk.execute();
+
+  if (promises.length > 0) {
+    await Promise.all(promises);
+    await bulk.execute();
+  }
 }
 
 module.exports = {

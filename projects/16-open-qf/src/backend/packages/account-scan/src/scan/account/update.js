@@ -28,7 +28,7 @@ async function handleBlockAccounts(indexer) {
     promises.push(promise);
   }
 
-  if (promises.length <= 0) {
+  if (promises.length > 0) {
     await Promise.all(promises);
     await bulk.execute();
   }
