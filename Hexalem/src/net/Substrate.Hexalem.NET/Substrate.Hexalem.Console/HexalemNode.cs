@@ -1,6 +1,7 @@
 ﻿using Schnorrkel.Keys;
 using Serilog;
 using Substrate.Hexalem.Bot;
+using Substrate.Hexalem.Engine;
 using Substrate.Integration;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;

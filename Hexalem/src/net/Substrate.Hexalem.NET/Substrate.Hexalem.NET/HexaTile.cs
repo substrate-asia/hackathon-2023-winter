@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public partial class HexaTile
     {
@@ -64,7 +64,7 @@ namespace Substrate.Hexalem
                 return false;
             }
 
-            if(TileType == TileType.Empty)
+            if (TileType == TileType.Empty)
             {
                 Log.Debug($"{nameof(TileType.Empty)} cannot be upgrade");
                 return false;

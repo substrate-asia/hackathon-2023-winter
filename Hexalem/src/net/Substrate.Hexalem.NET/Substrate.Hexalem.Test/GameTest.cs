@@ -1,4 +1,5 @@
 ﻿using Substrate.Hexalem.Bot;
+using Substrate.Hexalem.Engine;
 
 namespace Substrate.Hexalem.Test
 {

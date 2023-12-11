@@ -1,6 +1,6 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Extensions;
-using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Engine.Extensions;
+using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +8,11 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public partial class HexaGame : IHexaBase
     {
-         public byte[] Id { get; set; }
+        public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
 
@@ -111,7 +111,7 @@ namespace Substrate.Hexalem
         {
             var offSet = (byte)(blockNumber % 32);
             var result = new List<byte>();
-            for (int i = UnboundTileOffers.Count(); i < selectBase; i++)
+            for (int i = UnboundTileOffers.Count; i < selectBase; i++)
             {
                 byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
@@ -582,7 +582,6 @@ namespace Substrate.Hexalem
 
             return result;
         }
-
     }
 
     /// <summary>

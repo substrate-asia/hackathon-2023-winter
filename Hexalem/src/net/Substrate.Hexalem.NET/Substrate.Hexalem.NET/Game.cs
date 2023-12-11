@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public static class Game
     {

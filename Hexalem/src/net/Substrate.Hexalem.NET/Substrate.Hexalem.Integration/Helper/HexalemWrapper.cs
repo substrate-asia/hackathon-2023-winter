@@ -1,4 +1,5 @@
 ﻿using Substrate.Hexalem;
+using Substrate.Hexalem.Engine;
 using Substrate.Hexalem.Integration.Model;
 using Substrate.NetApi;
 using System.Collections.Generic;

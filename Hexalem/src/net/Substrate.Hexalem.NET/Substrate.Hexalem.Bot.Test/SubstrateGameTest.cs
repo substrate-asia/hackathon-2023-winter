@@ -7,6 +7,7 @@ using Substrate.Integration;
 using Substrate.Integration.Client;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
+using Substrate.Hexalem.Engine;
 
 namespace Substrate.Hexalem.Integration.Test
 {

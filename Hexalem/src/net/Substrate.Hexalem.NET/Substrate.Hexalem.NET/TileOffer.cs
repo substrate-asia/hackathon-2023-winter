@@ -1,4 +1,4 @@
-﻿namespace Substrate.Hexalem
+﻿namespace Substrate.Hexalem.Engine
 {
     public class TileOffer
     {

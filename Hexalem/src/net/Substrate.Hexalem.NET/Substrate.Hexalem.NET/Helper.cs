@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public static class Helper
     {
@@ -12,7 +12,7 @@ namespace Substrate.Hexalem
             if (startIndex < 0 || startIndex >= source.Length)
                 throw new ArgumentOutOfRangeException(nameof(startIndex), "Start index must be within the bounds of the source array.");
 
-            if (length < 0 || (startIndex + length) > source.Length)
+            if (length < 0 || startIndex + length > source.Length)
                 throw new ArgumentOutOfRangeException(nameof(length), "Length must be positive and within the bounds of the source array.");
 
             T[] subArray = new T[length];
@@ -20,5 +20,4 @@ namespace Substrate.Hexalem
             return subArray;
         }
     }
-
 }

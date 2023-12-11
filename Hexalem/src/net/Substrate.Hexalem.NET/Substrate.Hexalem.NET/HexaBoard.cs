@@ -1,9 +1,9 @@
 using Serilog;
-using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public class HexaBoard : IHexaBase
     {
@@ -133,7 +133,7 @@ namespace Substrate.Hexalem
                 throw new NotSupportedException("Index is out of the range of the grid");
             }
 
-            int q = (index % _sideLength) - _maxDistanceFromCenter;
+            int q = index % _sideLength - _maxDistanceFromCenter;
             int r = index / _sideLength - (_sideLength - 1) / 2;
 
             return (q, r);

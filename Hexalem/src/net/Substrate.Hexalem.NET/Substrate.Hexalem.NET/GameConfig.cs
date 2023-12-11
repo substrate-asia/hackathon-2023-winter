@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public static class GameConfig
     {
@@ -96,7 +96,6 @@ namespace Substrate.Hexalem
         /// Tile offer
         /// </summary>
         public static TileOffer[] TILE_COSTS = new TileOffer[16] {
-
             new TileOffer {
                 TileToBuy = new HexaTile(40), // Tree, level 0
                 TileCost = new MaterialCost {
