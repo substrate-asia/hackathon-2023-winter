@@ -126,7 +126,7 @@ namespace Substrate.Hexalem.WebAPI.Controllers
             }
 
             var hexPlayer = new HexaPlayer(new byte[32]);
-            var game = GameManager.Training(hexPlayer);
+            var game = GameManager.OffChain(hexPlayer);
             await game.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var board = new Board()

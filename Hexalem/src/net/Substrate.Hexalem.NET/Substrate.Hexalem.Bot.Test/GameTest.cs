@@ -17,7 +17,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RenewSelection_ShouldHaveRandomGenerationAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             _ = await _gameManager.CreateGameAsync(GridSize.Medium,CancellationToken.None);
             
             List<List<HexaTile>> hexaTiles = new List<List<HexaTile>>
@@ -36,7 +36,7 @@ namespace Substrate.Hexalem.Test
         public async Task StartInitialize_ShouldHaveValidSetupAsync()
         {
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
-            _gameManager = GameManager.VsBot(hexaPlayers);
+            _gameManager = GameManager.OffChain(hexaPlayers);
 
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
@@ -62,7 +62,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task GameWrongPlayerTryToPlay_ShouldNotSuceedAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Player index = 1 => Player 2
@@ -73,7 +73,7 @@ namespace Substrate.Hexalem.Test
         public async Task Game_WhenPlayOnInvalidCoordinate_ShouldNotSucceedAsync()
         {
             var hexaPlayer = new HexaPlayer(new byte[32]);
-            _gameManager = GameManager.Training(hexaPlayer);
+            _gameManager = GameManager.OffChain(hexaPlayer);
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // make sure to set ressources
@@ -89,7 +89,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task Game_WhenPlayOnNotAdjectingCoordinate_ShouldNotSucceedAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             Assert.That((await _gameManager.ChooseAndPlaceAsync(_gameManager.HexaGame.PlayerTurn, 1, (-2, -2), CancellationToken.None)).IsSuccess, Is.False);
@@ -98,7 +98,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task Game_WhenPlayOnAdjectingCoordinate_ShouldSucceedAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             Assert.That(_gameManager.HexaGame.HexaTuples[0].board.CanPlace((1, 0)), Is.True);
@@ -109,7 +109,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task Game_WhenPlayOnAlreadyFilledTile_ShouldNotSucceedAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             Assert.That(_gameManager.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
@@ -129,7 +129,7 @@ namespace Substrate.Hexalem.Test
         public async Task Game_WhenPlayedATile_ShouldSucceedButNoMoreManaAsync()
         {
             var player = new HexaPlayer(new byte[32]);
-            _gameManager = GameManager.Training(player);
+            _gameManager = GameManager.OffChain(player);
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             Assert.That(_gameManager.HexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
@@ -159,7 +159,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task Game_EveryRound_ShouldHaveFreeManaAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             Assert.That(_gameManager.HexaGame.HexaTuples.First().player[RessourceType.Mana], Is.EqualTo(1));
@@ -186,7 +186,7 @@ namespace Substrate.Hexalem.Test
                 new HexaPlayer(new byte[32])
             };
 
-            _gameManager = GameManager.VsBot(hexaPlayers);
+            _gameManager = GameManager.OffChain(hexaPlayers);
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             Assert.That(_gameManager.HexaGame.PlayerTurn, Is.EqualTo(0));
@@ -214,7 +214,7 @@ namespace Substrate.Hexalem.Test
             var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
             (int q, int r) coords = (0, 0); // Only Home can be upgraded at the moment
 
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Set ressources
@@ -245,7 +245,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task UpgradeTile_WithNotEnoughRessources_ShouldFailAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             await _gameManager.ChooseAndPlaceAsync(_gameManager.HexaGame.PlayerTurn, 0, (-2, -2), CancellationToken.None);
@@ -258,7 +258,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task UpgradeTile_WithEmptyTile_ShouldFailAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var res = await _gameManager.UpgradeAsync(_gameManager.HexaGame.PlayerTurn, (-2, -2), CancellationToken.None);
@@ -268,7 +268,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsMana_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[_gameManager.HexaGame.PlayerTurn];
@@ -296,7 +296,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsHuman_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[_gameManager.HexaGame.PlayerTurn];
@@ -326,7 +326,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsWater_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[_gameManager.HexaGame.PlayerTurn];
@@ -340,7 +340,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsFood_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[_gameManager.HexaGame.PlayerTurn];
@@ -362,7 +362,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsWood_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[_gameManager.HexaGame.PlayerTurn];
@@ -396,7 +396,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsStone_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[_gameManager.HexaGame.PlayerTurn];
@@ -433,7 +433,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public async Task RewardsGold_ShouldBeValidAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             var tuple = _gameManager.HexaGame.HexaTuples[index: _gameManager.HexaGame.PlayerTurn];

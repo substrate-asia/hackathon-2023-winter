@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.Integration.Test
         [Test]
         public async Task StartNewSubstrateGame_ThenPlay_ShouldSucceedAsync()
         {
-            _game = GameManager.Pvp(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
+            _game = GameManager.OnChain(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
 
             var token = CancellationToken.None;
 

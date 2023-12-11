@@ -1,5 +1,6 @@
 ﻿using Schnorrkel.Keys;
 using Serilog;
+using Substrate.Hexalem.Game;
 using Substrate.Integration;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;

@@ -15,7 +15,7 @@ namespace Substrate.Hexalem.Bot.Test
         [Test]
         public async Task StandardGameStart_Training_ShouldSucceedAsync()
         {
-            _gameManager = GameManager.Training(new HexaPlayer(new byte[32]));
+            _gameManager = GameManager.OffChain(new HexaPlayer(new byte[32]));
             _ = await _gameManager.CreateGameAsync(GridSize.Medium, CancellationToken.None);
 
             // Player select the second tile

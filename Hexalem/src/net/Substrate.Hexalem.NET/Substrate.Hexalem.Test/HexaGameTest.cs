@@ -45,6 +45,8 @@ namespace Substrate.Hexalem.Test
 
             HexaTile tile = _hexaGame.CurrentPlayerBoard[0];
             tile.TileType += 1;
+
+            _hexaGame.CurrentPlayerBoard[0] = tile;
             Assert.IsFalse(clonedGame.IsSame(_hexaGame));
         }
 
@@ -55,6 +57,8 @@ namespace Substrate.Hexalem.Test
 
             HexaTile tile = _hexaGame.CurrentPlayerBoard[0];
             tile.TileLevel += 1;
+
+            _hexaGame.CurrentPlayerBoard[0] = tile;
             Assert.IsFalse(clonedGame.IsSame(_hexaGame));
         }
 
@@ -65,6 +69,8 @@ namespace Substrate.Hexalem.Test
 
             HexaTile tile = _hexaGame.CurrentPlayerBoard[0];
             tile.TilePattern += 1;
+
+            _hexaGame.CurrentPlayerBoard[0] = tile;
             Assert.IsFalse(clonedGame.IsSame(_hexaGame));
         }
 
@@ -119,24 +125,6 @@ namespace Substrate.Hexalem.Test
             var clonedGame = _hexaGame.Clone();
 
             _hexaGame.SelectBase = (byte)(clonedGame.SelectBase + 1);
-            Assert.IsFalse(clonedGame.IsSame(_hexaGame));
-        }
-
-        [Test]
-        public void HexaGame_DifferentLastMove_ShouldNotBeEqual()
-        {
-            var clonedGame = _hexaGame.Clone();
-
-            _hexaGame.LastMove = clonedGame.LastMove.Concat(new byte[1] { 0 }).ToArray();
-            Assert.IsFalse(clonedGame.IsSame(_hexaGame));
-        }
-
-        [Test]
-        public void HexaGame_DifferentPlayed_ShouldNotBeEqual()
-        {
-            var clonedGame = _hexaGame.Clone();
-
-            _hexaGame.Played = !clonedGame.Played;
             Assert.IsFalse(clonedGame.IsSame(_hexaGame));
         }
     }

@@ -74,8 +74,7 @@
 
     public enum GameType
     {
-        Training,
-        VsBots,
-        Pvp
+        OffChain,
+        OnChain
     }
 }

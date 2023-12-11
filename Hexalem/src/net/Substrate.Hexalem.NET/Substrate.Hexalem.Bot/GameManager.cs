@@ -77,9 +77,9 @@ namespace Substrate.Hexalem.Game
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public static GameManager Training(HexaPlayer player)
+        public static GameManager OffChain(HexaPlayer player)
         {
-            return new GameManager(GameType.Training, new List<HexaPlayer>() { player });
+            return new GameManager(GameType.OffChain, new List<HexaPlayer>() { player });
         }
 
         /// <summary>
@@ -87,9 +87,9 @@ namespace Substrate.Hexalem.Game
         /// </summary>
         /// <param name="player"></param>
         /// <returns></returns>
-        public static GameManager VsBot(List<HexaPlayer> players) // Todo : Add AI in parameters ?
+        public static GameManager OffChain(List<HexaPlayer> players)
         {
-            return new GameManager(GameType.VsBots, players);
+            return new GameManager(GameType.OffChain, players);
         }
 
         /// <summary>
@@ -98,9 +98,9 @@ namespace Substrate.Hexalem.Game
         /// <param name="substrateNetwork"></param>
         /// <param name="nodePlayers"></param>
         /// <returns></returns>
-        public static GameManager Pvp(SubstrateNetwork substrateNetwork, List<Account> nodePlayers)
+        public static GameManager OnChain(SubstrateNetwork substrateNetwork, List<Account> nodePlayers)
         {
-            return new GameManager(GameType.Pvp, nodePlayers, substrateNetwork);
+            return new GameManager(GameType.OnChain, nodePlayers, substrateNetwork);
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Substrate.Hexalem.Game
         /// <exception cref="InvalidOperationException"></exception>
         private async Task EnsureConnectedAsync(CancellationToken token)
         {
-            if (GameType == GameType.Pvp && !_client!.IsConnected)
+            if (GameType == GameType.OnChain && !_client!.IsConnected)
             {
                 var isConnected = await _client.ConnectAsync(true, true, token);
                 if (isConnected)
@@ -136,7 +136,7 @@ namespace Substrate.Hexalem.Game
         {
             await EnsureConnectedAsync(token);
 
-            if (GameType == GameType.Pvp)
+            if (GameType == GameType.OnChain)
             {
                 return (uint)await _client!.GetBlocknumberAsync(token);
             }
@@ -322,7 +322,7 @@ namespace Substrate.Hexalem.Game
         /// <returns></returns>
         public async Task<GameWorflowStatus> CreateGameAsync(GridSize gridSize, CancellationToken token)
         {
-            if (GameType == GameType.Pvp)
+            if (GameType == GameType.OnChain)
             {
                 await InitOnChainGame(token);
 
@@ -379,7 +379,7 @@ namespace Substrate.Hexalem.Game
         {
             EnsurePlayerIndex(playerIndex);
 
-            if (GameType == GameType.Pvp)
+            if (GameType == GameType.OnChain)
             {
                 var chooseAndPlaceSubscription = await _client.PlayAsync(_substratePlayers[HexaGame.PlayerTurn], (byte)HexaGame.CurrentPlayerBoard.ToIndex(coords).Value, (byte)selectionIndex, _concurentTask, token);
 
@@ -419,7 +419,7 @@ namespace Substrate.Hexalem.Game
         {
             EnsurePlayerIndex(playerIndex);
 
-            if (GameType == GameType.Pvp)
+            if (GameType == GameType.OnChain)
             {
                 var upgradeSubscription = await _client.UpgradeAsync(_substratePlayers[HexaGame.PlayerTurn], (byte)HexaGame.CurrentPlayerBoard.ToIndex(coords).Value, _concurentTask, token);
 
@@ -457,7 +457,7 @@ namespace Substrate.Hexalem.Game
 
             var blockNumber = await getBlockNumberAsync(token);
 
-            if (GameType == GameType.Pvp)
+            if (GameType == GameType.OnChain)
             {
                 var finishTurnSubscription = await _client.FinishTurnAsync(_substratePlayers[playerIndex], _concurentTask, token);
 

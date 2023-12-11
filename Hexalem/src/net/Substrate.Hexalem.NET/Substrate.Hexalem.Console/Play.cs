@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.Console
         {
             Bots = bots;
             hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
-            _game = GameManager.VsBot(hexaPlayers);
+            _game = GameManager.OffChain(hexaPlayers);
         }
 
         public async Task<GameResult> StartGameAsync(CancellationToken token)

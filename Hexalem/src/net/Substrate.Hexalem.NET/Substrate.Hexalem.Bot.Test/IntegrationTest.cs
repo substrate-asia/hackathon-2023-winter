@@ -86,10 +86,10 @@ namespace Substrate.Hexalem.Game.Test
         {
             if(type == "onchain")
             {
-                return GameManager.Pvp(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
+                return GameManager.OnChain(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);
             } else
             {
-                return GameManager.VsBot(new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) });
+                return GameManager.OffChain(new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) });
             }
         }
     }
