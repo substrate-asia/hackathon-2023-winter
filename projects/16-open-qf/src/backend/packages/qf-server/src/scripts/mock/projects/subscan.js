@@ -9,6 +9,8 @@ const subscan = {
     twitter: "https://twitter.com/subscan_io/",
   },
   description: "",
+  bannerCid: "bafybeif73memn7ciwau7kwas7ldpe6grgtwizuw5c5ypy5oeiaiwe2q4qy",
+  logoCid: "bafybeihen6cr3pyqt26wyh7s6gs5sb7fzs52hjwswqlg4lcuopsbapnhpe",
 }
 
 module.exports = {

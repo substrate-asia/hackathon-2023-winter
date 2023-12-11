@@ -8,6 +8,8 @@ const statescan = {
     site: "https://polkadot.statescan.io/",
   },
   description: "",
+  bannerCid: "bafybeif6earkknc4jerhmkjlrq7ktcfwleqpdhsmvfaaws73wfjpf2rk4u",
+  logoCid: "bafybeidbqmpjx5f726ozc3mmjcqvwugqymcm6xxh53qppwonpt3vmqdzbu",
 }
 
 module.exports = {

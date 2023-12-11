@@ -9,6 +9,8 @@ const polkascan = {
     twitter: "https://twitter.com/polkascan",
   },
   description: "",
+  bannerCid: "bafybeibjj6j2gukjnrooliwrydfhdrhyjs2h47hzlgrdmkylph7bawttpe",
+  logoCid: "bafybeiflalcgo4jzemxg2iabjr6eedhnyf37qksktymbm2kp2brcpwi5i4",
 }
 
 module.exports = {
