@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Substrate.Hexalem.Engine;
+using UnityEngine;
 
 namespace Assets.Scripts
 {
@@ -27,7 +28,7 @@ namespace Assets.Scripts
         private GameObject _mountainTile;
 
         [SerializeField]
-        private GameObject _forestTile;
+        private GameObject _treesTile;
 
         [SerializeField]
         private GameObject _desertTile;
@@ -53,6 +54,45 @@ namespace Assets.Scripts
                     Debug.Log($"Clicked on {tileObject.name} [{index}]");
 
                     OnGridTileClicked?.Invoke(tileObject, index);
+                }
+            }
+        }
+
+        public void CreateGrid(HexaBoard hexaBoard)
+        {
+            for(int i = 0; i < hexaBoard.Value.Length; i++)
+            {
+                HexaTile tile = hexaBoard.Value[i];
+
+                var gridParent = PlayerGrid.transform.GetChild(i);
+
+                GameObject newTile;
+                switch (tile.TileType)
+                {
+                    case TileType.Empty:
+                        newTile = Instantiate(_emptyTile, gridParent);
+                        break;
+                    case TileType.Home:
+                        newTile = Instantiate(_homeTile, gridParent);
+                        break;
+                    case TileType.Grass:
+                        newTile = Instantiate(_grassTile, gridParent);
+                        break;
+                    case TileType.Water:
+                        newTile = Instantiate(_waterTile, gridParent);
+                        break;
+                    case TileType.Mountain:
+                        newTile = Instantiate(_mountainTile, gridParent);
+                        break;
+                    case TileType.Tree:
+                        newTile = Instantiate(_treesTile, gridParent);
+                        break;
+                    case TileType.Desert:
+                        newTile = Instantiate(_desertTile, gridParent);
+                        break;
+                    case TileType.Cave:
+                        newTile = Instantiate(_caveTile, gridParent);
+                        break;
                 }
             }
         }

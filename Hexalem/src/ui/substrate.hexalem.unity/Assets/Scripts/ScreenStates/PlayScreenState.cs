@@ -78,6 +78,8 @@ namespace Assets.Scripts.ScreenStates
 
             UpdateRessources();
 
+            UpdateBoard();
+
             // add container
             FlowController.VelContainer.Add(instance);
 
@@ -121,6 +123,13 @@ namespace Assets.Scripts.ScreenStates
             _lblWoodValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Wood].ToString();
             _lblStoneValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Stone].ToString();
             _lblGoldValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Gold].ToString();
+        }
+
+        private void UpdateBoard()
+        {
+            var pIndex = 0;
+
+            Grid.CreateGrid(HexaGame.HexaTuples[pIndex].board);
         }
 
     }
