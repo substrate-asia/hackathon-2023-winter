@@ -294,6 +294,9 @@ parameter_types! {
 
 	pub const HexalemMaxPlayers: u8 = 100;
 	pub const HexalemMinPlayers: u8 = 2;
+
+	pub const HexalemBlocksToPlayLimit: u8 = 10;
+
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 16;
 	pub const HexalemTileCosts: [TileCost<Runtime>; 16] = [
@@ -440,6 +443,7 @@ impl pallet_hexalem::Config for Runtime {
 	type WeightInfo = pallet_hexalem::weights::SubstrateWeight<Runtime>;
 	type MaxPlayers = HexalemMaxPlayers;
 	type MinPlayers = HexalemMinPlayers;
+	type BlocksToPlayLimit = HexalemBlocksToPlayLimit;
 	type MaxHexGridSize = HexalemMaxHexGridSize;
 	type MaxTileSelection = HexalemMaxTileSelection;
 	type Tile = HexalemTile;

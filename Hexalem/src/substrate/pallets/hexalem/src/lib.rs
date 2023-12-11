@@ -43,7 +43,7 @@ pub mod pallet {
 
 	pub type GameId = [u8; 32];
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone)]
 	pub enum GameState {
 		Matchmaking,
 		Playing,
@@ -52,6 +52,8 @@ pub mod pallet {
 
 	// Index used for referencing the TileCost
 	pub type TileCostIndex = u8;
+
+	pub type Players<T> = BoundedVec<AccountId<T>, <T as Config>::MaxPlayers>;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
@@ -63,14 +65,15 @@ pub mod pallet {
 		pub round: u8,       // current round number
 		pub player_turn: u8, // Who is playing?
 		pub played: bool,
+		last_played_block: <frame_system::Pallet<T> as crate::sp_runtime::traits::BlockNumberProvider>::BlockNumber,
 
 		// pub number_of_players: u8,
-		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
+		pub players: Players<T>, // Player ids
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
 	}
 
-	impl<T: Config> GameProperties for Game<T> {
+	impl<T: Config> GameProperties<T> for Game<T> {
 		fn get_played(&self) -> bool {
 			self.played
 		}
@@ -97,6 +100,18 @@ pub mod pallet {
 
 		fn set_player_turn(&mut self, turn: u8) -> () {
 			self.player_turn = turn;
+		}
+
+		fn borrow_players(&self) -> &Players<T> {
+			&self.players
+		}
+
+		fn get_state(&self) -> GameState {
+			self.state
+		}
+
+		fn set_state(&mut self, state: GameState) -> () {
+			self.state = state;
 		}
 	}
 
@@ -301,6 +316,9 @@ pub mod pallet {
 		type MinPlayers: Get<u8>;
 
 		#[pallet::constant]
+		type BlocksToPlayLimit: Get<u8>;
+
+		#[pallet::constant]
 		type MaxHexGridSize: Get<u32>;
 
 		#[pallet::constant]
@@ -369,6 +387,8 @@ pub mod pallet {
 		// Selection has been refilled
 		SelectionRefilled { game_id: GameId, selection: TileSelection<T> },
 
+		TurnForceFinished { game_id: GameId, player: T::AccountId },
+
 		// New turn
 		NewTurn { game_id: GameId, next_player: T::AccountId },
 
@@ -427,6 +447,12 @@ pub mod pallet {
 		// Player is not on the turn.
 		PlayerNotOnTurn,
 
+		// Player is not playing this game
+		PlayerNotInGame,
+
+		// Current player cannot force finish his own turn
+		CurrentPlayerCannotForceFinishTurn,
+
 		// Game has not started yet, or has been finished already.
 		GameNotPlaying,
 
@@ -447,6 +473,9 @@ pub mod pallet {
 
 		// The tile is surrounded by empty tiles.
 		TileSurroundedByEmptyTiles,
+
+		// Not enough blocks have passed to force finish turn
+		BlocksToPlayLimitNotPassed,
 	}
 
 	#[pallet::call]
@@ -490,6 +519,7 @@ pub mod pallet {
 				max_rounds: 15,
 				round: 0,
 				played: false,
+				last_played_block: current_block_number,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
 				player_turn: 0,
 				selection_size: 2,
@@ -541,7 +571,7 @@ pub mod pallet {
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
 			ensure!(
-				game.players[game.get_player_turn() as usize] == who,
+				game.borrow_players()[game.get_player_turn() as usize] == who,
 				Error::<T>::PlayerNotOnTurn
 			);
 
@@ -576,7 +606,12 @@ pub mod pallet {
 
 			let mut neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
 			ensure!(
-				Self::not_surrounded_by_empty_tiles(&neighbours, &hex_board.hex_grid, &max_distance, &side_length),
+				Self::not_surrounded_by_empty_tiles(
+					&neighbours,
+					&hex_board.hex_grid,
+					&max_distance,
+					&side_length
+				),
 				Error::<T>::TileSurroundedByEmptyTiles
 			);
 
@@ -619,7 +654,7 @@ pub mod pallet {
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
 			ensure!(
-				game.players[game.get_player_turn() as usize] == who,
+				game.borrow_players()[game.get_player_turn() as usize] == who,
 				Error::<T>::PlayerNotOnTurn
 			);
 
@@ -668,28 +703,16 @@ pub mod pallet {
 
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
-			let player_turn = game.get_player_turn();
+			ensure!(
+				game.borrow_players()[game.get_player_turn() as usize] == who,
+				Error::<T>::PlayerNotOnTurn
+			);
 
-			ensure!(game.players[player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
+			// Handle next turn counting
+			game.next_turn();
 
-			let next_player_turn = (player_turn + 1) % game.players.len().saturated_into::<u8>();
-
-			game.set_player_turn(next_player_turn);
-
-			if next_player_turn == 0 {
-				let round = game.get_round() + 1;
-				game.set_round(round);
-
-				if round > game.get_max_rounds() {
-					game.state = GameState::Finished;
-
-					GameStorage::<T>::set(&game_id, Some(game));
-
-					Self::deposit_event(Event::GameFinished { game_id });
-
-					return Ok(())
-				}
-			}
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
+			game.last_played_block = current_block_number;
 
 			// If the player has not played, generate a new selection
 			if game.get_played() {
@@ -698,7 +721,7 @@ pub mod pallet {
 				Self::new_selection(&mut game, game_id)?;
 			}
 
-			let next_player = game.players[next_player_turn as usize].clone();
+			let next_player = game.borrow_players()[game.get_player_turn() as usize].clone();
 
 			GameStorage::<T>::set(&game_id, Some(game));
 
@@ -714,6 +737,47 @@ pub mod pallet {
 
 		#[pallet::call_index(4)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn force_finish_turn(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
+			let who: T::AccountId = ensure_signed(origin)?;
+
+			let mut game = match GameStorage::<T>::get(&game_id) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()),
+			};
+
+			ensure!(game.borrow_players().contains(&who), Error::<T>::PlayerNotInGame);
+
+			let current_player = game.borrow_players()[game.get_player_turn() as usize].clone();
+			ensure!(current_player != who, Error::<T>::CurrentPlayerCannotForceFinishTurn);
+
+			// Handle next turn counting
+			game.next_turn();
+			
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
+
+			ensure!(
+				game.last_played_block
+					.saturated_into::<u128>()
+					.saturating_add(T::BlocksToPlayLimit::get() as u128) <
+					current_block_number.saturated_into::<u128>(),
+				Error::<T>::BlocksToPlayLimitNotPassed
+			);
+
+			game.last_played_block = current_block_number;
+
+			let next_player = game.borrow_players()[game.get_player_turn() as usize].clone();
+
+			GameStorage::<T>::set(&game_id, Some(game));
+
+			Self::deposit_event(Event::NewTurn { game_id, next_player });
+
+			Self::deposit_event(Event::TurnForceFinished { game_id, player: current_player });
+
+			Ok(())
+		}
+
+		#[pallet::call_index(5)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn root_delete_game(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
 			ensure_root(origin)?;
 
@@ -723,7 +787,7 @@ pub mod pallet {
 				None => return Err(Error::<T>::GameNotInitialized.into()),
 			};
 
-			for player in &game.players {
+			for player in game.borrow_players() {
 				HexBoardStorage::<T>::remove(player);
 			}
 
@@ -1154,7 +1218,9 @@ impl<T: Config> Pallet<T> {
 		for neighbour in neighbours {
 			match neighbour {
 				Some((q, r)) =>
-					if hex_grid[Self::coords_to_index(max_distance, side_length, &q, &r) as usize].get_type() != TileType::Empty {
+					if hex_grid[Self::coords_to_index(max_distance, side_length, &q, &r) as usize]
+						.get_type() != TileType::Empty
+					{
 						return true
 					},
 				None => (),
@@ -1248,7 +1314,7 @@ pub trait GetTileInfo {
 	}
 }
 
-trait GameProperties {
+trait GameProperties<T: Config> {
 	// Player made a move
 	// It is used for determining whether to generate a new selection
 	fn get_played(&self) -> bool;
@@ -1261,4 +1327,27 @@ trait GameProperties {
 
 	fn get_player_turn(&self) -> u8;
 	fn set_player_turn(&mut self, turn: u8) -> ();
+
+	fn get_state(&self) -> GameState;
+	fn set_state(&mut self, state: GameState) -> ();
+
+	fn borrow_players(&self) -> &Players<T>;
+
+	fn next_turn(&mut self) -> () {
+		let player_turn = self.get_player_turn();
+
+		let next_player_turn =
+			(player_turn + 1) % self.borrow_players().len().saturated_into::<u8>();
+
+		self.set_player_turn(next_player_turn);
+
+		if next_player_turn == 0 {
+			let round = self.get_round() + 1;
+			self.set_round(round);
+
+			if round > self.get_max_rounds() {
+				self.set_state(GameState::Finished);
+			}
+		}
+	}
 }
