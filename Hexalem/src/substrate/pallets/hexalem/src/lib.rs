@@ -373,7 +373,7 @@ pub mod pallet {
 		NewTurn { game_id: GameId, next_player: T::AccountId },
 
 		// Game has finished
-		GameFinished { game_id: GameId /*, winner: T::AccountId */ },
+		GameFinished { game_id: GameId /* , winner: T::AccountId */ },
 
 		// Event that is never used. It serves the purpose to expose hidden rust enums
 		ExposeEnums { tile_type: TileType, tile_pattern: TilePattern },
@@ -397,7 +397,7 @@ pub mod pallet {
 		// The game has already started. Can not create it twice.
 		GameAlreadyCreated,
 
-		// Other errors, that should never happen
+		// Other errors, that should never happen.
 		InternalError,
 
 		// Please set the number_of_players parameter to a bigger number.
@@ -406,16 +406,16 @@ pub mod pallet {
 		// Please set the number_of_players parameter to a smaller number.
 		NumberOfPlayersIsTooLarge,
 
-		// Math overflow
+		// Math overflow.
 		MathOverflow,
 
-		// Not enough resources to pay for the tile offer
+		// Not enough resources to pay for the tile offer.
 		NotEnoughResources,
 
-		// Not enough mana to pay for the tile offer
+		// Not enough mana to pay for the tile offer.
 		NotEnoughMana,
 
-		// Not enough population to play all moves
+		// Not enough population to play all moves.
 		NotEnoughPopulation,
 
 		// Entered index for buying is out of bounds.
@@ -424,29 +424,29 @@ pub mod pallet {
 		// Entered index for placing the tile is out of bounds.
 		PlaceIndexOutOfBounds,
 
-		// You have to buy and place at least one tile. You can instead use `skip_turn` call
-		NoMoves,
-
-		// Player is not on the turn
+		// Player is not on the turn.
 		PlayerNotOnTurn,
 
-		// Game has not started yet, or has been finished already
+		// Game has not started yet, or has been finished already.
 		GameNotPlaying,
 
-		// The grid size is not 9, 25, 49
+		// The grid size is not 9, 25, 49.
 		BadGridSize,
 
 		// You can not place a tile on another tile, unless it is empty.
 		TileIsNotEmpty,
 
-		// Tile is already on the max level
+		// Tile is already on the max level.
 		TileOnMaxLevel,
 
-		// Can not level up empty tile
+		// Can not level up empty tile.
 		CannotLevelUpEmptyTile,
 
-		// This tile can not be leveled up
+		// This tile can not be leveled up.
 		CannotLevelUp,
+
+		// The tile is surrounded by empty tiles.
+		TileSurroundedByEmptyTiles,
 	}
 
 	#[pallet::call]
@@ -573,7 +573,13 @@ pub mod pallet {
 			let max_distance: i8 = Self::max_distance_from_center(&grid_length);
 			let (tile_q, tile_r) =
 				Self::index_to_coords(move_played.place_index, &side_length, &max_distance)?;
+
 			let mut neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+			ensure!(
+				Self::not_surrounded_by_empty_tiles(&neighbours, &hex_board.hex_grid, &max_distance, &side_length),
+				Error::<T>::TileSurroundedByEmptyTiles
+			);
+
 			neighbours.push(Some((tile_q, tile_r)));
 
 			for option_tile in neighbours {
@@ -629,14 +635,14 @@ pub mod pallet {
 			ensure!(tile_level != 3, Error::<T>::TileOnMaxLevel);
 
 			Self::spend_for_tile_upgrade(&mut hex_board, &tile_to_upgrade)?;
-			
+
 			Self::ensure_enough_humans_for_level_upgrade(&hex_board, &tile_level)?;
 
 			hex_board.hex_grid[place_index as usize].set_level(tile_level.saturating_add(1));
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
-			Self::deposit_event(Event::TileUpgraded { game_id, player: who, place_index } );
+			Self::deposit_event(Event::TileUpgraded { game_id, player: who, place_index });
 
 			Ok(())
 		}
@@ -817,9 +823,18 @@ impl<T: Config> Pallet<T> {
 		tile_to_upgrade: &T::Tile,
 	) -> Result<(), sp_runtime::DispatchError> {
 		match (tile_to_upgrade.get_type(), tile_to_upgrade.get_level()) {
-			(TileType::Home, 0) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 5 }, hex_board),
-			(TileType::Home, 1) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 10 }, hex_board),
-			(TileType::Home, 2) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 15 }, hex_board),
+			(TileType::Home, 0) => Self::spend_material(
+				&MaterialCost { material_type: Material::Gold, material_cost: 5 },
+				hex_board,
+			),
+			(TileType::Home, 1) => Self::spend_material(
+				&MaterialCost { material_type: Material::Gold, material_cost: 10 },
+				hex_board,
+			),
+			(TileType::Home, 2) => Self::spend_material(
+				&MaterialCost { material_type: Material::Gold, material_cost: 15 },
+				hex_board,
+			),
 			(TileType::Empty, _) => Err(Error::<T>::CannotLevelUpEmptyTile.into()),
 			_ => Err(Error::<T>::CannotLevelUp.into()),
 		}
@@ -1127,6 +1142,25 @@ impl<T: Config> Pallet<T> {
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
 	fn is_valid_hex(max_distance: &i8, q: &i8, r: &i8) -> bool {
 		&q.abs() <= max_distance && &r.abs() <= max_distance
+	}
+
+	/// Check if at least one of the neighbouring tiles is not Empty.
+	fn not_surrounded_by_empty_tiles(
+		neighbours: &Vec<Option<(i8, i8)>>,
+		hex_grid: &HexGrid<T>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> bool {
+		for neighbour in neighbours {
+			match neighbour {
+				Some((q, r)) =>
+					if hex_grid[Self::coords_to_index(max_distance, side_length, &q, &r) as usize].get_type() != TileType::Empty {
+						return true
+					},
+				None => (),
+			};
+		}
+		false
 	}
 
 	/// Get the neighbors of a hex tile in the grid
