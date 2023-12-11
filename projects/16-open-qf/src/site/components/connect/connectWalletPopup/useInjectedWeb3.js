@@ -22,7 +22,7 @@ export default function useInjectedWeb3() {
         }, 1000);
       }
     }
-  }, []);
+  }, [isMounted]);
 
   return { loading, injectedWeb3 };
 }

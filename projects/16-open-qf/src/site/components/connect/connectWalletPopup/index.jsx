@@ -7,13 +7,16 @@ export default function ConnectWalletPopup({ open, setOpen }) {
   const login = useLogin();
   const [walletExtensionType, setWalletExtensionType] = useState();
 
-  const onConnectAccount = useCallback((account) => {
-    login({
-      network: "polkadot",
-      address: account.address,
-    });
-    setOpen(false);
-  }, []);
+  const onConnectAccount = useCallback(
+    (account) => {
+      login({
+        network: "polkadot",
+        address: account.address,
+      });
+      setOpen(false);
+    },
+    [login, setOpen],
+  );
 
   if (walletExtensionType) {
     return (
