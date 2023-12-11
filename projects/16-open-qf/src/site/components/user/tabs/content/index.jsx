@@ -1,17 +1,16 @@
-import { useSearchParams } from "next/navigation";
 import UserTabQFpowerContent from "./qfpower";
 import UserTabContributionsContent from "./contributions";
 import UserTabProjectsContent from "./projects";
+import { useUserTab } from "@/hooks/useUserTab";
 
 export default function UserTabsContent() {
-  const searchParams = useSearchParams();
-  const activeTab = searchParams.get("tab") ?? "qfpower";
+  const [tab] = useUserTab();
 
   return (
     <>
-      {activeTab === "qfpower" && <UserTabQFpowerContent />}
-      {activeTab === "contributions" && <UserTabContributionsContent />}
-      {activeTab === "projects" && <UserTabProjectsContent />}
+      {tab === "qfpower" && <UserTabQFpowerContent />}
+      {tab === "contributions" && <UserTabContributionsContent />}
+      {tab === "projects" && <UserTabProjectsContent />}
     </>
   );
 }

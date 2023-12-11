@@ -3,10 +3,7 @@ import { useEffect, useState } from "react";
 import { fetchIdentity } from "@osn/common/es/services/identity";
 import styled, { css } from "styled-components";
 import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
-import {
-  addressEllipsis,
-  encodeNetworkAddress,
-} from "@osn/common";
+import { addressEllipsis, encodeNetworkAddress } from "@osn/common";
 import { identityChainMap } from "@osn/constants";
 
 const IdentityWrapper = styled.a`
@@ -40,6 +37,7 @@ export default function IdentityOrAddr({
   tooltipPosition,
   noIcon,
   noLink,
+  className = "",
 }) {
   const isMounted = useIsMounted();
   const [identity, setIdentity] = useState();
@@ -65,6 +63,7 @@ export default function IdentityOrAddr({
 
   return (
     <IdentityWrapper
+      className={className}
       noLink={noLink}
       href={`/#/network/${network}/address/${ss58Address}`}
     >
