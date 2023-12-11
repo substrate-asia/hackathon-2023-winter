@@ -12,7 +12,8 @@ namespace Assets.Scripts.ScreenStates
         private System.Random _random = new System.Random();
 
 
-        public int SelectedTileIndex { get; set; } = -1;
+        public int SelectedGridIndex { get; set; } = -1;
+        public int SelectedCardIndex { get; set; } = -1;
 
         public HexaGame HexaGame { get; internal set; }
 

@@ -137,6 +137,7 @@ GameObject:
   - component: {fileID: 55225690}
   - component: {fileID: 55225689}
   - component: {fileID: 55225688}
+  - component: {fileID: 55225692}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -223,6 +224,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: eeae1424e878f48419b4f27c4dd80b90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &55225692
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55225685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34e91b86bd5e5ad48ae422df0208c00e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PlayerGrid: {fileID: 185871275}
+  _emptyTile: {fileID: 0}
+  _homeTile: {fileID: 0}
+  _grassTile: {fileID: 0}
+  _waterTile: {fileID: 0}
+  _mountainTile: {fileID: 0}
+  _forestTile: {fileID: 0}
+  _desertTile: {fileID: 0}
+  _caveTile: {fileID: 0}
 --- !u!1 &185871275
 GameObject:
   m_ObjectHideFlags: 0
@@ -363,6 +385,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8593497183637684177, guid: 315ee07e0671d6046a7e5a96554b33a4, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e45870c805bfc6245bde18a09632c7ab, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -103,7 +103,7 @@ namespace Assets.Scripts
         private void OnTileCardClicked(TemplateContainer tileCard, byte index, TileOffer info)
         {
 
-            MainScreenState.SelectedTileIndex = index;
+            MainScreenState.SelectedCardIndex = index;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileSelect);
 

@@ -9,6 +9,9 @@ namespace Assets.Scripts
         public event TileClickHandler OnGridTileClicked;
 
         [SerializeField]
+        public GameObject PlayerGrid;
+
+        [SerializeField]
         private GameObject _emptyTile;
 
         [SerializeField]

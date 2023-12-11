@@ -11,12 +11,19 @@ namespace Assets.Scripts
     {
         public PlayScreenState MainScreenState => ParentState as PlayScreenState;
 
+        private Material _emptyMat;
+        private Material _selectedMat;
+
         private VisualElement _velTileCardBox;
 
         private Label _lblActionCancel;
 
         public PlayTileSelectSubState(FlowController flowController, ScreenBaseState parent)
-            : base(flowController, parent) { }
+            : base(flowController, parent) {
+
+            _emptyMat = Resources.Load<Material>("Materials/empty");
+            _selectedMat = Resources.Load<Material>("Materials/emptySelected");
+        }
 
         public override void EnterState()
         {
@@ -50,11 +57,30 @@ namespace Assets.Scripts
         private void OnGridTileClicked(GameObject tileObject, int index)
         {
             Debug.Log($"[{this.GetType().Name}][SUB] OnGridTileClicked execute move? if possible.");
+
+            if (MainScreenState.SelectedGridIndex == index)
+            {
+                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+            } 
+            else if (MainScreenState.SelectedGridIndex >= 0)
+            {
+                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                MainScreenState.SelectedGridIndex = index;
+                Renderer renderer = tileObject.GetComponent<Renderer>();
+                renderer.material = new Material(_selectedMat);
+            }
+            else
+            {
+                MainScreenState.SelectedGridIndex = index;
+                Renderer renderer = tileObject.GetComponent<Renderer>();
+                renderer.material = new Material(_selectedMat);
+            }
+
         }
 
         private void OnCancelClicked(ClickEvent evt)
         {
-            MainScreenState.SelectedTileIndex = -1;
+            MainScreenState.SelectedCardIndex = -1;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
@@ -63,7 +89,7 @@ namespace Assets.Scripts
         {
             var tileCard = MainScreenState.TileCardElement.Instantiate();
 
-            var selectTile = GameConfig.TILE_COSTS[MainScreenState.SelectedTileIndex];
+            var selectTile = GameConfig.TILE_COSTS[MainScreenState.SelectedCardIndex];
 
             tileCard.Q<Label>("LblTileName").text = selectTile.TileToBuy.TileType.ToString() + "(Norm)";
 
