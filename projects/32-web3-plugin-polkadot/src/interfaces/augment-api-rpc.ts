@@ -1,3 +1,7 @@
+// this file is auto-generated from a modified template file
+// the original template file is '@polkadot/typegen/template/rpc.hbs'
+// and the modification template file is at 'static/type-generation/rpc.hbs'
+
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
 /* eslint-disable */
 
@@ -31,6 +35,180 @@ import type { ApplyExtrinsicResult, ChainProperties, ChainType, Health, NetworkS
 import type { IExtrinsic, Observable } from '@polkadot/types/types';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
+
+export const RpcList = {
+  author : [
+    'hasKey',
+    'hasSessionKeys',
+    'insertKey',
+    'pendingExtrinsics',
+    'removeExtrinsic',
+    'rotateKeys',
+    'submitAndWatchExtrinsic',
+    'submitExtrinsic',
+  ],
+  babe : [
+    'epochAuthorship',
+  ],
+  beefy : [
+    'getFinalizedHead',
+    'subscribeJustifications',
+  ],
+  chain : [
+    'getBlock',
+    'getBlockHash',
+    'getFinalizedHead',
+    'getHeader',
+    'subscribeAllHeads',
+    'subscribeFinalizedHeads',
+    'subscribeNewHeads',
+  ],
+  childstate : [
+    'getKeys',
+    'getKeysPaged',
+    'getStorage',
+    'getStorageEntries',
+    'getStorageHash',
+    'getStorageSize',
+  ],
+  contracts : [
+    'call',
+    'getStorage',
+    'instantiate',
+    'rentProjection',
+    'uploadCode',
+  ],
+  dev : [
+    'getBlockStats',
+  ],
+  engine : [
+    'createBlock',
+    'finalizeBlock',
+  ],
+  eth : [
+    'accounts',
+    'blockNumber',
+    'call',
+    'chainId',
+    'coinbase',
+    'estimateGas',
+    'feeHistory',
+    'gasPrice',
+    'getBalance',
+    'getBlockByHash',
+    'getBlockByNumber',
+    'getBlockTransactionCountByHash',
+    'getBlockTransactionCountByNumber',
+    'getCode',
+    'getFilterChanges',
+    'getFilterLogs',
+    'getLogs',
+    'getProof',
+    'getStorageAt',
+    'getTransactionByBlockHashAndIndex',
+    'getTransactionByBlockNumberAndIndex',
+    'getTransactionByHash',
+    'getTransactionCount',
+    'getTransactionReceipt',
+    'getUncleByBlockHashAndIndex',
+    'getUncleByBlockNumberAndIndex',
+    'getUncleCountByBlockHash',
+    'getUncleCountByBlockNumber',
+    'getWork',
+    'hashrate',
+    'maxPriorityFeePerGas',
+    'mining',
+    'newBlockFilter',
+    'newFilter',
+    'newPendingTransactionFilter',
+    'protocolVersion',
+    'sendRawTransaction',
+    'sendTransaction',
+    'submitHashrate',
+    'submitWork',
+    'subscribe',
+    'syncing',
+    'uninstallFilter',
+  ],
+  grandpa : [
+    'proveFinality',
+    'roundState',
+    'subscribeJustifications',
+  ],
+  mmr : [
+    'generateProof',
+    'root',
+    'verifyProof',
+    'verifyProofStateless',
+  ],
+  net : [
+    'listening',
+    'peerCount',
+    'version',
+  ],
+  offchain : [
+    'localStorageGet',
+    'localStorageSet',
+  ],
+  payment : [
+    'queryFeeDetails',
+    'queryInfo',
+  ],
+  rpc : [
+    'methods',
+  ],
+  state : [
+    'call',
+    'getChildKeys',
+    'getChildReadProof',
+    'getChildStorage',
+    'getChildStorageHash',
+    'getChildStorageSize',
+    'getKeys',
+    'getKeysPaged',
+    'getMetadata',
+    'getPairs',
+    'getReadProof',
+    'getRuntimeVersion',
+    'getStorage',
+    'getStorageHash',
+    'getStorageSize',
+    'queryStorage',
+    'queryStorageAt',
+    'subscribeRuntimeVersion',
+    'subscribeStorage',
+    'traceBlock',
+    'trieMigrationStatus',
+  ],
+  syncstate : [
+    'genSyncSpec',
+  ],
+  system : [
+    'accountNextIndex',
+    'addLogFilter',
+    'addReservedPeer',
+    'chain',
+    'chainType',
+    'dryRun',
+    'health',
+    'localListenAddresses',
+    'localPeerId',
+    'name',
+    'networkState',
+    'nodeRoles',
+    'peers',
+    'properties',
+    'removeReservedPeer',
+    'reservedPeers',
+    'resetLogFilter',
+    'syncState',
+    'version',
+  ],
+  web3 : [
+    'clientVersion',
+    'sha3',
+  ],
+} as const;
 
 declare module '@polkadot/rpc-core/types/jsonrpc' {
   interface RpcInterface {
@@ -615,3 +793,494 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
     };
   } // RpcInterface
 } // declare module
+
+/*
+// the class RpcBaseClass is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.  
+
+// type transoms RpcInterface to be implemented by RpcBaseClass
+type RemoveAugmentAroundFunction<Namespace> = {
+  [Func in keyof Namespace ]: Namespace[Func] extends AugmentedRpc<infer U> ? U : never
+};
+type RemoveAugment<T> = {
+  [Namespace in keyof T]: RemoveAugmentAroundFunction<T[Namespace]>;
+};
+// Note: this class in not inside a module augmentation because class implantation cannot be inside `declare module '...' { block }`
+import { RpcInterface} from '@polkadot/rpc-core/types/jsonrpc';
+export class RpcBaseClass implements RemoveAugment<RpcInterface> {
+  public get author() {
+    return {
+      hasKey: (publicKey: Bytes | string | Uint8Array, keyType: Text | string): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      hasSessionKeys: (sessionKeys: Bytes | string | Uint8Array): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      insertKey: (keyType: Text | string, suri: Text | string, publicKey: Bytes | string | Uint8Array): Observable<Bytes> => {
+        throw new Error('Function not implemented.');
+      },
+      pendingExtrinsics: (): Observable<Vec<Extrinsic>> => {
+        throw new Error('Function not implemented.');
+      },
+      removeExtrinsic: (bytesOrHash: Vec<ExtrinsicOrHash> | (ExtrinsicOrHash | { Hash: any } | { Extrinsic: any } | string | Uint8Array)[]): Observable<Vec<Hash>> => {
+        throw new Error('Function not implemented.');
+      },
+      rotateKeys: (): Observable<Bytes> => {
+        throw new Error('Function not implemented.');
+      },
+      submitAndWatchExtrinsic: (extrinsic: Extrinsic | IExtrinsic | string | Uint8Array): Observable<ExtrinsicStatus> => {
+        throw new Error('Function not implemented.');
+      },
+      submitExtrinsic: (extrinsic: Extrinsic | IExtrinsic | string | Uint8Array): Observable<Hash> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get babe() {
+    return {
+      epochAuthorship: (): Observable<HashMap<AuthorityId, EpochAuthorship>> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get beefy() {
+    return {
+      getFinalizedHead: (): Observable<H256> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeJustifications: (): Observable<BeefyVersionedFinalityProof> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get chain() {
+    return {
+      getBlock: (hash?: BlockHash | string | Uint8Array): Observable<SignedBlock> => {
+        throw new Error('Function not implemented.');
+      },
+      getBlockHash: (blockNumber?: BlockNumber | AnyNumber | Uint8Array): Observable<BlockHash> => {
+        throw new Error('Function not implemented.');
+      },
+      getFinalizedHead: (): Observable<BlockHash> => {
+        throw new Error('Function not implemented.');
+      },
+      getHeader: (hash?: BlockHash | string | Uint8Array): Observable<Header> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeAllHeads: (): Observable<Header> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeFinalizedHeads: (): Observable<Header> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeNewHeads: (): Observable<Header> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get childstate() {
+    return {
+      getKeys: (childKey: PrefixedStorageKey | string | Uint8Array, prefix: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array): Observable<Vec<StorageKey>> => {
+        throw new Error('Function not implemented.');
+      },
+      getKeysPaged: (childKey: PrefixedStorageKey | string | Uint8Array, prefix: StorageKey | string | Uint8Array | any, count: u32 | AnyNumber | Uint8Array, startKey?: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array): Observable<Vec<StorageKey>> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorage: (childKey: PrefixedStorageKey | string | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array): Observable<Option<StorageData>> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorageEntries: (childKey: PrefixedStorageKey | string | Uint8Array, keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: Hash | string | Uint8Array): Observable<Vec<Option<StorageData>>> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorageHash: (childKey: PrefixedStorageKey | string | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array): Observable<Option<Hash>> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorageSize: (childKey: PrefixedStorageKey | string | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array): Observable<Option<u64>> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get contracts() {
+    return {
+      call: (callRequest: ContractCallRequest | { origin?: any; dest?: any; value?: any; gasLimit?: any; storageDepositLimit?: any; inputData?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<ContractExecResult> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorage: (address: AccountId | string | Uint8Array, key: H256 | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<Option<Bytes>> => {
+        throw new Error('Function not implemented.');
+      },
+      instantiate: (request: InstantiateRequestV1 | { origin?: any; value?: any; gasLimit?: any; code?: any; data?: any; salt?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<ContractInstantiateResult> => {
+        throw new Error('Function not implemented.');
+      },
+      rentProjection: (address: AccountId | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<Option<BlockNumber>> => {
+        throw new Error('Function not implemented.');
+      },
+      uploadCode: (uploadRequest: CodeUploadRequest | { origin?: any; code?: any; storageDepositLimit?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<CodeUploadResult> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get dev() {
+    return {
+      getBlockStats: (at: Hash | string | Uint8Array): Observable<Option<BlockStats>> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get engine() {
+    return {
+      createBlock: (createEmpty: bool | boolean | Uint8Array, finalize: bool | boolean | Uint8Array, parentHash?: BlockHash | string | Uint8Array): Observable<CreatedBlock> => {
+        throw new Error('Function not implemented.');
+      },
+      finalizeBlock: (hash: BlockHash | string | Uint8Array, justification?: Justification): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get eth() {
+    return {
+      accounts: (): Observable<Vec<H160>> => {
+        throw new Error('Function not implemented.');
+      },
+      blockNumber: (): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      call: (request: EthCallRequest | { from?: any; to?: any; gasPrice?: any; gas?: any; value?: any; data?: any; nonce?: any } | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array): Observable<Bytes> => {
+        throw new Error('Function not implemented.');
+      },
+      chainId: (): Observable<U64> => {
+        throw new Error('Function not implemented.');
+      },
+      coinbase: (): Observable<H160> => {
+        throw new Error('Function not implemented.');
+      },
+      estimateGas: (request: EthCallRequest | { from?: any; to?: any; gasPrice?: any; gas?: any; value?: any; data?: any; nonce?: any } | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      feeHistory: (blockCount: U256 | AnyNumber | Uint8Array, newestBlock: BlockNumber | AnyNumber | Uint8Array, rewardPercentiles: Option<Vec<f64>> | null | Uint8Array | Vec<f64> | (f64)[]): Observable<EthFeeHistory> => {
+        throw new Error('Function not implemented.');
+      },
+      gasPrice: (): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getBalance: (address: H160 | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getBlockByHash: (hash: H256 | string | Uint8Array, full: bool | boolean | Uint8Array): Observable<Option<EthRichBlock>> => {
+        throw new Error('Function not implemented.');
+      },
+      getBlockByNumber: (block: BlockNumber | AnyNumber | Uint8Array, full: bool | boolean | Uint8Array): Observable<Option<EthRichBlock>> => {
+        throw new Error('Function not implemented.');
+      },
+      getBlockTransactionCountByHash: (hash: H256 | string | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getBlockTransactionCountByNumber: (block: BlockNumber | AnyNumber | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getCode: (address: H160 | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array): Observable<Bytes> => {
+        throw new Error('Function not implemented.');
+      },
+      getFilterChanges: (index: U256 | AnyNumber | Uint8Array): Observable<EthFilterChanges> => {
+        throw new Error('Function not implemented.');
+      },
+      getFilterLogs: (index: U256 | AnyNumber | Uint8Array): Observable<Vec<EthLog>> => {
+        throw new Error('Function not implemented.');
+      },
+      getLogs: (filter: EthFilter | { fromBlock?: any; toBlock?: any; blockHash?: any; address?: any; topics?: any } | string | Uint8Array): Observable<Vec<EthLog>> => {
+        throw new Error('Function not implemented.');
+      },
+      getProof: (address: H160 | string | Uint8Array, storageKeys: Vec<H256> | (H256 | string | Uint8Array)[], number: BlockNumber | AnyNumber | Uint8Array): Observable<EthAccount> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorageAt: (address: H160 | string | Uint8Array, index: U256 | AnyNumber | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array): Observable<H256> => {
+        throw new Error('Function not implemented.');
+      },
+      getTransactionByBlockHashAndIndex: (hash: H256 | string | Uint8Array, index: U256 | AnyNumber | Uint8Array): Observable<EthTransaction> => {
+        throw new Error('Function not implemented.');
+      },
+      getTransactionByBlockNumberAndIndex: (number: BlockNumber | AnyNumber | Uint8Array, index: U256 | AnyNumber | Uint8Array): Observable<EthTransaction> => {
+        throw new Error('Function not implemented.');
+      },
+      getTransactionByHash: (hash: H256 | string | Uint8Array): Observable<EthTransaction> => {
+        throw new Error('Function not implemented.');
+      },
+      getTransactionCount: (address: H160 | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getTransactionReceipt: (hash: H256 | string | Uint8Array): Observable<EthReceipt> => {
+        throw new Error('Function not implemented.');
+      },
+      getUncleByBlockHashAndIndex: (hash: H256 | string | Uint8Array, index: U256 | AnyNumber | Uint8Array): Observable<EthRichBlock> => {
+        throw new Error('Function not implemented.');
+      },
+      getUncleByBlockNumberAndIndex: (number: BlockNumber | AnyNumber | Uint8Array, index: U256 | AnyNumber | Uint8Array): Observable<EthRichBlock> => {
+        throw new Error('Function not implemented.');
+      },
+      getUncleCountByBlockHash: (hash: H256 | string | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getUncleCountByBlockNumber: (number: BlockNumber | AnyNumber | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      getWork: (): Observable<EthWork> => {
+        throw new Error('Function not implemented.');
+      },
+      hashrate: (): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      maxPriorityFeePerGas: (): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      mining: (): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      newBlockFilter: (): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      newFilter: (filter: EthFilter | { fromBlock?: any; toBlock?: any; blockHash?: any; address?: any; topics?: any } | string | Uint8Array): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      newPendingTransactionFilter: (): Observable<U256> => {
+        throw new Error('Function not implemented.');
+      },
+      protocolVersion: (): Observable<u64> => {
+        throw new Error('Function not implemented.');
+      },
+      sendRawTransaction: (bytes: Bytes | string | Uint8Array): Observable<H256> => {
+        throw new Error('Function not implemented.');
+      },
+      sendTransaction: (tx: EthTransactionRequest | { from?: any; to?: any; gasPrice?: any; gas?: any; value?: any; data?: any; nonce?: any } | string | Uint8Array): Observable<H256> => {
+        throw new Error('Function not implemented.');
+      },
+      submitHashrate: (index: U256 | AnyNumber | Uint8Array, hash: H256 | string | Uint8Array): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      submitWork: (nonce: H64 | string | Uint8Array, headerHash: H256 | string | Uint8Array, mixDigest: H256 | string | Uint8Array): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribe: (kind: EthSubKind | 'newHeads' | 'logs' | 'newPendingTransactions' | 'syncing' | number | Uint8Array, params?: EthSubParams | { None: any } | { Logs: any } | string | Uint8Array): Observable<Null> => {
+        throw new Error('Function not implemented.');
+      },
+      syncing: (): Observable<EthSyncStatus> => {
+        throw new Error('Function not implemented.');
+      },
+      uninstallFilter: (index: U256 | AnyNumber | Uint8Array): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get grandpa() {
+    return {
+      proveFinality: (blockNumber: BlockNumber | AnyNumber | Uint8Array): Observable<Option<EncodedFinalityProofs>> => {
+        throw new Error('Function not implemented.');
+      },
+      roundState: (): Observable<ReportedRoundStates> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeJustifications: (): Observable<JustificationNotification> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get mmr() {
+    return {
+      generateProof: (blockNumbers: Vec<u64> | (u64 | AnyNumber | Uint8Array)[], bestKnownBlockNumber?: u64 | AnyNumber | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<MmrLeafBatchProof> => {
+        throw new Error('Function not implemented.');
+      },
+      root: (at?: BlockHash | string | Uint8Array): Observable<MmrHash> => {
+        throw new Error('Function not implemented.');
+      },
+      verifyProof: (proof: MmrLeafBatchProof | { blockHash?: any; leaves?: any; proof?: any } | string | Uint8Array): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      verifyProofStateless: (root: MmrHash | string | Uint8Array, proof: MmrLeafBatchProof | { blockHash?: any; leaves?: any; proof?: any } | string | Uint8Array): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get net() {
+    return {
+      listening: (): Observable<bool> => {
+        throw new Error('Function not implemented.');
+      },
+      peerCount: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      version: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get offchain() {
+    return {
+      localStorageGet: (kind: StorageKind | 'PERSISTENT' | 'LOCAL' | number | Uint8Array, key: Bytes | string | Uint8Array): Observable<Option<Bytes>> => {
+        throw new Error('Function not implemented.');
+      },
+      localStorageSet: (kind: StorageKind | 'PERSISTENT' | 'LOCAL' | number | Uint8Array, key: Bytes | string | Uint8Array, value: Bytes | string | Uint8Array): Observable<Null> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get payment() {
+    return {
+      queryFeeDetails: (extrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<FeeDetails> => {
+        throw new Error('Function not implemented.');
+      },
+      queryInfo: (extrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<RuntimeDispatchInfoV1> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get rpc() {
+    return {
+      methods: (): Observable<RpcMethods> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get state() {
+    return {
+      call: (method: Text | string, data: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<Bytes> => {
+        throw new Error('Function not implemented.');
+      },
+      getChildKeys: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<Vec<StorageKey>> => {
+        throw new Error('Function not implemented.');
+      },
+      getChildReadProof: (childStorageKey: PrefixedStorageKey | string | Uint8Array, keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: BlockHash | string | Uint8Array): Observable<ReadProof> => {
+        throw new Error('Function not implemented.');
+      },
+      getChildStorage: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<StorageData> => {
+        throw new Error('Function not implemented.');
+      },
+      getChildStorageHash: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<Hash> => {
+        throw new Error('Function not implemented.');
+      },
+      getChildStorageSize: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<u64> => {
+        throw new Error('Function not implemented.');
+      },
+      getKeys: (key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<Vec<StorageKey>> => {
+        throw new Error('Function not implemented.');
+      },
+      getKeysPaged: (key: StorageKey | string | Uint8Array | any, count: u32 | AnyNumber | Uint8Array, startKey?: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<Vec<StorageKey>> => {
+        throw new Error('Function not implemented.');
+      },
+      getMetadata: (at?: BlockHash | string | Uint8Array): Observable<Metadata> => {
+        throw new Error('Function not implemented.');
+      },
+      getPairs: (prefix: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<Vec<KeyValue>> => {
+        throw new Error('Function not implemented.');
+      },
+      getReadProof: (keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: BlockHash | string | Uint8Array): Observable<ReadProof> => {
+        throw new Error('Function not implemented.');
+      },
+      getRuntimeVersion: (at?: BlockHash | string | Uint8Array): Observable<RuntimeVersion> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorage: <T = Codec>(key: StorageKey | string | Uint8Array | any, block?: Hash | Uint8Array | string): Observable<T> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorageHash: (key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<Hash> => {
+        throw new Error('Function not implemented.');
+      },
+      getStorageSize: (key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array): Observable<u64> => {
+        throw new Error('Function not implemented.');
+      },
+      queryStorage: <T = Codec[]>(keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], fromBlock?: Hash | Uint8Array | string, toBlock?: Hash | Uint8Array | string): Observable<[Hash, T][]> => {
+        throw new Error('Function not implemented.');
+      },
+      queryStorageAt: <T = Codec[]>(keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: Hash | Uint8Array | string): Observable<T> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeRuntimeVersion: (): Observable<RuntimeVersion> => {
+        throw new Error('Function not implemented.');
+      },
+      subscribeStorage: <T = Codec[]>(keys?: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[]): Observable<T> => {
+        throw new Error('Function not implemented.');
+      },
+      traceBlock: (block: Hash | string | Uint8Array, targets: Option<Text> | null | Uint8Array | Text | string, storageKeys: Option<Text> | null | Uint8Array | Text | string, methods: Option<Text> | null | Uint8Array | Text | string): Observable<TraceBlockResponse> => {
+        throw new Error('Function not implemented.');
+      },
+      trieMigrationStatus: (at?: BlockHash | string | Uint8Array): Observable<MigrationStatusResult> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get syncstate() {
+    return {
+      genSyncSpec: (raw: bool | boolean | Uint8Array): Observable<Json> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get system() {
+    return {
+      accountNextIndex: (accountId: AccountId | string | Uint8Array): Observable<Index> => {
+        throw new Error('Function not implemented.');
+      },
+      addLogFilter: (directives: Text | string): Observable<Null> => {
+        throw new Error('Function not implemented.');
+      },
+      addReservedPeer: (peer: Text | string): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      chain: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      chainType: (): Observable<ChainType> => {
+        throw new Error('Function not implemented.');
+      },
+      dryRun: (extrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array): Observable<ApplyExtrinsicResult> => {
+        throw new Error('Function not implemented.');
+      },
+      health: (): Observable<Health> => {
+        throw new Error('Function not implemented.');
+      },
+      localListenAddresses: (): Observable<Vec<Text>> => {
+        throw new Error('Function not implemented.');
+      },
+      localPeerId: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      name: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      networkState: (): Observable<NetworkState> => {
+        throw new Error('Function not implemented.');
+      },
+      nodeRoles: (): Observable<Vec<NodeRole>> => {
+        throw new Error('Function not implemented.');
+      },
+      peers: (): Observable<Vec<PeerInfo>> => {
+        throw new Error('Function not implemented.');
+      },
+      properties: (): Observable<ChainProperties> => {
+        throw new Error('Function not implemented.');
+      },
+      removeReservedPeer: (peerId: Text | string): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      reservedPeers: (): Observable<Vec<Text>> => {
+        throw new Error('Function not implemented.');
+      },
+      resetLogFilter: (): Observable<Null> => {
+        throw new Error('Function not implemented.');
+      },
+      syncState: (): Observable<SyncState> => {
+        throw new Error('Function not implemented.');
+      },
+      version: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+  public get web3() {
+    return {
+      clientVersion: (): Observable<Text> => {
+        throw new Error('Function not implemented.');
+      },
+      sha3: (data: Bytes | string | Uint8Array): Observable<H256> => {
+        throw new Error('Function not implemented.');
+      },
+    }
+  };
+} // RpcConst
+*/

@@ -1,0 +1,64 @@
+// this file is auto-generated from a modified template file
+// the original template file is '@polkadot/typegen/template/rpc.hbs'
+// and the modification template file is at 'static/type-generation/rpc.hbs'
+
+{{> header }}
+
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/rpc-core/types/jsonrpc';
+
+{{{ importsAll }}}
+
+export type __AugmentedRpc = AugmentedRpc<() => unknown>;
+
+export const RpcList = {
+  {{#each modules}}
+  {{{name}}} : [
+  {{#each items}}
+    '{{{name}}}',
+  {{/each}}
+  ],
+  {{/each}}
+} as const;
+
+declare module '@polkadot/rpc-core/types/jsonrpc' {
+  interface RpcInterface {
+    {{#each modules}}
+    {{{name}}}: {
+      {{#each items}}
+      {{> docs}}
+      {{{name}}}: AugmentedRpc<{{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}) => Observable<{{{type}}}>>;
+      {{/each}}
+    };
+    {{/each}}
+  } // RpcInterface
+} // declare module
+
+/*
+// the class RpcBaseClass is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.  
+
+
+// type transoms RpcInterface to be implemented by RpcBaseClass
+type RemoveAugmentAroundFunction<Namespace> = {
+  [Func in keyof Namespace ]: Namespace[Func] extends AugmentedRpc<infer U> ? U : never
+};
+type RemoveAugment<T> = {
+  [Namespace in keyof T]: RemoveAugmentAroundFunction<T[Namespace]>;
+};
+// Note: this class in not inside a module augmentation because class implantation cannot be inside `declare module '...' { block }`
+import { RpcInterface} from '@polkadot/rpc-core/types/jsonrpc';
+export class RpcBaseClass implements RemoveAugment<RpcInterface> {
+  {{#each modules}}
+  public get {{{name}}}() {
+    return {
+      {{#each items}}
+      {{{name}}}: {{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}): Observable<{{{type}}}> => {
+        throw new Error('Function not implemented.');
+      },
+      {{/each}}
+    }
+  };
+  {{/each}}
+} // RpcConst
+*/
