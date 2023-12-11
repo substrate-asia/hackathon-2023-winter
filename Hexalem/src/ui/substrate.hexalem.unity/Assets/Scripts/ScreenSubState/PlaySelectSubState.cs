@@ -5,6 +5,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
+using UnityEngine.WSA;
 
 namespace Assets.Scripts
 {
@@ -50,6 +51,19 @@ namespace Assets.Scripts
         private void OnGridTileClicked(GameObject tileObject, int index)
         {
             Debug.Log($"[{this.GetType().Name}][SUB] OnGridTileClicked Change to Upgrade, if possible.");
+
+            var pIndex = 0;
+
+            HexaTile tile = MainScreenState.HexaGame.HexaTuples[pIndex].board[index];
+
+            if (tile.IsEmpty())
+            {
+                return;
+            }
+
+            MainScreenState.SelectedGridIndex = index;
+
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileUpgrade);
         }
 
         private void UpdateSelection()
