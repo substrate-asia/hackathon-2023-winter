@@ -1,5 +1,6 @@
 # Cyborg Network
-![Alt text](image.jpg)
+![photo_2023-10-30 21 15 10](https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/5126a02f-68ab-4640-92c2-7f52b081cfdc)
+
 
 ## Basic Information
 
