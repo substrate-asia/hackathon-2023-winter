@@ -6,6 +6,10 @@ export default function Contributions() {
   const { detail } = useServerSideProps();
   const count = detail?.contributors?.length || 0;
 
+  if (!count) {
+    return null;
+  }
+
   return (
     <div className="flex flex-col p-[32px] shadow-shadow-card-default">
       <CardTitle title="Contributors" count={count} />

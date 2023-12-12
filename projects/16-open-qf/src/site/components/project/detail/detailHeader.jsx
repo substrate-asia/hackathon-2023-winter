@@ -2,6 +2,7 @@ import { useServerSideProps } from "@/context/serverSideProps";
 import Divider from "@/components/divider";
 import WebsiteLink from "@/components/websiteLink";
 import { cn } from "@/utils";
+import NetworkUser from "@/components/user/networkUser";
 
 function MetaItem({ title, children }) {
   return (
@@ -17,27 +18,22 @@ function Meta() {
   return (
     <div className="grid grid-cols-3 w-full">
       <MetaItem title="Create by">
-        <span>{detail.creator}</span>
+        <NetworkUser address={detail.creator} network="polkadot" />
       </MetaItem>
       <MetaItem title="Category">
-        <div className="flex gap-[8px] flex-wrap">
-          {(detail.categories || []).map((item, index) => (
-            <span
-              key={index}
-              className={cn(
-                "px-[8px] py-[2px]",
-                "text12medium text-text-secondary",
-                "rounded-[10px] border border-stroke-action-default",
-              )}
-            >
-              {item}
-            </span>
-          ))}
-        </div>
+        <span
+          className={cn(
+            "px-[8px] py-[2px]",
+            "text12medium text-text-secondary",
+            "rounded-[10px] border border-stroke-action-default",
+          )}
+        >
+          {detail.category}
+        </span>
       </MetaItem>
       <MetaItem title="Related links">
         <div className="flex gap-[8px] flex-wrap">
-          {(detail.relatedLinks || []).map((item, index) => (
+          {(detail.links || []).map((item, index) => (
             <WebsiteLink key={index} href={item} />
           ))}
         </div>
@@ -52,9 +48,7 @@ function Description() {
   return (
     <div className="flex flex-col gap-[8px]">
       <h1 className="text20semibold text-text-primary">{detail.name}</h1>
-      <span className="text14medium text-text-tertiary">
-        {detail.description}
-      </span>
+      <span className="text14medium text-text-tertiary">{detail.summary}</span>
     </div>
   );
 }

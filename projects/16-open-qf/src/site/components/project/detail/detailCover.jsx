@@ -1,6 +1,8 @@
+import { useServerSideProps } from "@/context/serverSideProps";
 import { cn } from "@/utils";
 
 function Avatar() {
+  const { detail } = useServerSideProps();
   return (
     <div
       className={cn(
@@ -9,15 +11,22 @@ function Avatar() {
         "absolute left-[20px] bottom-0 translate-y-[50%]",
       )}
     >
-      <img src="/imgs/avatar.png" alt="" />
+      <img
+        src={`${process.env.NEXT_PUBLIC_IPFS_ENDPOINT}${detail.logoCid}`}
+        alt=""
+      />
     </div>
   );
 }
 
 export default function Cover() {
+  const { detail } = useServerSideProps();
   return (
     <div className="flex flex-col relative">
-      <img src="/imgs/project-cover.png" alt="" />
+      <img
+        src={`${process.env.NEXT_PUBLIC_IPFS_ENDPOINT}${detail.bannerCid}`}
+        alt=""
+      />
       <Avatar />
     </div>
   );

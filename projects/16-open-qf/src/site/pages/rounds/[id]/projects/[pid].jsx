@@ -2,7 +2,7 @@ import DetailLayout from "@/components/layouts/detailLayout";
 import Contributions from "@/components/project/contributors";
 import ProjectDetail from "@/components/project/detail";
 import Sidebar from "@/components/project/sidebar";
-import { PROJECTS_DETAIL_DATA } from "@/fixtures/projectList";
+import { ssrNextApi } from "@/services";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 
 const ProjectPage = withCommonPageWrapper(() => {
@@ -19,12 +19,18 @@ const ProjectPage = withCommonPageWrapper(() => {
 export default ProjectPage;
 
 export const getServerSideProps = async (context) => {
-  const id = Number(context.query.id);
-  const detail = PROJECTS_DETAIL_DATA.find((item) => item.id === id);
+  const roundId = Number(context.query.id);
+  const projectId = Number(context.query.pid);
+  const { result: detail } = await ssrNextApi.fetch(
+    `/rounds/${roundId}/projects/${projectId}`,
+  );
+  if (!detail) {
+    //TODO: redirect to 404
+  }
 
   return {
     props: {
-      detail,
+      detail: detail ?? null,
       ...loadCommonServerSideProps(context),
     },
   };
