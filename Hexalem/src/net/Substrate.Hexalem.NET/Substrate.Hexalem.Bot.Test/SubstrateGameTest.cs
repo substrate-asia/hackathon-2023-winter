@@ -37,7 +37,7 @@ namespace Substrate.Hexalem.Integration.Test
             // Create a new game, and wait for extrinsic
             GameWorflowStatus result = await _game.CreateGameAsync(GridSize.Medium, token);
 
-            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.IsSuccess, Is.True, result.Message);
 
             Assert.That(_game.HexaGame.HexaTuples, Is.Not.Null);
 

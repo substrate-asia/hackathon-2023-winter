@@ -31,11 +31,11 @@ namespace Substrate.Hexalem.Game
         private readonly int _concurentTask;
         private byte[]? _gameId;
 
-        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainGameCreated;
-        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainPlayed;
-        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainUpgrade;
-        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainFinishTurn;
-        private readonly TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onGameFinished;
+        private TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainGameCreated;
+        private TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainPlayed;
+        private TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainUpgrade;
+        private TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onChainFinishTurn;
+        private TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)> _onGameFinished;
 
         private enum InternalGameState
         {
@@ -337,7 +337,9 @@ namespace Substrate.Hexalem.Game
 
                 Log.Information("[{gameId}] New game started, subscription = {subscription}, wait for finalized block", _gameId, gameSubscription);
 
-                return (await _onChainGameCreated.Task).extrinsicStatus;
+                var res = (await _onChainGameCreated.Task).extrinsicStatus;
+                _onChainGameCreated = new TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)>();
+                return res;
             }
             else
             {
@@ -391,7 +393,9 @@ namespace Substrate.Hexalem.Game
                 _state.Add(chooseAndPlaceSubscription, InternalGameState.Play);
                 Log.Information("[{gameId}] Played at [{r},{q}], wait for finalized block", _gameId, coords.Item1, coords.Item2);
 
-                return (await _onChainPlayed.Task).extrinsicStatus;
+                var result = (await _onChainPlayed.Task).extrinsicStatus;
+                _onChainPlayed = new TaskCompletionSource<(bool, GameWorflowStatus)>();
+                return result;
             }
             else
             {
@@ -429,7 +433,10 @@ namespace Substrate.Hexalem.Game
                 }
 
                 _state.Add(upgradeSubscription, InternalGameState.Upgrade);
-                return (await _onChainUpgrade.Task).extrinsicStatus;
+
+                var res = (await _onChainUpgrade.Task).extrinsicStatus;
+                _onChainUpgrade = new TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)>();
+                return res;
             }
             else
             {
@@ -467,7 +474,9 @@ namespace Substrate.Hexalem.Game
                 }
 
                 _state.Add(finishTurnSubscription, InternalGameState.FinishTurn);
-                return (await _onChainFinishTurn.Task).extrinsicStatus;
+                var res = (await _onChainFinishTurn.Task).extrinsicStatus;
+                _onChainFinishTurn = new TaskCompletionSource<(bool res, GameWorflowStatus extrinsicStatus)>();
+                return res;
             }
             else
             {

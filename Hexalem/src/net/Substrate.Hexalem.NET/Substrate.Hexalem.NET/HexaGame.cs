@@ -63,7 +63,7 @@ namespace Substrate.Hexalem
             PlayerTurn = 0;
             SelectBase = 2;
 
-            UnboundTileOffers = NewSelection(blockNumber, SelectBase);
+            RefillSelection(blockNumber, SelectBase);
         }
 
         public void NextRound(uint blockNumber)
@@ -79,7 +79,7 @@ namespace Substrate.Hexalem
         {
             HexaTuples.ForEach(p => { p.player.PostMove(blockNumber); p.board.PostMove(blockNumber); });
 
-            if (UnboundTileOffers.Count < (SelectBase + 1) / 2)
+            if (UnboundTileOffers.Count < (SelectBase / 2 + 1))
             {
                 Log.Debug("UnboundTileOffers is below half");
                 if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
@@ -88,7 +88,7 @@ namespace Substrate.Hexalem
                     SelectBase += 2;
                 }
 
-                UnboundTileOffers = RefillSelection(blockNumber, SelectBase);
+                RefillSelection(blockNumber, SelectBase);
             }
         }
 
@@ -98,20 +98,20 @@ namespace Substrate.Hexalem
         /// <param name="blockNumber"></param>
         /// <param name="selectBase">selection size</param>
         /// <returns></returns>
-        internal List<byte> NewSelection(uint blockNumber, int selectBase)
-        {
-            var offSet = (byte)(blockNumber % 32);
+        //internal List<byte> NewSelection(uint blockNumber, int selectBase)
+        //{
+        //    var offSet = (byte)(blockNumber % 32);
 
-            var result = new List<byte>();
+        //    var result = new List<byte>();
 
-            for (int i = 0; i < selectBase; i++)
-            {
-                byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
+        //    for (int i = 0; i < selectBase; i++)
+        //    {
+        //        byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
-                result.Add(tileIndex);
-            }
-            return result;
-        }
+        //        result.Add(tileIndex);
+        //    }
+        //    return result;
+        //}
 
         /// <summary>
         /// Refill selection
@@ -119,18 +119,16 @@ namespace Substrate.Hexalem
         /// <param name="blockNumber"></param>
         /// <param name="selectBase">selection size</param>
         /// <returns></returns>
-        internal List<byte> RefillSelection(uint blockNumber, int selectBase)
+        internal void RefillSelection(uint blockNumber, int selectBase)
         {
             var offSet = (byte)(blockNumber % 32);
-            var result = new List<byte>();
-            for (int i = UnboundTileOffers.Count(); i < selectBase; i++)
+
+            for (int i = UnboundTileOffers.Count; i < selectBase; i++)
             {
                 byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
-                result.Add(tileIndex);
+                UnboundTileOffers.Add(tileIndex);
             }
-
-            return result;
         }
 
         /// <param name="playerIndex"></param>
@@ -297,7 +295,7 @@ namespace Substrate.Hexalem
             }
             else
             {
-                UnboundTileOffers = NewSelection(blockNumber, SelectBase);
+                RefillSelection(blockNumber, SelectBase);
             }
 
             return true;
