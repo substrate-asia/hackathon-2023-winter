@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const nova = {
-  id: "nova",
   name: "Nova Wallet",
   summary: "Next-gen iOS/Android app for Polkadot & Kusam eco.",
   creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",

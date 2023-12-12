@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const polkascan = {
-  id: "polkascan",
   name: "Polkascan",
   summary:
     "Polkascan is a publicly available instance of a general-purpose open-source explorer that disseminates the highest granularity of data found on the Polkadot Ecosystem’s Relay Chains and supported Parachains.",

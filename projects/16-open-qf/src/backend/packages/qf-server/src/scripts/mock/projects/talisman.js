@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const talisman = {
-  id: "talisman",
   name: "Talisman",
   summary:
     "A user-friendly wallet built for Polkadot & Ethereum. The better way to explore Web3.",

@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const smoldot = {
-  id: "smoldot",
   name: "Smoldot",
   summary:
     "Smoldot is an alternative client of Substrate-based chains, including Polkadot.",

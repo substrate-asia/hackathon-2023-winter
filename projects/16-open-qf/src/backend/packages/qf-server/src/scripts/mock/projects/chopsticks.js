@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const chopsticks = {
-  id: "chopsticks",
   name: "Chopsticks by Acala Network",
   summary: "Create parallel reality of your Substrate network.",
   creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",

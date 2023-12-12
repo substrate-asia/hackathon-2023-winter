@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const subquery = {
-  id: "subquery",
   name: "SubQuery",
   summary:
     "SubQuery is a fast, flexible, and reliable open-source data indexer that provides you with custom APIs for your web3 project across all of our supported chains.",

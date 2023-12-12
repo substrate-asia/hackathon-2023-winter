@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const subwallet = {
-  id: "subwallet",
   name: "SubWallet",
   summary:
     "A non-custodial Polkadot & Ethereum wallet. Available on browser extension, mobile app & web dashboard.",

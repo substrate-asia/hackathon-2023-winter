@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const subsquare = {
-  id: "subsquare",
   name: "SubSquare",
   summary:
     "A governance platform for substrate based chains. SubSquare enables community members to propose, discuss and vote on governance proposals.",

@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const statescan = {
-  id: "statescan",
   name: "Statescan",
   summary: "A set of explorers for substrate chains.",
   creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",

@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const subsquid = {
-  id: "subsquid",
   name: "SubSquid",
   summary:
     "Subsquid Network is a decentralized query engine optimized for batch extraction of large volumes of data. It currently serves historial on-chain data ingested from 100+ EVM and Substrate networks, including event logs, transaction receipts, traces and per-transaction state diffs.",

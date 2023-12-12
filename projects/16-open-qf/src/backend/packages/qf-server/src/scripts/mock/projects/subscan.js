@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const subscan = {
-  id: "subscan",
   name: "Subscan",
   summary:
     "Subscan is a high-precision Web3 blockchain explorer that aggregate Substrate ecological network.",

@@ -1,7 +1,6 @@
 const { category } = require("../consts/category");
 
 const polkassembly = {
-  id: "polkassembly",
   name: "Polkassembly",
   summary:
     "Polkassembly is a governance forum for Polkadot & Kusama and all substrate chains!",
