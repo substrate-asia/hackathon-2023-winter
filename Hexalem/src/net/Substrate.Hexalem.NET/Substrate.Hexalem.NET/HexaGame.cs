@@ -148,11 +148,6 @@ namespace Substrate.Hexalem.Engine
                 return false;
             }
 
-            if (!EnsureValidSelection(selectionIndex))
-            {
-                return false;
-            }
-
             var (player, board) = HexaTuples[PlayerTurn];
 
             var tileOffer = GameConfig.TILE_COSTS[UnboundTileOffers[selectionIndex]];
@@ -574,12 +569,13 @@ namespace Substrate.Hexalem.Engine
             {
                 case RessourceType.Mana:
                     result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
-                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
+                    result += (byte)(player[RessourceType.Humans] / 2); // 1 Mana from 3 Humans
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Humans:
+
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
                     result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
 
