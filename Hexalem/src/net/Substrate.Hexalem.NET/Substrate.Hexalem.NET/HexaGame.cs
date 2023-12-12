@@ -215,7 +215,7 @@ namespace Substrate.Hexalem.Engine
             board.Place(coords, tile);
 
             // remove ressources from player
-            var tileCost = tileOffer.TileCost;
+            var tileCost = tileOffer.SelectCost;
 
             player[tileCost.MaterialType] -= tileCost.Cost;
 
@@ -277,12 +277,16 @@ namespace Substrate.Hexalem.Engine
             // Ensure coord have a valid tile
             var existingTile = (HexaTile)board[coords.q, coords.r];
 
-            // Upgrade tile to next level, if failed return
             existingTile.Upgrade();
 
             HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
-            player[RessourceType.Gold] -= (byte)GameConfig.GoldCostForUpgrade(existingTile.TileLevel);
-            player[RessourceType.Humans] -= (byte)GameConfig.MininumHumanToUpgrade(existingTile.TileLevel);
+
+            var ressourceCost = GameConfig.MapTileUpgradeCost(existingTile.TileType, existingTile.TileLevel);
+
+            for (int i = 0; i < ressourceCost.Length; i++)
+            {
+                player[(RessourceType)i] -= ressourceCost[i];
+            }
 
             return true;
         }
@@ -439,22 +443,29 @@ namespace Substrate.Hexalem.Engine
         }
 
         /// <summary>
-        /// Ensure that the player have enough ressources to upgrade the tile
+        /// Ensure that the player has enough ressources to upgrade the tile
         /// </summary>
         /// <param name="player"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
         private bool EnsureRessourcesToUpgrade(HexaPlayer player, HexaTile tile)
         {
-            // Check if player have enought ressources to upgrade
-            var goldRequired = GameConfig.GoldCostForUpgrade(tile.TileLevel);
-            var humansRequired = GameConfig.MininumHumanToUpgrade(tile.TileLevel);
-            if (player[RessourceType.Gold] < goldRequired
-             || player[RessourceType.Humans] < humansRequired)
+            var ressourceCost = GameConfig.MapTileUpgradeCost(tile.TileType, tile.TileLevel);
+
+            if (ressourceCost == null)
             {
-                Log.Error(LogMessages.MissingRessourcesToUpgrade(player, tile, goldRequired, humansRequired));
+                Log.Error(LogMessages.InvalidTileToUpgrade(tile));
                 return false;
             }
+
+            for(int i = 0; i < ressourceCost.Length; i++)
+            {
+                if (player[(RessourceType)i] < ressourceCost[i])
+                {
+                    Log.Error(LogMessages.MissingRessourcesToUpgrade(player, tile, (RessourceType)i, ressourceCost[i]));
+                    return false;
+                }
+            }   
 
             return true;
         }
@@ -467,7 +478,7 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         private bool EnsureRessourcesToPlay(HexaPlayer player, TileOffer tileOffer)
         {
-            var tileCost = tileOffer.TileCost;
+            var tileCost = tileOffer.SelectCost;
 
             if (player[tileCost.MaterialType] < tileCost.Cost)
             {
@@ -575,7 +586,7 @@ namespace Substrate.Hexalem.Engine
                     var homeWeighted = 0;
                     for (byte level = 0; level < 4; level++)
                     {
-                        homeWeighted += (int)(level + 1) * boardStats[TileType.Home, level];
+                        homeWeighted += (level + 1) * boardStats[TileType.Home, level];
                     }
                     result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
 

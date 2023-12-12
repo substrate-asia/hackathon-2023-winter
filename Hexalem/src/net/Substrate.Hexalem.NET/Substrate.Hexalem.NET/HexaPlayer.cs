@@ -71,16 +71,6 @@
             return false;
         }
 
-        /// <summary>
-        /// Check if player has enough ressources to upgrade tile
-        /// </summary>
-        /// <returns></returns>
-        public bool CanUpgrade(HexaTile tile)
-        {
-            return this[RessourceType.Gold] >= GameConfig.GoldCostForUpgrade(tile.TileLevel) &&
-                    this[RessourceType.Humans] >= GameConfig.MininumHumanToUpgrade(tile.TileLevel);
-        }
-
         public void NextRound(uint blockNumber)
         {
         }
