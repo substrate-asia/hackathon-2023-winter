@@ -1,4 +1,4 @@
-﻿namespace Substrate.Hexalem.GameException
+﻿namespace Substrate.Hexalem.Engine.GameException
 {
     public static class LogMessages
     {

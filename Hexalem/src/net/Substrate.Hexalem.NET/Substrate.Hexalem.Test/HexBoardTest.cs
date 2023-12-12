@@ -1,4 +1,5 @@
-using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Engine;
+using Substrate.Hexalem.Engine.GameException;
 using Substrate.Hexalem.Integration.Model;
 
 namespace Substrate.Hexalem.Tests

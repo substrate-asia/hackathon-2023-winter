@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using Substrate.NetApi.Model.Types.Primitive;
 using Substrate.Hexalem.Game;
 using Substrate.Hexalem.Game.Test;
+using Substrate.Hexalem.Engine;
 
 namespace Substrate.Hexalem.Integration.Test
 {

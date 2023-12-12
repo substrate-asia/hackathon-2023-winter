@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public class HexaBoardStats
     {
@@ -35,8 +35,8 @@ namespace Substrate.Hexalem
 
         public byte this[TileType tileType, byte tileLevel]
         {
-            get => _levelValues[(int)tileType * _maxTileTypes + (int)tileLevel];
-            set => _levelValues[(int)tileType * _maxTileTypes + (int)tileLevel] = value;
+            get => _levelValues[(int)tileType * _maxTileTypes + tileLevel];
+            set => _levelValues[(int)tileType * _maxTileTypes + tileLevel] = value;
         }
 
         public byte this[TileType tileType, TilePattern tilePattern]

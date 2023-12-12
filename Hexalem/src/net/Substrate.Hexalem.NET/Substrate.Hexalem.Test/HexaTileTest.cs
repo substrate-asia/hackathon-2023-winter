@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Substrate.Hexalem.Engine;
 using Substrate.Hexalem.Integration.Model;
 
 namespace Substrate.Hexalem.Test

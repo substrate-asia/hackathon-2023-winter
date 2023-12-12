@@ -1,7 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Substrate.Hexalem.Engine;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime;
-using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
-using System.Linq;
 
 namespace Substrate.Hexalem.Integration.Model
 {

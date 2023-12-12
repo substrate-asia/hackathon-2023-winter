@@ -1,4 +1,4 @@
-﻿namespace Substrate.Hexalem
+﻿namespace Substrate.Hexalem.Engine
 {
     public partial class HexaPlayer : IHexaBase
     {
@@ -13,7 +13,7 @@
         public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
-            AddWinCondition(Hexalem.WinningCondition.HumanThreshold);
+            AddWinCondition(Engine.WinningCondition.HumanThreshold);
         }
 
         public HexaPlayer(byte[] id, byte[] hash)
@@ -43,11 +43,11 @@
         {
             switch (condition)
             {
-                case Hexalem.WinningCondition.GoldThreshold:
+                case Engine.WinningCondition.GoldThreshold:
                     WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_GOLD);
                     break;
 
-                case Hexalem.WinningCondition.HumanThreshold:
+                case Engine.WinningCondition.HumanThreshold:
                     WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_HUMAN);
                     break;
             }
@@ -61,10 +61,10 @@
         {
             switch (WinningCondition.WinningCondition)
             {
-                case Hexalem.WinningCondition.GoldThreshold:
+                case Engine.WinningCondition.GoldThreshold:
                     return this[RessourceType.Gold] >= WinningCondition.Target;
 
-                case Hexalem.WinningCondition.HumanThreshold:
+                case Engine.WinningCondition.HumanThreshold:
                     return this[RessourceType.Humans] >= WinningCondition.Target;
             }
 

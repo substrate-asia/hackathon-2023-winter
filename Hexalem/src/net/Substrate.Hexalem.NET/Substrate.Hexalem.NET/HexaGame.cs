@@ -1,6 +1,6 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Extensions;
-using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Engine.Extensions;
+using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,7 +8,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public partial class HexaGame : IHexaBase
     {
@@ -131,6 +131,38 @@ namespace Substrate.Hexalem
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return CanChooseAndPlace(playerIndex, selectionIndex, coords);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return CanChooseAndPlace(playerIndex, selectionIndex, coords);
+        }
+
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
@@ -162,6 +194,27 @@ namespace Substrate.Hexalem
             }
 
             return board.CanPlace(coords);
+        }
+
+        /// <summary>
+        /// Choose and place a tile on the board
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            if (!CanChooseAndPlace(playerIndex, selectionIndex, gridIndex))
+            {
+                return false;
+            }
+
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return ChooseAndPlace(playerIndex, selectionIndex, coords);
         }
 
         /// <summary>
@@ -219,7 +272,7 @@ namespace Substrate.Hexalem
             var (player, board) = HexaTuples[PlayerTurn];
 
             var tile = (HexaTile)board[coords.q, coords.r];
-            if (!tile.CanUpgrade())
+            if (!EnsureUpgradableTile(tile))
             {
                 return false;
             }
@@ -271,13 +324,15 @@ namespace Substrate.Hexalem
             // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
             {
-                return false;
-            }
+                // do check for time here ... 
 
-            var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
-            if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
-            {
-                Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                //var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
+                //if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
+                //{
+                //    Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                //    return false;
+                //}
+
                 return false;
             }
 
@@ -365,9 +420,9 @@ namespace Substrate.Hexalem
             // TODO: remove humans being used for multiple resources, by removing them once used for a resource
 
             hexaPlayer[RessourceType.Mana] += newMana;
-            hexaPlayer[RessourceType.Humans] += newHumans;
-            hexaPlayer[RessourceType.Water] += newWater;
-            hexaPlayer[RessourceType.Food] += newFood;
+            hexaPlayer[RessourceType.Humans] = newHumans; // Humans are not cumulative
+            hexaPlayer[RessourceType.Water] = newWater; // Water is not cumulative
+            hexaPlayer[RessourceType.Food] = newFood; // Food is not cumulative
             hexaPlayer[RessourceType.Wood] += newWood;
             hexaPlayer[RessourceType.Stone] += newStone;
             hexaPlayer[RessourceType.Gold] += newGold;
@@ -612,6 +667,7 @@ namespace Substrate.Hexalem
 
             return result;
         }
+
     }
 
     /// <summary>
