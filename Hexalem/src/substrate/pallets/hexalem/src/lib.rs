@@ -104,13 +104,13 @@ pub mod pallet {
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Debug)]
 	pub enum Material {
-		Mana,
-		Humans,
-		Water,
-		Food,
-		Wood,
-		Stone,
-		Gold,
+		Mana = 0,
+		Humans = 1,
+		Water = 2,
+		Food = 3,
+		Wood = 4,
+		Stone = 5,
+		Gold = 6,
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
