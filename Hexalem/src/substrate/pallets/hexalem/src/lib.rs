@@ -178,9 +178,15 @@ pub mod pallet {
 		}
 	}
 
+	pub enum ResourceProductions {
+		None,
+		One(ResourceProduction),
+		Two(ResourceProduction, ResourceProduction),
+	}
+
 	pub struct ResourceProduction {
-		produces: ResourceAmount,
-		human_requirements: ResourceUnit,
+		pub produces: ResourceAmount,
+		pub human_requirements: ResourceUnit,
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq)]
@@ -1126,11 +1132,11 @@ impl<T: Config> Pallet<T> {
 
 		hex_board.resources[ResourceType::Water as usize] = hex_board.resources
 			[ResourceType::Water as usize]
-			.saturating_add(board_stats.get_tiles(TileType::Water));
+			.saturating_add(board_stats.get_tiles(TileType::Water).saturating_mul(2));
 
 		hex_board.resources[ResourceType::Food as usize] = hex_board.resources
 			[ResourceType::Food as usize]
-			.saturating_add(board_stats.get_tiles(TileType::Grass))
+			.saturating_add(board_stats.get_tiles(TileType::Grass).saturating_mul(2))
 			.saturating_add(T::FoodPerTree::get() * board_stats.get_tiles(TileType::Tree));
 
 		hex_board.resources[ResourceType::Wood as usize] =

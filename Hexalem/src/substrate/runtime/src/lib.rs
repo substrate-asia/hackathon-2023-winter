@@ -8,7 +8,8 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use pallet_grandpa::AuthorityId as GrandpaId;
 use pallet_hexalem::{
-	GetTileInfo, ResourceAmount, ResourceType, ResourceUnit, TileCost, TilePattern, TileType,
+	GetTileInfo, ResourceAmount, ResourceProduction, ResourceProductions, ResourceType,
+	ResourceUnit, TileCost, TilePattern, TileType,
 };
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
@@ -304,6 +305,84 @@ parameter_types! {
 
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 16;
+
+	pub const HexalemResourceProductions: [ResourceProductions; 6] = [
+		// Empty
+		ResourceProductions::None,
+		// Home
+		ResourceProductions::One(ResourceProduction {
+			produces: ResourceAmount {
+				resource_type: ResourceType::Human,
+				amount: 1,
+			},
+			human_requirements: 0,
+		}),
+		// Grass
+		ResourceProductions::One(
+			ResourceProduction {
+			produces: ResourceAmount {
+				resource_type: ResourceType::Food,
+				amount: 2,
+			},
+			human_requirements: 0,
+		}),
+		// Water
+		ResourceProductions::One(
+			ResourceProduction {
+			produces: ResourceAmount {
+				resource_type: ResourceType::Water,
+				amount: 2,
+			},
+			human_requirements: 0,
+		}),
+		// Mountain
+		ResourceProductions::One(
+			ResourceProduction {
+				produces: ResourceAmount {
+					resource_type: ResourceType::Stone,
+					amount: 4,
+				},
+				human_requirements: 4,
+			}
+		),
+		// Tree
+		ResourceProductions::Two(
+			ResourceProduction {
+				produces: ResourceAmount {
+					resource_type: ResourceType::Wood,
+					amount: 3,
+				},
+				human_requirements: 2,
+			},
+			ResourceProduction {
+				produces: ResourceAmount {
+					resource_type: ResourceType::Food,
+					amount: 1,
+				},
+				human_requirements: 0,
+			}
+		),
+		// Desert
+		ResourceProductions::None,
+		// Cave
+		ResourceProductions::Two(
+			ResourceProduction {
+				produces: ResourceAmount {
+					resource_type: ResourceType::Stone,
+					amount: 2,
+				},
+				human_requirements: 2,
+			},
+			ResourceProduction {
+				produces: ResourceAmount {
+					resource_type: ResourceType::Gold,
+					amount: 1,
+				},
+				human_requirements: 3,
+			}
+		)
+	];
+
 	pub const HexalemTileCosts: [TileCost<Runtime>; 15] = [
 		TileCost {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
