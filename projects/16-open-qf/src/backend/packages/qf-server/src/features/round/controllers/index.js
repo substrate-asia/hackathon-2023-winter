@@ -3,4 +3,5 @@ module.exports = {
   ...require("./getRound"),
   ...require("./projects"),
   ...require("./project"),
+  ...require("./categories"),
 };

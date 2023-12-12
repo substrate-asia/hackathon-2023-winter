@@ -1,4 +1,4 @@
-const { category } = require("../consts/category");
+const { category } = require("../../../utils/consts/category");
 
 const polkascan = {
   name: "Polkascan",
