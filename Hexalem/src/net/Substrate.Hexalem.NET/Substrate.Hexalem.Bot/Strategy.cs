@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Substrate.Hexalem.Engine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,7 +42,7 @@ namespace Substrate.Hexalem.Bot
             {
                 var tileOffer = GameConfig.TILE_COSTS[index];
 
-                if (hexGame.HexaTuples[hexGame.PlayerTurn].player[tileOffer.TileCost.MaterialType] >= tileOffer.TileCost.Cost)
+                if (hexGame.HexaTuples[hexGame.PlayerTurn].player[tileOffer.SelectCost.MaterialType] >= tileOffer.SelectCost.Cost)
                 {
                     tilesTobuy.Add(tileOffer.TileToBuy);
                 }
@@ -73,7 +74,7 @@ namespace Substrate.Hexalem.Bot
 
                 var currentTile = (HexaTile)playerBoard[i];
 
-                if (player.CanUpgrade(currentTile))
+                if (GameConfig.MapTileUpgradeCost(currentTile.TileType, currentTile.TileLevel) != null)
                 {
                     upgradableTile.Add(playerBoard.ToCoords(i));
                 }

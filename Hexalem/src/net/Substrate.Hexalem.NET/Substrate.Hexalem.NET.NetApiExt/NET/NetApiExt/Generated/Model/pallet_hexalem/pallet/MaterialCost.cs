@@ -30,9 +30,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumMaterial _materialType;
         
         /// <summary>
-        /// >> material_cost
+        /// >> material_amount
         /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _materialCost;
+        private Substrate.NetApi.Model.Types.Primitive.U8 _materialAmount;
         
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumMaterial MaterialType
         {
@@ -46,15 +46,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 MaterialCostValue
+        public Substrate.NetApi.Model.Types.Primitive.U8 MaterialAmount
         {
             get
             {
-                return this._materialCost;
+                return this._materialAmount;
             }
             set
             {
-                this._materialCost = value;
+                this._materialAmount = value;
             }
         }
         
@@ -67,7 +67,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         {
             var result = new List<byte>();
             result.AddRange(MaterialType.Encode());
-            result.AddRange(MaterialCostValue.Encode());
+            result.AddRange(MaterialAmount.Encode());
             return result.ToArray();
         }
         
@@ -76,8 +76,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             MaterialType = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumMaterial();
             MaterialType.Decode(byteArray, ref p);
-            MaterialCostValue = new Substrate.NetApi.Model.Types.Primitive.U8();
-            MaterialCostValue.Decode(byteArray, ref p);
+            MaterialAmount = new Substrate.NetApi.Model.Types.Primitive.U8();
+            MaterialAmount.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

@@ -1,5 +1,6 @@
 ﻿using Serilog;
 using Substrate.Hexalem.Bot;
+using Substrate.Hexalem.Engine;
 using System;
 using System.Collections.Generic;
 using System.Linq;

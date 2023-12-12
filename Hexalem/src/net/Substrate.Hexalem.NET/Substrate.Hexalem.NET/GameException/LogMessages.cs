@@ -1,4 +1,4 @@
-﻿namespace Substrate.Hexalem.GameException
+﻿namespace Substrate.Hexalem.Engine.GameException
 {
     public static class LogMessages
     {
@@ -14,8 +14,8 @@
         public static string InvalidTileToUpgrade(HexaTile tile)
             => $"Cannot upgrade tile of {tile.TileType}, {tile.TileLevel} because it not a valid tile";
 
-        public static string MissingRessourcesToUpgrade(HexaPlayer player, HexaTile tile, int goldRequired, int humansRequired)
-            => $"Player {player.Id} does not have enough Gold ({player[RessourceType.Gold]}) or Humans ({player[RessourceType.Humans]}) to upgrade {tile.TileLevel} (required {goldRequired} gold and {humansRequired})";
+        public static string MissingRessourcesToUpgrade(HexaPlayer player, HexaTile tile, RessourceType ressource, int cost)
+            => $"Player {player.Id} does not have enough {ressource} to upgrade {tile.TileLevel} (required {cost} {ressource}";
 
         internal static string MissingRessourcesToPlay(HexaPlayer player, HexaTile tile, RessourceType ressourceType, byte cost)
             => $"Player {player.Id} does not have enough {ressourceType} ({player[ressourceType]}) to place {tile.TileType} (required {cost})";

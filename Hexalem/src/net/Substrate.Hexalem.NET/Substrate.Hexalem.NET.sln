@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33927.249
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.NET", "Substrate.Hexalem.NET\Substrate.Hexalem.NET.csproj", "{64D275F5-5B97-44FC-B372-C5611E3E89B9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Engine", "Substrate.Hexalem.NET\Substrate.Hexalem.Engine.csproj", "{64D275F5-5B97-44FC-B372-C5611E3E89B9}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Test", "Substrate.Hexalem.Test\Substrate.Hexalem.Test.csproj", "{57870F77-E108-4BE0-B906-2571F43321A9}"
 EndProject
@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Bot", "Su
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Bot.Test", "Substrate.Hexalem.Bot.Test\Substrate.Hexalem.Bot.Test.csproj", "{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.UnityIntegration", "Substrate.Hexalem.UnityIntegration\Substrate.Hexalem.UnityIntegration.csproj", "{5791D948-8F61-4A4F-BA7D-3A3BF4313855}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.UnityIntegration", "Substrate.Hexalem.UnityIntegration\Substrate.Hexalem.UnityIntegration.csproj", "{5791D948-8F61-4A4F-BA7D-3A3BF4313855}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

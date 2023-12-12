@@ -1,6 +1,6 @@
 ﻿using Serilog;
-using Substrate.Hexalem.Extensions;
-using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Engine.Extensions;
+using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,11 +8,11 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public partial class HexaGame : IHexaBase
     {
-         public byte[] Id { get; set; }
+        public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
 
@@ -111,7 +111,7 @@ namespace Substrate.Hexalem
         {
             var offSet = (byte)(blockNumber % 32);
             var result = new List<byte>();
-            for (int i = UnboundTileOffers.Count(); i < selectBase; i++)
+            for (int i = UnboundTileOffers.Count; i < selectBase; i++)
             {
                 byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
@@ -121,6 +121,22 @@ namespace Substrate.Hexalem
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return CanChooseAndPlace(playerIndex, selectionIndex, coords);
+        }
+
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
@@ -128,11 +144,6 @@ namespace Substrate.Hexalem
         public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
             if (!EnsureCurrentPlayer(playerIndex))
-            {
-                return false;
-            }
-
-            if (!EnsureValidSelection(selectionIndex))
             {
                 return false;
             }
@@ -159,6 +170,27 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            if (!CanChooseAndPlace(playerIndex, selectionIndex, gridIndex))
+            {
+                return false;
+            }
+
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return ChooseAndPlace(playerIndex, selectionIndex, coords);
+        }
+
+        /// <summary>
+        /// Choose and place a tile on the board
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
         internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
@@ -178,7 +210,7 @@ namespace Substrate.Hexalem
             board.Place(coords, tile);
 
             // remove ressources from player
-            var tileCost = tileOffer.TileCost;
+            var tileCost = tileOffer.SelectCost;
 
             player[tileCost.MaterialType] -= tileCost.Cost;
 
@@ -209,7 +241,7 @@ namespace Substrate.Hexalem
             var (player, board) = HexaTuples[PlayerTurn];
 
             var tile = (HexaTile)board[coords.q, coords.r];
-            if (!tile.CanUpgrade())
+            if (!EnsureUpgradableTile(tile))
             {
                 return false;
             }
@@ -240,12 +272,16 @@ namespace Substrate.Hexalem
             // Ensure coord have a valid tile
             var existingTile = (HexaTile)board[coords.q, coords.r];
 
-            // Upgrade tile to next level, if failed return
             existingTile.Upgrade();
 
             HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
-            player[RessourceType.Gold] -= (byte)GameConfig.GoldCostForUpgrade(existingTile.TileLevel);
-            player[RessourceType.Humans] -= (byte)GameConfig.MininumHumanToUpgrade(existingTile.TileLevel);
+
+            var ressourceCost = GameConfig.MapTileUpgradeCost(existingTile.TileType, existingTile.TileLevel);
+
+            for (int i = 0; i < ressourceCost.Length; i++)
+            {
+                player[(RessourceType)i] -= ressourceCost[i];
+            }
 
             return true;
         }
@@ -261,13 +297,15 @@ namespace Substrate.Hexalem
             // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
             {
-                return false;
-            }
+                // do check for time here ... 
 
-            var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
-            if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
-            {
-                Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                //var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
+                //if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
+                //{
+                //    Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                //    return false;
+                //}
+
                 return false;
             }
 
@@ -355,9 +393,9 @@ namespace Substrate.Hexalem
             // TODO: remove humans being used for multiple resources, by removing them once used for a resource
 
             hexaPlayer[RessourceType.Mana] += newMana;
-            hexaPlayer[RessourceType.Humans] += newHumans;
-            hexaPlayer[RessourceType.Water] += newWater;
-            hexaPlayer[RessourceType.Food] += newFood;
+            hexaPlayer[RessourceType.Humans] = newHumans; // Humans are not cumulative
+            hexaPlayer[RessourceType.Water] = newWater; // Water is not cumulative
+            hexaPlayer[RessourceType.Food] = newFood; // Food is not cumulative
             hexaPlayer[RessourceType.Wood] += newWood;
             hexaPlayer[RessourceType.Stone] += newStone;
             hexaPlayer[RessourceType.Gold] += newGold;
@@ -400,22 +438,29 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Ensure that the player have enough ressources to upgrade the tile
+        /// Ensure that the player has enough ressources to upgrade the tile
         /// </summary>
         /// <param name="player"></param>
         /// <param name="tile"></param>
         /// <returns></returns>
         private bool EnsureRessourcesToUpgrade(HexaPlayer player, HexaTile tile)
         {
-            // Check if player have enought ressources to upgrade
-            var goldRequired = GameConfig.GoldCostForUpgrade(tile.TileLevel);
-            var humansRequired = GameConfig.MininumHumanToUpgrade(tile.TileLevel);
-            if (player[RessourceType.Gold] < goldRequired
-             || player[RessourceType.Humans] < humansRequired)
+            var ressourceCost = GameConfig.MapTileUpgradeCost(tile.TileType, tile.TileLevel);
+
+            if (ressourceCost == null)
             {
-                Log.Error(LogMessages.MissingRessourcesToUpgrade(player, tile, goldRequired, humansRequired));
+                Log.Error(LogMessages.InvalidTileToUpgrade(tile));
                 return false;
             }
+
+            for(int i = 0; i < ressourceCost.Length; i++)
+            {
+                if (player[(RessourceType)i] < ressourceCost[i])
+                {
+                    Log.Error(LogMessages.MissingRessourcesToUpgrade(player, tile, (RessourceType)i, ressourceCost[i]));
+                    return false;
+                }
+            }   
 
             return true;
         }
@@ -428,7 +473,7 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         private bool EnsureRessourcesToPlay(HexaPlayer player, TileOffer tileOffer)
         {
-            var tileCost = tileOffer.TileCost;
+            var tileCost = tileOffer.SelectCost;
 
             if (player[tileCost.MaterialType] < tileCost.Cost)
             {
@@ -524,19 +569,20 @@ namespace Substrate.Hexalem
             {
                 case RessourceType.Mana:
                     result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
-                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
+                    result += (byte)(player[RessourceType.Humans] / 2); // 1 Mana from 3 Humans
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Humans:
+
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
                     result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
 
                     var homeWeighted = 0;
                     for (byte level = 0; level < 4; level++)
                     {
-                        homeWeighted += (int)(level + 1) * boardStats[TileType.Home, level];
+                        homeWeighted += (level + 1) * boardStats[TileType.Home, level];
                     }
                     result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
 
@@ -582,7 +628,6 @@ namespace Substrate.Hexalem
 
             return result;
         }
-
     }
 
     /// <summary>

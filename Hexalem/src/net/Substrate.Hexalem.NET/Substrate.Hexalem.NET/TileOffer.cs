@@ -1,9 +1,11 @@
-﻿namespace Substrate.Hexalem
+﻿using System.Collections.Generic;
+
+namespace Substrate.Hexalem.Engine
 {
     public class TileOffer
     {
         public HexaTile TileToBuy { get; set; }
-        public MaterialCost TileCost { get; set; }
+        public MaterialCost SelectCost { get; set; }
     }
 
     public class MaterialCost

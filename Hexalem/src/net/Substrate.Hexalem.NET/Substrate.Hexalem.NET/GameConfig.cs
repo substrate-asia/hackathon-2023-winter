@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public static class GameConfig
     {
         public const uint MAX_TURN_BLOCKS = 10;
 
-        public const double WATER_PER_HUMANS = 0.5;
+        public const double WATER_PER_HUMANS = 2;
         public const double FOOD_PER_HUMANS = 1;
         public const double HOME_PER_HUMANS = 3;
 
-        public const double WATER_PER_WATER = 1;
-        public const double FOOD_PER_GRASS = 1;
-        public const double FOOD_PER_TREE = 0.5;
+        public const double WATER_PER_WATER = 2;
+        public const double FOOD_PER_GRASS = 2;
+        public const double FOOD_PER_TREE = 1;
 
         public const int GAME_STORAGE_SIZE = 16;
         public const int PLAYER_STORAGE_SIZE = 8;
@@ -45,169 +45,128 @@ namespace Substrate.Hexalem
         }
 
         /// <summary>
-        /// Gold cost to upgrade a tile
+        /// Map tile upgrade cost
         /// </summary>
-        /// <param name="level"></param>
+        /// <param name="tileType"></param>
+        /// <param name="tileLevel"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static int GoldCostForUpgrade(byte level)
+        public static byte[]? MapTileUpgradeCost(TileType tileType, byte tileLevel)
         {
-            switch (level)
+            var materialCost = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+
+            switch (tileType)
             {
-                case 0: // Normal to rare
-                    return 5;
+                case TileType.Grass:
+                case TileType.Water:
+                case TileType.Mountain:
+                case TileType.Tree:
+                case TileType.Desert:
+                case TileType.Cave:
+                    return null;
 
-                case 1: // Rare to Epic
-                    return 10;
-
-                case 2: // Epic to Legendary
-                    return 15;
-
-                default:
-                    throw new InvalidOperationException($"Level {level} not supported...");
+                case TileType.Home:
+                    materialCost[(int)RessourceType.Wood] = (byte)((tileLevel + 1) * 2);
+                    materialCost[(int)RessourceType.Stone] = (byte)((tileLevel + 1) * 2);
+                    materialCost[(int)RessourceType.Gold] = (byte)(tileLevel * 2);
+                    return materialCost;
             }
+            return null;
         }
 
         /// <summary>
-        /// Minimum human to upgrade a tile
+        /// Map tile cost
         /// </summary>
-        /// <param name="level"></param>
+        /// <param name="tileType"></param>
+        /// <param name="tileLevel"></param>
         /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static int MininumHumanToUpgrade(byte level)
+        public static byte[]? MapTileCost(TileType tileType, byte tileLevel)
         {
-            switch (level)
+            var materialCost = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+
+            switch (tileType)
             {
-                case 0: // Normal to rare
-                    return 3;
+                case TileType.Grass:
+                case TileType.Water:
+                case TileType.Mountain:
+                case TileType.Tree:
+                case TileType.Desert:
+                case TileType.Cave:
+                    materialCost[(int)RessourceType.Mana] = (byte) (1 + tileLevel);
+                    return materialCost;
 
-                case 1: // Rare to Epic
-                    return 5;
-
-                case 2: // Epic to Legendary
-                    return 8;
-
-                default:
-                    throw new InvalidOperationException($"Level {level} not supported...");
+                case TileType.Home:
+                    return null;
             }
+            return null;
         }
 
         /// <summary>
         /// Tile offer
         /// </summary>
         public static TileOffer[] TILE_COSTS = new TileOffer[16] {
-
             new TileOffer {
-                TileToBuy = new HexaTile(40), // Tree, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Grass, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(40), // Tree, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Grass, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(40), // Tree, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Grass, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(32), // Mountain, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Water, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(32), // Mountain, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Water, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(32), // Mountain, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Water, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(16), // Grass, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Mountain, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
              new TileOffer {
-                TileToBuy = new HexaTile(16), // Grass, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Mountain, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
               new TileOffer {
-                TileToBuy = new HexaTile(16), // Grass, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Mountain, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(24), // Water, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Tree, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(24), // Water, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Tree, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(24), // Water, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Tree, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(8), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Desert, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(8), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Desert, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(8), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType =  RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Cave, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(72), // Home, level 0
-                TileCost = new MaterialCost {
-                    MaterialType = RessourceType.Mana,
-                    Cost = 1,
-                }
+                TileToBuy = new HexaTile(TileType.Cave, 0, TilePattern.Normal),
+                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
         };
     }

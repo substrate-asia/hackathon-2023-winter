@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public static class Game
     {
@@ -45,11 +45,24 @@ namespace Substrate.Hexalem
         /// <param name="hexaGame"></param>
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, int index)
+        {
+            return ChooseAndPlace(blockNumber, hexaGame, playerIndex, selectionIndex, hexaGame.HexaTuples[0].board.ToCoords(index));
+        }
+
+        /// <summary>
+        /// Player chose a tile and play it
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
         /// <param name="logger"></param>
         /// <returns></returns>
-        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex,
-            (int, int) coords)
+        public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, (int, int) coords)
         {
             if (!hexaGame.ChooseAndPlace(playerIndex, selectionIndex, coords))
             {

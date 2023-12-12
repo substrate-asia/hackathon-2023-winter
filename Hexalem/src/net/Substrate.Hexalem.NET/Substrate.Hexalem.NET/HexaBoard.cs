@@ -1,9 +1,10 @@
 using Serilog;
-using Substrate.Hexalem.GameException;
+using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
+using System.Reflection;
 
-namespace Substrate.Hexalem
+namespace Substrate.Hexalem.Engine
 {
     public class HexaBoard : IHexaBase
     {
@@ -133,7 +134,7 @@ namespace Substrate.Hexalem
                 throw new NotSupportedException("Index is out of the range of the grid");
             }
 
-            int q = (index % _sideLength) - _maxDistanceFromCenter;
+            int q = index % _sideLength - _maxDistanceFromCenter;
             int r = index / _sideLength - (_sideLength - 1) / 2;
 
             return (q, r);
@@ -344,15 +345,18 @@ namespace Substrate.Hexalem
         /// </summary>
         /// <param name="coords"></param>
         /// <returns></returns>
+        public bool CanPlace((int, int) coords)
+        {
+            return CanPlace(ToIndex(coords));
+        }
+
         /// <summary>
         /// Check if a tile can be placed on the board
         /// </summary>
-        /// <param name="coords"></param>
+        /// <param name="index"></param>
         /// <returns></returns>
-        public bool CanPlace((int, int) coords)
+        public bool CanPlace(int? index)
         {
-            var index = ToIndex(coords);
-
             if (index == null)
             {
                 return false;
@@ -365,6 +369,9 @@ namespace Substrate.Hexalem
                 return false;
             }
 
+            // sucks that we can't decide if we use coords or index
+            var coords = ToCoords(index.Value);
+
             // Check if the tile is not surrounded by empty tiles
             var neighbours = GetNeighbors(coords);
             if (!neighbours.Exists(p => p.HasValue && this[p.Value.q, p.Value.r] != 0x00))
@@ -374,7 +381,6 @@ namespace Substrate.Hexalem
 
             return true;
         }
-
         /// <summary>
         /// Place a tile on the board
         /// </summary>
@@ -383,12 +389,21 @@ namespace Substrate.Hexalem
         /// <returns></returns>
         internal bool Place((int, int) coords, HexaTile tile)
         {
-            if (!CanPlace(coords))
+            return Place(ToIndex(coords), tile);
+        }
+
+        /// <summary>
+        /// Place a tile on the board
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="tile"></param>
+        /// <returns></returns>
+        internal bool Place(int? index, HexaTile tile)
+        {
+            if (!CanPlace(index))
             {
                 return false;
             }
-
-            var index = ToIndex(coords);
 
             Value[index.Value] = tile;
 

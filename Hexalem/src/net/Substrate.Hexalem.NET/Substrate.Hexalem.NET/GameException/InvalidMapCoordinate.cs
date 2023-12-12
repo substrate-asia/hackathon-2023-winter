@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Substrate.Hexalem.GameException
+namespace Substrate.Hexalem.Engine.GameException
 {
     public class InvalidMapCoordinate : Exception
     {
