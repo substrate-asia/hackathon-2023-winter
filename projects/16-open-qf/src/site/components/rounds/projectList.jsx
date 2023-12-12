@@ -99,7 +99,7 @@ export default function RoundProjectList({ projects = [] }) {
                   <div className="flex-1">
                     <h4 className="text16semibold text-text-primary truncate">
                       <Link
-                        href={`/projects/${project.id}`}
+                        href={`/rounds/${project.roundId}/projects/${project.id}`}
                         className="hover:underline hover:text-inherit"
                       >
                         {project.name}
