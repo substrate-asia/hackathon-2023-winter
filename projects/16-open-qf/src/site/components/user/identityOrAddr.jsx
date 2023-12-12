@@ -65,7 +65,7 @@ export default function IdentityOrAddr({
     <IdentityWrapper
       className={className}
       noLink={noLink}
-      href={`/#/network/${network}/address/${ss58Address}`}
+      href={`/users/${ss58Address}`}
     >
       {identity?.info && identity?.info?.status !== "NO_ID" ? (
         <>
