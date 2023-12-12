@@ -53,43 +53,11 @@ namespace Substrate.Hexalem.Engine
         }
 
         /// <summary>
-        /// Determine if a tile can be upgrade
-        /// </summary>
-        /// <returns></returns>
-        public bool CanUpgrade()
-        {
-            if (TileLevel == 3)
-            {
-                Log.Debug($"Can not upgrade past level {3}");
-                return false;
-            }
-
-            if (TileType == TileType.Empty)
-            {
-                Log.Debug($"{nameof(TileType.Empty)} cannot be upgrade");
-                return false;
-            }
-
-            var upgradable = GameConfig.UpgradableTypeTile();
-
-            if (!upgradable.Exists(x => x == TileType))
-            {
-                Log.Debug("{TileType} cannot be upgrade", TileType);
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Upgrade a tile
         /// </summary>
         internal void Upgrade()
         {
-            if (CanUpgrade())
-            {
-                TileLevel += 1;
-            }
+            TileLevel += 1;
         }
 
         public HexaTile Clone()

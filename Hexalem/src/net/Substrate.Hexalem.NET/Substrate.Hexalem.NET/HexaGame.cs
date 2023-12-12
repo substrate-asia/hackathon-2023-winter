@@ -121,6 +121,22 @@ namespace Substrate.Hexalem.Engine
             return result;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return CanChooseAndPlace(playerIndex, selectionIndex, coords);
+        }
+
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
@@ -152,6 +168,27 @@ namespace Substrate.Hexalem.Engine
             }
 
             return board.CanPlace(coords);
+        }
+
+        /// <summary>
+        /// Choose and place a tile on the board
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="selectionIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
+        {
+            if (!CanChooseAndPlace(playerIndex, selectionIndex, gridIndex))
+            {
+                return false;
+            }
+
+            var (player, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return ChooseAndPlace(playerIndex, selectionIndex, coords);
         }
 
         /// <summary>
@@ -209,7 +246,7 @@ namespace Substrate.Hexalem.Engine
             var (player, board) = HexaTuples[PlayerTurn];
 
             var tile = (HexaTile)board[coords.q, coords.r];
-            if (!tile.CanUpgrade())
+            if (!EnsureUpgradableTile(tile))
             {
                 return false;
             }
