@@ -3,15 +3,19 @@ import { find } from "lodash-es";
 import RoundProjectInfo from "@/components/rounds/info";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import RoundProjectList from "@/components/rounds/projectList";
-import { getRoundProjectsList, getRoundsList } from "@/services/rounds";
+import {
+  getRoundCategoriesList,
+  getRoundProjectsList,
+  getRoundsList,
+} from "@/services/rounds";
 
-const RoundPage = withCommonPageWrapper(({ round, projects }) => {
+const RoundPage = withCommonPageWrapper(({ round, projects, categories }) => {
   return (
     <ListLayout title="Explore Projects" description="How OpenQF Works">
       <div className="space-y-5">
         <RoundProjectInfo data={round} />
 
-        <RoundProjectList projects={projects} />
+        <RoundProjectList projects={projects} categories={categories} />
       </div>
     </ListLayout>
   );
@@ -20,11 +24,21 @@ const RoundPage = withCommonPageWrapper(({ round, projects }) => {
 export default RoundPage;
 
 export const getServerSideProps = async (context) => {
-  const { result: roundsResult } = await getRoundsList();
-  const rounds = roundsResult?.items ?? [];
   const id = Number(context.params.id);
+
+  const [
+    { result: roundsResult },
+    { result: projectsResult },
+    { result: categories },
+  ] = await Promise.all([
+    getRoundsList(),
+    getRoundProjectsList(id, { page_size: 25 }),
+    getRoundCategoriesList(id),
+  ]);
+
+  const rounds = roundsResult?.items ?? [];
   const round = find(rounds, { id });
-  const { result: projectsResult } = await getRoundProjectsList(id);
+
   const projects = projectsResult?.items ?? [];
 
   return {
@@ -32,6 +46,7 @@ export const getServerSideProps = async (context) => {
       ...loadCommonServerSideProps(context),
       round,
       projects,
+      categories,
     },
   };
 };

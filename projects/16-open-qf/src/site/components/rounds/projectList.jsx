@@ -9,41 +9,40 @@ import IpfsImage from "../image/ipfs";
 import Link from "next/link";
 import NetworkUser from "../user/networkUser";
 
-const tagList = [
-  {
-    label: "All",
-  },
-  {
-    label: "Infrastructure",
-  },
-  {
-    label: "Community",
-  },
-  {
-    label: "Education",
-  },
-];
-
-export default function RoundProjectList({ projects = [] }) {
-  const [activeTag, setActiveTag] = useState(tagList[0].label);
+export default function RoundProjectList({
+  categories: categoriesProp = [],
+  projects = [],
+}) {
+  const categories = [
+    { label: "All", value: "" },
+    ...categoriesProp.map((item) => ({
+      label: item,
+      value: item,
+    })),
+  ];
+  const [activeCategory, setActiveCategory] = useState(categories[0].value);
   const [searchInput, setSearchInput] = useState("");
 
-  const filteredProjects = projects.filter((project) =>
-    project.name.toLowerCase().includes(searchInput.toLowerCase()),
-  );
+  const filteredProjects = projects
+    .filter((project) =>
+      activeCategory ? project.category === activeCategory : true,
+    )
+    .filter((project) =>
+      project.name.toLowerCase().includes(searchInput.toLowerCase()),
+    );
 
   return (
     <div className="space-y-5">
       <Card size="small">
         <div className={cn("flex justify-between gap-5", "max-sm:flex-col")}>
           <div className="flex items-center flex-wrap gap-3">
-            {tagList.map((tag) => (
+            {categories.map((item) => (
               <Tag
-                key={tag.label}
-                active={tag.label === activeTag}
-                onClick={() => setActiveTag(tag.label)}
+                key={item.label}
+                active={item.value === activeCategory}
+                onClick={() => setActiveCategory(item.value)}
               >
-                {tag.label}
+                {item.label}
               </Tag>
             ))}
           </div>

@@ -1,9 +1,13 @@
 import { ssrNextApi } from ".";
 
-export function getRoundsList() {
-  return ssrNextApi.fetch("rounds");
+export function getRoundsList(params = {}) {
+  return ssrNextApi.fetch("rounds", params);
 }
 
-export function getRoundProjectsList(id) {
-  return ssrNextApi.fetch(`rounds/${id}/projects`);
+export function getRoundProjectsList(id, params = {}) {
+  return ssrNextApi.fetch(`rounds/${id}/projects`, params);
+}
+
+export function getRoundCategoriesList(id) {
+  return ssrNextApi.fetch(`rounds/${id}/categories`);
 }
