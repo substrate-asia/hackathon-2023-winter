@@ -218,7 +218,7 @@ namespace Substrate.Hexalem.Game
 
                 if (board == null)
                 {
-                    return LogErrorThenReturn($"Board for player {playerAddress} is empty");
+                    return GameWorflowStatus.LogErrorThenReturn($"Board for player {playerAddress} is empty");
                 }
 
                 boards.Add(board);
@@ -231,7 +231,7 @@ namespace Substrate.Hexalem.Game
 
             if (game == null)
             {
-                return LogErrorThenReturn("Game is not set propertly");
+                return GameWorflowStatus.LogErrorThenReturn("Game is not set propertly");
             }
 
             HexaGame = HexalemWrapper.GetHexaGame(game, boards.ToArray());
@@ -330,7 +330,7 @@ namespace Substrate.Hexalem.Game
 
                 if (string.IsNullOrEmpty(gameSubscription))
                 {
-                    return LogErrorThenReturn($"[{_gameId}] Error while creating a new OnChain game. GameSubscription is empty");
+                    return GameWorflowStatus.LogErrorThenReturn($"[{_gameId}] Error while creating a new OnChain game. GameSubscription is empty");
                 }
 
                 _state.Add(gameSubscription, InternalGameState.GameCreated);
@@ -387,7 +387,7 @@ namespace Substrate.Hexalem.Game
 
                 if (string.IsNullOrEmpty(chooseAndPlaceSubscription))
                 {
-                    return LogErrorThenReturn("$[{_gameId}] Error while playing a new OnChain game. chooseAndPlaceSubscription is empty");
+                    return GameWorflowStatus.LogErrorThenReturn("$[{_gameId}] Error while playing a new OnChain game. chooseAndPlaceSubscription is empty");
                 }
 
                 _state.Add(chooseAndPlaceSubscription, InternalGameState.Play);
@@ -429,7 +429,7 @@ namespace Substrate.Hexalem.Game
 
                 if (string.IsNullOrEmpty(upgradeSubscription))
                 {
-                    return LogErrorThenReturn($"[{_gameId}] Error while trying to upgrade tile [{coords.Item1},{coords.Item2}] OnChain game. upgradeSubscription is empty");
+                    return GameWorflowStatus.LogErrorThenReturn($"[{_gameId}] Error while trying to upgrade tile [{coords.Item1},{coords.Item2}] OnChain game. upgradeSubscription is empty");
                 }
 
                 _state.Add(upgradeSubscription, InternalGameState.Upgrade);
@@ -470,7 +470,7 @@ namespace Substrate.Hexalem.Game
 
                 if (string.IsNullOrEmpty(finishTurnSubscription))
                 {
-                    return LogErrorThenReturn($"[{_gameId}] Error while trying to finish a turn OnChain game. finishTurnSubscription is empty");
+                    return GameWorflowStatus.LogErrorThenReturn($"[{_gameId}] Error while trying to finish a turn OnChain game. finishTurnSubscription is empty");
                 }
 
                 _state.Add(finishTurnSubscription, InternalGameState.FinishTurn);
@@ -506,12 +506,6 @@ namespace Substrate.Hexalem.Game
 
                 return GameWorflowStatus.Success();
             }
-        }
-
-        private GameWorflowStatus LogErrorThenReturn(string message)
-        {
-            Log.Error(message);
-            return GameWorflowStatus.Fail(message);
         }
     }
 }

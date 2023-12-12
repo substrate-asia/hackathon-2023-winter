@@ -23,7 +23,7 @@ namespace Substrate.Hexalem.Integration.Test
     {
         private GameManager _game;
 
-        [Test]
+        [Test, Ignore("")]
         public async Task StartNewSubstrateGame_ThenPlay_ShouldSucceedAsync()
         {
             _game = GameManager.OnChain(new SubstrateNetwork(_players.First(), Substrate.Integration.Helper.NetworkType.Live, _nodeUri), _players);

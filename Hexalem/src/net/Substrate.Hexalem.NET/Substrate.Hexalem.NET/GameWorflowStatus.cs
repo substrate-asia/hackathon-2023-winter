@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Serilog;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -29,6 +30,12 @@ namespace Substrate.Hexalem
                 IsSuccess = true,
                 Message = string.Empty
             };
+        }
+
+        public static GameWorflowStatus LogErrorThenReturn(string message)
+        {
+            Log.Error(message);
+            return GameWorflowStatus.Fail(message);
         }
     }
 }
