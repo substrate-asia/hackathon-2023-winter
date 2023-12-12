@@ -4,6 +4,9 @@ import Tag from "../tag";
 import Card from ".";
 import { Button } from "../button";
 import Link from "next/link";
+import { abbreviateBigNumber, toPrecision } from "@osn/common";
+import { DECIMALS } from "@/utils/constants";
+import IpfsImage from "../image/ipfs";
 
 export function RoundCardMetadata({ data }) {
   return (
@@ -18,13 +21,13 @@ export function RoundCardMetadata({ data }) {
           <h3 className="text20semibold text-text-primary">{data.title}</h3>
         </Link>
         <p className="mt-1 text14medium text-text-link">
-          {dayjs(data.startDate).format("YYYY/MM/DD")} -
-          {dayjs(data.endDate).format("YYYY/MM/DD")}
+          {dayjs(data.date.start).format("YYYY/MM/DD")} -
+          {dayjs(data.date.end).format("YYYY/MM/DD")}
         </p>
       </div>
 
       <div>
-        <Tag>{data.type}</Tag>
+        <Tag>{data.type || "TODO"}</Tag>
       </div>
     </div>
   );
@@ -33,7 +36,7 @@ export function RoundCardMetadata({ data }) {
 export default function RoundCard({ data = {} }) {
   return (
     <Card
-      cover={<>{/* cover */}</>}
+      cover={<IpfsImage cid={data.bannerCid} className="object-cover" />}
       head={
         <>
           <div>
@@ -51,10 +54,15 @@ export default function RoundCard({ data = {} }) {
       >
         <FooterItem
           label="Matching Pool"
-          content={`${data.matchingPool} DOT`}
+          content={`${abbreviateBigNumber(
+            toPrecision(data.asset.amount, DECIMALS),
+          )} ${data.asset.id}`}
         />
-        <FooterItem label="Contributors" content={data.contributors} />
-        <FooterItem label="Program Funders" content={data.programFunders} />
+        <FooterItem
+          label="Contributors"
+          content={data.contributors || "TODO"}
+        />
+        <FooterItem label="Program Funders" content={data.founders?.[0]} />
         <div className={cn("flex items-end justify-end")}>
           <Button className="max-sm:w-full">Apply</Button>
         </div>

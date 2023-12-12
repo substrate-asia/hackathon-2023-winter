@@ -49,3 +49,8 @@ export const TOAST_TYPES = {
   INFO: "Info",
   PENDING: "Pending",
 };
+
+/**
+ * @description Polkadot decimals
+ */
+export const DECIMALS = 10;

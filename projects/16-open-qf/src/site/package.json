@@ -53,6 +53,7 @@
     "sanitize-html": "^2.6.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
+    "sharp": "^0.33.0",
     "socket.io-client": "^4.6.1",
     "styled-components": "^5.3.1",
     "tailwind-merge": "^2.1.0",
