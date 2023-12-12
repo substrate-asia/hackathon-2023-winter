@@ -41,7 +41,7 @@ export default function IdentityOrAddr({
   return (
     <Link
       className={cn(
-        "text-text-primary text14medium",
+        "text14medium",
         "hover:underline hover:text-inherit",
         noLink && "pointer-events-none",
         className,
