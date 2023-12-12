@@ -66,6 +66,12 @@ namespace Assets.Scripts
 
                 var gridParent = PlayerGrid.transform.GetChild(i);
 
+                // remove previous game objects connected to the grid
+                foreach (Transform child in gridParent.transform)
+                {
+                    Destroy(child.gameObject);
+                }
+
                 GameObject newTile;
                 switch (tile.TileType)
                 {

@@ -1,4 +1,5 @@
 ﻿using Substrate.Hexalem.Engine;
+using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace Assets.Scripts.ScreenStates
     {
         private System.Random _random = new System.Random();
 
+        public uint Blocknumber { get; set; } = 123124;
 
         public int SelectedGridIndex { get; set; } = -1;
         public int SelectedCardIndex { get; set; } = -1;
@@ -35,6 +37,8 @@ namespace Assets.Scripts.ScreenStates
         private Label _lblWoodValue;
         private Label _lblStoneValue;
         private Label _lblGoldValue;
+
+        private VisualElement _velEndTurnBox;
 
         public PlayScreenState(FlowController _flowController)
             : base(_flowController) {
@@ -74,6 +78,9 @@ namespace Assets.Scripts.ScreenStates
             _lblStoneValue = instance.Q<Label>("LblStoneValue");
             _lblGoldValue = instance.Q<Label>("LblGoldValue");
 
+            _velEndTurnBox = instance.Q<VisualElement>("VelEndTurnBox");
+            _velEndTurnBox.RegisterCallback<ClickEvent>(OnEndTurnClicked);
+
             TestCreateGame();
 
             UpdateRessources();
@@ -112,7 +119,26 @@ namespace Assets.Scripts.ScreenStates
             HexaGame.Init(1234567);
         }
 
-        private void UpdateRessources()
+        private void OnEndTurnClicked(ClickEvent evt)
+        {
+            var pIndex = 0;
+
+            // increment block number
+            Blocknumber++;
+
+            var result = Game.FinishTurn(Blocknumber, HexaGame, (byte)pIndex);
+
+            if (result == null)
+            {
+                Debug.Log("Failed to finish turn!");
+            }
+
+            UpdateRessources();
+
+            Grid.CreateGrid(HexaGame.HexaTuples[pIndex].board);
+        }
+
+        public void UpdateRessources()
         {
             var pIndex = 0;
 

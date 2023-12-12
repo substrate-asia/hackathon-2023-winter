@@ -98,12 +98,26 @@ namespace Assets.Scripts
 
         private void OnActionClicked(ClickEvent evt)
         {
-            if (MainScreenState.SelectedGridIndex < 0)
+            var pIndex = 0;
+
+            var result = Game.ChooseAndPlace(12, MainScreenState.HexaGame , (byte)pIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
+
+            if (result == null)
             {
                 return;
             }
 
+            Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+            MainScreenState.SelectedCardIndex = -1;
+            MainScreenState.SelectedGridIndex = -1;
 
+            // update ressources
+            MainScreenState.UpdateRessources();
+
+            // update board
+            Grid.CreateGrid(MainScreenState.HexaGame.HexaTuples[pIndex].board);
+
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
 
         private void OnCancelClicked(ClickEvent evt)
@@ -117,7 +131,7 @@ namespace Assets.Scripts
         {
             var tileCard = MainScreenState.TileCardElement.Instantiate();
 
-            var selectTile = GameConfig.TILE_COSTS[MainScreenState.SelectedCardIndex];
+            var selectTile = GameConfig.TILE_COSTS[MainScreenState.HexaGame.UnboundTileOffers[MainScreenState.SelectedCardIndex]];
 
             tileCard.Q<Label>("LblTileName").text = selectTile.TileToBuy.TileType.ToString() + "(Norm)";
 
