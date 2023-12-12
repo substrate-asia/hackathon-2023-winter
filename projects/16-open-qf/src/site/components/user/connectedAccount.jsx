@@ -128,8 +128,8 @@ function ConnectedAccount({ setShowConnectPopup = noop }) {
   const [showMenu, setShowMenu] = useState(false);
   const account = useAccount();
   const logout = useLogout();
-  const network = account.network;
-  const address = encodeNetworkAddress(account.address, network);
+  const network = account?.network;
+  const address = encodeNetworkAddress(account?.address, network);
 
   const onSwitch = () => {
     setShowConnectPopup(true);

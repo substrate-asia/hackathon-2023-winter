@@ -29,6 +29,9 @@ const SmallSelect = styled(FlexCenter)`
     width: 24px;
     height: 24px;
   }
+  :hover {
+    border: 1px solid ${(p) => p.theme["--stroke-action-active"]};
+  }
 `;
 
 const Select = styled(Flex)`

@@ -2708,10 +2708,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@osn/icons@npm:^1.43.0":
-  version: 1.43.0
-  resolution: "@osn/icons@npm:1.43.0"
-  checksum: 93eb9e8b7f4710d850f9d449d758173a0b3f175e6633cd5cb1a9516b43f3e9215b4d1635386ac9ec384e254fe3381d7b6d51c16a0e913067ff6f44249d4804fe
+"@osn/icons@npm:^1.45.0":
+  version: 1.45.0
+  resolution: "@osn/icons@npm:1.45.0"
+  checksum: ee5257a665d16be6655e9c66809fa99a6c5e1ce0f9b256fadfad8fb3d80d4fab023f2412501595000a5587549c9af051ff4cc8d0ea3e5647546f1c48d4d412a7
   languageName: node
   linkType: hard
 
@@ -2731,9 +2731,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@osn/previewer@npm:^0.12.3":
-  version: 0.12.3
-  resolution: "@osn/previewer@npm:0.12.3"
+"@osn/previewer@npm:^0.12.5":
+  version: 0.12.5
+  resolution: "@osn/previewer@npm:0.12.5"
   dependencies:
     marked: ^4.0.17
     prismjs: ^1.28.0
@@ -2742,7 +2742,7 @@ __metadata:
     react: ^17.0.2
     react-dom: ^17.0.2
     styled-components: ^5.3.5
-  checksum: 5c761500811f9fa204e21bce71c6032cd0baf219b4376875258f71d4757233301daa67beaf99d53868712ecdfc87f276467b6de0ebb1e674017a22e70755e9fa
+  checksum: 23e6cf478b19b21bece0d3537e822dbb8842af502bc92a2bd00f28cce4c68ac8a10efe70b4e2580915311eb03a1ddb8b355795835717ef9b9f964c407d4151e2
   languageName: node
   linkType: hard
 
@@ -11167,9 +11167,9 @@ __metadata:
     "@osn/common-ui": ^1.18.11
     "@osn/constants": ^1.1.2
     "@osn/eslint-config": ^1.0.1
-    "@osn/icons": ^1.43.0
+    "@osn/icons": ^1.45.0
     "@osn/polkadot-react-identicon": ^1.0.10
-    "@osn/previewer": ^0.12.3
+    "@osn/previewer": ^0.12.5
     "@osn/rich-text-editor": ^0.1.56
     "@polkadot/api": ^9.4.2
     "@polkadot/extension-dapp": 0.44.6

@@ -6,3 +6,9 @@ export const Button = tw(ButtonBase)`
   !bg-fill-bg-brand-secondary
   !text-text-primary-contrast
 `;
+
+export const SecondaryButton = tw(ButtonBase)`
+  hover:!border-fill-bg-brand-secondary
+  !bg-white
+  !text-text-primary
+`;
