@@ -46,7 +46,6 @@ export const useUpdateNodesDelay = (setNodesDelay) => {
 
   const setNodeDelay = useCallback(
     (nodeUrl, delay) => {
-      console.log(nodeUrl, delay);
       setNodesDelay((nodesDelay) => ({ ...nodesDelay, [nodeUrl]: delay }));
     },
     [setNodesDelay],
