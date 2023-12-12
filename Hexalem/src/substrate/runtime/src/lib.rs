@@ -8,7 +8,7 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use pallet_grandpa::AuthorityId as GrandpaId;
 use pallet_hexalem::{
-	GetTileInfo, ResourceAmount, ResourceType, TileCost, TilePattern, TileType,
+	GetTileInfo, ResourceAmount, ResourceType, ResourceUnit, TileCost, TilePattern, TileType,
 };
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
@@ -21,7 +21,7 @@ use sp_runtime::{
 		AccountIdLookup, BlakeTwo256, Block as BlockT, IdentifyAccount, NumberFor, One, Verify,
 	},
 	transaction_validity::{TransactionSource, TransactionValidity},
-	ApplyExtrinsicResult, MultiSignature, Percent,
+	ApplyExtrinsicResult, MultiSignature,
 };
 use sp_std::prelude::*;
 #[cfg(feature = "std")]
@@ -420,10 +420,17 @@ parameter_types! {
 			}
 		},
 	];
+
 	pub const HexalemFoodPerHuman: u8 = 1u8;
-	pub const HexalemWaterPerHuman: Percent = Percent::from_percent(50);
+	pub const HexalemWaterPerHuman: u8 = 2u8;
 	pub const HexalemHomePerHumans: u8 = 3u8;
-	pub const HexalemFoodPerTree: Percent = Percent::from_percent(50);
+	pub const HexalemFoodPerTree: u8 = 1u8;
+
+	pub const HexalemDefaultPlayerResources: [ResourceUnit; 7] = [1, 1, 0, 0, 0, 0, 0];
+
+	pub const HexalemDefaultWinningConditionGold: u8 = 10u8;
+	pub const HexalemDefaultWinningConditionHuman: u8 = 7u8;
+
 }
 
 impl pallet_transaction_payment::Config for Runtime {
@@ -456,6 +463,9 @@ impl pallet_hexalem::Config for Runtime {
 	type FoodPerHuman = HexalemFoodPerHuman;
 	type FoodPerTree = HexalemFoodPerTree;
 	type HomePerHumans = HexalemHomePerHumans;
+	type DefaultPlayerResources = HexalemDefaultPlayerResources;
+	type DefaultWinningConditionGold = HexalemDefaultWinningConditionGold;
+	type DefaultWinningConditionHuman = HexalemDefaultWinningConditionHuman;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
