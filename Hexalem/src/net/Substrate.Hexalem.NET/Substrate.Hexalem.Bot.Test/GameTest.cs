@@ -1,4 +1,5 @@
-﻿using Substrate.Hexalem.Game;
+﻿using Substrate.Hexalem.Engine;
+using Substrate.Hexalem.Game;
 
 namespace Substrate.Hexalem.Test
 {

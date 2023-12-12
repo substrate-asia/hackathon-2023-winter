@@ -3,15 +3,14 @@ using Substrate.Hexalem.Integration.Model;
 using Substrate.Integration;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
-using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using Substrate.Hexalem.Integration.Helper;
 using Substrate.Integration.Helper;
+using Substrate.Hexalem.Engine;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Bot.Test")]
 

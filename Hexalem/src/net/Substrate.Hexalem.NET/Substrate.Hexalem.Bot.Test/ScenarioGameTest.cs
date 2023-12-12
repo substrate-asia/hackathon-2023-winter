@@ -1,10 +1,6 @@
-﻿using Substrate.Hexalem.Game;
+﻿using Substrate.Hexalem.Engine;
+using Substrate.Hexalem.Game;
 using Substrate.Hexalem.Game.Test;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Substrate.Hexalem.Bot.Test
 {
