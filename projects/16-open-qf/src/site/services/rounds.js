@@ -1,9 +1,9 @@
-import { nextApi } from ".";
+import { ssrNextApi } from ".";
 
 export function getRoundsList() {
-  return nextApi.fetch("/rounds");
+  return ssrNextApi.fetch("rounds");
 }
 
 export function getRoundProjectsList(id) {
-  return nextApi.fetch(`/rounds/${id}/projects`);
+  return ssrNextApi.fetch(`rounds/${id}/projects`);
 }
