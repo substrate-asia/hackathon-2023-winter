@@ -1,8 +1,11 @@
+import { useServerSideProps } from "@/context/serverSideProps";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/router";
 import qs from "querystring";
 
 export function useUserTab() {
+  const { projects } = useServerSideProps();
+
   const items = [
     {
       value: "qfpower",
@@ -16,7 +19,7 @@ export function useUserTab() {
     {
       value: "projects",
       content: "Projects",
-      activeCount: 3,
+      activeCount: projects?.length,
     },
   ];
 

@@ -4,6 +4,10 @@ import UserLayout from "@/components/layouts/userLayout";
 import UserInfo from "@/components/user/info";
 import UserTabs from "@/components/user/tabs";
 import UserTabsContent from "@/components/user/tabs/content";
+import {
+  getRoundCategoriesList,
+  getRoundProjectsList,
+} from "@/services/rounds";
 import { withCommonPageWrapper } from "@/utils/ssr";
 
 const UserPage = withCommonPageWrapper(() => {
@@ -25,3 +29,20 @@ const UserPage = withCommonPageWrapper(() => {
 });
 
 export default UserPage;
+
+export async function getServerSideProps() {
+  const [{ result: projectsResult }, { result: categories }] =
+    await Promise.all([
+      getRoundProjectsList(1, { page_size: 25 }),
+      getRoundCategoriesList(1),
+    ]);
+
+  const projects = projectsResult?.items ?? [];
+
+  return {
+    props: {
+      projects,
+      categories,
+    },
+  };
+}
