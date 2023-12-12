@@ -5,6 +5,9 @@ import Tag from "../tag";
 import { cn } from "@/utils";
 import { useState } from "react";
 import Dot from "../dot";
+import IpfsImage from "../image/ipfs";
+import Link from "next/link";
+import NetworkUser from "../user/networkUser";
 
 const tagList = [
   {
@@ -21,9 +24,13 @@ const tagList = [
   },
 ];
 
-export default function RoundProjectList({ data = {} }) {
-  const { projects = [] } = data;
+export default function RoundProjectList({ projects = [] }) {
   const [activeTag, setActiveTag] = useState(tagList[0].label);
+  const [searchInput, setSearchInput] = useState("");
+
+  const filteredProjects = projects.filter((project) =>
+    project.name.toLowerCase().includes(searchInput.toLowerCase()),
+  );
 
   return (
     <div className="space-y-5">
@@ -46,6 +53,9 @@ export default function RoundProjectList({ data = {} }) {
               suffix={
                 <SystemSearch className="w-5 h-5 [&_path]:fill-text-tertiary" />
               }
+              onChange={(e) => {
+                setSearchInput(e.target.value);
+              }}
             />
           </div>
         </div>
@@ -64,31 +74,39 @@ export default function RoundProjectList({ data = {} }) {
             "max-sm:grid-cols-1",
           )}
         >
-          {projects.map((project, idx) => (
+          {filteredProjects.map((project) => (
             <Card
-              key={idx}
-              cover={<></>}
+              key={project.id}
+              cover={
+                <IpfsImage cid={project.bannerCid} className="object-cover" />
+              }
               coverPosition="top"
               size="small"
               head={
-                <div>
+                <div className="flex flex-col flex-1">
                   <div className="h-6">
                     <div
                       className={cn(
-                        "relative -top-12",
+                        "relative -top-14",
                         "bg-neutral-200",
                         "w-16 h-16 rounded-full border-2 border-stroke-border-default",
+                        "overflow-hidden",
                       )}
                     >
-                      {/* icon */}
+                      <IpfsImage cid={project.logoCid} />
                     </div>
                   </div>
-                  <div>
-                    <h4 className="text16semibold text-text-primary">
-                      {project.title}
+                  <div className="flex-1">
+                    <h4 className="text16semibold text-text-primary truncate">
+                      <Link
+                        href={`/projects/${project.id}`}
+                        className="hover:underline hover:text-inherit"
+                      >
+                        {project.name}
+                      </Link>
                     </h4>
-                    <p className="mt-2 text14medium text-text-secondary">
-                      {project.description}
+                    <p className="mt-2 text14medium text-text-secondary line-clamp-3">
+                      {project.summary}
                     </p>
                   </div>
 
@@ -100,7 +118,10 @@ export default function RoundProjectList({ data = {} }) {
                       123 DOT
                     </div>
                     <div className="text12medium text-text-tertiary">
-                      from <span className="text-text-primary">34</span>{" "}
+                      from{" "}
+                      <span className="text-text-primary">
+                        {project.contributors?.length || 0}
+                      </span>{" "}
                       Contributors
                     </div>
                   </div>
@@ -108,9 +129,11 @@ export default function RoundProjectList({ data = {} }) {
               }
             >
               <div className="flex items-center justify-between">
-                <div>by address</div>
                 <div>
-                  <Tag size="small">Infrastructure</Tag>
+                  <NetworkUser address={project.creator} network={"polkadot"} />
+                </div>
+                <div>
+                  <Tag size="small">{project.category}</Tag>
                 </div>
               </div>
             </Card>

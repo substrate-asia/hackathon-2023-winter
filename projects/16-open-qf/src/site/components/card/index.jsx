@@ -7,6 +7,7 @@ export default function Card({
   className = "",
   children,
   hoverable = true,
+  size = "default",
   ...props
 }) {
   return (
@@ -18,7 +19,9 @@ export default function Card({
         "shadow-shadow-card-default",
         hoverable && "hover:shadow-shadow-card-hover",
         "[&_.osn-card]:shadow-none [&_.osn-card]:bg-transparent [&_.osn-card]:h-full [&_.osn-card]:w-full [&_.osn-card]:flex-1",
-        "[&_.osn-card-body]:w-full [&_.osn-card-body]:h-full",
+        "[&_.osn-card-body]:w-full [&_.osn-card-body]:h-full [&_.osn-card-body]:flex [&_.osn-card-body]:flex-col",
+        // padding
+        "[&_.osn-card]:max-sm:p-6",
         className,
       )}
     >
@@ -36,6 +39,7 @@ export default function Card({
       <CardBase
         bordered={false}
         hoverable={false}
+        size={size}
         {...props}
         prefix={
           cover && (

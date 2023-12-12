@@ -1,23 +1,17 @@
 import ListLayout from "@/components/layouts/listLayout";
-import { ROUND_LIST_DATA } from "@/fixtures/roundList";
 import { find } from "lodash-es";
-import { useRouter } from "next/router";
 import RoundProjectInfo from "@/components/rounds/info";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import RoundProjectList from "@/components/rounds/projectList";
+import { getRoundProjectsList, getRoundsList } from "@/services/rounds";
 
-const RoundPage = withCommonPageWrapper(() => {
-  const router = useRouter();
-  const id = Number(router.query.id);
-
-  const data = find(ROUND_LIST_DATA, { id }) ?? {};
-
+const RoundPage = withCommonPageWrapper(({ round, projects }) => {
   return (
     <ListLayout title="Explore Projects" description="How OpenQF Works">
       <div className="space-y-5">
-        <RoundProjectInfo data={data} />
+        <RoundProjectInfo data={round} />
 
-        <RoundProjectList data={data} />
+        <RoundProjectList projects={projects} />
       </div>
     </ListLayout>
   );
@@ -26,9 +20,18 @@ const RoundPage = withCommonPageWrapper(() => {
 export default RoundPage;
 
 export const getServerSideProps = async (context) => {
+  const { result: roundsResult } = await getRoundsList();
+  const rounds = roundsResult?.items ?? [];
+  const id = Number(context.params.id);
+  const round = find(rounds, { id });
+  const { result: projectsResult } = await getRoundProjectsList(id);
+  const projects = projectsResult?.items ?? [];
+
   return {
     props: {
       ...loadCommonServerSideProps(context),
+      round,
+      projects,
     },
   };
 };
