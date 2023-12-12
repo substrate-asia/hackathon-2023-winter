@@ -4,19 +4,34 @@
 
 **Project Initiation Date:** 2023-11-15
 
+**Track:** DApp & Smart Contract
+
 ## Important Note
 
-CBIndex attended Polkadot Hackathon Summer 2023. At that time, we tried to complete copy-investing feature for copy fund (the basic feature of our platform), and worked on Vara blockchain. Due to the lack of maturity of the infra and time constraints, we barely finished the copy-investing feature. We were very lucky and won the 3rd place of the smart contract track.
+The Project CBIndex attended Polkadot Hackathon Summer 2023. At that time, we tried to complete the copy-investing feature for the copy fund (the basic feature of our project), and tried to deploy on the Vara blockchain. Due to the lack of maturity of the infra and time constraints, we barely finished the copy-investing feature during the hackathon.
 
-This time, we've done sufficient research and planning. We would love to try completing our advanced feature, namely active on-chain funds, on Moonbase Alpha TestNet.
+We were very lucky to win the 3rd place of the smart contract track.
 
-One of the reasons we choose Moonriver is beacuse that CBIndex requires the price feed service of Chainlink, and Chainlink supports Moonbeam.
+This time, we've done sufficient research and planning. We would love to try completing one of our advanced features, namely active on-chain funds, on Moonbase Alpha TestNet.
 
 ---
 
 ## Project Overview
 
-### Project Background
+### Background
+
+CBIndex is an ongoing project that aims to provide a comprehensive suite of on-chain investment and crypto asset management tools. The project is structured as a dual-component platform, comprising the "CBIndex Simulator" and the "CBIndex DApp." This unique architecture allows CBIndex to offer a wide array of features that cater to a diverse range of user needs and preferences.
+
+### Origin
+
+The origin of CBIndex is deeply rooted in the core principles of traditional finance, particularly in the concept of mutual funds, which have long been a cornerstone of effective asset management. In the traditional finance market, mutual funds represent a proven model for pooling investments, managed by experts or indices to achieve a diversified and optimized portfolio. This model of collective investment and professional management has been a game-changer in democratizing access to sophisticated investment strategies for a broad range of investors.
+
+Translating this time-tested approach to the burgeoning world of cryptocurrency, CBIndex was conceived to harness the power of on-chain funds. The platform is designed to facilitate crypto asset management by leveraging the transparency, security, and efficiency inherent in blockchain technology. The parallel here is striking: just as mutual funds revolutionized traditional asset management by offering diversification and expert management, CBIndex aims to transform crypto asset management by providing a platform for on-chain funds that simplifies and enhances investment strategies in the crypto space.
+
+### Problems need to be solved
+
+- Bad crypto investment decisions
+- 
 
 🙋‍♀ **What is CBIndex**
 
@@ -54,7 +69,7 @@ Provide a better solution of making crypto asset investment, especially for new 
 
 ### Project Demo
 
-Website:
+[**Demo Website**](https://moonbase.cbindex.finance/)
 
 ### Technical Architecture
 
@@ -69,7 +84,6 @@ Second, it offers a decentralized, secure, and transparent platform through the 
 
 The three-layered structure—Infrastructure, Core, and Application—ensures modularity and scalability, allowing each component to evolve independently while maintaining overall system integrity. Additionally, the "Integration" part signifies CBIndex's commitment to adaptability and innovation, as it leaves room for incorporating essential services and emerging technologies to meet evolving market demands.
 The architecture diagram of CBIndex, as shown in Figure 2, offers a holistic view of the technical structure, divided into three primary layers: Infrastructure, Core, and Application. Each layer has specific components for both the Simulator and the DApp, and an additional part on the right outlines various integrations that enhance the platform's capabilities.
-
 
 ### Project Logo
 
