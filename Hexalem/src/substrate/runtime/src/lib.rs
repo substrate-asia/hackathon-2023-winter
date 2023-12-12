@@ -304,7 +304,7 @@ parameter_types! {
 
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 16;
-	pub const HexalemTileCosts: [TileCost<Runtime>; 16] = [
+	pub const HexalemTileCosts: [TileCost<Runtime>; 15] = [
 		TileCost {
 			tile_to_buy: HexalemTile(40), // Tree, level 0
 			cost: ResourceAmount {
@@ -386,13 +386,6 @@ parameter_types! {
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
-		TileCost {
-			tile_to_buy: HexalemTile(56), // Cave, level 0
 			cost: ResourceAmount {
 				resource_type: ResourceType::Mana,
 				amount: 1,

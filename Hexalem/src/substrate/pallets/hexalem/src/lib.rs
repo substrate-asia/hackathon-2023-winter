@@ -325,7 +325,7 @@ pub mod pallet {
 			+ GetTileInfo;
 
 		#[pallet::constant]
-		type TileCosts: Get<[TileCost<Self>; 16]>;
+		type TileCosts: Get<[TileCost<Self>; 15]>;
 
 		#[pallet::constant]
 		type WaterPerHuman: Get<u8>;
@@ -803,7 +803,7 @@ impl<T: Config> Pallet<T> {
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
 		for i in 0..game.selection_size {
-			new_selection.push(selection_base[((i + offset) % 32) as usize].clone() % 16);
+			new_selection.push(selection_base[((i + offset) % 32) as usize].clone() % T::TileCosts::get().len().saturated_into::<u8>());
 		}
 
 		// Casting
@@ -837,7 +837,7 @@ impl<T: Config> Pallet<T> {
 			let mut new_selection = game.selection.to_vec();
 
 			for i in selection_len..game.selection_size as usize {
-				new_selection.push(selection_base[(i + offset) % 32].clone() % 16);
+				new_selection.push(selection_base[(i + offset) % 32].clone() % T::TileCosts::get().len().saturated_into::<u8>());
 			}
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;

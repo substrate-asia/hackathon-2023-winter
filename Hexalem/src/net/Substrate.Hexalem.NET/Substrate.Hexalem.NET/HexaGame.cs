@@ -94,7 +94,7 @@ namespace Substrate.Hexalem.Engine
 
             for (int i = 0; i < selectBase; i++)
             {
-                byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
+                byte tileIndex = (byte)(Id[(offSet + i) % 32] % GameConfig.TILE_COSTS.Length);
 
                 result.Add(tileIndex);
             }
@@ -113,7 +113,7 @@ namespace Substrate.Hexalem.Engine
             var result = new List<byte>();
             for (int i = UnboundTileOffers.Count; i < selectBase; i++)
             {
-                byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
+                byte tileIndex = (byte)(Id[(offSet + i) % 32] % GameConfig.TILE_COSTS.Length);
 
                 result.Add(tileIndex);
             }

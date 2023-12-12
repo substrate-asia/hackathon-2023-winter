@@ -103,7 +103,7 @@ namespace Substrate.Hexalem.Engine
         /// <summary>
         /// Tile offer
         /// </summary>
-        public static TileOffer[] TILE_COSTS = new TileOffer[16] {
+        public static TileOffer[] TILE_COSTS = new TileOffer[15] {
             new TileOffer {
                 TileToBuy = new HexaTile(TileType.Grass, 0, TilePattern.Normal),
                 SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
@@ -153,11 +153,7 @@ namespace Substrate.Hexalem.Engine
                 SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(TileType.Desert, 0, TilePattern.Normal),
-                SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
-            },
-            new TileOffer {
-                TileToBuy = new HexaTile(TileType.Desert, 0, TilePattern.Normal),
+                TileToBuy = new HexaTile(TileType.Cave, 0, TilePattern.Normal),
                 SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
