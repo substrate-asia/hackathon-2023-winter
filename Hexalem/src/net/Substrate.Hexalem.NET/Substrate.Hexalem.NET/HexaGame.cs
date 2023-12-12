@@ -298,13 +298,15 @@ namespace Substrate.Hexalem.Engine
             // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
             {
-                return false;
-            }
+                // do check for time here ... 
 
-            var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
-            if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
-            {
-                Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                //var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
+                //if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
+                //{
+                //    Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
+                //    return false;
+                //}
+
                 return false;
             }
 
@@ -392,9 +394,9 @@ namespace Substrate.Hexalem.Engine
             // TODO: remove humans being used for multiple resources, by removing them once used for a resource
 
             hexaPlayer[RessourceType.Mana] += newMana;
-            hexaPlayer[RessourceType.Humans] += newHumans;
-            hexaPlayer[RessourceType.Water] += newWater;
-            hexaPlayer[RessourceType.Food] += newFood;
+            hexaPlayer[RessourceType.Humans] = newHumans; // Humans are not cumulative
+            hexaPlayer[RessourceType.Water] = newWater; // Water is not cumulative
+            hexaPlayer[RessourceType.Food] = newFood; // Food is not cumulative
             hexaPlayer[RessourceType.Wood] += newWood;
             hexaPlayer[RessourceType.Stone] += newStone;
             hexaPlayer[RessourceType.Gold] += newGold;
