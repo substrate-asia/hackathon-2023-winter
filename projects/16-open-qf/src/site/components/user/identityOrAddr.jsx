@@ -1,34 +1,11 @@
 import { useIsMounted } from "@osn/common";
 import { useEffect, useState } from "react";
 import { fetchIdentity } from "@osn/common/es/services/identity";
-import styled, { css } from "styled-components";
 import IdentityIcon from "@osn/common-ui/es/User/IdentityIcon";
 import { addressEllipsis, encodeNetworkAddress } from "@osn/common";
 import { identityChainMap } from "@osn/constants";
-
-const IdentityWrapper = styled.a`
-  display: flex;
-  align-items: center;
-  font-weight: 500;
-
-  ${(p) =>
-    p.noLink &&
-    css`
-      pointer-events: none;
-    `}
-  cursor: pointer;
-  :hover {
-    text-decoration: underline;
-  }
-
-  & > span {
-    margin-right: 4px;
-  }
-`;
-
-const Name = styled.span`
-  line-height: 24px;
-`;
+import Link from "next/link";
+import { cn } from "@/utils";
 
 export default function IdentityOrAddr({
   address,
@@ -62,9 +39,13 @@ export default function IdentityOrAddr({
   }, [network, address, isMounted]);
 
   return (
-    <IdentityWrapper
-      className={className}
-      noLink={noLink}
+    <Link
+      className={cn(
+        "text-text-primary text14medium",
+        "hover:underline hover:text-inherit",
+        noLink && "pointer-events-none",
+        className,
+      )}
       href={`/users/${ss58Address}`}
     >
       {identity?.info && identity?.info?.status !== "NO_ID" ? (
@@ -77,11 +58,11 @@ export default function IdentityOrAddr({
               position={tooltipPosition}
             />
           )}
-          <Name>{identity.info.display}</Name>
+          <span>{identity.info.display}</span>
         </>
       ) : (
-        <Name>{addressEllipsis(ss58Address)}</Name>
+        <span>{addressEllipsis(ss58Address)}</span>
       )}
-    </IdentityWrapper>
+    </Link>
   );
 }
