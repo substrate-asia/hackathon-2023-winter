@@ -2,6 +2,7 @@
 using Substrate.Hexalem.Engine;
 using System;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
@@ -68,19 +69,23 @@ namespace Assets.Scripts
 
         private void UpdateSelection()
         {
+
             var offer = MainScreenState.HexaGame.UnboundTileOffers;
-            var selectionTileOffers = offer.Select(p => (index:p, info:GameConfig.TILE_COSTS[p])).ToList();
-            foreach (var selectionTile in selectionTileOffers)
+
+            for (int i = 0; i < offer.Count; i++  )
             {
+                var p = offer[i];
+                var tileOffer = GameConfig.TILE_COSTS[p];
+
                 var tileCard = MainScreenState.TileCardElement.Instantiate();
 
-                tileCard.Q<Label>("LblTileName").text = selectionTile.info.TileToBuy.TileType.ToString() + "(Norm)";
+                tileCard.Q<Label>("LblTileName").text = tileOffer.TileToBuy.TileType.ToString() + "(Norm)";
 
                 tileCard.Q<Label>("LblRoundPre").text = "(+1";
                 tileCard.Q<Label>("LblManaCost").text = "1";
 
                 var velTileImage = tileCard.Q<VisualElement>("VelTileImage");
-                switch (selectionTile.info.TileToBuy.TileType)
+                switch (tileOffer.TileToBuy.TileType)
                 {
                     case TileType.Home:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileHome);
@@ -104,19 +109,22 @@ namespace Assets.Scripts
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileDesert);
                         break;
                 }
-
-                tileCard.AddManipulator(new Clickable(() => OnTileCardClicked(tileCard, selectionTile.index, selectionTile.info)));
+                
+                var number = new byte();
+                number = (byte)i;
+                tileCard.AddManipulator(new Clickable(() => OnTileCardClicked(number)));
 
                 _scvSelection.Add(tileCard);
-            } 
+
+            }
 
             _lblActionInfo.text = $"{_scvSelection.Children().Count()}/{MainScreenState.HexaGame.SelectBase} Tile(s) available";
 
         }
 
-        private void OnTileCardClicked(TemplateContainer tileCard, byte index, TileOffer info)
+        private void OnTileCardClicked(byte index)
         {
-
+            Debug.Log($"OnTileCardClicked: index {index}");
             MainScreenState.SelectedCardIndex = index;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileSelect);

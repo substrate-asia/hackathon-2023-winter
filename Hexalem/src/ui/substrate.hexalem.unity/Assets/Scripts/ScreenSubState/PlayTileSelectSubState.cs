@@ -16,6 +16,7 @@ namespace Assets.Scripts
 
         private VisualElement _velTileCardBox;
 
+        private Label _lblActionTitle;
         private Label _lblActionCancel;
 
         public PlayTileSelectSubState(FlowController flowController, ScreenBaseState parent)
@@ -35,6 +36,9 @@ namespace Assets.Scripts
             TemplateContainer elementInstance = ElementInstance("UI/Frames/PlayTileSelectFrame");
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
+
+            _lblActionTitle = elementInstance.Q<Label>("LblActionTitle");
+            _lblActionTitle.RegisterCallback<ClickEvent>(OnActionClicked);
 
             _lblActionCancel = elementInstance.Q<Label>("LblActionCancel");
             _lblActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
@@ -56,8 +60,6 @@ namespace Assets.Scripts
 
         private void OnGridTileClicked(GameObject tileObject, int index)
         {
-            Debug.Log($"[{this.GetType().Name}][SUB] Clicked on tile with index {index}");
-
             var pIndex = 0;
 
             HexaTile tile = MainScreenState.HexaGame.HexaTuples[pIndex].board[index];
@@ -67,23 +69,40 @@ namespace Assets.Scripts
                 return;
             }
 
-            if (MainScreenState.SelectedGridIndex == index)
+            if (!MainScreenState.HexaGame.CanChooseAndPlace((byte)pIndex, MainScreenState.SelectedCardIndex, index))
             {
-                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-            } 
-            else if (MainScreenState.SelectedGridIndex >= 0)
+                Debug.Log($"Bad Chose & Place player {pIndex}, selection index {MainScreenState.SelectedCardIndex} and grid index {index}");
+                return;
+            }
+
+            if (MainScreenState.SelectedGridIndex < 0)
             {
-                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
                 MainScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
-            }
+            } 
+            else if (MainScreenState.SelectedGridIndex == index)
+            {
+                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                MainScreenState.SelectedGridIndex = -1;
+            } 
             else
             {
+                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
                 MainScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
             }
+
+        }
+
+        private void OnActionClicked(ClickEvent evt)
+        {
+            if (MainScreenState.SelectedGridIndex < 0)
+            {
+                return;
+            }
+
 
         }
 
