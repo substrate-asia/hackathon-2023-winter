@@ -128,7 +128,7 @@ pub mod pallet {
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
 	pub struct MaterialCost {
 		pub material_type: Material,
-		pub material_cost: MaterialUnit,
+		pub material_amount: MaterialUnit,
 	}
 
 	impl TileType {
@@ -817,9 +817,9 @@ impl<T: Config> Pallet<T> {
 		tile_to_upgrade: &T::Tile,
 	) -> Result<(), sp_runtime::DispatchError> {
 		match (tile_to_upgrade.get_type(), tile_to_upgrade.get_level()) {
-			(TileType::Home, 0) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 5 }, hex_board),
-			(TileType::Home, 1) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 10 }, hex_board),
-			(TileType::Home, 2) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_cost: 15 }, hex_board),
+			(TileType::Home, 0) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_amount: 5 }, hex_board),
+			(TileType::Home, 1) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_amount: 10 }, hex_board),
+			(TileType::Home, 2) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_amount: 15 }, hex_board),
 			(TileType::Empty, _) => Err(Error::<T>::CannotLevelUpEmptyTile.into()),
 			_ => Err(Error::<T>::CannotLevelUp.into()),
 		}
@@ -848,32 +848,32 @@ impl<T: Config> Pallet<T> {
 			Material::Gold =>
 				hex_board.gold = hex_board
 					.gold
-					.checked_sub(material_cost.material_cost)
+					.checked_sub(material_cost.material_amount)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Wood =>
 				hex_board.wood = hex_board
 					.wood
-					.checked_sub(material_cost.material_cost)
+					.checked_sub(material_cost.material_amount)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Stone =>
 				hex_board.stone = hex_board
 					.stone
-					.checked_sub(material_cost.material_cost)
+					.checked_sub(material_cost.material_amount)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Mana =>
 				hex_board.mana = hex_board
 					.mana
-					.checked_sub(material_cost.material_cost)
+					.checked_sub(material_cost.material_amount)
 					.ok_or(Error::<T>::NotEnoughMana)?,
 			Material::Food =>
 				hex_board.food = hex_board
 					.food
-					.checked_sub(material_cost.material_cost)
+					.checked_sub(material_cost.material_amount)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Water =>
 				hex_board.water = hex_board
 					.water
-					.checked_sub(material_cost.material_cost)
+					.checked_sub(material_cost.material_amount)
 					.ok_or(Error::<T>::NotEnoughResources)?,
 			Material::Humans => (),
 		};
