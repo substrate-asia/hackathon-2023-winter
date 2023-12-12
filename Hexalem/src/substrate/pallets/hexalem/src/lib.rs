@@ -115,17 +115,17 @@ pub mod pallet {
 		}
 	}
 
-	pub type MaterialUnit = u8;
+	pub type ResourceUnit = u8;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Debug)]
-	pub enum Material {
-		Mana,
-		Humans,
-		Water,
-		Food,
-		Wood,
-		Stone,
-		Gold,
+	pub enum ResourceType {
+		Mana = 0,
+		Human = 1,
+		Water = 2,
+		Food = 3,
+		Wood = 4,
+		Stone = 5,
+		Gold = 6,
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
@@ -141,9 +141,9 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
-	pub struct MaterialCost {
-		pub material_type: Material,
-		pub material_cost: MaterialUnit,
+	pub struct ResourceAmount {
+		pub resource_type: ResourceType,
+		pub amount: ResourceUnit,
 	}
 
 	impl TileType {
@@ -180,13 +180,16 @@ pub mod pallet {
 		}
 	}
 
-	#[derive(
-		Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound,
-	)]
+	pub struct ResourceProduction {
+		produces: ResourceAmount,
+		human_requirements: ResourceUnit,
+	}
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq)]
 	#[scale_info(skip_type_params(T))]
 	pub struct TileCost<T: Config> {
 		pub tile_to_buy: T::Tile,
-		pub cost: MaterialCost,
+		pub cost: ResourceAmount,
 	}
 
 	// This type will get changed to be more generic, but I did not have time now.
@@ -199,17 +202,11 @@ pub mod pallet {
 	// The board hex grid
 	pub type HexGrid<T> = BoundedVec<<T as Config>::Tile, <T as Config>::MaxHexGridSize>;
 
-	// The board of the player, with all stats and materials
+	// The board of the player, with all stats and resources
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	pub struct HexBoard<T: Config> {
-		pub gold: MaterialUnit,
-		pub wood: MaterialUnit,
-		pub stone: MaterialUnit,
-		pub food: MaterialUnit,
-		pub water: MaterialUnit,
-		pub mana: MaterialUnit,
-		pub humans: MaterialUnit,
+		pub resources: [ResourceUnit; 7],
 		pub hex_grid: HexGrid<T>, // Board with all tiles
 		game_id: GameId,          // Game key
 	}
@@ -220,19 +217,9 @@ pub mod pallet {
 				.try_into()
 				.map_err(|_| Error::<T>::InternalError)?;
 
-			new_hex_grid[size / 2] = T::HomeTile::get();
+			new_hex_grid[size / 2] = T::Tile::get_home();
 
-			Ok(HexBoard::<T> {
-				gold: 255,
-				wood: 0,
-				stone: 0,
-				food: 0,
-				water: 0,
-				mana: 1,
-				humans: 1,
-				hex_grid: new_hex_grid,
-				game_id,
-			})
+			Ok(HexBoard::<T> { resources: [1, 1, 0, 0, 0, 0, 0], hex_grid: new_hex_grid, game_id })
 		}
 
 		pub fn get_stats(&self) -> BoardStats {
@@ -349,9 +336,6 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type FoodPerTree: Get<Percent>;
-
-		#[pallet::constant]
-		type HomeTile: Get<Self::Tile>;
 	}
 
 	// The pallet's runtime storage items.
@@ -431,9 +415,6 @@ pub mod pallet {
 
 		// Not enough resources to pay for the tile offer.
 		NotEnoughResources,
-
-		// Not enough mana to pay for the tile offer.
-		NotEnoughMana,
 
 		// Not enough population to play all moves.
 		NotEnoughPopulation,
@@ -752,7 +733,7 @@ pub mod pallet {
 
 			// Handle next turn counting
 			game.next_turn();
-			
+
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
 
 			ensure!(
@@ -834,7 +815,7 @@ impl<T: Config> Pallet<T> {
 	) -> Result<(), sp_runtime::DispatchError> {
 		let selection_len = game.selection.len();
 
-		if selection_len < (game.selection_size / 2 + 1) as usize {
+		if selection_len <= (game.selection_size / 2) as usize {
 			if game.selection_size as u32 != T::MaxTileSelection::get() {
 				game.selection_size = game.selection_size.saturating_add(2);
 			}
@@ -876,7 +857,7 @@ impl<T: Config> Pallet<T> {
 		ensure!(all_offers.len() > selected_offer_index as usize, Error::<T>::BuyIndexOutOfBounds);
 		let selected_offer = all_offers[selected_offer_index as usize].clone();
 
-		Self::spend_material(&selected_offer.cost, hex_board)?;
+		Self::spend_resource(&selected_offer.cost, hex_board)?;
 
 		Ok(selected_offer.tile_to_buy)
 	}
@@ -887,16 +868,16 @@ impl<T: Config> Pallet<T> {
 		tile_to_upgrade: &T::Tile,
 	) -> Result<(), sp_runtime::DispatchError> {
 		match (tile_to_upgrade.get_type(), tile_to_upgrade.get_level()) {
-			(TileType::Home, 0) => Self::spend_material(
-				&MaterialCost { material_type: Material::Gold, material_cost: 5 },
+			(TileType::Home, 0) => Self::spend_resource(
+				&ResourceAmount { resource_type: ResourceType::Gold, amount: 5 },
 				hex_board,
 			),
-			(TileType::Home, 1) => Self::spend_material(
-				&MaterialCost { material_type: Material::Gold, material_cost: 10 },
+			(TileType::Home, 1) => Self::spend_resource(
+				&ResourceAmount { resource_type: ResourceType::Gold, amount: 10 },
 				hex_board,
 			),
-			(TileType::Home, 2) => Self::spend_material(
-				&MaterialCost { material_type: Material::Gold, material_cost: 15 },
+			(TileType::Home, 2) => Self::spend_resource(
+				&ResourceAmount { resource_type: ResourceType::Gold, amount: 15 },
 				hex_board,
 			),
 			(TileType::Empty, _) => Err(Error::<T>::CannotLevelUpEmptyTile.into()),
@@ -909,55 +890,33 @@ impl<T: Config> Pallet<T> {
 		level: &u8,
 	) -> Result<(), sp_runtime::DispatchError> {
 		match level {
-			0 => ensure!(hex_board.humans >= 3, Error::<T>::NotEnoughPopulation),
-			1 => ensure!(hex_board.humans >= 5, Error::<T>::NotEnoughPopulation),
-			2 => ensure!(hex_board.humans >= 8, Error::<T>::NotEnoughPopulation),
+			0 => ensure!(
+				hex_board.resources[ResourceType::Human as usize] >= 3,
+				Error::<T>::NotEnoughPopulation
+			),
+			1 => ensure!(
+				hex_board.resources[ResourceType::Human as usize] >= 5,
+				Error::<T>::NotEnoughPopulation
+			),
+			2 => ensure!(
+				hex_board.resources[ResourceType::Human as usize] >= 8,
+				Error::<T>::NotEnoughPopulation
+			),
 			_ => return Err(Error::<T>::CannotLevelUp.into()),
 		};
 
 		Ok(())
 	}
 
-	/// Helper method that spends the resources according to MaterialCost
-	fn spend_material(
-		material_cost: &MaterialCost,
+	/// Helper method that spends the resources according to ResourceAmount
+	fn spend_resource(
+		resource_cost: &ResourceAmount,
 		hex_board: &mut HexBoard<T>,
 	) -> Result<(), sp_runtime::DispatchError> {
-		match material_cost.material_type {
-			Material::Gold =>
-				hex_board.gold = hex_board
-					.gold
-					.checked_sub(material_cost.material_cost)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Wood =>
-				hex_board.wood = hex_board
-					.wood
-					.checked_sub(material_cost.material_cost)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Stone =>
-				hex_board.stone = hex_board
-					.stone
-					.checked_sub(material_cost.material_cost)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Mana =>
-				hex_board.mana = hex_board
-					.mana
-					.checked_sub(material_cost.material_cost)
-					.ok_or(Error::<T>::NotEnoughMana)?,
-			Material::Food =>
-				hex_board.food = hex_board
-					.food
-					.checked_sub(material_cost.material_cost)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Water =>
-				hex_board.water = hex_board
-					.water
-					.checked_sub(material_cost.material_cost)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Humans => (),
-		};
-
-		// Successfully paid
+		hex_board.resources[resource_cost.resource_type as usize] = hex_board
+			.resources[ResourceType::Gold as usize]
+			.checked_sub(resource_cost.amount)
+			.ok_or(Error::<T>::NotEnoughResources)?;
 		Ok(())
 	}
 
@@ -1146,16 +1105,17 @@ impl<T: Config> Pallet<T> {
 	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
 		let board_stats: BoardStats = hex_board.get_stats();
 
-		hex_board.mana = hex_board
-			.mana
-			.saturating_add(hex_board.humans / 3)
+		hex_board.resources[ResourceType::Mana as usize] = hex_board
+			.resources[ResourceType::Mana as usize]
+			.saturating_add(hex_board.resources[ResourceType::Human as usize] / 3)
 			.saturating_add(board_stats.get_tiles(TileType::Home));
 
-		let food_and_water_eaten = cmp::min(
-			hex_board.food.saturating_mul(T::FoodPerHuman::get()),
-			T::WaterPerHuman::get() * hex_board.water, /* It is safe to multiply Percent, it
-			                                            * will never overflow */
-		);
+		let food_and_water_eaten =
+			cmp::min(
+				hex_board.resources[ResourceType::Food as usize].saturating_mul(T::FoodPerHuman::get()),
+				T::WaterPerHuman::get() * hex_board.resources[ResourceType::Water as usize], /* It is safe to multiply Percent, it
+				                                                                     * will never overflow */
+			);
 
 		let mut home_weighted: u8 = 0;
 
@@ -1173,34 +1133,39 @@ impl<T: Config> Pallet<T> {
 			1,
 		);
 
-		hex_board.water = hex_board.water.saturating_add(board_stats.get_tiles(TileType::Water));
+		hex_board.resources[ResourceType::Water as usize] = hex_board.resources[ResourceType::Water as usize]
+			.saturating_add(board_stats.get_tiles(TileType::Water));
 
-		hex_board.food = hex_board
-			.food
+		hex_board.resources[ResourceType::Food as usize] = hex_board
+			.resources[ResourceType::Food as usize]
 			.saturating_add(board_stats.get_tiles(TileType::Grass))
 			.saturating_add(T::FoodPerTree::get() * board_stats.get_tiles(TileType::Tree));
 
-		hex_board.wood = hex_board.wood.saturating_add(cmp::min(
-			board_stats.get_tiles(TileType::Tree).saturating_mul(3),
-			hex_board.humans / 2,
-		));
+		hex_board.resources[ResourceType::Wood as usize] = hex_board.resources[ResourceType::Wood as usize]
+			.saturating_add(cmp::min(
+				board_stats.get_tiles(TileType::Tree).saturating_mul(3),
+				hex_board.resources[ResourceType::Human as usize] / 2,
+			));
 
-		hex_board.stone = hex_board
-			.stone
+		hex_board.resources[ResourceType::Stone as usize] = hex_board
+			.resources[ResourceType::Stone as usize]
 			.saturating_add(cmp::min(
 				board_stats.get_tiles(TileType::Mountain) * 4,
-				hex_board.humans / 4,
+				hex_board.resources[ResourceType::Human as usize] / 4,
 			))
 			.saturating_add(cmp::min(
 				board_stats.get_tiles(TileType::Cave) * 2,
-				hex_board.humans / 2,
+				hex_board.resources[ResourceType::Human as usize] / 2,
 			));
 
-		hex_board.gold = hex_board
-			.gold
-			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Cave), hex_board.humans / 3));
+		hex_board.resources[ResourceType::Gold as usize] = hex_board.resources[ResourceType::Gold as usize]
+			.saturating_add(cmp::min(
+				board_stats.get_tiles(TileType::Cave),
+				hex_board.resources[ResourceType::Human as usize] / 3,
+			));
 
-		hex_board.humans = hex_board.humans.saturating_add(new_humans);
+		hex_board.resources[ResourceType::Human as usize] =
+			hex_board.resources[ResourceType::Human as usize].saturating_add(new_humans);
 	}
 
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
@@ -1312,6 +1277,8 @@ pub trait GetTileInfo {
 	fn same(&self, other: &Self) -> bool {
 		self.get_type() == other.get_type()
 	}
+
+	fn get_home() -> Self;
 }
 
 trait GameProperties<T: Config> {
