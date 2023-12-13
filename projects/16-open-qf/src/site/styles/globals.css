@@ -69,5 +69,5 @@ html {
   font-size: unset;
 }
 body {
-  @apply bg-fill-bg-secondary antialiased;
+  @apply text-text-primary bg-fill-bg-secondary antialiased;
 }

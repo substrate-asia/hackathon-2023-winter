@@ -14,7 +14,7 @@ const UserPage = withCommonPageWrapper(() => {
   return (
     <UserLayout>
       <Backdrop className="static h-auto top-0 z-0">
-        <MainContainer className="pt-10 pb-0 space-y-10">
+        <MainContainer className="pt-10 pb-0 space-y-10 max-sm:pb-0">
           <UserInfo />
 
           <UserTabs />

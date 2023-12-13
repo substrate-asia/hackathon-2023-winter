@@ -4,6 +4,7 @@ import { Card as CardBase } from "@osn/common-ui";
 export default function Card({
   cover,
   coverPosition = "auto",
+  prefix,
   className = "",
   children,
   hoverable = false,
@@ -42,7 +43,8 @@ export default function Card({
         size={size}
         {...props}
         prefix={
-          cover && (
+          prefix ||
+          (cover && (
             <>
               <div
                 className={cn(
@@ -56,7 +58,7 @@ export default function Card({
                 </div>
               </div>
             </>
-          )
+          ))
         }
       >
         {children}

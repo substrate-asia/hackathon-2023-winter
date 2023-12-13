@@ -5,7 +5,7 @@ export default function UserTabs() {
   const [tab, setTab, items] = useUserTab();
 
   return (
-    <div className="flex">
+    <div className="flex overflow-auto scrollbar-none">
       <TabsList
         items={items}
         activeTab={tab}

@@ -35,5 +35,8 @@ module.exports = {
       },
     },
   },
-  plugins: [require("./styles/tailwind-plugins/fonts")],
+  plugins: [
+    require("./styles/tailwind-plugins/fonts"),
+    require("tailwind-scrollbar"),
+  ],
 };
