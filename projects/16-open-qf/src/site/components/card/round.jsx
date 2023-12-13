@@ -9,16 +9,17 @@ import { DECIMALS } from "@/utils/constants";
 import IpfsImage from "../image/ipfs";
 
 export function RoundCardMetadata({ data, linkTitle = true }) {
-  const title = linkTitle ? (
-    <Link
-      href={`/rounds/${data.id}`}
-      className="hover:underline hover:text-inherit"
-    >
-      {data.title}
-    </Link>
-  ) : (
-    data.title
-  );
+  let title = data.title;
+  if (linkTitle) {
+    title = (
+      <Link
+        href={`/rounds/${data.id}`}
+        className="hover:underline hover:text-inherit"
+      >
+        {title}
+      </Link>
+    );
+  }
 
   return (
     <div
