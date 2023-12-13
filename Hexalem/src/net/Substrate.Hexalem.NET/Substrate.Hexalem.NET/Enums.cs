@@ -66,7 +66,7 @@
         Finish,
     }
 
-    public enum WinningCondition
+    public enum TargetGoal
     {
         HumanThreshold,
         GoldThreshold,

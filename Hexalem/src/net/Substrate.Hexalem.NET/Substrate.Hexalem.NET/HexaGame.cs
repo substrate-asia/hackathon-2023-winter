@@ -342,9 +342,9 @@ namespace Substrate.Hexalem.Engine
         {
             var player = HexaTuples[PlayerTurn].player;
 
-            if (player.HasWin())
+            if (player.HasReachedTargetGoal())
             {
-                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.WinningCondition.WinningCondition);
+                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.TargetGoal);
 
                 return true;
             }

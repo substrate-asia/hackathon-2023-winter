@@ -14,12 +14,12 @@ namespace Substrate.Hexalem.Test
         public void CreatePlayer_WithWinningConditionSet_ShouldSucceed()
         {
             var playerRessourceBytes = new byte[8];
-            playerRessourceBytes[7] = new HexaWinningCondition(WinningCondition.GoldThreshold, 10);
+            playerRessourceBytes[7] = new HexaTargetGoal(TargetGoal.GoldThreshold, 10);
 
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32], playerRessourceBytes) };
             
-            Assert.That(hexaPlayers.First().WinningCondition.WinningCondition, Is.EqualTo(WinningCondition.GoldThreshold));
-            Assert.That(hexaPlayers.First().WinningCondition.Target, Is.EqualTo(10));
+            Assert.That(hexaPlayers.First().TargetGoal, Is.EqualTo(TargetGoal.GoldThreshold));
+            Assert.That(hexaPlayers.First().TargetValue, Is.EqualTo(10));
 
         }
     }

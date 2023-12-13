@@ -71,7 +71,7 @@ namespace Substrate.Hexalem.Console
 
             foreach (var hexaPlayer in hexaPlayers)
             {
-                hexaPlayer.AddWinCondition(Strategy.ChooseWinningCondition());
+                hexaPlayer.TargetGoal = Strategy.ChooseWinningCondition();
             }
 
             return hexaPlayers;

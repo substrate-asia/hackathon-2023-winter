@@ -146,30 +146,30 @@ namespace Substrate.Hexalem.Bot
             var newGold = HexaGame.Evaluate(RessourceType.Gold, hexaPlayer, hexaBoardStats);
 
             var score =
-                manaScore(hexaPlayer.WinningCondition.WinningCondition) * newMana +
-                humanScore(hexaPlayer.WinningCondition.WinningCondition) * newHumans +
-                waterScore(hexaPlayer.WinningCondition.WinningCondition) * newWater +
-                foodScore(hexaPlayer.WinningCondition.WinningCondition) * newFood +
-                woodScore(hexaPlayer.WinningCondition.WinningCondition) * newWood +
-                stoneScore(hexaPlayer.WinningCondition.WinningCondition) * newStone +
-                goldScore(hexaPlayer.WinningCondition.WinningCondition) * newGold;
+                manaScore(hexaPlayer.TargetGoal) * newMana +
+                humanScore(hexaPlayer.TargetGoal) * newHumans +
+                waterScore(hexaPlayer.TargetGoal) * newWater +
+                foodScore(hexaPlayer.TargetGoal) * newFood +
+                woodScore(hexaPlayer.TargetGoal) * newWood +
+                stoneScore(hexaPlayer.TargetGoal) * newStone +
+                goldScore(hexaPlayer.TargetGoal) * newGold;
 
             Log.Debug("\t[MinMax evaluation] Score = {score}", score);
             return score;
         }
 
-        private int manaScore(WinningCondition wc) => 5;
+        private int manaScore(TargetGoal wc) => 5;
 
-        private int humanScore(WinningCondition wc) => wc == WinningCondition.HumanThreshold ? 8 : 5;
+        private int humanScore(TargetGoal wc) => wc == TargetGoal.HumanThreshold ? 8 : 5;
 
-        private int waterScore(WinningCondition wc) => 1;
+        private int waterScore(TargetGoal wc) => 1;
 
-        private int foodScore(WinningCondition wc) => 1;
+        private int foodScore(TargetGoal wc) => 1;
 
-        private int woodScore(WinningCondition wc) => 1;
+        private int woodScore(TargetGoal wc) => 1;
 
-        private int stoneScore(WinningCondition wc) => 1;
+        private int stoneScore(TargetGoal wc) => 1;
 
-        private int goldScore(WinningCondition wc) => wc == WinningCondition.GoldThreshold ? 8 : 5;
+        private int goldScore(TargetGoal wc) => wc == TargetGoal.GoldThreshold ? 8 : 5;
     }
 }
