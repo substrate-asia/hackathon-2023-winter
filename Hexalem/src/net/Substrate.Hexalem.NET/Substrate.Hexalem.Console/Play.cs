@@ -29,7 +29,7 @@ namespace Substrate.Hexalem.Console
             Log.Information("Start a new game between AI [{aiFirstType}] and [{aiSecondType}]", Bots[0].AiName, Bots[1].AiName);
             List<HexaPlayer> hexaPlayers = InitializePlayers();
 
-            var hexGame = await _game.CreateGameAsync(GridSize.Medium, token);
+            await _game.CreateGameAsync(GridSize.Medium, token);
 
             bool isFinish = true;
             uint blockNumber = 1;
@@ -60,8 +60,8 @@ namespace Substrate.Hexalem.Console
                 Log.Warning("Player {num} has no mana and can not play anymore", _game.HexaGame.PlayerTurn);
                 await _game.FinishTurnAsync(_game.HexaGame.PlayerTurn, token);
                 
-                isFinish = isFinish || hexGame.IsFinished();
-                gameResult = GameResult.PlayerWinByReachingWinCondition(hexaPlayers[hexGame.PlayerTurn]);
+                isFinish = isFinish || _game.HexaGame.IsFinished();
+                gameResult = GameResult.PlayerWinByReachingWinCondition(hexaPlayers[_game.HexaGame.PlayerTurn]);
 
                 blockNumber++;
             } while (!isFinish);

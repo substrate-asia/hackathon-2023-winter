@@ -542,9 +542,11 @@ namespace Substrate.Hexalem.Engine
 
         public object Clone()
         {
-            var cloneGame = new HexaGame((byte[])Id.Clone(), HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
+            var cloneGame = new HexaGame(
+                (byte[])Id.Clone(), 
+                HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
             {
-                Value = Value,
+                Value = (byte[])Value.Clone(),
                 UnboundTileOffers = UnboundTileOffers.Select(x => x).ToList()
             };
 

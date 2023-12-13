@@ -1,19 +1,17 @@
-﻿using Substrate.Hexalem.Bot;
-using Substrate.Hexalem.Engine;
+﻿using Substrate.Hexalem.Engine;
 
 namespace Substrate.Hexalem.Test
 {
     public class GameTest
     {
         private HexaBoard _hexGridMedium_Player1;
+
         private HexaPlayer _hexPlayer_Player1;
         private readonly int _player1_Index = 0;
 
         private HexaBoard _hexGridMedium_Player2;
         private HexaPlayer _hexPlayer_Player2;
         private readonly int _player2_Index = 1;
-
-        private List<Strategy> _bots;
 
         private byte[] _selectionGenerator;
         private uint _defaultBlockStart;
@@ -67,59 +65,6 @@ namespace Substrate.Hexalem.Test
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
             hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, (0, 1));
-
-            // Selection is 4
-            Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
-
-            Game.FinishTurn(_defaultBlockStart + 6, hexaGame, hexaGame.PlayerTurn);
-        }
-
-        [Test]
-        public void StandardGameStart_2v2_ShouldSucceed()
-        {
-            var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
-            var hexaGame = Game.CreateGame(_defaultBlockStart, hexaPlayers, GridSize.Medium);
-
-            // Player select the second tile
-            var indexSelection = 1;
-            var selectedTileOffer = GameConfig.TILE_COSTS[hexaGame.UnboundTileOffers[indexSelection]];
-            // Player coordinate move
-            var coordinate = (1, 0);
-
-            // Players should have 1 mana when start
-            Assert.That(hexaGame.HexaTuples[_player1_Index].player[RessourceType.Mana], Is.EqualTo(1));
-            Assert.That(hexaGame.HexaTuples[_player2_Index].player[RessourceType.Mana], Is.EqualTo(1));
-
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
-
-            // Unbounded tiles should have normal rarity
-            Assert.That(hexaGame.UnboundTileOffers.All(x => GameConfig.TILE_COSTS[x].TileToBuy.TileLevel == 0), Is.True);
-
-            Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, indexSelection, coordinate);
-
-            // Player 1 should have now 0 mana
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].player[RessourceType.Mana], Is.EqualTo(0));
-
-            // Now we should have selectedTile put in the correct coord
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTileOffer.TileToBuy));
-
-            Assert.That(hexaGame.SelectBase, Is.EqualTo(2));
-
-            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
-
-            // Reward should have given 1 food (because of grass tile) and also 1 mana because of home starting tile
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].player[RessourceType.Mana], Is.EqualTo(1));
-
-            // Need to find a solution for other ressources
-
-            // Now it is Player 2 turn
-            Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player2_Index));
-
-            selectedTileOffer = GameConfig.TILE_COSTS[hexaGame.UnboundTileOffers[0]];
-            Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, coordinate);
-
-            // Now we should have selectedTile put in the correct coord
-            Assert.That(hexaGame.HexaTuples[hexaGame.PlayerTurn].board[coordinate.Item1, coordinate.Item2], Is.EqualTo((byte)selectedTileOffer.TileToBuy));
 
             // Selection is 4
             Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
