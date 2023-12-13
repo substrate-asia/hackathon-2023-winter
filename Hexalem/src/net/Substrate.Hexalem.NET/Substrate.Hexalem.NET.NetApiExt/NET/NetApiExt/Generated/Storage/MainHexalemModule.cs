@@ -154,6 +154,16 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
+        /// >> receive_reward
+        /// Contains a variant per dispatchable extrinsic that this pallet has.
+        /// </summary>
+        public static Method ReceiveReward()
+        {
+            System.Collections.Generic.List<byte> byteArray = new List<byte>();
+            return new Method(8, "HexalemModule", 5, "receive_reward", byteArray.ToArray());
+        }
+        
+        /// <summary>
         /// >> root_delete_game
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
@@ -161,7 +171,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(game_id.Encode());
-            return new Method(8, "HexalemModule", 5, "root_delete_game", byteArray.ToArray());
+            return new Method(8, "HexalemModule", 6, "root_delete_game", byteArray.ToArray());
         }
     }
     
@@ -184,7 +194,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.NetApi.Model.Types.Primitive.U8 MinPlayers()
         {
             var result = new Substrate.NetApi.Model.Types.Primitive.U8();
-            result.Create("0x02");
+            result.Create("0x01");
             return result;
         }
         
@@ -290,9 +300,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
-        /// >> DefaultWinningConditionGold
+        /// >> TargetGoalGold
         /// </summary>
-        public Substrate.NetApi.Model.Types.Primitive.U8 DefaultWinningConditionGold()
+        public Substrate.NetApi.Model.Types.Primitive.U8 TargetGoalGold()
         {
             var result = new Substrate.NetApi.Model.Types.Primitive.U8();
             result.Create("0x0A");
@@ -300,9 +310,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
-        /// >> DefaultWinningConditionHuman
+        /// >> TargetGoalHuman
         /// </summary>
-        public Substrate.NetApi.Model.Types.Primitive.U8 DefaultWinningConditionHuman()
+        public Substrate.NetApi.Model.Types.Primitive.U8 TargetGoalHuman()
         {
             var result = new Substrate.NetApi.Model.Types.Primitive.U8();
             result.Create("0x07");

@@ -786,7 +786,7 @@ pub mod pallet {
 
 		#[pallet::call_index(5)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
-		pub fn receive_reward(origin: OriginFor<T>) -> DispatchResult {
+		pub fn receive_reward(_origin: OriginFor<T>) -> DispatchResult {
 			todo!()
 		}
 
