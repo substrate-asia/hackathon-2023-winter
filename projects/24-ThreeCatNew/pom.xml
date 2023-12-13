@@ -15,15 +15,23 @@
     </properties>
 
     <dependencies>
+        <!--读取yaml文件-->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
             <version>1.27</version>
         </dependency>
+        <!--处理数据转换常用的-->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
             <version>1.9.2</version>
+        </dependency>
+        <!--groovy Shell使用-->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.4.15</version>
         </dependency>
     </dependencies>
 
