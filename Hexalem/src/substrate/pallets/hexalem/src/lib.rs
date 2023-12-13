@@ -178,12 +178,14 @@ pub mod pallet {
 		}
 	}
 
+	#[derive(Encode, TypeInfo)]
 	pub enum ResourceProductions {
 		None,
 		One(ResourceProduction),
 		Two(ResourceProduction, ResourceProduction),
 	}
 
+	#[derive(Encode, TypeInfo)]
 	pub struct ResourceProduction {
 		pub produces: ResourceAmount,
 		pub human_requirements: ResourceUnit,
@@ -332,6 +334,9 @@ pub mod pallet {
 
 		#[pallet::constant]
 		type TileCosts: Get<[TileCost<Self>; 15]>;
+
+		#[pallet::constant]
+		type TileResourceProductions: Get<[ResourceProductions; 8]>;
 
 		#[pallet::constant]
 		type WaterPerHuman: Get<u8>;

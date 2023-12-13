@@ -306,7 +306,7 @@ parameter_types! {
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 16;
 
-	pub const HexalemResourceProductions: [ResourceProductions; 6] = [
+	pub const HexalemTileResourceProductions: [ResourceProductions; 8] = [
 		// Empty
 		ResourceProductions::None,
 		// Home
@@ -531,6 +531,7 @@ impl pallet_hexalem::Config for Runtime {
 	type MaxTileSelection = HexalemMaxTileSelection;
 	type Tile = HexalemTile;
 	type TileCosts = HexalemTileCosts;
+	type TileResourceProductions = HexalemTileResourceProductions;
 	type WaterPerHuman = HexalemWaterPerHuman;
 	type FoodPerHuman = HexalemFoodPerHuman;
 	type FoodPerTree = HexalemFoodPerTree;
