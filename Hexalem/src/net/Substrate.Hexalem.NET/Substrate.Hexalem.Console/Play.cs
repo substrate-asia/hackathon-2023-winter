@@ -56,7 +56,7 @@ namespace Substrate.Hexalem.Console
                 Log.Warning("Player {num} has no mana and can not play anymore", hexGame.PlayerTurn);
                 hexGame = Game.FinishTurn(blockNumber, hexGame, hexGame.PlayerTurn);
                 
-                isFinish = isFinish || hexGame.IsGameWon();
+                isFinish = isFinish || hexGame.IsFinished();
                 gameResult = GameResult.PlayerWinByReachingWinCondition(hexaPlayers[hexGame.PlayerTurn]);
 
                 blockNumber++;

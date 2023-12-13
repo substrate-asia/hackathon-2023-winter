@@ -114,7 +114,7 @@ namespace Substrate.Hexalem.Engine
             Log.Debug("Rewards calculated for player {index}", playerIndex);
 
             // Does the current player win ?
-            if (hexaGame.IsGameWon())
+            if (hexaGame.IsFinished())
             {
                 return hexaGame;
             }

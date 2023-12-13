@@ -20,6 +20,8 @@ namespace Substrate.Hexalem.Engine
 
         public byte[] Value { get; set; }
 
+        public bool IsFull => Array.TrueForAll(Value, p => p != 0x00);
+
         /// <summary>
         /// HexGrid constructor, bytes need to be of size 9, 25 or 49
         /// An odd number power two, to have a middle tile
