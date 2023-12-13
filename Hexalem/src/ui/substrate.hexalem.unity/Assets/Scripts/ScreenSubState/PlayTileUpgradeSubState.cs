@@ -1,7 +1,5 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
-using System;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -13,6 +11,7 @@ namespace Assets.Scripts
 
         private VisualElement _velTileCardBox;
 
+        private Label _lblActionTitle;
         private Label _lblActionCancel;
 
         public PlayTileUpgradeSubState(FlowController flowController, ScreenBaseState parent)
@@ -29,6 +28,12 @@ namespace Assets.Scripts
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
 
+            _lblActionTitle = elementInstance.Q<Label>("LblActionTitle");
+            var canUpgrade = Storage.HexaGame.CanUpgrade((byte)MainScreenState.PlayerIndex, MainScreenState.SelectedGridIndex);
+            _lblActionTitle.SetEnabled(canUpgrade);
+            _lblActionTitle.RegisterCallback<ClickEvent>(OnActionClicked);
+
+
             _lblActionCancel = elementInstance.Q<Label>("LblActionCancel");
             _lblActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
 
@@ -36,7 +41,6 @@ namespace Assets.Scripts
             floatBody.Add(elementInstance);
 
             UpdateTileSelection();
-
         }
 
         public override void ExitState()
@@ -55,15 +59,15 @@ namespace Assets.Scripts
         {
             var tileCard = MainScreenState.TileCardElement.Instantiate();
 
-            var selectTile = GameConfig.TILE_COSTS[MainScreenState.SelectedGridIndex];
+            var selectTile = (HexaTile)Storage.Board(MainScreenState.PlayerIndex)[MainScreenState.SelectedGridIndex];
 
-            tileCard.Q<Label>("LblTileName").text = selectTile.TileToBuy.TileType.ToString() + "(Norm)";
+            tileCard.Q<Label>("LblTileName").text = selectTile.TileType.ToString() + "(" + HelperUI.TileLevelName(selectTile.TileLevel) + ")";
 
             tileCard.Q<Label>("LblRoundPre").text = "(+1";
             tileCard.Q<Label>("LblManaCost").text = "1";
 
             var velTileImage = tileCard.Q<VisualElement>("VelTileImage");
-            switch (selectTile.TileToBuy.TileType)
+            switch (selectTile.TileType)
             {
                 case TileType.Home:
                     velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileHome);
@@ -95,6 +99,26 @@ namespace Assets.Scripts
             }
 
             _velTileCardBox.Add(tileCard);
+        }
+
+        private void OnActionClicked(ClickEvent evt)
+        {
+            if (!Storage.UpdateHexalem)
+            {
+                MainScreenState.Blocknumber++;
+                var result = Game.Upgrade(MainScreenState.Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)MainScreenState.PlayerIndex, MainScreenState.SelectedGridIndex);
+
+                if (result == null)
+                {
+                    return;
+                }
+
+                Storage.SetTrainGame(result, MainScreenState.PlayerIndex);
+            }
+            else
+            {
+                // TODO ADD On chain action ...
+            }
         }
     }
 }

@@ -1,8 +1,6 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
-using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -21,8 +19,8 @@ namespace Assets.Scripts
         private Label _lblActionCancel;
 
         public PlayTileSelectSubState(FlowController flowController, ScreenBaseState parent)
-            : base(flowController, parent) {
-
+            : base(flowController, parent)
+        {
             _emptyMat = Resources.Load<Material>("Materials/empty");
             _selectedMat = Resources.Load<Material>("Materials/emptySelected");
         }
@@ -66,7 +64,7 @@ namespace Assets.Scripts
             var pIndex = 0;
 
             HexaTile tile = Storage.HexaGame.HexaTuples[pIndex].board[index];
-            
+
             if (!tile.IsEmpty())
             {
                 return;
@@ -83,12 +81,12 @@ namespace Assets.Scripts
                 MainScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
-            } 
+            }
             else if (MainScreenState.SelectedGridIndex == index)
             {
                 Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
                 MainScreenState.SelectedGridIndex = -1;
-            } 
+            }
             else
             {
                 Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
@@ -96,7 +94,6 @@ namespace Assets.Scripts
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
             }
-
         }
 
         private void OnActionClicked(ClickEvent evt)
@@ -111,26 +108,33 @@ namespace Assets.Scripts
                 }
 
                 Storage.SetTrainGame(result, MainScreenState.PlayerIndex);
-
             }
             else
             {
-                // TODO ADD On chain action ... 
+                // TODO ADD On chain action ...
             }
         }
 
         private void OnCancelClicked(ClickEvent evt)
         {
+            if (MainScreenState.SelectedGridIndex > -1)
+            {
+                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                MainScreenState.SelectedGridIndex = -1;
+            }
             MainScreenState.SelectedCardIndex = -1;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
+
         private void OnChangedHexaSelection(List<byte> hexaSelection)
         {
-            Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-            MainScreenState.SelectedCardIndex = -1;
-            MainScreenState.SelectedGridIndex = -1;
+            if (MainScreenState.SelectedGridIndex > -1) {
+                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                MainScreenState.SelectedGridIndex = -1;
+            }
 
+            MainScreenState.SelectedCardIndex = -1;
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
 

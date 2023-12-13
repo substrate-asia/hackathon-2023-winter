@@ -1,11 +1,7 @@
 ﻿using Substrate.Hexalem.Engine;
 using Substrate.Integration.Client;
-using Substrate.Integration.Helper;
-using Substrate.NetApi.Model.Meta;
-using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -37,15 +33,16 @@ namespace Assets.Scripts.ScreenStates
         private Label _lblStoneValue;
         private Label _lblGoldValue;
 
-        private VisualElement _velEndTurnBox;
+        private Label _lblRoundValue;
 
+        private VisualElement _velEndTurnBox;
 
         private List<string> _subscriptionOrder;
         private Dictionary<string, ExtrinsicInfo> _subscriptionDict;
 
         public PlayScreenState(FlowController _flowController)
-            : base(_flowController) {
-
+            : base(_flowController)
+        {
             // load assets here
             TileCardElement = Resources.Load<VisualTreeAsset>($"UI/Elements/TileCardElement");
 
@@ -83,6 +80,8 @@ namespace Assets.Scripts.ScreenStates
             _lblStoneValue = instance.Q<Label>("LblStoneValue");
             _lblGoldValue = instance.Q<Label>("LblGoldValue");
 
+            _lblRoundValue = instance.Q<Label>("LblRoundValue");
+
             _velEndTurnBox = instance.Q<VisualElement>("VelEndTurnBox");
             _velEndTurnBox.RegisterCallback<ClickEvent>(OnEndTurnClicked);
 
@@ -93,11 +92,14 @@ namespace Assets.Scripts.ScreenStates
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
 
             // initial update
+            _lblRoundValue.text = $"{Storage.HexaGame.PlayerTurn}/{Storage.HexaGame.HexBoardRound}";
             OnChangedHexaPlayer(Storage.HexaGame.HexaTuples[PlayerIndex].player);
             OnChangedHexaBoard(Storage.HexaGame.HexaTuples[PlayerIndex].board);
 
             Storage.OnChangedHexaBoard += OnChangedHexaBoard;
             Storage.OnChangedHexaPlayer += OnChangedHexaPlayer;
+            Storage.OnNextPlayerTurn += OnNextPlayerTurn;
+            Storage.OnBoardStateChanged += OnBoardStateChanged;
         }
 
         public override void ExitState()
@@ -108,13 +110,15 @@ namespace Assets.Scripts.ScreenStates
             FlowController.VelContainer.RemoveAt(1);
 
             Storage.OnChangedHexaBoard -= OnChangedHexaBoard;
+            Storage.OnChangedHexaPlayer -= OnChangedHexaPlayer;
+            Storage.OnNextPlayerTurn -= OnNextPlayerTurn;
+            Storage.OnBoardStateChanged -= OnBoardStateChanged;
         }
 
         private void OnExtrinsicCheck()
         {
             if (_subscriptionOrder.Count == 0)
             {
-
             }
 
             if (!Network.Client.IsConnected)
@@ -152,22 +156,18 @@ namespace Assets.Scripts.ScreenStates
                 {
                     if (extrinsicInfo.Error != null)
                     {
-
                     }
                     else if (extrinsicInfo.SystemExtrinsicEvent(out Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.Event? systemExtrinsicEvent, out string errorMsg))
                     {
-
                     }
                     else
                     {
-
                     }
                 }
             });
 
             if (extrinsicInfo.IsCompleted)
             {
-
             }
         }
 
@@ -187,9 +187,6 @@ namespace Assets.Scripts.ScreenStates
                 }
 
                 Storage.SetTrainGame(result, PlayerIndex);
-
-
-                FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
             }
             else
             {
@@ -213,5 +210,20 @@ namespace Assets.Scripts.ScreenStates
             _lblGoldValue.text = hexaPlayer[RessourceType.Gold].ToString();
         }
 
+        private void OnNextPlayerTurn(byte playerTurn)
+        {
+            _lblRoundValue.text = $"{Storage.HexaGame.PlayerTurn}/{Storage.HexaGame.HexBoardRound}";
+
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
+        }
+
+        private void OnBoardStateChanged(HexBoardState boardState)
+        {
+            Debug.Log($"New board state {boardState}");
+            if (boardState == HexBoardState.Finish)
+            {
+                FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayFinish);
+            }
+        }
     }
 }

@@ -1,6 +1,7 @@
 using Schnorrkel.Keys;
-using Substrate.NET.Wallet;
 using Substrate.Integration;
+using Substrate.Integration.Helper;
+using Substrate.NET.Wallet;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Rpc;
 using Substrate.NetApi.Model.Types;
@@ -9,8 +10,6 @@ using System.Data;
 using System.IO;
 using System.Linq;
 using UnityEngine;
-using Substrate.Integration.Helper;
-using Substrate.NetApi.Model.Types.Base;
 
 namespace Assets.Scripts
 {
@@ -27,26 +26,28 @@ namespace Assets.Scripts
     public class NetworkManager : Singleton<NetworkManager>
     {
         public delegate void ConnectionStateChangedHandler(bool IsConnected);
+
         public delegate void ExtrinsicCheckHandler();
 
         public event ConnectionStateChangedHandler ConnectionStateChanged;
+
         public event ExtrinsicCheckHandler ExtrinsicCheck;
 
         public MiniSecret MiniSecretAlice => new MiniSecret(Utils.HexToByteArray("0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a"), ExpandMode.Ed25519);
         public Account Alice => Account.Build(KeyType.Sr25519, MiniSecretAlice.ExpandToSecret().ToBytes(), MiniSecretAlice.GetPair().Public.Key);
-        
+
         public MiniSecret MiniSecretBob => new MiniSecret(Utils.HexToByteArray("0x398f0c28f98885e046333d4a41c19cee4c37368a9832c6502f6cfd182e2aef89"), ExpandMode.Ed25519);
         public Account Bob => Account.Build(KeyType.Sr25519, MiniSecretBob.ExpandToSecret().ToBytes(), MiniSecretBob.GetPair().Public.Key);
-        
+
         public MiniSecret MiniSecretCharlie => new MiniSecret(Utils.HexToByteArray("0xbc1ede780f784bb6991a585e4f6e61522c14e1cae6ad0895fb57b9a205a8f938"), ExpandMode.Ed25519);
         public Account Charlie => Account.Build(KeyType.Sr25519, MiniSecretCharlie.ExpandToSecret().ToBytes(), MiniSecretCharlie.GetPair().Public.Key);
-        
+
         public MiniSecret MiniSecretDave => new MiniSecret(Utils.HexToByteArray("0x868020ae0687dda7d57565093a69090211449845a7e11453612800b663307246"), ExpandMode.Ed25519);
         public Account Dave => Account.Build(KeyType.Sr25519, MiniSecretDave.ExpandToSecret().ToBytes(), MiniSecretDave.GetPair().Public.Key);
 
         private readonly string _nodeUrl = "ws://127.0.0.1:9944";
         public string NodeUrl => _nodeUrl;
-        
+
         private readonly NetworkType _networkType = NetworkType.Live;
 
         public AccountType? CurrentAccountType { get; private set; }

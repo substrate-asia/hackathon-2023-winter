@@ -1,12 +1,8 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
-using System;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 
 namespace Assets.Scripts
 {
@@ -16,8 +12,6 @@ namespace Assets.Scripts
 
         private ScrollView _scvSelection;
         private Label _lblActionInfo;
-
-
 
         public PlaySelectSubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent) { }
@@ -30,7 +24,7 @@ namespace Assets.Scripts
             floatBody.Clear();
 
             TemplateContainer elementInstance = ElementInstance("UI/Frames/PlaySelectFrame");
-            
+
             _scvSelection = elementInstance.Q<ScrollView>("ScVSelection");
             _lblActionInfo = elementInstance.Q<Label>("LblActionInfo");
 
@@ -69,10 +63,9 @@ namespace Assets.Scripts
 
         private void UpdateSelection()
         {
-
             var offer = Storage.HexaGame.UnboundTileOffers;
 
-            for (int i = 0; i < offer.Count; i++  )
+            for (int i = 0; i < offer.Count; i++)
             {
                 var p = offer[i];
                 var tileOffer = GameConfig.TILE_COSTS[p];
@@ -90,36 +83,40 @@ namespace Assets.Scripts
                     case TileType.Home:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileHome);
                         break;
+
                     case TileType.Grass:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileGrass);
                         break;
+
                     case TileType.Water:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileWater);
                         break;
+
                     case TileType.Tree:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileTrees);
                         break;
+
                     case TileType.Mountain:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileMountain);
                         break;
+
                     case TileType.Cave:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileCave);
                         break;
+
                     case TileType.Desert:
                         velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileDesert);
                         break;
                 }
-                
+
                 var number = new byte();
                 number = (byte)i;
                 tileCard.AddManipulator(new Clickable(() => OnTileCardClicked(number)));
 
                 _scvSelection.Add(tileCard);
-
             }
 
             _lblActionInfo.text = $"{_scvSelection.Children().Count()}/{Storage.HexaGame.SelectBase} Tile(s) available";
-
         }
 
         private void OnTileCardClicked(byte index)
@@ -128,7 +125,6 @@ namespace Assets.Scripts
             MainScreenState.SelectedCardIndex = index;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileSelect);
-
         }
     }
 }

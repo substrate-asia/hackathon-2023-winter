@@ -1,10 +1,8 @@
 using Assets.Scripts;
 using Substrate.Hexalem.Engine;
 using Substrate.Hexalem.Integration.Model;
-using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Integration.Helper;
 using Substrate.Integration.Model;
-using Substrate.NetApi.Model.Meta;
 using Substrate.NetApi.Model.Types;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +12,28 @@ using UnityEngine;
 public class StorageManager : Singleton<StorageManager>
 {
     public delegate void NextBlocknumberHandler(uint blocknumber);
+
     public event NextBlocknumberHandler OnNextBlocknumber;
 
     public delegate void HexaBoardChangedHandler(HexaBoard hexaBoard);
+
     public event HexaBoardChangedHandler OnChangedHexaBoard;
 
     public delegate void HexaPlayerChangedHandler(HexaPlayer hexaPlayer);
+
     public event HexaPlayerChangedHandler OnChangedHexaPlayer;
 
-    public delegate void HexaSelectionChangedHandler(List<byte>  hexaSelection);
+    public delegate void HexaSelectionChangedHandler(List<byte> hexaSelection);
+
     public event HexaSelectionChangedHandler OnChangedHexaSelection;
 
     public delegate void NextPlayerTurnHandler(byte playerTurn);
+
     public event NextPlayerTurnHandler OnNextPlayerTurn;
+
+    public delegate void BoardStateChangedHandler(HexBoardState boardState);
+
+    public event BoardStateChangedHandler OnBoardStateChanged;
 
     public NetworkManager Network => NetworkManager.GetInstance();
 
@@ -153,7 +160,7 @@ public class StorageManager : Singleton<StorageManager>
         }
 
         var newPlayer = newGame.HexaTuples[playerIndex].player;
-        if (oldGame == null ||  !oldGame.HexaTuples[playerIndex].player.Value.SequenceEqual(newPlayer.Value))
+        if (oldGame == null || !oldGame.HexaTuples[playerIndex].player.Value.SequenceEqual(newPlayer.Value))
         {
             Debug.Log("[EVENT] OnChangedHexaPlayer");
             OnChangedHexaPlayer?.Invoke(newPlayer);
@@ -172,10 +179,16 @@ public class StorageManager : Singleton<StorageManager>
             OnChangedHexaSelection?.Invoke(newGame.UnboundTileOffers);
         }
 
-        if (oldGame == null || oldGame.PlayerTurn != newGame.PlayerTurn)
+        if (oldGame == null || oldGame.PlayerTurn != newGame.PlayerTurn || oldGame.HexBoardRound != newGame.HexBoardRound)
         {
             Debug.Log("[EVENT] OnNextPlayerTurn");
             OnNextPlayerTurn?.Invoke(newGame.PlayerTurn);
+        }
+
+        if (oldGame == null || oldGame.HexBoardState != newGame.HexBoardState )
+        {
+            Debug.Log("[EVENT] OnBoardStateChanged");
+            OnBoardStateChanged?.Invoke(newGame.HexBoardState);
         }
     }
 
@@ -192,4 +205,7 @@ public class StorageManager : Singleton<StorageManager>
     }
 
     public int? PlayerIndex(Account account) => HexaGame?.HexaTuples.FindIndex(p => p.player.Id.SequenceEqual(account.Bytes));
+
+    public HexaPlayer Player(int playerIndex) => HexaGame?.HexaTuples[playerIndex].player;
+    public HexaBoard Board(int playerIndex) => HexaGame?.HexaTuples[playerIndex].board;
 }

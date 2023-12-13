@@ -1,13 +1,7 @@
 ﻿using Assets.Scripts.ScreenStates;
-using Substrate.Hexalem.Engine;
 using Substrate.Integration.Helper;
-using System;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.Tilemaps;
 using UnityEngine.UIElements;
-using UnityEngine.WSA;
 
 namespace Assets.Scripts
 {
@@ -38,7 +32,6 @@ namespace Assets.Scripts
 
             _lblActionTitle = elementInstance.Q<Label>("LblActionTitle");
             _lblActionInfo = elementInstance.Q<Label>("LblActionInfo");
-
 
             // add element
             floatBody.Add(elementInstance);
@@ -75,6 +68,5 @@ namespace Assets.Scripts
         {
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
-
     }
 }

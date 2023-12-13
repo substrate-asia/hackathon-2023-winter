@@ -1,8 +1,4 @@
 ﻿using Substrate.Integration;
-using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
 using System.Numerics;
 using System.Threading;
 using UnityEngine;
@@ -38,7 +34,7 @@ namespace Assets.Scripts.ScreenStates
             instance.style.height = new Length(98, LengthUnit.Percent);
 
             var topBound = instance.Q<VisualElement>("TopBound");
-            
+
             _lblAccount = topBound.Query<Label>("LblAccount");
             _lblAddress = topBound.Query<Label>("LblAddress");
             _lblToken = topBound.Query<Label>("LblToken");
@@ -83,7 +79,7 @@ namespace Assets.Scripts.ScreenStates
                 _lblConnection.style.color = GameConstant.PastelGreen;
             }
             else
-            { 
+            {
                 _lblConnection.text = "Offline";
                 _lblConnection.style.color = GameConstant.PastelRed;
             }
@@ -98,7 +94,7 @@ namespace Assets.Scripts.ScreenStates
                 _lblAccount.text = Network.CurrentAccountType.Value.ToString();
                 Debug.Log(Network.Client.Account.Value);
                 var address = Network.Client.Account.Value;
-                _lblAddress.text = address.Substring(0,6) + " ... " + address.Substring(20, 6);
+                _lblAddress.text = address.Substring(0, 6) + " ... " + address.Substring(20, 6);
             }
             else
             {

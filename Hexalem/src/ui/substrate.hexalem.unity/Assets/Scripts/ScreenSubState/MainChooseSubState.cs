@@ -148,6 +148,7 @@ namespace Assets.Scripts.ScreenStates
                     case Substrate.NetApi.Model.Rpc.TransactionEvent.Dropped:
                         _lblExtriniscUpdate.text = $"\"Gonna, drop this, bro.\"";
                         break;
+
                     default:
                         _lblExtriniscUpdate.text = $"\"No blue, funk soul bro!\"";
                         break;
