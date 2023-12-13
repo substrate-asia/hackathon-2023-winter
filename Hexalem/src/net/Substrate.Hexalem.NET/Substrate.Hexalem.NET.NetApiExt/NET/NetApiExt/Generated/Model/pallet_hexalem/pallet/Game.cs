@@ -50,6 +50,11 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         private Substrate.NetApi.Model.Types.Primitive.Bool _played;
         
         /// <summary>
+        /// >> last_played_block
+        /// </summary>
+        private Substrate.NetApi.Model.Types.Primitive.U32 _lastPlayedBlock;
+        
+        /// <summary>
         /// >> players
         /// </summary>
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 _players;
@@ -124,6 +129,18 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
+        public Substrate.NetApi.Model.Types.Primitive.U32 LastPlayedBlock
+        {
+            get
+            {
+                return this._lastPlayedBlock;
+            }
+            set
+            {
+                this._lastPlayedBlock = value;
+            }
+        }
+        
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 Players
         {
             get
@@ -173,6 +190,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             result.AddRange(Round.Encode());
             result.AddRange(PlayerTurn.Encode());
             result.AddRange(Played.Encode());
+            result.AddRange(LastPlayedBlock.Encode());
             result.AddRange(Players.Encode());
             result.AddRange(Selection.Encode());
             result.AddRange(SelectionSize.Encode());
@@ -192,6 +210,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             PlayerTurn.Decode(byteArray, ref p);
             Played = new Substrate.NetApi.Model.Types.Primitive.Bool();
             Played.Decode(byteArray, ref p);
+            LastPlayedBlock = new Substrate.NetApi.Model.Types.Primitive.U32();
+            LastPlayedBlock.Decode(byteArray, ref p);
             Players = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5();
             Players.Decode(byteArray, ref p);
             Selection = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1();

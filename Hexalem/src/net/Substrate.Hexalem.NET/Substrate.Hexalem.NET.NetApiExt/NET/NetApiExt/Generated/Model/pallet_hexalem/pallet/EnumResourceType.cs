@@ -11,24 +11,32 @@ using Substrate.NetApi.Model.Types.Base;
 using System.Collections.Generic;
 
 
-namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime
+namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
 {
     
     
-    public enum MultiSignature
+    public enum ResourceType
     {
         
-        Ed25519 = 0,
+        Mana = 0,
         
-        Sr25519 = 1,
+        Human = 1,
         
-        Ecdsa = 2,
+        Water = 2,
+        
+        Food = 3,
+        
+        Wood = 4,
+        
+        Stone = 5,
+        
+        Gold = 6,
     }
     
     /// <summary>
-    /// >> 143 - Variant[sp_runtime.MultiSignature]
+    /// >> 137 - Variant[pallet_hexalem.pallet.ResourceType]
     /// </summary>
-    public sealed class EnumMultiSignature : BaseEnumExt<MultiSignature, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.ed25519.Signature, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.sr25519.Signature, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.ecdsa.Signature>
+    public sealed class EnumResourceType : BaseEnum<ResourceType>
     {
     }
 }

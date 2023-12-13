@@ -143,6 +143,17 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
+        /// >> force_finish_turn
+        /// Contains a variant per dispatchable extrinsic that this pallet has.
+        /// </summary>
+        public static Method ForceFinishTurn(Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8 game_id)
+        {
+            System.Collections.Generic.List<byte> byteArray = new List<byte>();
+            byteArray.AddRange(game_id.Encode());
+            return new Method(8, "HexalemModule", 4, "force_finish_turn", byteArray.ToArray());
+        }
+        
+        /// <summary>
         /// >> root_delete_game
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
@@ -150,7 +161,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(game_id.Encode());
-            return new Method(8, "HexalemModule", 4, "root_delete_game", byteArray.ToArray());
+            return new Method(8, "HexalemModule", 5, "root_delete_game", byteArray.ToArray());
         }
     }
     
@@ -178,6 +189,16 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
+        /// >> BlocksToPlayLimit
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 BlocksToPlayLimit()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x0A");
+            return result;
+        }
+        
+        /// <summary>
         /// >> MaxHexGridSize
         /// </summary>
         public Substrate.NetApi.Model.Types.Primitive.U32 MaxHexGridSize()
@@ -200,21 +221,31 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// <summary>
         /// >> TileCosts
         /// </summary>
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileCost TileCosts()
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr15TileCost TileCosts()
         {
-            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr16TileCost();
-            result.Create("0x2800012800012800012000012000012000011000011000011000011800011800011800010800010" +
-                    "80001080001080001");
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr15TileCost();
+            result.Create("0x2800012800012800012000012000012000011000011000011000011800011800011800013800013" +
+                    "80001380001");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> TileResourceProductions
+        /// </summary>
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr8EnumResourceProductions TileResourceProductions()
+        {
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr8EnumResourceProductions();
+            result.Create("0x0001010100010302000102020001050404020403020301000002050202060103");
             return result;
         }
         
         /// <summary>
         /// >> WaterPerHuman
         /// </summary>
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent WaterPerHuman()
+        public Substrate.NetApi.Model.Types.Primitive.U8 WaterPerHuman()
         {
-            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent();
-            result.Create("0x32");
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x02");
             return result;
         }
         
@@ -241,20 +272,40 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// <summary>
         /// >> FoodPerTree
         /// </summary>
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent FoodPerTree()
+        public Substrate.NetApi.Model.Types.Primitive.U8 FoodPerTree()
         {
-            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic.per_things.Percent();
-            result.Create("0x32");
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x01");
             return result;
         }
         
         /// <summary>
-        /// >> HomeTile
+        /// >> DefaultPlayerResources
         /// </summary>
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile HomeTile()
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 DefaultPlayerResources()
         {
-            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
-            result.Create("0x08");
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8();
+            result.Create("0x01010000000000");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> DefaultWinningConditionGold
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 DefaultWinningConditionGold()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x0A");
+            return result;
+        }
+        
+        /// <summary>
+        /// >> DefaultWinningConditionHuman
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 DefaultWinningConditionHuman()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x07");
             return result;
         }
     }
@@ -313,11 +364,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         NotEnoughResources,
         
         /// <summary>
-        /// >> NotEnoughMana
-        /// </summary>
-        NotEnoughMana,
-        
-        /// <summary>
         /// >> NotEnoughPopulation
         /// </summary>
         NotEnoughPopulation,
@@ -333,14 +379,19 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         PlaceIndexOutOfBounds,
         
         /// <summary>
-        /// >> NoMoves
-        /// </summary>
-        NoMoves,
-        
-        /// <summary>
         /// >> PlayerNotOnTurn
         /// </summary>
         PlayerNotOnTurn,
+        
+        /// <summary>
+        /// >> PlayerNotInGame
+        /// </summary>
+        PlayerNotInGame,
+        
+        /// <summary>
+        /// >> CurrentPlayerCannotForceFinishTurn
+        /// </summary>
+        CurrentPlayerCannotForceFinishTurn,
         
         /// <summary>
         /// >> GameNotPlaying
@@ -371,5 +422,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> CannotLevelUp
         /// </summary>
         CannotLevelUp,
+        
+        /// <summary>
+        /// >> TileSurroundedByEmptyTiles
+        /// </summary>
+        TileSurroundedByEmptyTiles,
+        
+        /// <summary>
+        /// >> BlocksToPlayLimitNotPassed
+        /// </summary>
+        BlocksToPlayLimitNotPassed,
     }
 }

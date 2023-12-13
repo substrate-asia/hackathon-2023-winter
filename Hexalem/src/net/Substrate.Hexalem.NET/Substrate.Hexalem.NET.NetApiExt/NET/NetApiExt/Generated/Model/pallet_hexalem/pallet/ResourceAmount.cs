@@ -18,66 +18,66 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 135 - Composite[pallet_hexalem.pallet.TileCost]
+    /// >> 136 - Composite[pallet_hexalem.pallet.ResourceAmount]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
-    public sealed class TileCost : BaseType
+    public sealed class ResourceAmount : BaseType
     {
         
         /// <summary>
-        /// >> tile_to_buy
+        /// >> resource_type
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile _tileToBuy;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceType _resourceType;
         
         /// <summary>
-        /// >> cost
+        /// >> amount
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount _cost;
+        private Substrate.NetApi.Model.Types.Primitive.U8 _amount;
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile TileToBuy
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceType ResourceType
         {
             get
             {
-                return this._tileToBuy;
+                return this._resourceType;
             }
             set
             {
-                this._tileToBuy = value;
+                this._resourceType = value;
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount Cost
+        public Substrate.NetApi.Model.Types.Primitive.U8 Amount
         {
             get
             {
-                return this._cost;
+                return this._amount;
             }
             set
             {
-                this._cost = value;
+                this._amount = value;
             }
         }
         
         public override string TypeName()
         {
-            return "TileCost";
+            return "ResourceAmount";
         }
         
         public override byte[] Encode()
         {
             var result = new List<byte>();
-            result.AddRange(TileToBuy.Encode());
-            result.AddRange(Cost.Encode());
+            result.AddRange(ResourceType.Encode());
+            result.AddRange(Amount.Encode());
             return result.ToArray();
         }
         
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            TileToBuy = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
-            TileToBuy.Decode(byteArray, ref p);
-            Cost = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount();
-            Cost.Decode(byteArray, ref p);
+            ResourceType = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceType();
+            ResourceType.Decode(byteArray, ref p);
+            Amount = new Substrate.NetApi.Model.Types.Primitive.U8();
+            Amount.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];

@@ -13,23 +13,28 @@ using Substrate.NetApi.Model.Types.Metadata.V14;
 using System.Collections.Generic;
 
 
-namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.sr25519
+namespace Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base
 {
     
     
     /// <summary>
-    /// >> 144 - Composite[sp_core.sr25519.Signature]
+    /// >> 130 - Array
     /// </summary>
-    [SubstrateNodeType(TypeDefEnum.Composite)]
-    public sealed class Signature : BaseType
+    [SubstrateNodeType(TypeDefEnum.Array)]
+    public sealed class Arr7U8 : BaseType
     {
         
-        /// <summary>
-        /// >> value
-        /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr64U8 _value;
+        private Substrate.NetApi.Model.Types.Primitive.U8[] _value;
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr64U8 Value
+        public override int TypeSize
+        {
+            get
+            {
+                return 7;
+            }
+        }
+        
+        public Substrate.NetApi.Model.Types.Primitive.U8[] Value
         {
             get
             {
@@ -43,25 +48,31 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.sr25519
         
         public override string TypeName()
         {
-            return "Signature";
+            return string.Format("[{0}; {1}]", new Substrate.NetApi.Model.Types.Primitive.U8().TypeName(), this.TypeSize);
         }
         
         public override byte[] Encode()
         {
             var result = new List<byte>();
-            result.AddRange(Value.Encode());
+            foreach (var v in Value){result.AddRange(v.Encode());};
             return result.ToArray();
         }
         
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            Value = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr64U8();
-            Value.Decode(byteArray, ref p);
+            var array = new Substrate.NetApi.Model.Types.Primitive.U8[TypeSize];
+            for (var i = 0; i < array.Length; i++) {var t = new Substrate.NetApi.Model.Types.Primitive.U8();t.Decode(byteArray, ref p);array[i] = t;};
             var bytesLength = p - start;
-            TypeSize = bytesLength;
             Bytes = new byte[bytesLength];
             System.Array.Copy(byteArray, start, Bytes, 0, bytesLength);
+            Value = array;
+        }
+        
+        public void Create(Substrate.NetApi.Model.Types.Primitive.U8[] array)
+        {
+            Value = array;
+            Bytes = Encode();
         }
     }
 }

@@ -25,39 +25,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     {
         
         /// <summary>
-        /// >> gold
+        /// >> resources
         /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _gold;
-        
-        /// <summary>
-        /// >> wood
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _wood;
-        
-        /// <summary>
-        /// >> stone
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _stone;
-        
-        /// <summary>
-        /// >> food
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _food;
-        
-        /// <summary>
-        /// >> water
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _water;
-        
-        /// <summary>
-        /// >> mana
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _mana;
-        
-        /// <summary>
-        /// >> humans
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _humans;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 _resources;
         
         /// <summary>
         /// >> hex_grid
@@ -69,87 +39,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// </summary>
         private Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8 _gameId;
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 Gold
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 Resources
         {
             get
             {
-                return this._gold;
+                return this._resources;
             }
             set
             {
-                this._gold = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 Wood
-        {
-            get
-            {
-                return this._wood;
-            }
-            set
-            {
-                this._wood = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 Stone
-        {
-            get
-            {
-                return this._stone;
-            }
-            set
-            {
-                this._stone = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 Food
-        {
-            get
-            {
-                return this._food;
-            }
-            set
-            {
-                this._food = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 Water
-        {
-            get
-            {
-                return this._water;
-            }
-            set
-            {
-                this._water = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 Mana
-        {
-            get
-            {
-                return this._mana;
-            }
-            set
-            {
-                this._mana = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 Humans
-        {
-            get
-            {
-                return this._humans;
-            }
-            set
-            {
-                this._humans = value;
+                this._resources = value;
             }
         }
         
@@ -185,13 +83,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         public override byte[] Encode()
         {
             var result = new List<byte>();
-            result.AddRange(Gold.Encode());
-            result.AddRange(Wood.Encode());
-            result.AddRange(Stone.Encode());
-            result.AddRange(Food.Encode());
-            result.AddRange(Water.Encode());
-            result.AddRange(Mana.Encode());
-            result.AddRange(Humans.Encode());
+            result.AddRange(Resources.Encode());
             result.AddRange(HexGrid.Encode());
             result.AddRange(GameId.Encode());
             return result.ToArray();
@@ -200,20 +92,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            Gold = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Gold.Decode(byteArray, ref p);
-            Wood = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Wood.Decode(byteArray, ref p);
-            Stone = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Stone.Decode(byteArray, ref p);
-            Food = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Food.Decode(byteArray, ref p);
-            Water = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Water.Decode(byteArray, ref p);
-            Mana = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Mana.Decode(byteArray, ref p);
-            Humans = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Humans.Decode(byteArray, ref p);
+            Resources = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8();
+            Resources.Decode(byteArray, ref p);
             HexGrid = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT6();
             HexGrid.Decode(byteArray, ref p);
             GameId = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8();
