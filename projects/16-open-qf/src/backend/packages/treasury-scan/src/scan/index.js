@@ -3,8 +3,9 @@ const {
 } = require("@open-qf/mongo");
 const {
   chain: { getBlockIndexer },
-  scan: { oneStepScan, handleExtrinsics },
+  scan: { oneStepScan, handleExtrinsics, scanKnownHeights },
   utils: { sleep },
+  env: { firstScanKnowHeights },
 } = require("@osn/scan-common");
 const { handleEvents } = require("./events");
 const { handleCall } = require("./calls");
@@ -22,6 +23,14 @@ async function handleBlock({ block, events, height }) {
 async function scan() {
   const db = getTreasuryDb();
   let toScanHeight = await db.getNextScanHeight();
+
+  if (firstScanKnowHeights()) {
+    await scanKnownHeights(
+      toScanHeight,
+      undefined,
+      handleBlock,
+    );
+  }
 
   /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
   while (true) {
