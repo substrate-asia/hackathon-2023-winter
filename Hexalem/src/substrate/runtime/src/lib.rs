@@ -500,8 +500,8 @@ parameter_types! {
 
 	pub const HexalemDefaultPlayerResources: [ResourceUnit; 7] = [1, 1, 0, 0, 0, 0, 0];
 
-	pub const HexalemDefaultWinningConditionGold: u8 = 10u8;
-	pub const HexalemDefaultWinningConditionHuman: u8 = 7u8;
+	pub const HexalemTargetGoalGold: u8 = 10u8;
+	pub const HexalemTargetGoalHuman: u8 = 7u8;
 
 }
 
@@ -537,8 +537,8 @@ impl pallet_hexalem::Config for Runtime {
 	type FoodPerTree = HexalemFoodPerTree;
 	type HomePerHumans = HexalemHomePerHumans;
 	type DefaultPlayerResources = HexalemDefaultPlayerResources;
-	type DefaultWinningConditionGold = HexalemDefaultWinningConditionGold;
-	type DefaultWinningConditionHuman = HexalemDefaultWinningConditionHuman;
+	type TargetGoalGold = HexalemTargetGoalGold;
+	type TargetGoalHuman = HexalemTargetGoalHuman;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

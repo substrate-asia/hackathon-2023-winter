@@ -45,7 +45,10 @@ pub mod pallet {
 	pub enum GameState {
 		Matchmaking,
 		Playing,
-		Finished, // Ready to reward players
+		Finished {
+			winner: u8
+		}, // Ready to reward players
+		Draw,
 	}
 
 	// Index used for referencing the TileCost
@@ -354,10 +357,10 @@ pub mod pallet {
 		type DefaultPlayerResources: Get<[ResourceUnit; 7]>;
 
 		#[pallet::constant]
-		type DefaultWinningConditionGold: Get<ResourceUnit>;
+		type TargetGoalGold: Get<ResourceUnit>;
 
 		#[pallet::constant]
-		type DefaultWinningConditionHuman: Get<ResourceUnit>;
+		type TargetGoalHuman: Get<ResourceUnit>;
 	}
 
 	// The pallet's runtime storage items.
@@ -709,9 +712,6 @@ pub mod pallet {
 				Error::<T>::PlayerNotOnTurn
 			);
 
-			// Handle next turn counting
-			game.next_turn();
-
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
 			game.last_played_block = current_block_number;
 
@@ -722,14 +722,21 @@ pub mod pallet {
 				Self::new_selection(&mut game, game_id)?;
 			}
 
+			// Updating the resources
+			Self::evaluate_board(&mut hex_board);
+
+			if Self::is_game_won(&hex_board) {
+				game.state = GameState::Finished { winner: game.get_player_turn() };
+			}
+
+			// Handle next turn counting
+			game.next_turn();
+
 			let next_player = game.borrow_players()[game.get_player_turn() as usize].clone();
 
 			GameStorage::<T>::set(&game_id, Some(game));
 
 			Self::deposit_event(Event::NewTurn { game_id, next_player });
-
-			// Updating the resources
-			Self::evaluate_board(&mut hex_board);
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
@@ -1118,6 +1125,10 @@ impl<T: Config> Pallet<T> {
 		}
 	}
 
+	fn is_game_won(hex_board: &HexBoard<T>) -> bool {
+		hex_board.resources[ResourceType::Human as usize] >= T::TargetGoalHuman::get()
+	}
+
 	fn tile_produce(
 		hex_board: &mut HexBoard<T>,
 		tile_resource_productions: &ResourceProductions,
@@ -1339,7 +1350,7 @@ trait GameProperties<T: Config> {
 			self.set_round(round);
 
 			if round > self.get_max_rounds() {
-				self.set_state(GameState::Finished);
+				self.set_state(GameState::Draw);
 			}
 		}
 	}
