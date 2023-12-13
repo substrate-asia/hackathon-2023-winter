@@ -305,7 +305,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void UpgradeTile_WithEnoughtRessources_ShouldSucceed()
         {
-            var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
+            var playerRessources = new byte[10] { 25, 25, 25, 25, 25, 25, 35, 0 , 0, 0};
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             (int q, int r) coords = (0, 0); // Only Home can be upgraded at the moment
 

@@ -348,14 +348,22 @@ namespace Substrate.Hexalem.Engine
         /// Check if a player has won the game
         /// </summary>
         /// <returns></returns>
-        public bool IsGameWon()
+        public bool IsFinished()
         {
             var player = HexaTuples[PlayerTurn].player;
 
             if (player.HasReachedTargetGoal())
             {
+                player.TargetState = TargetState.Achieved;
+                HexBoardState = HexBoardState.Finish;
                 Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.TargetGoal);
+                return true;
+            }
 
+            if (HexaTuples.Select(p => p.board).All(p => p.IsFull))
+            {
+                HexaTuples.ForEach(p => p.player.TargetState = TargetState.Failed);
+                HexBoardState = HexBoardState.Finish;
                 return true;
             }
 
@@ -723,6 +731,5 @@ namespace Substrate.Hexalem.Engine
             get => Value[10] == 1;
             set => Value[10] = (byte) (value ? 1 : 0);
         }
-
     }
 }
