@@ -26,6 +26,18 @@ namespace Substrate.Hexalem.Engine
         /// </summary>
         public List<byte> UnboundTileOffers { get; set; }
 
+        /// <summary>
+        /// Shortcut to current player board instance
+        /// </summary>
+        /// <returns></returns>
+        public HexaBoard CurrentPlayerBoard => HexaTuples[PlayerTurn].board;
+
+        /// <summary>
+        /// Shortcut to current player instance
+        /// </summary>
+        /// <returns></returns>
+        public HexaPlayer CurrentPlayer => HexaTuples[PlayerTurn].player;
+
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
             Id = id;
@@ -51,7 +63,7 @@ namespace Substrate.Hexalem.Engine
             PlayerTurn = 0;
             SelectBase = 2;
 
-            UnboundTileOffers = NewSelection(blockNumber, SelectBase);
+            RefillSelection(blockNumber, SelectBase);
         }
 
         public void NextRound(uint blockNumber)
@@ -67,7 +79,7 @@ namespace Substrate.Hexalem.Engine
         {
             HexaTuples.ForEach(p => { p.player.PostMove(blockNumber); p.board.PostMove(blockNumber); });
 
-            if (UnboundTileOffers.Count < (SelectBase + 1) / 2)
+            if (UnboundTileOffers.Count < (SelectBase / 2 + 1))
             {
                 Log.Debug("UnboundTileOffers is below half");
                 if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
@@ -76,7 +88,7 @@ namespace Substrate.Hexalem.Engine
                     SelectBase += 2;
                 }
 
-                UnboundTileOffers = RefillSelection(blockNumber, SelectBase);
+                RefillSelection(blockNumber, SelectBase);
             }
         }
 
@@ -86,20 +98,20 @@ namespace Substrate.Hexalem.Engine
         /// <param name="blockNumber"></param>
         /// <param name="selectBase">selection size</param>
         /// <returns></returns>
-        internal List<byte> NewSelection(uint blockNumber, int selectBase)
-        {
-            var offSet = (byte)(blockNumber % 32);
+        //internal List<byte> NewSelection(uint blockNumber, int selectBase)
+        //{
+        //    var offSet = (byte)(blockNumber % 32);
 
-            var result = new List<byte>();
+        //    var result = new List<byte>();
 
-            for (int i = 0; i < selectBase; i++)
-            {
-                byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
+        //    for (int i = 0; i < selectBase; i++)
+        //    {
+        //        byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
-                result.Add(tileIndex);
-            }
-            return result;
-        }
+        //        result.Add(tileIndex);
+        //    }
+        //    return result;
+        //}
 
         /// <summary>
         /// Refill selection
@@ -107,18 +119,16 @@ namespace Substrate.Hexalem.Engine
         /// <param name="blockNumber"></param>
         /// <param name="selectBase">selection size</param>
         /// <returns></returns>
-        internal List<byte> RefillSelection(uint blockNumber, int selectBase)
+        internal void RefillSelection(uint blockNumber, int selectBase)
         {
             var offSet = (byte)(blockNumber % 32);
-            var result = new List<byte>();
+
             for (int i = UnboundTileOffers.Count; i < selectBase; i++)
             {
                 byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
 
-                result.Add(tileIndex);
+                UnboundTileOffers.Add(tileIndex);
             }
-
-            return result;
         }
 
         /// <summary>
@@ -198,7 +208,7 @@ namespace Substrate.Hexalem.Engine
         /// <param name="selectionIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
-        internal bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
+        public bool ChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
             if (!CanChooseAndPlace(playerIndex, selectionIndex, coords))
             {
@@ -265,7 +275,7 @@ namespace Substrate.Hexalem.Engine
         /// <param name="playerIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
-        internal bool Upgrade(byte playerIndex, (int q, int r) coords)
+        public bool Upgrade(byte playerIndex, (int q, int r) coords)
         {
             if (!CanUpgrade(playerIndex, coords))
             {
@@ -297,7 +307,7 @@ namespace Substrate.Hexalem.Engine
         /// <param name="blockNumber"></param>
         /// <param name="playerIndex"></param>
         /// <returns></returns>
-        internal bool UpdateTurnState(uint blockNumber, byte playerIndex)
+        public bool UpdateTurnState(uint blockNumber, byte playerIndex)
         {
             // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
@@ -328,7 +338,7 @@ namespace Substrate.Hexalem.Engine
             }
             else
             {
-                UnboundTileOffers = NewSelection(blockNumber, SelectBase);
+                RefillSelection(blockNumber, SelectBase);
             }
 
             return true;
@@ -366,7 +376,7 @@ namespace Substrate.Hexalem.Engine
         /// <param name="blockNumber"></param>
         /// <param name="selectBase"></param>
         /// <returns></returns>
-        internal List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
+        public List<HexaTile> RenewSelection(uint blockNumber, int selectBase)
         {
             var values = Enum.GetValues(typeof(TileType))
                 .Cast<TileType>()
@@ -388,7 +398,7 @@ namespace Substrate.Hexalem.Engine
         /// </summary>
         /// <param name="blockNumber"></param>
         /// <param name="playerIndex"></param>
-        internal void CalcRewards(uint blockNumber, byte playerIndex)
+        public void CalcRewards(uint blockNumber, byte playerIndex)
         {
             var hexaPlayer = HexaTuples[playerIndex].player;
             var hexaBoard = HexaTuples[playerIndex].board;
@@ -532,13 +542,35 @@ namespace Substrate.Hexalem.Engine
 
         public object Clone()
         {
-            var cloneGame = new HexaGame((byte[])Id.Clone(), HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
+            var cloneGame = new HexaGame(
+                (byte[])Id.Clone(), 
+                HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
             {
-                Value = Value,
+                Value = (byte[])Value.Clone(),
                 UnboundTileOffers = UnboundTileOffers.Select(x => x).ToList()
             };
 
             return cloneGame;
+        }
+
+        public bool IsSame(HexaGame other)
+        {
+            if (other == null)
+                return true;
+
+            // Selection does not count
+            var isEqual = Id.SequenceEqual(other.Id);
+            isEqual = isEqual && Value.SequenceEqual(other.Value);
+            isEqual = isEqual && UnboundTileOffers.SequenceEqual(other.UnboundTileOffers);
+            isEqual = isEqual && HexaTuples.Count == other.HexaTuples.Count;
+
+            for(int i = 0; i < HexaTuples.Count; i++)
+            {
+                isEqual = isEqual && HexaTuples[i].player.Value.SequenceEqual(other.HexaTuples[i].player.Value);
+                isEqual = isEqual && HexaTuples[i].board.Value.SequenceEqual(other.HexaTuples[i].board.Value);
+            }
+
+            return isEqual;
         }
 
         public override string ToString()
@@ -635,6 +667,7 @@ namespace Substrate.Hexalem.Engine
 
             return result;
         }
+
 
     }
 

@@ -60,7 +60,7 @@ namespace Substrate.Integration
         }
 
         /// <summary>
-        /// Get own account informations.
+        /// Get owner account informations.
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>

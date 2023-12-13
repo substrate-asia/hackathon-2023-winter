@@ -1,4 +1,5 @@
 using Substrate.Hexalem;
+using System.Threading.Tasks;
 using UnityEngine;
 using static Assets.Scripts.ScreensSubState.MainPlaySubState;
 
@@ -6,7 +7,7 @@ namespace Assets.Scripts
 {
     public class GameEventManager : Singleton<GameEventManager>
     {
-        public delegate void StartNewGameHandler(string gameType);
+        public delegate Task StartNewGameHandler(string gameType);
         public static event StartNewGameHandler StartNewGameDelegate;
 
         public void OnStartNewGame(string gameType)

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Substrate.Hexalem.Engine;
-using Substrate.Hexalem.Integration.Model;
+﻿using Substrate.Hexalem.Engine;
 
 namespace Substrate.Hexalem.Test
 {
