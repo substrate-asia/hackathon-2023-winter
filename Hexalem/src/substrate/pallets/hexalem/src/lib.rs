@@ -814,7 +814,10 @@ impl<T: Config> Pallet<T> {
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
 		for i in 0..game.selection_size {
-			new_selection.push(selection_base[((i + offset) % 32) as usize].clone() % T::TileCosts::get().len().saturated_into::<u8>());
+			new_selection.push(
+				selection_base[((i + offset) % 32) as usize].clone() %
+					T::TileCosts::get().len().saturated_into::<u8>(),
+			);
 		}
 
 		// Casting
@@ -848,7 +851,10 @@ impl<T: Config> Pallet<T> {
 			let mut new_selection = game.selection.to_vec();
 
 			for i in selection_len..game.selection_size as usize {
-				new_selection.push(selection_base[(i + offset) % 32].clone() % T::TileCosts::get().len().saturated_into::<u8>());
+				new_selection.push(
+					selection_base[(i + offset) % 32].clone() %
+						T::TileCosts::get().len().saturated_into::<u8>(),
+				);
 			}
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
@@ -890,15 +896,24 @@ impl<T: Config> Pallet<T> {
 		match (tile_to_upgrade.get_type(), tile_to_upgrade.get_level()) {
 			(TileType::Home, tile_level) => {
 				Self::spend_resource(
-					&ResourceAmount { resource_type: ResourceType::Wood, amount: (tile_level + 1).saturating_mul(2) },
+					&ResourceAmount {
+						resource_type: ResourceType::Wood,
+						amount: (tile_level + 1).saturating_mul(2),
+					},
 					hex_board,
 				)?;
 				Self::spend_resource(
-					&ResourceAmount { resource_type: ResourceType::Stone, amount: (tile_level + 1).saturating_mul(2) },
+					&ResourceAmount {
+						resource_type: ResourceType::Stone,
+						amount: (tile_level + 1).saturating_mul(2),
+					},
 					hex_board,
 				)?;
 				Self::spend_resource(
-					&ResourceAmount { resource_type: ResourceType::Gold, amount: tile_level.saturating_mul(2) },
+					&ResourceAmount {
+						resource_type: ResourceType::Gold,
+						amount: tile_level.saturating_mul(2),
+					},
 					hex_board,
 				)?;
 			},
@@ -1103,6 +1118,36 @@ impl<T: Config> Pallet<T> {
 		}
 	}
 
+	fn tile_produce(
+		hex_board: &mut HexBoard<T>,
+		tile_resource_productions: &ResourceProductions,
+		multiplier: u8,
+	) -> () {
+		match tile_resource_productions {
+			ResourceProductions::None => (),
+			ResourceProductions::One(production1) => {
+				Self::produce(hex_board, production1, multiplier);
+			},
+			ResourceProductions::Two(production1, production2) => {
+				Self::produce(hex_board, production1, multiplier);
+				Self::produce(hex_board, production2, multiplier);
+			},
+		}
+	}
+
+	fn produce(hex_board: &mut HexBoard<T>, production: &ResourceProduction, multiplier: u8) {
+		if production.human_requirements == 0 {
+			hex_board.resources[production.produces.resource_type as usize] +=
+				production.produces.amount.saturating_mul(multiplier);
+		} else {
+			hex_board.resources[production.produces.resource_type as usize] += cmp::min(
+				production.produces.amount,
+				hex_board.resources[ResourceType::Human as usize] / production.human_requirements,
+			)
+			.saturating_mul(multiplier);
+		}
+	}
+
 	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
 		let board_stats: BoardStats = hex_board.get_stats();
 
@@ -1113,10 +1158,8 @@ impl<T: Config> Pallet<T> {
 
 		let food_and_water_eaten = cmp::min(
 			hex_board.resources[ResourceType::Food as usize].saturating_mul(T::FoodPerHuman::get()),
-			T::WaterPerHuman::get() * hex_board.resources[ResourceType::Water as usize], /* It is safe to multiply Percent, it
-			                                                                              * will
-			                                                                              * never
-			                                                                              * overflow */
+			hex_board.resources[ResourceType::Water as usize]
+				.saturating_mul(T::WaterPerHuman::get()),
 		);
 
 		let mut home_weighted: u8 = 0;
@@ -1135,40 +1178,20 @@ impl<T: Config> Pallet<T> {
 			1,
 		);
 
-		hex_board.resources[ResourceType::Water as usize] = hex_board.resources
-			[ResourceType::Water as usize]
-			.saturating_add(board_stats.get_tiles(TileType::Water).saturating_mul(2));
+		let tile_resource_productions = T::TileResourceProductions::get();
 
-		hex_board.resources[ResourceType::Food as usize] = hex_board.resources
-			[ResourceType::Food as usize]
-			.saturating_add(board_stats.get_tiles(TileType::Grass).saturating_mul(2))
-			.saturating_add(T::FoodPerTree::get() * board_stats.get_tiles(TileType::Tree));
+		for tile_type in [
+			TileType::Grass,
+			TileType::Water,
+			TileType::Mountain,
+			TileType::Tree,
+			TileType::Desert,
+			TileType::Cave,
+		] {
+			Self::tile_produce(hex_board, &tile_resource_productions[tile_type as usize], board_stats.get_tiles(tile_type));
+		}
 
-		hex_board.resources[ResourceType::Wood as usize] =
-			hex_board.resources[ResourceType::Wood as usize].saturating_add(cmp::min(
-				board_stats.get_tiles(TileType::Tree).saturating_mul(3),
-				hex_board.resources[ResourceType::Human as usize] / 2,
-			));
-
-		hex_board.resources[ResourceType::Stone as usize] = hex_board.resources
-			[ResourceType::Stone as usize]
-			.saturating_add(cmp::min(
-				board_stats.get_tiles(TileType::Mountain) * 4,
-				hex_board.resources[ResourceType::Human as usize] / 4,
-			))
-			.saturating_add(cmp::min(
-				board_stats.get_tiles(TileType::Cave) * 2,
-				hex_board.resources[ResourceType::Human as usize] / 2,
-			));
-
-		hex_board.resources[ResourceType::Gold as usize] =
-			hex_board.resources[ResourceType::Gold as usize].saturating_add(cmp::min(
-				board_stats.get_tiles(TileType::Cave),
-				hex_board.resources[ResourceType::Human as usize] / 3,
-			));
-
-		hex_board.resources[ResourceType::Human as usize] =
-			hex_board.resources[ResourceType::Human as usize].saturating_add(new_humans);
+		hex_board.resources[ResourceType::Human as usize] = new_humans;
 	}
 
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
