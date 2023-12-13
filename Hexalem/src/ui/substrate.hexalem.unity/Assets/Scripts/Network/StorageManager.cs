@@ -22,6 +22,8 @@ public class StorageManager : Singleton<StorageManager>
     public delegate void HexaPlayerChangedHandler(HexaPlayer hexaPlayer);
     public event HexaPlayerChangedHandler OnChangedHexaPlayer;
 
+    public delegate void HexaSelectionChangedHandler(List<byte>  hexaSelection);
+    public event HexaSelectionChangedHandler OnChangedHexaSelection;
 
     public delegate void NextPlayerTurnHandler(byte playerTurn);
     public event NextPlayerTurnHandler OnNextPlayerTurn;
@@ -34,11 +36,10 @@ public class StorageManager : Singleton<StorageManager>
 
     public HexaGame HexaGame { get; private set; }
 
-    public HexaBoard HexaBoard { get; private set; }
-
-    public HexaPlayer HexaPlayer { get; private set; }
-
     public bool UpdateHexalem { get; internal set; }
+
+    //public int PlayerIndex { get; private set; }
+
     /// <summary>
     /// Awake is called when the script instance is being loaded
     /// </summary>
@@ -117,18 +118,12 @@ public class StorageManager : Singleton<StorageManager>
         }
 
         var myBoard = await Network.Client.GetBoardAsync(Network.Client.Account.Value, CancellationToken.None);
-        //Debug.Log($"[StorageManager] my board exists? {myBoard != null}");
         var playerGame = myBoard != null ? await Network.Client.GetGameAsync(myBoard.GameId, CancellationToken.None) : null;
-        //Debug.Log($"[StorageManager] player game exists? {playerGame != null}");
         if (myBoard == null || playerGame == null)
         {
             HexaGame = null;
             return;
         }
-        var hexaBoard = HexalemWrapper.GetHexaBoard(myBoard);
-        // check for the event
-        HexaBoardDiff(HexaBoard, hexaBoard);
-        HexaBoard = hexaBoard;
 
         var playerBoards = new List<BoardSharp>();
         foreach (var player in playerGame.Players)
@@ -139,38 +134,42 @@ public class StorageManager : Singleton<StorageManager>
                 playerBoards.Add(playerBoard);
             }
         }
-        var hexaGame = HexalemWrapper.GetHexaGame(playerGame, playerBoards.ToArray());
+
+        HexaGame oldGame = null;
+        if (HexaGame != null)
+        {
+            oldGame = (HexaGame)HexaGame.Clone();
+        }
+        HexaGame = HexalemWrapper.GetHexaGame(playerGame, playerBoards.ToArray());
         // check for the event
-        HexaGameDiff(HexaGame, hexaGame);
-        HexaGame = hexaGame;
-
-        //Debug.Log($"[StorageManager] updated hexa game? {HexaGame != null}");
-
-        var playerIndex = PlayerIndex(Network.Client.Account);
-        var hexaPlayer = hexaGame.HexaTuples[playerIndex.Value].player;
-        HexaPlayerDiff(HexaPlayer, hexaPlayer);
-        HexaPlayer = hexaPlayer;
+        HexaGameDiff(oldGame, HexaGame, PlayerIndex(Network.Client.Account).Value);
     }
 
-    public void HexaBoardDiff(HexaBoard oldBoard, HexaBoard newBoard)
-    {
-        if (newBoard == null)
-        {
-            return;
-        }
-
-        if (oldBoard == null || !oldBoard.IsSame(newBoard))
-        {
-            Debug.Log("[EVENT] OnChangedHexaBoard");
-            OnChangedHexaBoard?.Invoke(newBoard);
-        }
-    }
-
-    public void HexaGameDiff(HexaGame oldGame, HexaGame newGame)
+    public void HexaGameDiff(HexaGame oldGame, HexaGame newGame, int playerIndex)
     {
         if (newGame == null)
         {
             return;
+        }
+
+        var newPlayer = newGame.HexaTuples[playerIndex].player;
+        if (oldGame == null ||  !oldGame.HexaTuples[playerIndex].player.Value.SequenceEqual(newPlayer.Value))
+        {
+            Debug.Log("[EVENT] OnChangedHexaPlayer");
+            OnChangedHexaPlayer?.Invoke(newPlayer);
+        }
+
+        var newBoard = newGame.HexaTuples[playerIndex].board;
+        if (oldGame == null || !oldGame.HexaTuples[playerIndex].board.IsSame(newBoard))
+        {
+            Debug.Log("[EVENT] OnChangedHexaBoard");
+            OnChangedHexaBoard?.Invoke(newBoard);
+        }
+
+        if (oldGame == null || !oldGame.UnboundTileOffers.SequenceEqual(newGame.UnboundTileOffers))
+        {
+            Debug.Log("[EVENT] OnSelectionChanged");
+            OnChangedHexaSelection?.Invoke(newGame.UnboundTileOffers);
         }
 
         if (oldGame == null || oldGame.PlayerTurn != newGame.PlayerTurn)
@@ -180,41 +179,16 @@ public class StorageManager : Singleton<StorageManager>
         }
     }
 
-    private void HexaPlayerDiff(HexaPlayer oldPlayer, HexaPlayer newPlayer)
+    public void SetTrainGame(HexaGame newGame, int playerIndex)
     {
-        if (oldPlayer == null)
+        HexaGame oldGame = null;
+        if (HexaGame != null)
         {
-            return;
+            oldGame = (HexaGame)HexaGame.Clone();
         }
-
-        Debug.Log($"Player: {oldPlayer[RessourceType.Mana]} -> {newPlayer[RessourceType.Mana]} Mana");
-
-        if (oldPlayer == null || !oldPlayer.Value.SequenceEqual(newPlayer.Value))
-        {
-            Debug.Log("[EVENT] OnChangedHexaPlayer");
-            OnChangedHexaPlayer?.Invoke(newPlayer);
-        }
-    }
-
-    public void SetTrainStates(HexaGame hexaGame)
-    {
         // check for the event
-        HexaGameDiff(HexaGame, hexaGame);
-        HexaGame = hexaGame;
-    }
-
-    public void SetTrainStates(HexaBoard hexaBoard)
-    {
-        // check for the event
-        HexaBoardDiff(HexaBoard, hexaBoard);
-        HexaBoard = hexaBoard;
-    }
-
-    public void SetTrainStates(HexaPlayer hexaPlayer)
-    {
-        // check for the event
-        HexaPlayerDiff(HexaPlayer, hexaPlayer);
-        HexaPlayer = hexaPlayer;
+        HexaGame = newGame;
+        HexaGameDiff(oldGame, newGame, playerIndex);
     }
 
     public int? PlayerIndex(Account account) => HexaGame?.HexaTuples.FindIndex(p => p.player.Id.SequenceEqual(account.Bytes));

@@ -178,7 +178,7 @@ namespace Assets.Scripts.ScreenStates
                 // increment block number
                 Blocknumber++;
 
-                var result = Game.FinishTurn(Blocknumber, Storage.HexaGame.Clone(), (byte)PlayerIndex);
+                var result = Game.FinishTurn(Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayerIndex);
 
                 if (result == null)
                 {
@@ -186,11 +186,8 @@ namespace Assets.Scripts.ScreenStates
                     return;
                 }
 
-                Storage.SetTrainStates(result);
+                Storage.SetTrainGame(result, PlayerIndex);
 
-                Storage.SetTrainStates(result.HexaTuples[PlayerIndex].board);
-
-                Storage.SetTrainStates(result.HexaTuples[PlayerIndex].player);
 
                 FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
             }

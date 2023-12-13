@@ -169,9 +169,7 @@ namespace Assets.Scripts.ScreenStates
             var hexaGame = new HexaGame(gameId, hexaTuple);
             hexaGame.Init(1234567);
 
-            Storage.SetTrainStates(hexaGame.HexaTuples[0].board);
-            Storage.SetTrainStates(hexaGame.HexaTuples[0].player);
-            Storage.SetTrainStates(hexaGame);
+            Storage.SetTrainGame(hexaGame, 0);
 
             FlowController.ChangeScreenState(ScreenState.PlayScreen);
         }

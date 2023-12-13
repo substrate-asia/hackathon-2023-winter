@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -49,7 +50,7 @@ namespace Assets.Scripts
             UpdateTileSelection();
 
             Grid.OnGridTileClicked += OnGridTileClicked;
-            Storage.OnChangedHexaBoard += OnChangedHexaBoard;
+            Storage.OnChangedHexaSelection += OnChangedHexaSelection;
         }
 
         public override void ExitState()
@@ -57,7 +58,7 @@ namespace Assets.Scripts
             Debug.Log($"[{this.GetType().Name}][SUB] ExitState");
 
             Grid.OnGridTileClicked -= OnGridTileClicked;
-            Storage.OnChangedHexaBoard -= OnChangedHexaBoard;
+            Storage.OnChangedHexaSelection -= OnChangedHexaSelection;
         }
 
         private void OnGridTileClicked(GameObject tileObject, int index)
@@ -100,19 +101,22 @@ namespace Assets.Scripts
 
         private void OnActionClicked(ClickEvent evt)
         {
-            var pIndex = 0;
-
-            var result = Game.ChooseAndPlace(12, Storage.HexaGame.Clone(), (byte)pIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
-
-            if (result == null)
+            if (!Storage.UpdateHexalem)
             {
-                return;
+                var result = Game.ChooseAndPlace(12, (HexaGame)Storage.HexaGame.Clone(), (byte)MainScreenState.PlayerIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
+
+                if (result == null)
+                {
+                    return;
+                }
+
+                Storage.SetTrainGame(result, MainScreenState.PlayerIndex);
+
             }
-
-            Storage.SetTrainStates(result);
-            Storage.SetTrainStates(result.HexaTuples[pIndex].board);
-
-            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
+            else
+            {
+                // TODO ADD On chain action ... 
+            }
         }
 
         private void OnCancelClicked(ClickEvent evt)
@@ -121,11 +125,13 @@ namespace Assets.Scripts
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
-        private void OnChangedHexaBoard(HexaBoard HexaBoard)
+        private void OnChangedHexaSelection(List<byte> hexaSelection)
         {
             Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
             MainScreenState.SelectedCardIndex = -1;
             MainScreenState.SelectedGridIndex = -1;
+
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
 
         private void UpdateTileSelection()
