@@ -6,7 +6,7 @@ import { cn } from "@/utils";
 export default function UserTabQFpowerContent() {
   return (
     <div className="space-y-5">
-      <Card className="space-y-1" hoverable={false}>
+      <Card className="space-y-1">
         <div className="text20semibold text-text-primary">What is QFpower</div>
         <div className="text14medium text-text-tertiary">
           QFpower is a score calculated by OpenQF based on on-chain activities

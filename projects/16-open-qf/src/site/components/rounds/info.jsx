@@ -14,7 +14,7 @@ export default function RoundProjectInfo({ data }) {
         className="col-span-2"
         head={
           <div>
-            <RoundCardMetadata data={data} />
+            <RoundCardMetadata data={data} linkTitle={false} />
 
             <p className="mt-4 text-text-secondary text14medium">
               {data.description}

@@ -6,7 +6,7 @@ export default function Card({
   coverPosition = "auto",
   className = "",
   children,
-  hoverable = true,
+  hoverable = false,
   size = "default",
   ...props
 }) {

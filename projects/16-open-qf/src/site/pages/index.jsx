@@ -8,7 +8,7 @@ const HomePage = withCommonPageWrapper(({ rounds }) => {
     <ListLayout title="Program Rounds" description="How OpenQF Works">
       <div className="space-y-5">
         {rounds.map((data, idx) => (
-          <RoundCard key={idx} data={data} />
+          <RoundCard key={idx} data={data} hoverable />
         ))}
       </div>
     </ListLayout>

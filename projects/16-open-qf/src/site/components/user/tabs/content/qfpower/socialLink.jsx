@@ -25,7 +25,7 @@ export default function UserTabQFpowerSocialLink() {
 
       <ul className="space-y-3">
         {SOCIAL_LINK_ITEMS.map((item) => (
-          <Card key={item.title} size="small" hoverable={false}>
+          <Card key={item.title} size="small">
             <div className="space-y-5">
               <div className="flex justify-between">
                 <div className="w-12 h-12 bg-fill-bg-quaternary"></div>

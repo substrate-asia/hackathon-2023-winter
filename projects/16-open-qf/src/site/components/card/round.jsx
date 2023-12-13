@@ -8,7 +8,18 @@ import { abbreviateBigNumber, toPrecision } from "@osn/common";
 import { DECIMALS } from "@/utils/constants";
 import IpfsImage from "../image/ipfs";
 
-export function RoundCardMetadata({ data }) {
+export function RoundCardMetadata({ data, linkTitle = true }) {
+  const title = linkTitle ? (
+    <Link
+      href={`/rounds/${data.id}`}
+      className="hover:underline hover:text-inherit"
+    >
+      {data.title}
+    </Link>
+  ) : (
+    data.title
+  );
+
   return (
     <div
       className={cn(
@@ -17,9 +28,7 @@ export function RoundCardMetadata({ data }) {
       )}
     >
       <div>
-        <Link href={`/rounds/${data.id}`} className="hover:underline">
-          <h3 className="text20semibold text-text-primary">{data.title}</h3>
-        </Link>
+        <h3 className="text20semibold text-text-primary">{title}</h3>
         <p className="mt-1 text14medium text-text-link">
           {dayjs(data.date.start).format("YYYY/MM/DD")} -
           {dayjs(data.date.end).format("YYYY/MM/DD")}
@@ -33,14 +42,19 @@ export function RoundCardMetadata({ data }) {
   );
 }
 
-export default function RoundCard({ data = {} }) {
+export default function RoundCard({
+  data = {},
+  hoverable = false,
+  linkTitle = true,
+}) {
   return (
     <Card
+      hoverable={hoverable}
       cover={<IpfsImage cid={data.bannerCid} className="object-cover" />}
       head={
         <>
           <div>
-            <RoundCardMetadata data={data} />
+            <RoundCardMetadata data={data} linkTitle={linkTitle} />
 
             <p className="mt-4 text-text-secondary text14medium line-clamp-3">
               {data.description}
