@@ -786,6 +786,12 @@ pub mod pallet {
 
 		#[pallet::call_index(5)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn receive_reward(origin: OriginFor<T>) -> DispatchResult {
+			todo!()
+		}
+
+		#[pallet::call_index(6)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn root_delete_game(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
 			ensure_root(origin)?;
 
