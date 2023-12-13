@@ -18,7 +18,10 @@
                 <ui:Button text="EXIT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnExit" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
-                <ui:Label tabindex="-1" text="hexalem.unity-v0.0.1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-regular font-comic font-color" style="font-size: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; -unity-text-align: middle-center;" />
+                <ui:Label tabindex="-1" text="hexalem.unity-v0.0.1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-comic font-color" style="font-size: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; -unity-text-align: middle-center;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblExtriniscUpdate" class="font-comic font-color" style="font-size: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; -unity-text-align: middle-center;" />
             </ui:VisualElement>
         </ui:VisualElement>
     </ui:VisualElement>

@@ -55,7 +55,7 @@ namespace Assets.Scripts
 
             var pIndex = 0;
 
-            HexaTile tile = MainScreenState.HexaGame.HexaTuples[pIndex].board[index];
+            HexaTile tile = Storage.HexaGame.HexaTuples[pIndex].board[index];
 
             if (tile.IsEmpty())
             {
@@ -70,7 +70,7 @@ namespace Assets.Scripts
         private void UpdateSelection()
         {
 
-            var offer = MainScreenState.HexaGame.UnboundTileOffers;
+            var offer = Storage.HexaGame.UnboundTileOffers;
 
             for (int i = 0; i < offer.Count; i++  )
             {
@@ -118,7 +118,7 @@ namespace Assets.Scripts
 
             }
 
-            _lblActionInfo.text = $"{_scvSelection.Children().Count()}/{MainScreenState.HexaGame.SelectBase} Tile(s) available";
+            _lblActionInfo.text = $"{_scvSelection.Children().Count()}/{Storage.HexaGame.SelectBase} Tile(s) available";
 
         }
 

@@ -49,6 +49,7 @@ namespace Assets.Scripts
             UpdateTileSelection();
 
             Grid.OnGridTileClicked += OnGridTileClicked;
+            Storage.OnChangedHexaBoard += OnChangedHexaBoard;
         }
 
         public override void ExitState()
@@ -56,20 +57,21 @@ namespace Assets.Scripts
             Debug.Log($"[{this.GetType().Name}][SUB] ExitState");
 
             Grid.OnGridTileClicked -= OnGridTileClicked;
+            Storage.OnChangedHexaBoard -= OnChangedHexaBoard;
         }
 
         private void OnGridTileClicked(GameObject tileObject, int index)
         {
             var pIndex = 0;
 
-            HexaTile tile = MainScreenState.HexaGame.HexaTuples[pIndex].board[index];
+            HexaTile tile = Storage.HexaGame.HexaTuples[pIndex].board[index];
             
             if (!tile.IsEmpty())
             {
                 return;
             }
 
-            if (!MainScreenState.HexaGame.CanChooseAndPlace((byte)pIndex, MainScreenState.SelectedCardIndex, index))
+            if (!Storage.HexaGame.CanChooseAndPlace((byte)pIndex, MainScreenState.SelectedCardIndex, index))
             {
                 Debug.Log($"Bad Chose & Place player {pIndex}, selection index {MainScreenState.SelectedCardIndex} and grid index {index}");
                 return;
@@ -100,22 +102,15 @@ namespace Assets.Scripts
         {
             var pIndex = 0;
 
-            var result = Game.ChooseAndPlace(12, MainScreenState.HexaGame , (byte)pIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
+            var result = Game.ChooseAndPlace(12, Storage.HexaGame.Clone(), (byte)pIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
 
             if (result == null)
             {
                 return;
             }
 
-            Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-            MainScreenState.SelectedCardIndex = -1;
-            MainScreenState.SelectedGridIndex = -1;
-
-            // update ressources
-            MainScreenState.UpdateRessources();
-
-            // update board
-            Grid.CreateGrid(MainScreenState.HexaGame.HexaTuples[pIndex].board);
+            Storage.SetTrainStates(result);
+            Storage.SetTrainStates(result.HexaTuples[pIndex].board);
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
@@ -126,12 +121,18 @@ namespace Assets.Scripts
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
+        private void OnChangedHexaBoard(HexaBoard HexaBoard)
+        {
+            Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+            MainScreenState.SelectedCardIndex = -1;
+            MainScreenState.SelectedGridIndex = -1;
+        }
 
         private void UpdateTileSelection()
         {
             var tileCard = MainScreenState.TileCardElement.Instantiate();
 
-            var selectTile = GameConfig.TILE_COSTS[MainScreenState.HexaGame.UnboundTileOffers[MainScreenState.SelectedCardIndex]];
+            var selectTile = GameConfig.TILE_COSTS[Storage.HexaGame.UnboundTileOffers[MainScreenState.SelectedCardIndex]];
 
             tileCard.Q<Label>("LblTileName").text = selectTile.TileToBuy.TileType.ToString() + "(Norm)";
 

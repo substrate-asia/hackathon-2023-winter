@@ -1,4 +1,5 @@
 ﻿using Substrate.Hexalem.Engine;
+using Substrate.Integration.Client;
 using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
@@ -10,14 +11,10 @@ namespace Assets.Scripts.ScreenStates
 {
     public class PlayScreenState : ScreenBaseState
     {
-        private System.Random _random = new System.Random();
-
         public uint Blocknumber { get; set; } = 123124;
 
         public int SelectedGridIndex { get; set; } = -1;
         public int SelectedCardIndex { get; set; } = -1;
-
-        public HexaGame HexaGame { get; internal set; }
 
         public VisualTreeAsset TileCardElement { get; }
 
@@ -39,6 +36,10 @@ namespace Assets.Scripts.ScreenStates
         private Label _lblGoldValue;
 
         private VisualElement _velEndTurnBox;
+
+
+        private List<string> _subscriptionOrder;
+        private Dictionary<string, ExtrinsicInfo> _subscriptionDict;
 
         public PlayScreenState(FlowController _flowController)
             : base(_flowController) {
@@ -81,8 +82,6 @@ namespace Assets.Scripts.ScreenStates
             _velEndTurnBox = instance.Q<VisualElement>("VelEndTurnBox");
             _velEndTurnBox.RegisterCallback<ClickEvent>(OnEndTurnClicked);
 
-            TestCreateGame();
-
             UpdateRessources();
 
             UpdateBoard();
@@ -92,6 +91,8 @@ namespace Assets.Scripts.ScreenStates
 
             // load initial sub state
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
+
+            Storage.OnChangedHexaBoard += OnChangedHexaBoard;
         }
 
         public override void ExitState()
@@ -100,24 +101,71 @@ namespace Assets.Scripts.ScreenStates
 
             // remove container
             FlowController.VelContainer.RemoveAt(1);
+
+            Storage.OnChangedHexaBoard -= OnChangedHexaBoard;
         }
 
-        private void TestCreateGame()
+        private void OnExtrinsicCheck()
         {
-
-            var playerId = new byte[32];
-            _random.NextBytes(playerId);
-
-            var hexaTuple = new List<(HexaPlayer, HexaBoard)>
+            if (_subscriptionOrder.Count == 0)
             {
-                { (new HexaPlayer(playerId), new HexaBoard(new byte[25])) }
-            };
 
-            var gameId = new byte[32];
-            _random.NextBytes(gameId);
-            HexaGame = new HexaGame(gameId, hexaTuple);
-            HexaGame.Init(1234567);
+            }
+
+            if (!Network.Client.IsConnected)
+            {
+                _subscriptionOrder.Clear();
+                _subscriptionDict.Clear();
+            }
         }
+
+        private void OnExtrinsicUpdated(string subscriptionId, ExtrinsicInfo extrinsicInfo)
+        {
+            Debug.Log($"[{GetType().Name}] OnExtrinsicUpdated {subscriptionId} {extrinsicInfo.TransactionEvent}");
+
+            if (!_subscriptionDict.ContainsKey(subscriptionId))
+            {
+                _subscriptionOrder.Add(subscriptionId);
+                _subscriptionDict.Add(subscriptionId, extrinsicInfo);
+            }
+            else
+            {
+                _subscriptionDict[subscriptionId] = extrinsicInfo;
+            }
+
+            var infoStr = "Unknown";
+            if (extrinsicInfo.ExtrinsicType != null)
+            {
+                infoStr = extrinsicInfo.ExtrinsicType.Contains(".") ? extrinsicInfo.ExtrinsicType.Split(".")[1] : extrinsicInfo.ExtrinsicType;
+            }
+
+            // dispatch to main thread as the call comes from outside
+            UnityMainThreadDispatcher.Instance().Enqueue(() =>
+            {
+                // clean up
+                if (extrinsicInfo.TransactionEvent == Substrate.NetApi.Model.Rpc.TransactionEvent.BestChainBlockIncluded && (extrinsicInfo.HasEvents || extrinsicInfo.Error != null))
+                {
+                    if (extrinsicInfo.Error != null)
+                    {
+
+                    }
+                    else if (extrinsicInfo.SystemExtrinsicEvent(out Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.Event? systemExtrinsicEvent, out string errorMsg))
+                    {
+
+                    }
+                    else
+                    {
+
+                    }
+                }
+            });
+
+            if (extrinsicInfo.IsCompleted)
+            {
+
+            }
+        }
+
 
         private void OnEndTurnClicked(ClickEvent evt)
         {
@@ -126,36 +174,47 @@ namespace Assets.Scripts.ScreenStates
             // increment block number
             Blocknumber++;
 
-            var result = Game.FinishTurn(Blocknumber, HexaGame, (byte)pIndex);
+            var result = Game.FinishTurn(Blocknumber, Storage.HexaGame.Clone(), (byte)pIndex);
 
             if (result == null)
             {
                 Debug.Log("Failed to finish turn!");
             }
 
+            Storage.SetTrainStates(result);
+
+            Storage.SetTrainStates(result.HexaTuples[pIndex].board);
+
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
+        }
+
+        private void OnChangedHexaBoard(HexaBoard HexaBoard)
+        {
+            
+            UpdateBoard();
+
             UpdateRessources();
 
-            Grid.CreateGrid(HexaGame.HexaTuples[pIndex].board);
         }
 
         public void UpdateRessources()
         {
             var pIndex = 0;
 
-            _lblManaValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Mana].ToString();
-            _lblHumansValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Humans].ToString();
-            _lblWaterValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Water].ToString();
-            _lblFoodValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Food].ToString();
-            _lblWoodValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Wood].ToString();
-            _lblStoneValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Stone].ToString();
-            _lblGoldValue.text = HexaGame.HexaTuples[pIndex].player[RessourceType.Gold].ToString();
+            _lblManaValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Mana].ToString();
+            _lblHumansValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Humans].ToString();
+            _lblWaterValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Water].ToString();
+            _lblFoodValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Food].ToString();
+            _lblWoodValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Wood].ToString();
+            _lblStoneValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Stone].ToString();
+            _lblGoldValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Gold].ToString();
         }
 
         private void UpdateBoard()
         {
             var pIndex = 0;
 
-            Grid.CreateGrid(HexaGame.HexaTuples[pIndex].board);
+            Grid.CreateGrid(Storage.HexaGame.HexaTuples[pIndex].board);
         }
 
     }
