@@ -1,5 +1,7 @@
 ﻿using Substrate.Hexalem.Engine;
 using Substrate.Integration.Client;
+using Substrate.Integration.Helper;
+using Substrate.NetApi.Model.Meta;
 using Substrate.NetApi.Model.Types.Base;
 using System;
 using System.Collections.Generic;
@@ -25,7 +27,7 @@ namespace Assets.Scripts.ScreenStates
         public Texture2D TileMountain { get; }
         public Texture2D TileCave { get; }
         public Texture2D TileDesert { get; }
-
+        public int PlayerIndex { get; private set; }
 
         private Label _lblManaValue;
         private Label _lblHumansValue;
@@ -60,6 +62,8 @@ namespace Assets.Scripts.ScreenStates
         {
             Debug.Log($"[{this.GetType().Name}] EnterState");
 
+            PlayerIndex = Storage.PlayerIndex(Network.Client.Account).Value;
+
             // filler is to avoid camera in the ui
             var topFiller = FlowController.VelContainer.Q<VisualElement>("VelTopFiller");
             topFiller.style.backgroundColor = GameConstant.ColorDark;
@@ -82,17 +86,18 @@ namespace Assets.Scripts.ScreenStates
             _velEndTurnBox = instance.Q<VisualElement>("VelEndTurnBox");
             _velEndTurnBox.RegisterCallback<ClickEvent>(OnEndTurnClicked);
 
-            UpdateRessources();
-
-            UpdateBoard();
-
             // add container
             FlowController.VelContainer.Add(instance);
 
             // load initial sub state
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
 
+            // initial update
+            OnChangedHexaPlayer(Storage.HexaGame.HexaTuples[PlayerIndex].player);
+            OnChangedHexaBoard(Storage.HexaGame.HexaTuples[PlayerIndex].board);
+
             Storage.OnChangedHexaBoard += OnChangedHexaBoard;
+            Storage.OnChangedHexaPlayer += OnChangedHexaPlayer;
         }
 
         public override void ExitState()
@@ -166,55 +171,49 @@ namespace Assets.Scripts.ScreenStates
             }
         }
 
-
         private void OnEndTurnClicked(ClickEvent evt)
         {
-            var pIndex = 0;
-
-            // increment block number
-            Blocknumber++;
-
-            var result = Game.FinishTurn(Blocknumber, Storage.HexaGame.Clone(), (byte)pIndex);
-
-            if (result == null)
+            if (!Storage.UpdateHexalem)
             {
-                Debug.Log("Failed to finish turn!");
+                // increment block number
+                Blocknumber++;
+
+                var result = Game.FinishTurn(Blocknumber, Storage.HexaGame.Clone(), (byte)PlayerIndex);
+
+                if (result == null)
+                {
+                    Debug.Log("Failed to finish turn!");
+                    return;
+                }
+
+                Storage.SetTrainStates(result);
+
+                Storage.SetTrainStates(result.HexaTuples[PlayerIndex].board);
+
+                Storage.SetTrainStates(result.HexaTuples[PlayerIndex].player);
+
+                FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
             }
-
-            Storage.SetTrainStates(result);
-
-            Storage.SetTrainStates(result.HexaTuples[pIndex].board);
-
-            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
+            else
+            {
+                Debug.Log("Not implemented!!!!");
+            }
         }
 
         private void OnChangedHexaBoard(HexaBoard HexaBoard)
         {
-            
-            UpdateBoard();
-
-            UpdateRessources();
-
+            Grid.CreateGrid(HexaBoard);
         }
 
-        public void UpdateRessources()
+        private void OnChangedHexaPlayer(HexaPlayer hexaPlayer)
         {
-            var pIndex = 0;
-
-            _lblManaValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Mana].ToString();
-            _lblHumansValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Humans].ToString();
-            _lblWaterValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Water].ToString();
-            _lblFoodValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Food].ToString();
-            _lblWoodValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Wood].ToString();
-            _lblStoneValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Stone].ToString();
-            _lblGoldValue.text = Storage.HexaGame.HexaTuples[pIndex].player[RessourceType.Gold].ToString();
-        }
-
-        private void UpdateBoard()
-        {
-            var pIndex = 0;
-
-            Grid.CreateGrid(Storage.HexaGame.HexaTuples[pIndex].board);
+            _lblManaValue.text = hexaPlayer[RessourceType.Mana].ToString();
+            _lblHumansValue.text = hexaPlayer[RessourceType.Humans].ToString();
+            _lblWaterValue.text = hexaPlayer[RessourceType.Water].ToString();
+            _lblFoodValue.text = hexaPlayer[RessourceType.Food].ToString();
+            _lblWoodValue.text = hexaPlayer[RessourceType.Wood].ToString();
+            _lblStoneValue.text = hexaPlayer[RessourceType.Stone].ToString();
+            _lblGoldValue.text = hexaPlayer[RessourceType.Gold].ToString();
         }
 
     }

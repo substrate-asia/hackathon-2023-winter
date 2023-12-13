@@ -45,6 +45,7 @@ namespace Assets.Scripts.ScreenStates
 
             _lblNodeVersion = topBound.Query<Label>("LblNodeVersion");
             _lblNodeUrl = topBound.Query<Label>("LblNodeUrl");
+            _lblNodeUrl.text = Network.NodeUrl;
             _lblConnection = topBound.Query<Label>("LblConnection");
             _lblBlockNumber = topBound.Query<Label>("LblBlockNumber");
 
@@ -78,13 +79,13 @@ namespace Assets.Scripts.ScreenStates
         {
             if (IsConnected)
             {
-                _lblConnection.text = "CONNECTED";
-                _lblConnection.style.color = GameConstant.ColorGreen;
+                _lblConnection.text = "Online";
+                _lblConnection.style.color = GameConstant.PastelGreen;
             }
             else
             { 
-                _lblConnection.text = "DISCONNECTED";
-                _lblConnection.style.color = GameConstant.ColorRed;
+                _lblConnection.text = "Offline";
+                _lblConnection.style.color = GameConstant.PastelRed;
             }
         }
 

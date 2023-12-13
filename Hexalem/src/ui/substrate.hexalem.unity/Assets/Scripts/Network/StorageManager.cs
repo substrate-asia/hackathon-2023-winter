@@ -4,6 +4,8 @@ using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Integration.Helper;
 using Substrate.Integration.Model;
+using Substrate.NetApi.Model.Meta;
+using Substrate.NetApi.Model.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -14,8 +16,12 @@ public class StorageManager : Singleton<StorageManager>
     public delegate void NextBlocknumberHandler(uint blocknumber);
     public event NextBlocknumberHandler OnNextBlocknumber;
 
-    public delegate void HexaBoardChangedHandler(HexaBoard HexaBoard);
+    public delegate void HexaBoardChangedHandler(HexaBoard hexaBoard);
     public event HexaBoardChangedHandler OnChangedHexaBoard;
+
+    public delegate void HexaPlayerChangedHandler(HexaPlayer hexaPlayer);
+    public event HexaPlayerChangedHandler OnChangedHexaPlayer;
+
 
     public delegate void NextPlayerTurnHandler(byte playerTurn);
     public event NextPlayerTurnHandler OnNextPlayerTurn;
@@ -26,11 +32,13 @@ public class StorageManager : Singleton<StorageManager>
 
     public AccountInfoSharp AccountInfo { get; private set; }
 
+    public HexaGame HexaGame { get; private set; }
+
     public HexaBoard HexaBoard { get; private set; }
 
-    public HexaGame HexaGame { get; private set; }
-    public bool UpdateHexalem { get; internal set; }
+    public HexaPlayer HexaPlayer { get; private set; }
 
+    public bool UpdateHexalem { get; internal set; }
     /// <summary>
     /// Awake is called when the script instance is being loaded
     /// </summary>
@@ -38,6 +46,8 @@ public class StorageManager : Singleton<StorageManager>
     {
         base.Awake();
         //Your code goes here
+
+        UpdateHexalem = true;
     }
 
     /// <summary>
@@ -107,7 +117,9 @@ public class StorageManager : Singleton<StorageManager>
         }
 
         var myBoard = await Network.Client.GetBoardAsync(Network.Client.Account.Value, CancellationToken.None);
+        //Debug.Log($"[StorageManager] my board exists? {myBoard != null}");
         var playerGame = myBoard != null ? await Network.Client.GetGameAsync(myBoard.GameId, CancellationToken.None) : null;
+        //Debug.Log($"[StorageManager] player game exists? {playerGame != null}");
         if (myBoard == null || playerGame == null)
         {
             HexaGame = null;
@@ -115,7 +127,7 @@ public class StorageManager : Singleton<StorageManager>
         }
         var hexaBoard = HexalemWrapper.GetHexaBoard(myBoard);
         // check for the event
-        ChangedHexaBoard(HexaBoard, hexaBoard);
+        HexaBoardDiff(HexaBoard, hexaBoard);
         HexaBoard = hexaBoard;
 
         var playerBoards = new List<BoardSharp>();
@@ -128,13 +140,19 @@ public class StorageManager : Singleton<StorageManager>
             }
         }
         var hexaGame = HexalemWrapper.GetHexaGame(playerGame, playerBoards.ToArray());
-
         // check for the event
-        NextPlayerTurn(HexaGame, hexaGame);
+        HexaGameDiff(HexaGame, hexaGame);
         HexaGame = hexaGame;
+
+        //Debug.Log($"[StorageManager] updated hexa game? {HexaGame != null}");
+
+        var playerIndex = PlayerIndex(Network.Client.Account);
+        var hexaPlayer = hexaGame.HexaTuples[playerIndex.Value].player;
+        HexaPlayerDiff(HexaPlayer, hexaPlayer);
+        HexaPlayer = hexaPlayer;
     }
 
-    public void ChangedHexaBoard(HexaBoard oldBoard, HexaBoard newBoard)
+    public void HexaBoardDiff(HexaBoard oldBoard, HexaBoard newBoard)
     {
         if (newBoard == null)
         {
@@ -143,11 +161,12 @@ public class StorageManager : Singleton<StorageManager>
 
         if (oldBoard == null || !oldBoard.IsSame(newBoard))
         {
+            Debug.Log("[EVENT] OnChangedHexaBoard");
             OnChangedHexaBoard?.Invoke(newBoard);
         }
     }
 
-    public void NextPlayerTurn(HexaGame oldGame, HexaGame newGame)
+    public void HexaGameDiff(HexaGame oldGame, HexaGame newGame)
     {
         if (newGame == null)
         {
@@ -156,21 +175,47 @@ public class StorageManager : Singleton<StorageManager>
 
         if (oldGame == null || oldGame.PlayerTurn != newGame.PlayerTurn)
         {
+            Debug.Log("[EVENT] OnNextPlayerTurn");
             OnNextPlayerTurn?.Invoke(newGame.PlayerTurn);
+        }
+    }
+
+    private void HexaPlayerDiff(HexaPlayer oldPlayer, HexaPlayer newPlayer)
+    {
+        if (oldPlayer == null)
+        {
+            return;
+        }
+
+        Debug.Log($"Player: {oldPlayer[RessourceType.Mana]} -> {newPlayer[RessourceType.Mana]} Mana");
+
+        if (oldPlayer == null || !oldPlayer.Value.SequenceEqual(newPlayer.Value))
+        {
+            Debug.Log("[EVENT] OnChangedHexaPlayer");
+            OnChangedHexaPlayer?.Invoke(newPlayer);
         }
     }
 
     public void SetTrainStates(HexaGame hexaGame)
     {
         // check for the event
-        NextPlayerTurn(HexaGame, hexaGame);
+        HexaGameDiff(HexaGame, hexaGame);
         HexaGame = hexaGame;
     }
 
     public void SetTrainStates(HexaBoard hexaBoard)
     {
         // check for the event
-        ChangedHexaBoard(HexaBoard, hexaBoard);
+        HexaBoardDiff(HexaBoard, hexaBoard);
         HexaBoard = hexaBoard;
     }
+
+    public void SetTrainStates(HexaPlayer hexaPlayer)
+    {
+        // check for the event
+        HexaPlayerDiff(HexaPlayer, hexaPlayer);
+        HexaPlayer = hexaPlayer;
+    }
+
+    public int? PlayerIndex(Account account) => HexaGame?.HexaTuples.FindIndex(p => p.player.Id.SequenceEqual(account.Bytes));
 }

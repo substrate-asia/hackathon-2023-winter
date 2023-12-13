@@ -45,6 +45,7 @@ namespace Assets.Scripts
         public Account Dave => Account.Build(KeyType.Sr25519, MiniSecretDave.ExpandToSecret().ToBytes(), MiniSecretDave.GetPair().Public.Key);
 
         private readonly string _nodeUrl = "ws://127.0.0.1:9944";
+        public string NodeUrl => _nodeUrl;
         
         private readonly NetworkType _networkType = NetworkType.Live;
 
