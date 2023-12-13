@@ -1,0 +1,36 @@
+# 第一阶段 生成测试工程
+generateEngine:
+  # 编译命令行方式 检查编译方式对应的合约目录
+  compile: truffle
+  directory:
+    - contracts
+    - migrations
+    - test
+  # 编译后文件命名
+  compiledNames: abi
+  # Sdk名称
+  sdkName: xxx
+  # 选择断言模板l路径-匹配模板
+  assertionPath: xxx
+
+# 第二阶段 生成测试用例文件
+generateTestCaseFile:
+  #是否开启覆盖率指标。默认1=开启，0=关闭
+  enableCoverageTarget: true
+  # 覆盖率总体水位线
+  coverageThreshold: 80.7
+  # 核心文件阈值 由覆盖率指标和核心文件阈值一起才是准出
+  coreFileThreshold: 70
+  # CI的选择器（支持Jenkins）
+  CISelector: xxx
+  # 扫描工序接入（flow）key代表添加的插件名称，xxx代表检查数据的位置
+  scanStages: {"stage1":xxx,"stage2":xxx,"stage3":xxx}
+  # 扫描权限需要包含如下和scanStages结合
+  # 比如scanStages有3个扫描工序scanWeight里面的配置2个包含在scanStages上面，则配置合法
+  scanWeight:
+    - xxx
+    - xxx
+  # 报告模式进行合并scanStages上面的步骤
+  reportMode: xxx
+
+

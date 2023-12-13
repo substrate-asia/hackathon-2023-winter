@@ -54,6 +54,6 @@ Framework, etc., please give description. For mature projects, it can be a branc
 ## Team information
 
 - **arjanjohan** [Backend developer] -  [Github](https://github.com/arjanjohan) - [Twitter](https://x.com/arjanjohan) - [Discord](https://discordapp.com/users/arjanjohan)
-- **arjanjohan** [Backend developer] -  [Github](https://github.com/arjanjohan) - [Twitter](https://x.com/arjanjohan) - [Discord](https://discordapp.com/users/arjanjohan)
+- **eurvin** [Frontend developer] -  [Github](https://github.com/eurvin) - [Twitter](https://x.com/eurvin) - [Discord](https://discordapp.com/users/eurvin)
 - **arjanjohan** [Backend developer] -  [Github](https://github.com/arjanjohan) - [Twitter](https://x.com/arjanjohan) - [Discord](https://discordapp.com/users/arjanjohan)
 - **arjanjohan** [Backend developer] -  [Github](https://github.com/arjanjohan) - [Twitter](https://x.com/arjanjohan) - [Discord](https://discordapp.com/users/arjanjohan)
