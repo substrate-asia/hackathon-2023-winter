@@ -88,5 +88,11 @@ namespace Substrate.Hexalem.Engine
             get => Value[8];
             set => Value[8] = value;
         }
+
+        public TargetState TargetState
+        {
+            get => (TargetState)Value[9];
+            set => Value[9] = (byte)value;
+        }
     }
 }

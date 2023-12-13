@@ -21,7 +21,6 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(hexaPlayers[0].TargetGoal, Is.EqualTo(TargetGoal.GoldThreshold));
             Assert.That(hexaPlayers[0].TargetValue, Is.EqualTo(10));
-
         }
     }
 }

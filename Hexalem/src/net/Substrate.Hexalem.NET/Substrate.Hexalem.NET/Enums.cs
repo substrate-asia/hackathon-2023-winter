@@ -66,6 +66,13 @@
         Finish,
     }
 
+    public enum TargetState
+    {
+        None,
+        Failed,
+        Achieved
+    }
+
     public enum TargetGoal
     {
         HumanThreshold,
