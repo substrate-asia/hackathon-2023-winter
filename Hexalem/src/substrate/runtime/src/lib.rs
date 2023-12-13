@@ -299,7 +299,7 @@ parameter_types! {
 	pub FeeMultiplier: Multiplier = Multiplier::one();
 
 	pub const HexalemMaxPlayers: u8 = 100;
-	pub const HexalemMinPlayers: u8 = 2;
+	pub const HexalemMinPlayers: u8 = 1;
 
 	pub const HexalemBlocksToPlayLimit: u8 = 10;
 
