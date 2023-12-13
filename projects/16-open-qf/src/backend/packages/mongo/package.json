@@ -4,6 +4,6 @@
   "main": "src/index.js",
   "dependencies": {
     "@osn/scan-common": "0.6.4",
-    "lodash.isempty": "^4.4.0"
+    "lodash.isempty": "4.4.0"
   }
 }

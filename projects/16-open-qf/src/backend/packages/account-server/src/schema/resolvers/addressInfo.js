@@ -15,6 +15,7 @@ const { chains } = require("../../consts");
 const { checkAndGetApis } = require("../../common/checkAndGetApis");
 const { queryFromApis } = require("../../common/queryFromApis");
 const { queryIdentityVerificationFromOneApi } = require("./identity/query");
+const { queryIsActiveVoter } = require("./governance/voter");
 
 async function getMemberFromOneApi(api, address) {
   if (!api.query.fellowshipCollective?.members) {
@@ -59,6 +60,7 @@ async function addressInfo(_, _args) {
   const fellowshipRank = await queryFromApis(apis, getMemberFromOneApi, [address]);
   const polkadotApis = checkAndGetApis(chains.polkadot);
   const hasVerifiedIdentity = await queryFromApis(polkadotApis, queryIdentityVerificationFromOneApi, [address]);
+  const isActiveVoter = await queryIsActiveVoter(address);
 
   return {
     isTipFinder,
@@ -69,6 +71,7 @@ async function addressInfo(_, _args) {
     fellowshipRank,
     isValidator,
     hasVerifiedIdentity,
+    isActiveVoter,
   };
 }
 

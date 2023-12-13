@@ -8,6 +8,7 @@ const addressInfo = /* GraphQL */ `
     fellowshipRank: Int
     isValidator: Boolean!
     hasVerifiedIdentity: Boolean!
+    isActiveVoter: Boolean!
   }
 `;
 
