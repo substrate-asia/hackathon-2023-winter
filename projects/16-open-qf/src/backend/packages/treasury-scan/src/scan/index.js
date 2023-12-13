@@ -9,6 +9,7 @@ const {
 } = require("@osn/scan-common");
 const { handleEvents } = require("./events");
 const { handleCall } = require("./calls");
+const { cleanFrom } = require("./delete");
 
 async function handleBlock({ block, events, height }) {
   const blockIndexer = getBlockIndexer(block);
@@ -23,6 +24,7 @@ async function handleBlock({ block, events, height }) {
 async function scan() {
   const db = getTreasuryDb();
   let toScanHeight = await db.getNextScanHeight();
+  await cleanFrom(toScanHeight);
 
   if (firstScanKnowHeights()) {
     await scanKnownHeights(
