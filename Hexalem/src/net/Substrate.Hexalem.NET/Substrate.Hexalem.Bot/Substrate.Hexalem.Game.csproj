@@ -7,6 +7,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj" />
+    <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.Engine.csproj" />
   </ItemGroup>
 
 </Project>

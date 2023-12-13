@@ -71,10 +71,4 @@
         HumanThreshold,
         GoldThreshold,
     }
-
-    public enum GameType
-    {
-        OffChain,
-        OnChain
-    }
 }

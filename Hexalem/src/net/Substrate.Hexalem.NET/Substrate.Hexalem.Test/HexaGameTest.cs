@@ -128,5 +128,24 @@ namespace Substrate.Hexalem.Test
             _hexaGame.SelectBase = (byte)(clonedGame.SelectBase + 1);
             Assert.IsFalse(clonedGame.IsSame(_hexaGame));
         }
+
+        [Test]
+        public void HexaGame_DifferentPlayed_ShouldNotBeEqual()
+        {
+            var clonedGame = _hexaGame.Clone();
+
+            _hexaGame.Played = !clonedGame.Played;
+            Assert.IsFalse(clonedGame.IsSame(_hexaGame));
+        }
+
+        [Test]
+        public void HexaGame_PlayedAccessor_ShouldSucceed()
+        {
+            _hexaGame.Played = true;
+            Assert.That(_hexaGame.Played, Is.True);
+
+            _hexaGame.Played = false;
+            Assert.That(_hexaGame.Played, Is.False);
+        }
     }
 }

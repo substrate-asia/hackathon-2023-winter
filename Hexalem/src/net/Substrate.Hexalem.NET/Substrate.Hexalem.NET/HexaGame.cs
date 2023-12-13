@@ -722,6 +722,10 @@ namespace Substrate.Hexalem.Engine
             set => value.CopyTo(Value, 6);
         }
 
-        public bool Played { get; set; } = false;
+        public bool Played
+        {
+            get => Value[11] != 0x00;
+            set => Value[11] = Convert.ToByte(value);
+        }
     }
 }
