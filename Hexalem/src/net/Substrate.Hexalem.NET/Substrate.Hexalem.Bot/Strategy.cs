@@ -114,12 +114,12 @@ namespace Substrate.Hexalem.Bot
         /// Expose available win condition a player can choose
         /// </summary>
         /// <returns></returns>
-        public static WinningCondition ChooseWinningCondition()
+        public static TargetGoal ChooseWinningCondition()
         {
-            var values = Enum.GetValues(typeof(WinningCondition))
-                .Cast<WinningCondition>().ToArray();
+            var values = Enum.GetValues(typeof(TargetGoal))
+                .Cast<TargetGoal>().ToArray();
 
-            return (WinningCondition)new System.Random().Next(values.Length);
+            return (TargetGoal)new System.Random().Next(values.Length);
         }
     }
 }

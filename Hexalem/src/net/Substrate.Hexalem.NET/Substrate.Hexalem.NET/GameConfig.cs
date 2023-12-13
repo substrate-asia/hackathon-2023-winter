@@ -16,7 +16,7 @@ namespace Substrate.Hexalem.Engine
         public const double FOOD_PER_TREE = 1;
 
         public const int GAME_STORAGE_SIZE = 16;
-        public const int PLAYER_STORAGE_SIZE = 8;
+        public const int PLAYER_STORAGE_SIZE = 9;
 
         // Default player ressources
         public const byte DEFAULT_MANA = 1;

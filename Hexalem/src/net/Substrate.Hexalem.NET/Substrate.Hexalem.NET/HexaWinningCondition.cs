@@ -1,34 +1,33 @@
 ﻿namespace Substrate.Hexalem.Engine
 {
-    public partial class HexaWinningCondition
+    public partial class HexaTargetGoal
     {
-        public static implicit operator byte(HexaWinningCondition p) => p.Value;
+        public static implicit operator byte(HexaTargetGoal p) => p.Value;
 
-        public static implicit operator HexaWinningCondition(byte p) => new HexaWinningCondition(p);
+        public static implicit operator HexaTargetGoal(byte p) => new HexaTargetGoal(p);
 
         public byte Value { get; set; }
 
-        public HexaWinningCondition(WinningCondition winningCondition, byte target)
+        public HexaTargetGoal(TargetGoal winningCondition, byte target)
         {
-            //Value = new byte[2] { (byte)winningCondition, target };
             Value = (byte)(((byte)((byte)winningCondition & 0x3) << 6) | (target & 0x3F));
         }
 
-        public HexaWinningCondition(byte bytes)
+        public HexaTargetGoal(byte bytes)
         {
             Value = bytes;
         }
     }
 
-    public partial class HexaWinningCondition
+    public partial class HexaTargetGoal
     {
-        public WinningCondition WinningCondition
+        public TargetGoal TargetGoal
         {
-            get => (WinningCondition)((Value >> 6) & 0x3);
+            get => (TargetGoal)((Value >> 6) & 0x3);
             set => Value = (byte)((Value & 0x3F) | (((byte)value & 0x3) << 6));
         }
 
-        public byte Target
+        public byte TargetValue
         {
             get => (byte)(Value & 0x3F);
             set => Value = (byte)((Value & 0xC0) | (value & 0x3F));

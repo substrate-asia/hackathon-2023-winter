@@ -1,6 +1,8 @@
-﻿namespace Substrate.Hexalem.Engine
+﻿using System;
+
+namespace Substrate.Hexalem.Engine
 {
-    public partial class HexaPlayer : IHexaBase
+    public partial class HexaPlayer : IHexaBase, ICloneable
     {
         public static implicit operator byte[](HexaPlayer p) => p.Value;
 
@@ -13,13 +15,14 @@
         public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
-            AddWinCondition(Engine.WinningCondition.HumanThreshold);
+            TargetGoal = TargetGoal.HumanThreshold;
+            TargetValue= GameConfig.DEFAULT_WINNING_CONDITION_HUMAN;
         }
 
-        public HexaPlayer(byte[] id, byte[] hash)
+        public HexaPlayer(byte[] id, byte[] value)
         {
             Id = id;
-            Value = hash;
+            Value = value;
         }
 
         public byte this[RessourceType ressourceType]
@@ -39,36 +42,23 @@
             this[RessourceType.Gold] = GameConfig.DEFAULT_GOLD;
         }
 
-        public void AddWinCondition(WinningCondition condition)
-        {
-            switch (condition)
-            {
-                case Engine.WinningCondition.GoldThreshold:
-                    WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_GOLD);
-                    break;
-
-                case Engine.WinningCondition.HumanThreshold:
-                    WinningCondition = new HexaWinningCondition(condition, GameConfig.DEFAULT_WINNING_CONDITION_HUMAN);
-                    break;
-            }
-        }
-
         /// <summary>
-        /// Check if player reach his win condition
+        /// Ha
         /// </summary>
         /// <returns></returns>
-        public bool HasWin()
+        public bool HasReachedTargetGoal()
         {
-            switch (WinningCondition.WinningCondition)
+            switch (TargetGoal)
             {
-                case Engine.WinningCondition.GoldThreshold:
-                    return this[RessourceType.Gold] >= WinningCondition.Target;
+                case TargetGoal.HumanThreshold:
+                    return this[RessourceType.Humans] >= TargetValue;
 
-                case Engine.WinningCondition.HumanThreshold:
-                    return this[RessourceType.Humans] >= WinningCondition.Target;
+                case TargetGoal.GoldThreshold:
+                    return this[RessourceType.Gold] >= TargetValue;
+
+                default:
+                    return false;
             }
-
-            return false;
         }
 
         public void NextRound(uint blockNumber)
@@ -79,24 +69,24 @@
         {
         }
 
-        internal HexaPlayer Clone()
+        public object Clone()
         {
-            var clonePlayer = new HexaPlayer((byte[])Id.Clone(), (byte[])Value.Clone());
-            clonePlayer.WinningCondition = new HexaWinningCondition(WinningCondition.WinningCondition, WinningCondition.Target);
-
-            return clonePlayer;
+            return new HexaPlayer((byte[])Id.Clone(), (byte[])Value.Clone());
         }
     }
 
     public partial class HexaPlayer
     {
-        /// <summary>
-        /// Winning condition selected by the player
-        /// </summary>
-        public HexaWinningCondition WinningCondition
+        public TargetGoal TargetGoal
         {
-            get => (HexaWinningCondition)Value[7];
-            set => Value[7] = value;
+            get => (TargetGoal)Value[7];
+            set => Value[7] = (byte)value;
+        }
+
+        public byte TargetValue
+        {
+            get => Value[8];
+            set => Value[8] = value;
         }
     }
 }

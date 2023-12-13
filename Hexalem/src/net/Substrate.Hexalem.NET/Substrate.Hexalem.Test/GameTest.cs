@@ -305,7 +305,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void UpgradeTile_WithEnoughtRessources_ShouldSucceed()
         {
-            var playerRessources = new byte[8] { 25, 25, 25, 25, 25, 25, 35, 0 };
+            var playerRessources = new byte[9] { 25, 25, 25, 25, 25, 25, 35, 0 , 0};
             var hexaPlayers = new List<HexaPlayer>() { new HexaPlayer(new byte[32]) };
             (int q, int r) coords = (0, 0); // Only Home can be upgraded at the moment
 
@@ -412,12 +412,12 @@ namespace Substrate.Hexalem.Test
             tuple.player[RessourceType.Water] = 10;
             tuple.player[RessourceType.Food] = 10;
 
-            Assert.That(HexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(5));
+            Assert.That(HexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(9));
 
             // But if I have not enough water for human
             tuple.player[RessourceType.Water] = 4;
 
-            Assert.That(HexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+            Assert.That(HexaGame.Evaluate(RessourceType.Humans, tuple.player, tuple.board.Stats()), Is.EqualTo(8));
         }
 
         [Test]
@@ -432,7 +432,7 @@ namespace Substrate.Hexalem.Test
             tuple.board[5] = new HexaTile(TileType.Water, 0, TilePattern.Normal);
 
             // Water reward is equal to nb water tiles on the field
-            Assert.That(HexaGame.Evaluate(RessourceType.Water, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+            Assert.That(HexaGame.Evaluate(RessourceType.Water, tuple.player, tuple.board.Stats()), Is.EqualTo(4));
         }
 
         [Test]
@@ -447,15 +447,15 @@ namespace Substrate.Hexalem.Test
             tuple.board[5] = new HexaTile(TileType.Grass, 0, TilePattern.Normal);
 
             // 2 grass field give 2 food
-            Assert.That(HexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+            Assert.That(HexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(4));
 
             // 1 forest field give 0 food
             tuple.board[6] = new HexaTile(TileType.Tree, 0, TilePattern.Normal);
-            Assert.That(HexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(2));
+            Assert.That(HexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(5));
 
             // 2 forest field give 0 food
             tuple.board[7] = new HexaTile(TileType.Tree, 0, TilePattern.Normal);
-            Assert.That(HexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(3));
+            Assert.That(HexaGame.Evaluate(RessourceType.Food, tuple.player, tuple.board.Stats()), Is.EqualTo(6));
         }
 
         [Test]

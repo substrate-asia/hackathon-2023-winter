@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Substrate.Hexalem.Engine
 {
-    public partial class HexaGame : IHexaBase
+    public partial class HexaGame : IHexaBase, ICloneable
     {
         public byte[] Id { get; set; }
 
@@ -144,6 +144,11 @@ namespace Substrate.Hexalem.Engine
         public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, (int, int) coords)
         {
             if (!EnsureCurrentPlayer(playerIndex))
+            {
+                return false;
+            }
+
+            if (!EnsureValidSelection(selectionIndex))
             {
                 return false;
             }
@@ -337,9 +342,9 @@ namespace Substrate.Hexalem.Engine
         {
             var player = HexaTuples[PlayerTurn].player;
 
-            if (player.HasWin())
+            if (player.HasReachedTargetGoal())
             {
-                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.WinningCondition.WinningCondition);
+                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.TargetGoal);
 
                 return true;
             }
@@ -517,19 +522,13 @@ namespace Substrate.Hexalem.Engine
             return true;
         }
 
-        public HexaGame Clone()
+        public object Clone()
         {
-            var gameId = (byte[])this.Id.Clone();
-            var players = this.HexaTuples.Select(x => (x.player.Clone(), x.board.Clone())).ToList();
-
-            var cloneGame = new HexaGame(gameId, players);
-
-            cloneGame.HexBoardState = this.HexBoardState;
-            cloneGame.HexBoardRound = this.HexBoardRound;
-            cloneGame.PlayerTurn = this.PlayerTurn;
-            cloneGame.SelectBase = this.SelectBase;
-
-            cloneGame.UnboundTileOffers = this.UnboundTileOffers.Select(x => x).ToList();
+            var cloneGame = new HexaGame((byte[])Id.Clone(), HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
+            {
+                Value = Value,
+                UnboundTileOffers = UnboundTileOffers.Select(x => x).ToList()
+            };
 
             return cloneGame;
         }
@@ -628,6 +627,7 @@ namespace Substrate.Hexalem.Engine
 
             return result;
         }
+
     }
 
     /// <summary>
@@ -687,6 +687,11 @@ namespace Substrate.Hexalem.Engine
             set => value.CopyTo(Value, 6);
         }
 
-        public bool Played { get; set; } = false;
+        public bool Played
+        {
+            get => Value[10] == 1;
+            set => Value[10] = (byte) (value ? 1 : 0);
+        }
+
     }
 }
