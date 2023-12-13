@@ -24,7 +24,7 @@ namespace Substrate.Hexalem.Bot
 
             foreach (PlayAction action in GetPossibleActions(initialState))
             {
-                var gameClone = initialState.Clone();
+                var gameClone = (HexaGame)initialState.Clone();
                 int score = Minimax(ApplyAction(gameClone, action), 0, true);
 
                 if (score > bestScore)

@@ -1,15 +1,12 @@
 ﻿using Schnorrkel.Keys;
 using Substrate.Integration;
 using Substrate.Integration.Client;
-using Substrate.Integration.Helper;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
-using Substrate.NetApi.Model.Types.Base;
-using Substrate.NetApi.Model.Types.Primitive;
 
 namespace Substrate.Hexalem.Integration.Test
 {
-    public class SubstrateNetworkTest
+    public class HexalemTest
     {
         public MiniSecret MiniSecretAlice => new MiniSecret(Utils.HexToByteArray("0xe5be9a5092b81bca64be81d212e7f2f9eba183bb7a90954f7b76361f6edb5c0a"), ExpandMode.Ed25519);
         public Account Alice => Account.Build(KeyType.Sr25519, MiniSecretAlice.ExpandToSecret().ToBytes(), MiniSecretAlice.GetPair().Public.Key);
@@ -36,21 +33,7 @@ namespace Substrate.Hexalem.Integration.Test
         }
 
         [Test]
-        public async Task ConnectionTestAsync()
-        {
-            Assert.That(_client, Is.Not.Null);
-            Assert.That(_client.IsConnected, Is.False);
-
-            Assert.That(await _client.ConnectAsync(true, true, CancellationToken.None), Is.True);
-            Assert.That(_client.IsConnected, Is.True);
-
-            Assert.That(await _client.DisconnectAsync(), Is.True);
-            Assert.That(_client.IsConnected, Is.False);
-        }
-
-
-        [Test]
-        public async Task Extrinsic_EventTestAsync()
+        public async Task CreateGameTestAsync()
         {
             Assert.That(_client, Is.Not.Null);
             Assert.That(_client.IsConnected, Is.False);
@@ -68,10 +51,11 @@ namespace Substrate.Hexalem.Integration.Test
                 }
             };
 
-            var subscriptionId = await _client.TransferKeepAliveAsync(Bob.ToAccountId32(), 1000000000000000, 1, CancellationToken.None);
+            var subscriptionId = await _client.CreateGameAsync(Alice, new List<Account>() { Alice, Bob }, 25, 1, CancellationToken.None);
             if (subscriptionId == null)
             {
                 Assert.Fail();
+                return;
             }
 
             await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromMinutes(1)));
@@ -81,6 +65,5 @@ namespace Substrate.Hexalem.Integration.Test
             Assert.That(await _client.DisconnectAsync(), Is.True);
             Assert.That(_client.IsConnected, Is.False);
         }
-
     }
 }

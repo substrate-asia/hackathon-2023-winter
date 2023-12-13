@@ -2,11 +2,12 @@ using Serilog;
 using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 namespace Substrate.Hexalem.Engine
 {
-    public class HexaBoard : IHexaBase
+    public class HexaBoard : IHexaBase, ICloneable
     {
         // Implicit operator to convert a HexGrid to a byte[]
         public static implicit operator byte[](HexaBoard hexGrid) => hexGrid.Value;
@@ -71,10 +72,9 @@ namespace Substrate.Hexalem.Engine
         {
         }
 
-        internal HexaBoard Clone()
+        public object Clone()
         {
-            var cloneBoard = new HexaBoard((byte[])Value.Clone());
-            return cloneBoard;
+            return new HexaBoard((byte[])Value.Clone());
         }
 
         /// <summary>
@@ -434,6 +434,16 @@ namespace Substrate.Hexalem.Engine
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Check if two boards are the same
+        /// </summary>
+        /// <param name="compare"></param>
+        /// <returns></returns>
+        public bool IsSame(HexaBoard compare)
+        {
+            return Value.SequenceEqual(compare.Value);
         }
     }
 }

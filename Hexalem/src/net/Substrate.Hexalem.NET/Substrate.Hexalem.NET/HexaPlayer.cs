@@ -1,6 +1,8 @@
-﻿namespace Substrate.Hexalem.Engine
+﻿using System;
+
+namespace Substrate.Hexalem.Engine
 {
-    public partial class HexaPlayer : IHexaBase
+    public partial class HexaPlayer : IHexaBase, ICloneable
     {
         public static implicit operator byte[](HexaPlayer p) => p.Value;
 
@@ -79,12 +81,12 @@
         {
         }
 
-        internal HexaPlayer Clone()
+        public object Clone()
         {
-            var clonePlayer = new HexaPlayer((byte[])Id.Clone(), (byte[])Value.Clone());
-            clonePlayer.WinningCondition = new HexaWinningCondition(WinningCondition.WinningCondition, WinningCondition.Target);
-
-            return clonePlayer;
+            return new HexaPlayer((byte[])Id.Clone(), (byte[])Value.Clone())
+            {
+                WinningCondition = new HexaWinningCondition(WinningCondition.WinningCondition, WinningCondition.Target)
+            };
         }
     }
 
