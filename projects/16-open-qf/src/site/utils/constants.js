@@ -54,3 +54,10 @@ export const TOAST_TYPES = {
  * @description Polkadot decimals
  */
 export const DECIMALS = 10;
+
+export const EmptyList = {
+  items: [],
+  page: 1,
+  pageSize: 0,
+  total: 0,
+};

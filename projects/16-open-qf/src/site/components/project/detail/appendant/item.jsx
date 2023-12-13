@@ -1,13 +1,4 @@
-import { noop } from "lodash-es";
-import { ReactComponent as LogoIpfs } from "./logo-ipfs.svg";
-
-function Ipfs({ onClick = noop }) {
-  return (
-    <div className="cursor-pointer" onClick={onClick}>
-      <LogoIpfs className="w-[20px] h-[20px]" />
-    </div>
-  );
-}
+import IpfsButton from "@/components/ipfsButton";
 
 function Content() {
   return (
@@ -26,7 +17,7 @@ function Meta() {
         <span className="text-text-tertiary">·</span>
         <span className="text-text-tertiary">12h ago</span>
       </div>
-      <Ipfs />
+      <IpfsButton />
     </div>
   );
 }

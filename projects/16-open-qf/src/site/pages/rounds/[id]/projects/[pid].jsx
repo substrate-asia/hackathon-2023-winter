@@ -1,7 +1,7 @@
 import DetailLayout from "@/components/layouts/detailLayout";
 import Contributions from "@/components/project/contributors";
 import ProjectDetail from "@/components/project/detail";
-// import Discussion from "@/components/project/discussion";
+import Discussion from "@/components/project/discussion";
 import Sidebar from "@/components/project/sidebar";
 import { ssrNextApi } from "@/services";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
@@ -13,7 +13,7 @@ const ProjectPage = withCommonPageWrapper(() => {
       <div className="flex flex-col gap-[20px]">
         <ProjectDetail />
         <Contributions />
-        {/* <Discussion /> */}
+        <Discussion />
       </div>
     </DetailLayout>
   );
@@ -34,6 +34,31 @@ export const getServerSideProps = async (context) => {
   return {
     props: {
       detail: detail ?? null,
+      comments: {
+        items: [
+          {
+            id: 1,
+            timestamp: new Date("2021-10-13T08:04:00.000Z").getTime(),
+            content:
+              "Velit amet auctor feugiat consectetur malesuada suspendisse facilisi. Eget fringilla eu semper vivamus morbi nunc arcu pellentesque ac.",
+            cid: "QmZQ4qfzUg2f4p5qUZ4qZvQZ7G6L7y3JqzgXt1d6VJv6uX",
+            author: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+            network: "polkadot",
+          },
+          {
+            id: 2,
+            timestamp: new Date("2021-10-13T08:04:00.000Z").getTime(),
+            content:
+              "Velit amet auctor feugiat consectetur malesuada suspendisse facilisi. Eget fringilla eu semper vivamus morbi nunc arcu pellentesque ac.",
+            cid: "QmZQ4qfzUg2f4p5qUZ4qZvQZ7G6L7y3JqzgXt1d6VJv6uX",
+            author: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+            network: "polkadot",
+          },
+        ],
+        total: 2,
+        page: 1,
+        pageSize: 10,
+      },
       ...loadCommonServerSideProps(context),
     },
   };
