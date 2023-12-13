@@ -4,6 +4,7 @@ import { RoundCardMetadata } from "@/components/card/round";
 import { abbreviateBigNumber, toPrecision } from "@osn/common";
 import { DECIMALS } from "@/utils/constants";
 import { cn } from "@/utils";
+import Link from "next/link";
 
 export default function RoundProjectInfo({ data }) {
   return (
@@ -22,7 +23,7 @@ export default function RoundProjectInfo({ data }) {
           </div>
         }
       >
-        <div className="flex justify-between gap-4">
+        <div className={cn("flex justify-between gap-4", "max-sm:flex-col")}>
           <div className="space-y-1">
             <div className="text14medium text-text-tertiary">
               Program Funders
@@ -32,7 +33,9 @@ export default function RoundProjectInfo({ data }) {
             </div>
           </div>
           <div className="flex items-end justify-end">
-            <Button>Apply</Button>
+            <Link href="/apply" className="max-sm:w-full">
+              <Button className="w-full">Apply</Button>
+            </Link>
           </div>
         </div>
       </Card>

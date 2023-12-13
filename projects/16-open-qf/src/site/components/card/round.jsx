@@ -78,7 +78,9 @@ export default function RoundCard({
         />
         <FooterItem label="Program Funders" content={data.founders?.[0]} />
         <div className={cn("flex items-end justify-end")}>
-          <Button className="max-sm:w-full">Apply</Button>
+          <Link href="/apply" className="max-sm:w-full">
+            <Button className="w-full">Apply</Button>
+          </Link>
         </div>
       </div>
     </Card>
