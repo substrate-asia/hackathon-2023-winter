@@ -10,25 +10,25 @@ namespace Substrate.Hexalem.Test
     internal class WinningConditionTests
     {
         [Test]
-        [TestCase(WinningCondition.HumanThreshold, 2)]
-        [TestCase(WinningCondition.HumanThreshold, 10)]
-        [TestCase(WinningCondition.GoldThreshold, 0)]
-        [TestCase(WinningCondition.GoldThreshold, 4)]
-        public void GetAndSetValue_ShouldSucceed(WinningCondition winning, int target)
+        [TestCase(TargetGoal.HumanThreshold, 2)]
+        [TestCase(TargetGoal.HumanThreshold, 10)]
+        [TestCase(TargetGoal.GoldThreshold, 0)]
+        [TestCase(TargetGoal.GoldThreshold, 4)]
+        public void GetAndSetValue_ShouldSucceed(TargetGoal winning, int target)
         {
-            var winningCondition = new HexaWinningCondition(winning, (byte)target);
+            var winningCondition = new HexaTargetGoal(winning, (byte)target);
 
-            Assert.That(winningCondition.WinningCondition, Is.EqualTo(winning));
-            Assert.That(winningCondition.Target, Is.EqualTo((byte)target));
+            Assert.That(winningCondition.TargetGoal, Is.EqualTo(winning));
+            Assert.That(winningCondition.TargetValue, Is.EqualTo((byte)target));
         }
 
         [Test]
         public void InitWithByte_ShouldSucceed()
         {
-            var winningCondition = new HexaWinningCondition(2);
+            var winningCondition = new HexaTargetGoal(2);
 
-            Assert.That(winningCondition.WinningCondition, Is.EqualTo(WinningCondition.HumanThreshold));
-            Assert.That(winningCondition.Target, Is.EqualTo((byte)2));
+            Assert.That(winningCondition.TargetGoal, Is.EqualTo(TargetGoal.HumanThreshold));
+            Assert.That(winningCondition.TargetValue, Is.EqualTo((byte)2));
         }
     }
 }

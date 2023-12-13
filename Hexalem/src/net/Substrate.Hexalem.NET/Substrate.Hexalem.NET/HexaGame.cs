@@ -10,7 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Substrate.Hexalem.Engine
 {
-    public partial class HexaGame : IHexaBase
+    public partial class HexaGame : IHexaBase, ICloneable
     {
         public byte[] Id { get; set; }
 
@@ -352,9 +352,9 @@ namespace Substrate.Hexalem.Engine
         {
             var player = HexaTuples[PlayerTurn].player;
 
-            if (player.HasWin())
+            if (player.HasReachedTargetGoal())
             {
-                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.WinningCondition.WinningCondition);
+                Log.Information("Player {num} has reached his win condition {winCondition} !", PlayerTurn, player.TargetGoal);
 
                 return true;
             }
@@ -532,19 +532,13 @@ namespace Substrate.Hexalem.Engine
             return true;
         }
 
-        public HexaGame Clone()
+        public object Clone()
         {
-            var gameId = (byte[])this.Id.Clone();
-            var players = this.HexaTuples.Select(x => (x.player.Clone(), x.board.Clone())).ToList();
-
-            var cloneGame = new HexaGame(gameId, players);
-
-            cloneGame.HexBoardState = this.HexBoardState;
-            cloneGame.HexBoardRound = this.HexBoardRound;
-            cloneGame.PlayerTurn = this.PlayerTurn;
-            cloneGame.SelectBase = this.SelectBase;
-
-            cloneGame.UnboundTileOffers = this.UnboundTileOffers.Select(x => x).ToList();
+            var cloneGame = new HexaGame((byte[])Id.Clone(), HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
+            {
+                Value = Value,
+                UnboundTileOffers = UnboundTileOffers.Select(x => x).ToList()
+            };
 
             return cloneGame;
         }
@@ -604,12 +598,13 @@ namespace Substrate.Hexalem.Engine
             {
                 case RessourceType.Mana:
                     result += (byte)(boardStats[TileType.Home] * 1); // 1 Mana from Home
-                    result += (byte)(player[RessourceType.Humans] / 3); // 1 Mana from 3 Humans
+                    result += (byte)(player[RessourceType.Humans] / 2); // 1 Mana from 3 Humans
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Humans:
+
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
                     result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
 
@@ -662,6 +657,7 @@ namespace Substrate.Hexalem.Engine
 
             return result;
         }
+
 
     }
 
@@ -724,8 +720,9 @@ namespace Substrate.Hexalem.Engine
 
         public bool Played
         {
-            get => Value[11] != 0x00;
-            set => Value[11] = Convert.ToByte(value);
+            get => Value[10] == 1;
+            set => Value[10] = (byte) (value ? 1 : 0);
         }
+
     }
 }

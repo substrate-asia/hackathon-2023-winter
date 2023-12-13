@@ -7,16 +7,16 @@ namespace Substrate.Hexalem.Engine
     {
         public const uint MAX_TURN_BLOCKS = 10;
 
-        public const double WATER_PER_HUMANS = 0.5;
+        public const double WATER_PER_HUMANS = 2;
         public const double FOOD_PER_HUMANS = 1;
         public const double HOME_PER_HUMANS = 3;
 
-        public const double WATER_PER_WATER = 1;
-        public const double FOOD_PER_GRASS = 1;
-        public const double FOOD_PER_TREE = 0.5;
+        public const double WATER_PER_WATER = 2;
+        public const double FOOD_PER_GRASS = 2;
+        public const double FOOD_PER_TREE = 1;
 
         public const int GAME_STORAGE_SIZE = 16;
-        public const int PLAYER_STORAGE_SIZE = 8;
+        public const int PLAYER_STORAGE_SIZE = 9;
 
         // Default player ressources
         public const byte DEFAULT_MANA = 1;
@@ -45,30 +45,6 @@ namespace Substrate.Hexalem.Engine
         }
 
         /// <summary>
-        /// Maximum humans in a home
-        /// </summary>
-        /// <param name="level"></param>
-        /// <returns></returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        public static int HumansPerHome(byte level)
-        {
-            switch (level)
-            {
-                case 0: // Normal to rare
-                    return 3;
-
-                case 1: // Rare to Epic
-                    return 5;
-
-                case 2: // Epic to Legendary
-                    return 8;
-
-                default:
-                    throw new InvalidOperationException($"Level {level} not supported...");
-            }
-        }
-
-        /// <summary>
         /// Map tile upgrade cost
         /// </summary>
         /// <param name="tileType"></param>
@@ -93,6 +69,33 @@ namespace Substrate.Hexalem.Engine
                     materialCost[(int)RessourceType.Stone] = (byte)((tileLevel + 1) * 2);
                     materialCost[(int)RessourceType.Gold] = (byte)(tileLevel * 2);
                     return materialCost;
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Map tile cost
+        /// </summary>
+        /// <param name="tileType"></param>
+        /// <param name="tileLevel"></param>
+        /// <returns></returns>
+        public static byte[]? MapTileCost(TileType tileType, byte tileLevel)
+        {
+            var materialCost = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+
+            switch (tileType)
+            {
+                case TileType.Grass:
+                case TileType.Water:
+                case TileType.Mountain:
+                case TileType.Tree:
+                case TileType.Desert:
+                case TileType.Cave:
+                    materialCost[(int)RessourceType.Mana] = (byte) (1 + tileLevel);
+                    return materialCost;
+
+                case TileType.Home:
+                    return null;
             }
             return null;
         }
