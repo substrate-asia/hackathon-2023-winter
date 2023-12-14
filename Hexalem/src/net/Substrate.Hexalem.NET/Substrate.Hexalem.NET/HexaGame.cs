@@ -132,7 +132,7 @@ namespace Substrate.Hexalem.Engine
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="playerIndex"></param>
         /// <param name="selectionIndex"></param>
@@ -337,7 +337,7 @@ namespace Substrate.Hexalem.Engine
             // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
             {
-                // do check for time here ... 
+                // do check for time here ...
 
                 //var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
                 //if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
@@ -481,14 +481,14 @@ namespace Substrate.Hexalem.Engine
                 return false;
             }
 
-            for(int i = 0; i < ressourceCost.Length; i++)
+            for (int i = 0; i < ressourceCost.Length; i++)
             {
                 if (player[(RessourceType)i] < ressourceCost[i])
                 {
                     Log.Error(LogMessages.MissingRessourcesToUpgrade(player, tile, (RessourceType)i, ressourceCost[i]));
                     return false;
                 }
-            }   
+            }
 
             return true;
         }
@@ -567,7 +567,7 @@ namespace Substrate.Hexalem.Engine
             isEqual = isEqual && UnboundTileOffers.SequenceEqual(other.UnboundTileOffers);
             isEqual = isEqual && HexaTuples.Count == other.HexaTuples.Count;
 
-            for(int i = 0; i < HexaTuples.Count; i++)
+            for (int i = 0; i < HexaTuples.Count; i++)
             {
                 isEqual = isEqual && HexaTuples[i].player.Value.SequenceEqual(other.HexaTuples[i].player.Value);
                 isEqual = isEqual && HexaTuples[i].board.Value.SequenceEqual(other.HexaTuples[i].board.Value);
@@ -670,8 +670,6 @@ namespace Substrate.Hexalem.Engine
 
             return result;
         }
-
-
     }
 
     /// <summary>
@@ -734,7 +732,7 @@ namespace Substrate.Hexalem.Engine
         public bool Played
         {
             get => Value[10] == 1;
-            set => Value[10] = (byte) (value ? 1 : 0);
+            set => Value[10] = (byte)(value ? 1 : 0);
         }
     }
 }
