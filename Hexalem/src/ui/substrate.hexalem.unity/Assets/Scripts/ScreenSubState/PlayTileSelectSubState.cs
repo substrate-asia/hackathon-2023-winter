@@ -15,8 +15,8 @@ namespace Assets.Scripts
 
         private VisualElement _velTileCardBox;
 
-        private Label _lblActionTitle;
-        private Label _lblActionCancel;
+        private Button _btnActionTitle;
+        private Button _btnActionCancel;
 
         public PlayTileSelectSubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent)
@@ -36,11 +36,12 @@ namespace Assets.Scripts
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
 
-            _lblActionTitle = elementInstance.Q<Label>("LblActionTitle");
-            _lblActionTitle.RegisterCallback<ClickEvent>(OnActionClicked);
+            _btnActionTitle = elementInstance.Q<Button>("BtnActionTitle");
+            _btnActionTitle.SetEnabled(false);
+            _btnActionTitle.RegisterCallback<ClickEvent>(OnActionClicked);
 
-            _lblActionCancel = elementInstance.Q<Label>("LblActionCancel");
-            _lblActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
+            _btnActionCancel = elementInstance.Q<Button>("BtnActionCancel");
+            _btnActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
 
             // add element
             BootomPadding.Add(elementInstance);
@@ -83,11 +84,13 @@ namespace Assets.Scripts
                 MainScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
+                _btnActionTitle.SetEnabled(true);
             }
             else if (MainScreenState.SelectedGridIndex == index)
             {
                 Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
                 MainScreenState.SelectedGridIndex = -1;
+                _btnActionTitle.SetEnabled(false);
             }
             else
             {
@@ -95,6 +98,7 @@ namespace Assets.Scripts
                 MainScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
+                _btnActionTitle.SetEnabled(true);
             }
         }
 
