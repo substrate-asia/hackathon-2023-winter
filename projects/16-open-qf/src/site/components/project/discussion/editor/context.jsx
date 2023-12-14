@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import Editor from ".";
-import { noop } from "lodash-es";
+import { useAccount } from "@/context/account";
 
 export const EditorContext = React.createContext();
 
@@ -10,6 +10,7 @@ export function EditorProvider({ onSubmit, children }) {
   const editorRef = React.useRef();
   const [content, setContent] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const account = useAccount();
 
   const forceEditor = useCallback(() => {
     editorRef.current?.querySelector("textarea")?.focus();
@@ -29,7 +30,7 @@ export function EditorProvider({ onSubmit, children }) {
       }}
     >
       {children}
-      <Editor ref={editorRef} onSubmit={onSubmit} />
+      {account && <Editor ref={editorRef} onSubmit={onSubmit} />}
     </EditorContext.Provider>
   );
 }
