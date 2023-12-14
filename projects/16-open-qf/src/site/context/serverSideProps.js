@@ -1,15 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 
 const ServerSidePropsContext = React.createContext();
 
 export const ServerSidePropsProvider = ({ serverSideProps, children }) => {
-  const [serverSidePropsState] = useState(serverSideProps);
   return (
-    <ServerSidePropsContext.Provider
-      value={{
-        serverSidePropsState,
-      }}
-    >
+    <ServerSidePropsContext.Provider value={{ serverSideProps }}>
       {children}
     </ServerSidePropsContext.Provider>
   );
@@ -26,8 +21,6 @@ function useServerSidePropsContext() {
 }
 
 export const useServerSideProps = () => {
-  const { serverSidePropsState } = useServerSidePropsContext(
-    ServerSidePropsContext,
-  );
-  return serverSidePropsState;
+  const { serverSideProps } = useServerSidePropsContext();
+  return serverSideProps;
 };

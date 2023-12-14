@@ -1,18 +1,24 @@
 const {
-  mongo: { ScanDb }, env: { getEnvOrThrow },
+  mongo: { ScanDb },
+  env: { getEnvOrThrow },
 } = require("@osn/scan-common");
 
 let db = null;
 
 let roundCol = null;
 let projectCol = null;
+let projectCommentCol = null;
 
 async function initQfServerDb() {
-  db = new ScanDb(getEnvOrThrow("MONGO_QF_SERVER_URL"), getEnvOrThrow("MONGO_QF_SERVER_NAME"),);
+  db = new ScanDb(
+    getEnvOrThrow("MONGO_QF_SERVER_URL"),
+    getEnvOrThrow("MONGO_QF_SERVER_NAME")
+  );
   await db.init();
 
   roundCol = await db.createCol("round");
   projectCol = await db.createCol("project");
+  projectCommentCol = await db.createCol("projectComment");
   _createIndexes().then(() => console.log("DB indexes created!"));
 }
 
@@ -39,6 +45,11 @@ async function getProjectCol() {
   return projectCol;
 }
 
+async function getProjectCommentCol() {
+  await makeSureInit(projectCommentCol);
+  return projectCommentCol;
+}
+
 function getQfServerDb() {
   return db;
 }
@@ -47,4 +58,5 @@ module.exports = {
   getQfServerDb,
   getRoundCol,
   getProjectCol,
-}
+  getProjectCommentCol,
+};

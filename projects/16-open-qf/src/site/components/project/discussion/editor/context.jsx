@@ -1,11 +1,12 @@
 import React, { useCallback, useState } from "react";
 import Editor from ".";
+import { noop } from "lodash-es";
 
 export const EditorContext = React.createContext();
 
 export default EditorContext;
 
-export function EditorProvider({ children }) {
+export function EditorProvider({ onSubmit, children }) {
   const editorRef = React.useRef();
   const [content, setContent] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -28,7 +29,7 @@ export function EditorProvider({ children }) {
       }}
     >
       {children}
-      <Editor ref={editorRef} />
+      <Editor ref={editorRef} onSubmit={onSubmit} />
     </EditorContext.Provider>
   );
 }

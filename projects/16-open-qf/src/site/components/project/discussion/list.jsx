@@ -58,18 +58,32 @@ function useSetEditorSuggestions() {
   }, [comments, setSuggestions]);
 }
 
+function EmptyContent() {
+  return (
+    <div className="flex p-[32px] justify-center text-text-tertiary text14medium">
+      No current discussions
+    </div>
+  );
+}
+
 export default function DiscussionList() {
   const { comments } = useServerSideProps();
 
   useSetEditorSuggestions();
 
+  let listContent = <EmptyContent />;
+
+  if (comments?.items?.length) {
+    listContent = (comments?.items || []).map((comment, index) => (
+      <BorderRow key={index}>
+        <DiscussionItem comment={comment} />
+      </BorderRow>
+    ));
+  }
+
   return (
     <div className="flex flex-col gap-[16px]">
-      {(comments?.items || []).map((comment, index) => (
-        <BorderRow key={index}>
-          <DiscussionItem comment={comment} />
-        </BorderRow>
-      ))}
+      {listContent}
       <Pagination
         page={comments?.page}
         pageSize={comments?.pageSize}

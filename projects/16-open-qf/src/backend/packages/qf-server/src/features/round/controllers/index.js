@@ -4,4 +4,6 @@ module.exports = {
   ...require("./projects"),
   ...require("./project"),
   ...require("./categories"),
+  ...require("./getComments"),
+  ...require("./postComment"),
 };

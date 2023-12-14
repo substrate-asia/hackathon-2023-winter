@@ -33,7 +33,7 @@ function Meta() {
 export default function DiscussionItem({ comment }) {
   return (
     <CommentProvider comment={comment}>
-      <div className="flex flex-col gap-[8px]">
+      <div className="flex flex-col gap-[8px] grow">
         <Meta />
         <Content />
         <Actions />

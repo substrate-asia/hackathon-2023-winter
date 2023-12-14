@@ -6,6 +6,7 @@ import Discussion from "@/components/project/discussion";
 import Sidebar from "@/components/project/sidebar";
 import { useServerSideProps } from "@/context/serverSideProps";
 import { ssrNextApi } from "@/services";
+import { EmptyList } from "@/utils/constants";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
 
@@ -13,8 +14,8 @@ const ProjectPage = withCommonPageWrapper(() => {
   const { roundId } = useServerSideProps();
 
   return (
-    <DetailLayout sidebar={<Sidebar />}>
-      <div className="flex flex-col gap-[20px]">
+    <DetailLayout
+      breadcrumb={
         <BreadCrumb
           items={[
             {
@@ -26,6 +27,10 @@ const ProjectPage = withCommonPageWrapper(() => {
             },
           ]}
         />
+      }
+      sidebar={<Sidebar />}
+    >
+      <div className="flex flex-col gap-[20px]">
         <ProjectDetail />
         <Contributions />
         <Discussion />
@@ -46,36 +51,16 @@ export const getServerSideProps = async (context) => {
     return to404();
   }
 
+  const { result: comments } = await ssrNextApi.fetch(
+    `/rounds/${roundId}/projects/${projectId}/comments`,
+  );
+
   return {
     props: {
       roundId,
       projectId,
       detail: detail ?? null,
-      comments: {
-        items: [
-          {
-            id: 1,
-            timestamp: new Date("2021-10-13T08:04:00.000Z").getTime(),
-            content:
-              "Velit amet auctor feugiat consectetur malesuada suspendisse facilisi. Eget fringilla eu semper vivamus morbi nunc arcu pellentesque ac.",
-            cid: "QmZQ4qfzUg2f4p5qUZ4qZvQZ7G6L7y3JqzgXt1d6VJv6uX",
-            author: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
-            network: "polkadot",
-          },
-          {
-            id: 2,
-            timestamp: new Date("2021-10-13T08:04:00.000Z").getTime(),
-            content:
-              "Velit amet auctor feugiat consectetur malesuada suspendisse facilisi. Eget fringilla eu semper vivamus morbi nunc arcu pellentesque ac.",
-            cid: "QmZQ4qfzUg2f4p5qUZ4qZvQZ7G6L7y3JqzgXt1d6VJv6uX",
-            author: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
-            network: "polkadot",
-          },
-        ],
-        total: 2,
-        page: 1,
-        pageSize: 10,
-      },
+      comments: comments ?? EmptyList,
       ...loadCommonServerSideProps(context),
     },
   };
