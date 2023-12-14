@@ -12,7 +12,6 @@ namespace Substrate.Hexalem.Integration.Model
         {
             GameId = gameId;
             State = game.State.Value;
-            MaxRounds = game.MaxRounds.Value;
             Round = game.Round.Value;
             PlayerTurn = game.PlayerTurn.Value;
             Played = game.Played.Value;
