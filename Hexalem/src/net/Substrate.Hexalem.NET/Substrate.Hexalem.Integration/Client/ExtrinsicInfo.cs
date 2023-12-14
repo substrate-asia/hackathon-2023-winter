@@ -1,6 +1,6 @@
-﻿using Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime;
-using Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_support.dispatch;
+﻿using Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_support.dispatch;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system;
+using Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_arithmetic;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime;
 using Substrate.Integration.Helper;
@@ -144,26 +144,26 @@ namespace Substrate.Integration.Client
                 case DispatchError.Module:
                     var moduleError = (ModuleError)dispatchError.Value2;
                     return dispatchError.Value.ToString() + $"[{(RuntimeEvent)moduleError.Index.Value}{moduleError.Index.Value}][{Utils.Bytes2HexString(moduleError.Error.Value.ToBytes())}]";
-                
+
                 case DispatchError.Token:
                     var enumTokenError = (EnumTokenError)dispatchError.Value2;
                     return dispatchError.Value.ToString() + $"[{enumTokenError.Value}]";
-                
+
                 case DispatchError.Arithmetic:
                     var enumArithmeticError = (EnumArithmeticError)dispatchError.Value2;
                     return dispatchError.Value.ToString() + $"[{enumArithmeticError.Value}]";
-                
+
                 case DispatchError.Transactional:
                     var enumTransactionalError = (EnumTransactionalError)dispatchError.Value2;
                     return dispatchError.Value.ToString() + $"[{enumTransactionalError.Value}]";
-               
+
                 default:
                     return dispatchError.Value.ToString();
             }
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="runtimeEvent"></param>

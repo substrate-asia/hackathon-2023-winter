@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Substrate.Hexalem.Engine
+﻿namespace Substrate.Hexalem.Engine
 {
     public class TileOffer
     {

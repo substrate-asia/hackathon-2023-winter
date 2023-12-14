@@ -159,7 +159,6 @@ namespace Substrate.Integration.Client
             return subscription;
         }
 
-
         /// <summary>
         ///
         /// </summary>

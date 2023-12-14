@@ -1,6 +1,4 @@
-﻿using Serilog;
-
-namespace Substrate.Hexalem.Engine
+﻿namespace Substrate.Hexalem.Engine
 {
     public partial class HexaTile
     {

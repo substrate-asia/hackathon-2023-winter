@@ -244,6 +244,21 @@ namespace Substrate.Hexalem.Engine
         /// Can upgrade a tile
         /// </summary>
         /// <param name="playerIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        public bool CanUpgrade(byte playerIndex, int gridIndex)
+        {
+            var (_, board) = HexaTuples[playerIndex];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return CanUpgrade(playerIndex, coords);
+        }
+
+        /// <summary>
+        /// Can upgrade a tile
+        /// </summary>
+        /// <param name="playerIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
         public bool CanUpgrade(byte playerIndex, (int q, int r) coords)
@@ -253,20 +268,30 @@ namespace Substrate.Hexalem.Engine
                 return false;
             }
 
-            var (player, board) = HexaTuples[PlayerTurn];
+            var (player, board) = HexaTuples[playerIndex];
 
             var tile = (HexaTile)board[coords.q, coords.r];
-            if (!EnsureUpgradableTile(tile))
-            {
-                return false;
-            }
-
             if (!EnsureRessourcesToUpgrade(player, tile))
             {
                 return false;
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Upgrade a tile
+        /// </summary>
+        /// <param name="playerIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        internal bool Upgrade(byte playerIndex, int gridIndex)
+        {
+            var (_, board) = HexaTuples[PlayerTurn];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return Upgrade(playerIndex, coords);
         }
 
         /// <summary>
@@ -441,26 +466,6 @@ namespace Substrate.Hexalem.Engine
         }
 
         /// <summary>
-        /// Ensure that the tile can be upgraded
-        /// </summary>
-        /// <param name="tile"></param>
-        /// <returns></returns>
-        private bool EnsureUpgradableTile(HexaTile tile)
-        {
-            var upgradableTileTypes = GameConfig.UpgradableTypeTile();
-
-            if (tile.TileType == TileType.Empty
-             || tile.TileLevel == 3 /* Highest level */
-             || !upgradableTileTypes.Contains(tile.TileType))
-            {
-                Log.Error(LogMessages.InvalidTileToUpgrade(tile));
-                return false;
-            }
-
-            return true;
-        }
-
-        /// <summary>
         /// Ensure that the player has enough ressources to upgrade the tile
         /// </summary>
         /// <param name="player"></param>
@@ -542,9 +547,7 @@ namespace Substrate.Hexalem.Engine
 
         public object Clone()
         {
-            var cloneGame = new HexaGame(
-                (byte[])Id.Clone(), 
-                HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
+            var cloneGame = new HexaGame((byte[])Id.Clone(), HexaTuples.Select(x => ((HexaPlayer)x.player.Clone(), (HexaBoard)x.board.Clone())).ToList())
             {
                 Value = (byte[])Value.Clone(),
                 UnboundTileOffers = UnboundTileOffers.Select(x => x).ToList()

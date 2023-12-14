@@ -3,7 +3,6 @@ using Substrate.Hexalem.Engine.GameException;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace Substrate.Hexalem.Engine
 {
@@ -383,6 +382,7 @@ namespace Substrate.Hexalem.Engine
 
             return true;
         }
+
         /// <summary>
         /// Place a tile on the board
         /// </summary>

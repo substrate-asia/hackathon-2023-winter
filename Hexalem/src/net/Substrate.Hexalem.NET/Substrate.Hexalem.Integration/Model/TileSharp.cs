@@ -1,5 +1,4 @@
-﻿using Substrate.Hexalem.Engine;
-using Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime;
+﻿using Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime;
 
 namespace Substrate.Hexalem.Integration.Model
 {
@@ -7,7 +6,8 @@ namespace Substrate.Hexalem.Integration.Model
     {
         public byte Value { get; private set; }
 
-        public TileSharp(HexalemTile tile) {
+        public TileSharp(HexalemTile tile)
+        {
             TileType = (byte)((tile.Value.Value >> 3) & 0x7);
             TileLevel = (byte)((tile.Value.Value >> 6) & 0x3);
             Pattern = (byte)(tile.Value.Value & 0x7);

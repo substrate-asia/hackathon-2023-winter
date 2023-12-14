@@ -36,15 +36,6 @@ namespace Substrate.Hexalem.Engine
         public const int DEFAULT_WINNING_CONDITION_HUMAN = 7;
 
         /// <summary>
-        /// Upgradeable tile type
-        /// </summary>
-        /// <returns></returns>
-        public static List<TileType> UpgradableTypeTile()
-        {
-            return new List<TileType>() { TileType.Home }; // For now, only home can be upgrade
-        }
-
-        /// <summary>
         /// Map tile upgrade cost
         /// </summary>
         /// <param name="tileType"></param>

@@ -16,7 +16,7 @@ namespace Substrate.Hexalem.Engine
         {
             Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
             TargetGoal = TargetGoal.HumanThreshold;
-            TargetValue= GameConfig.DEFAULT_WINNING_CONDITION_HUMAN;
+            TargetValue = GameConfig.DEFAULT_WINNING_CONDITION_HUMAN;
         }
 
         public HexaPlayer(byte[] id, byte[] value)
