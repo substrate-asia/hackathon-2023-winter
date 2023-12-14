@@ -6,6 +6,7 @@ import { addressEllipsis, encodeNetworkAddress } from "@osn/common";
 import { identityChainMap } from "@osn/constants";
 import Link from "next/link";
 import { cn } from "@/utils";
+import Tooltip from "../tooltip";
 
 export default function IdentityOrAddr({
   address,
@@ -50,17 +51,23 @@ export default function IdentityOrAddr({
       href={`/users/${ss58Address}`}
     >
       {identity?.info && identity?.info?.status !== "NO_ID" ? (
-        <>
+        <span className="inline-flex items-center">
           {!noIcon && (
-            <IdentityIcon
-              status={identity.info.status}
-              showTooltip
-              size={iconSize}
-              position={tooltipPosition}
-            />
+            <span className="mr-1">
+              <IdentityIcon
+                status={identity.info.status}
+                showTooltip
+                size={iconSize}
+                position={tooltipPosition}
+              />
+            </span>
           )}
-          <span>{identity.info.display}</span>
-        </>
+          <Tooltip content={identity.info.display} delayDuration={500}>
+            <span className="line-clamp-1 break-all">
+              {identity.info.display}
+            </span>
+          </Tooltip>
+        </span>
       ) : (
         <span>{addressEllipsis(ss58Address)}</span>
       )}
