@@ -35,6 +35,8 @@ namespace Assets.Scripts
 
             // add element
             floatBody.Add(elementInstance);
+            // avoid raycast through bottom bound UI
+            Grid.RegisterBottomBound();
 
             OnNextPlayerTurn(Storage.HexaGame.PlayerTurn);
 

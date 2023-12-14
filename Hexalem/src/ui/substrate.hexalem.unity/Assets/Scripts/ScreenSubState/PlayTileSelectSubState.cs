@@ -44,6 +44,8 @@ namespace Assets.Scripts
 
             // add element
             floatBody.Add(elementInstance);
+            // avoid raycast through bottom bound UI
+            Grid.RegisterBottomBound();
 
             UpdateTileSelection();
 
@@ -100,7 +102,9 @@ namespace Assets.Scripts
         {
             if (!Storage.UpdateHexalem)
             {
-                var result = Game.ChooseAndPlace(12, (HexaGame)Storage.HexaGame.Clone(), (byte)MainScreenState.PlayerIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
+                MainScreenState.Blocknumber++;
+
+                var result = Game.ChooseAndPlace(MainScreenState.Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)MainScreenState.PlayerIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
 
                 if (result == null)
                 {

@@ -39,6 +39,8 @@ namespace Assets.Scripts
 
             // add element
             floatBody.Add(elementInstance);
+            // avoid raycast through bottom bound UI
+            Grid.RegisterBottomBound();
 
             UpdateTileSelection();
         }

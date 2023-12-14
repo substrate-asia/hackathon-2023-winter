@@ -49,16 +49,22 @@ namespace Assets.Scripts
 
         private bool isPointerOverUI = false;
 
+        private VisualElement _root;
+
         private void Start()
         {
-            var root = GetComponent<UIDocument>().rootVisualElement;
-            var myElement = root.Q("BottomBound");
-            myElement.RegisterCallback<PointerEnterEvent>(e => isPointerOverUI = true);
-            myElement.RegisterCallback<PointerLeaveEvent>(e => isPointerOverUI = false);
+            _root = GetComponent<UIDocument>().rootVisualElement;
+        }
+
+        public void RegisterBottomBound()
+        {
+            _root.Q("BottomBound").RegisterCallback<PointerEnterEvent>(e => isPointerOverUI = true);
+            _root.Q("Body").RegisterCallback<PointerEnterEvent>(e => isPointerOverUI = false);
         }
 
         private void Update()
         {
+
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
