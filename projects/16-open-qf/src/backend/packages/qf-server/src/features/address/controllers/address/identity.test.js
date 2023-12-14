@@ -1,7 +1,7 @@
 const {
   chain: { getApi, findBlockApi }, test: { disconnect, setPolkadot },
 } = require("@osn/scan-common");
-const { queryIdentityVerificationFromOneApi } = require("./index");
+const { queryIdentityVerificationFromOneApi } = require("./identity");
 
 jest.setTimeout(3000000);
 

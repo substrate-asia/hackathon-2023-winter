@@ -1,3 +1,6 @@
+const { checkAndGetApis, queryFromApis } = require("../../../../common");
+const { chains } = require("../../../../consts");
+
 async function queryIdentityVerificationFromOneApi(api, address) {
   if (!api.query.identity?.identityOf) {
     return false;
@@ -15,6 +18,12 @@ async function queryIdentityVerificationFromOneApi(api, address) {
   });
 }
 
+async function checkIsIdentityVerified(address) {
+  const polkadotApis = checkAndGetApis(chains.polkadot);
+  return await queryFromApis(polkadotApis, queryIdentityVerificationFromOneApi, [address]);
+}
+
 module.exports = {
   queryIdentityVerificationFromOneApi,
+  checkIsIdentityVerified,
 }

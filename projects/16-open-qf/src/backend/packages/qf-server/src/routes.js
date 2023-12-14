@@ -3,6 +3,7 @@ const router = new Router();
 
 const routes = [
   require("./features/round/routes"),
+  require("./features/address/routes"),
 ];
 
 module.exports = (app) => {

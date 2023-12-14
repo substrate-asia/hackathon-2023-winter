@@ -22,8 +22,6 @@ async function queryAddresses(col) {
 
   const voterCol = await getReferendaVoteCol();
   const voters = await voterCol.distinct("account");
-  //todo: other addresses,
-  //  - active voters
 
   const all = [
     ...new Set([...beneficiaries, ...voters]),
