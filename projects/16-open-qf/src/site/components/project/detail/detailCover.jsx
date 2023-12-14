@@ -1,3 +1,4 @@
+import IpfsImage from "@/components/image/ipfs";
 import { useServerSideProps } from "@/context/serverSideProps";
 import { cn } from "@/utils";
 
@@ -11,10 +12,7 @@ function Avatar() {
         "absolute left-[20px] bottom-0 translate-y-[50%]",
       )}
     >
-      <img
-        src={`${process.env.NEXT_PUBLIC_IPFS_ENDPOINT}${detail.logoCid}`}
-        alt=""
-      />
+      <IpfsImage cid={detail.logoCid} />
     </div>
   );
 }
@@ -23,10 +21,7 @@ export default function Cover() {
   const { detail } = useServerSideProps();
   return (
     <div className="flex flex-col relative">
-      <img
-        src={`${process.env.NEXT_PUBLIC_IPFS_ENDPOINT}${detail.bannerCid}`}
-        alt=""
-      />
+      <IpfsImage cid={detail.bannerCid} />
       <Avatar />
     </div>
   );
