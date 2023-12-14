@@ -61,3 +61,12 @@ export const EmptyList = {
   pageSize: 0,
   total: 0,
 };
+
+export const CATEGORIES = {
+  explorer: "Explorer",
+  wallet: "Wallet",
+  governance: "Governance",
+  infrastructure: "Infrastructure",
+  data: "Data",
+  libs: "Libs",
+};

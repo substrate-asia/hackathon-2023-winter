@@ -50,6 +50,7 @@
     "react-mde": "^11.5.0",
     "react-minimal-pie-chart": "^8.4.0",
     "react-redux": "^7.2.5",
+    "react-use": "^17.4.2",
     "sanitize-html": "^2.6.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
