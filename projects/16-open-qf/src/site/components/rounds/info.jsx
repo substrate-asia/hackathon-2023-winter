@@ -57,7 +57,7 @@ export default function RoundProjectInfo({ data }) {
                 Total Contributors
               </div>
               <div className="text24bold text-text-primary">
-                {data.contributors || " TODO"}
+                {data.contributorsCount || 0}
               </div>
             </div>
           </div>
