@@ -11,8 +11,8 @@ namespace Assets.Scripts
 
         private VisualElement _velTileCardBox;
 
-        private Label _lblActionTitle;
-        private Label _lblActionCancel;
+        private Button _btnActionTitle;
+        private Button _btnActionCancel;
 
         public PlayTileUpgradeSubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent) { }
@@ -24,18 +24,17 @@ namespace Assets.Scripts
             var BootomPadding = FlowController.VelContainer.Q<VisualElement>("BottomPadding");
             BootomPadding.Clear();
 
-            TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomTileUpgradeElemen");
+            TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomTileUpgradeElement");
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
 
-            _lblActionTitle = elementInstance.Q<Label>("LblActionTitle");
+            _btnActionTitle = elementInstance.Q<Button>("BtnActionTitle");
             var canUpgrade = Storage.HexaGame.CanUpgrade((byte)MainScreenState.PlayerIndex, MainScreenState.SelectedGridIndex);
-            _lblActionTitle.SetEnabled(canUpgrade);
-            _lblActionTitle.RegisterCallback<ClickEvent>(OnActionClicked);
+            _btnActionTitle.SetEnabled(canUpgrade);
+            _btnActionTitle.RegisterCallback<ClickEvent>(OnActionClicked);
 
-
-            _lblActionCancel = elementInstance.Q<Label>("LblActionCancel");
-            _lblActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
+            _btnActionCancel = elementInstance.Q<Button>("BtnActionCancel");
+            _btnActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
 
             // add element
             BootomPadding.Add(elementInstance);

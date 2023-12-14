@@ -1,6 +1,7 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
 using System.Collections.Generic;
+using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -190,6 +191,8 @@ namespace Assets.Scripts
             }
 
             _velTileCardBox.Add(tileCard);
+
+            
         }
     }
 }

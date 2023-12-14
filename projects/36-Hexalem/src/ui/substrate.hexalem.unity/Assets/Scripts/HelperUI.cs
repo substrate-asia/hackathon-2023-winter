@@ -37,9 +37,8 @@ namespace Assets.Scripts
             switch (tileType)
             {
                 case TileType.Home:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
+                    return "The Cave tile, will cost <color=blue>1 Mana</color>.\r\n\r\n" +
+                           "Cave tiles produce <color=grey>1 Stone</color> per round when deployed alone, patterns can create mines and other things.";
                 case TileType.Grass:
                     return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
                            "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +

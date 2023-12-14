@@ -1,4 +1,5 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
     <ui:VisualElement name="VelSelection" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 550px;">
         <ui:VisualElement name="VelActionTitleBox" class="font-comic" style="flex-grow: 0; width: 100%; height: 100px;">
             <ui:Label tabindex="-1" text="BUY TILE TO GROW" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LvlActionTitle" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; font-size: 50px; -unity-text-align: middle-center;" />
