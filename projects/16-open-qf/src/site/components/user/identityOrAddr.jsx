@@ -41,6 +41,7 @@ export default function IdentityOrAddr({
   return (
     <Link
       className={cn(
+        "flex gap-[4px]",
         "text14medium",
         "hover:underline hover:text-inherit",
         noLink && "pointer-events-none",

@@ -23,21 +23,17 @@ export default function NetworkUser({
   tooltipPosition,
   noLink,
 }) {
-  const identity = (
-    <IdentityOrAddr
-      address={address}
-      network={network}
-      iconSize={iconSize}
-      tooltipPosition={tooltipPosition}
-      noLink={noLink}
-    />
-  );
-
   return (
     <Wrapper>
       <Avatar address={address} size={20} />
       {network && <ChainIcon chainName={network} size={16} />}
-      {identity}
+      <IdentityOrAddr
+        address={address}
+        network={network}
+        iconSize={iconSize}
+        tooltipPosition={tooltipPosition}
+        noLink={noLink}
+      />
     </Wrapper>
   );
 }

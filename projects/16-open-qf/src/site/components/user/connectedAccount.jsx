@@ -172,6 +172,7 @@ function ConnectedAccount({ setShowConnectPopup = noop }) {
   return (
     <Wrapper>
       <AccountWrapperPC
+        className="flex items-center h-[40px]"
         onClick={() => {
           setShowMenu(!showMenu);
         }}
