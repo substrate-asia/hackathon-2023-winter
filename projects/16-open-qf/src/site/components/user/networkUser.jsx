@@ -19,20 +19,22 @@ const Wrapper = styled(Flex)`
 export default function NetworkUser({
   address,
   network,
-  iconSize,
+  iconSize = 20,
   tooltipPosition,
   noLink,
+  className = "",
 }) {
   return (
     <Wrapper>
-      <Avatar address={address} size={20} />
-      {network && <ChainIcon chainName={network} size={16} />}
+      <Avatar address={address} size={iconSize} />
+      {network && <ChainIcon chainName={network} size={iconSize * (16 / 20)} />}
       <IdentityOrAddr
         address={address}
         network={network}
-        iconSize={iconSize}
+        iconSize={iconSize * (16 / 20)}
         tooltipPosition={tooltipPosition}
         noLink={noLink}
+        className={className}
       />
     </Wrapper>
   );

@@ -2,6 +2,7 @@ import tw from "tailwind-styled-components";
 import { Button } from "@/components/button";
 import { useServerSideProps } from "@/context/serverSideProps";
 import { toPrecision } from "@osn/common";
+import NetworkUser from "../user/networkUser";
 
 const Content = tw.div`flex flex-col gap-[16px]`;
 
@@ -38,6 +39,17 @@ export default function Sidebar() {
         <Content>
           <Info title="Total Raised" value={`${totalDot} DOT`} />
           <Info title="Contributors" value={contributors.length} />
+          <Info
+            title="Donation Address"
+            value={
+              <NetworkUser
+                address={detail?.donationAddress}
+                network="polkadot"
+                iconSize={24}
+                className="!text20semibold"
+              />
+            }
+          />
         </Content>
         <Button className="w-full">Donate</Button>
       </div>
