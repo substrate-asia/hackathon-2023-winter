@@ -1,16 +1,31 @@
+import BreadCrumb from "@/components/breadCrumb";
 import DetailLayout from "@/components/layouts/detailLayout";
 import Contributions from "@/components/project/contributors";
 import ProjectDetail from "@/components/project/detail";
 import Discussion from "@/components/project/discussion";
 import Sidebar from "@/components/project/sidebar";
+import { useServerSideProps } from "@/context/serverSideProps";
 import { ssrNextApi } from "@/services";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
 
 const ProjectPage = withCommonPageWrapper(() => {
+  const { roundId } = useServerSideProps();
+
   return (
     <DetailLayout sidebar={<Sidebar />}>
       <div className="flex flex-col gap-[20px]">
+        <BreadCrumb
+          items={[
+            {
+              name: "Explorer",
+              url: `/rounds/${roundId}`,
+            },
+            {
+              name: "Project Detail",
+            },
+          ]}
+        />
         <ProjectDetail />
         <Contributions />
         <Discussion />
@@ -33,6 +48,8 @@ export const getServerSideProps = async (context) => {
 
   return {
     props: {
+      roundId,
+      projectId,
       detail: detail ?? null,
       comments: {
         items: [
