@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vocechat Widget Demo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+
+  <body class="w-sreen h-screen flex-center bg-slate-800 text-stone-50">
+    <div class="w-96 flex flex-col gap-2">
+      <div class="flex flex-col gap-1">
+        <h2 class="text-gray-100">S3:</h2>
+        <video class="w-full h-full object-cover" controls>
+          <source src="https://s.voce.chat/demo/how_to_install_vocechat.mp4" type="video/mp4" />
+        </video>
+      </div>
+      <div class="flex flex-col gap-1">
+        <h2 class="text-gray-100">VoceChat:</h2>
+        <video class="w-full h-full object-cover" controls>
+          <source
+            src="https://dev.voce.chat/api/resource/file?file_path=2022%2F12%2F29%2F6803d8ad-8857-464b-a0a3-5d0f45bc1682"
+            type="video/mp4"
+          />
+        </video>
+      </div>
+    </div>
+  </body>
+  <script src="/widget.js" data-host-id="1" data-theme-color="#eee" async></script>
+</html>
