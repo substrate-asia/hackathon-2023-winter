@@ -23,6 +23,12 @@ namespace Assets.Scripts.ScreenStates
         public Texture2D TileMountain { get; }
         public Texture2D TileCave { get; }
         public Texture2D TileDesert { get; }
+
+        public Texture2D PortraitAlice { get; }
+        public Texture2D PortraitBob { get; }
+        public Texture2D PortraitCharlie { get; }
+        public Texture2D PortraitDave { get; }
+
         public int PlayerIndex { get; private set; }
 
         private Label _lblManaValue;
@@ -53,6 +59,11 @@ namespace Assets.Scripts.ScreenStates
             TileMountain = Resources.Load<Texture2D>($"Images/tile_mountain");
             TileCave = Resources.Load<Texture2D>($"Images/tile_cave");
             TileDesert = Resources.Load<Texture2D>($"Images/tile_desert");
+
+            PortraitAlice = Resources.Load<Texture2D>($"Images/alice_portrait");
+            PortraitBob = Resources.Load<Texture2D>($"Images/bob_portrait");
+            PortraitCharlie = Resources.Load<Texture2D>($"Images/charlie_portrait");
+            PortraitDave = Resources.Load<Texture2D>($"Images/dave_portrait");
         }
 
         public override void EnterState()
@@ -71,6 +82,25 @@ namespace Assets.Scripts.ScreenStates
             instance.style.height = new Length(98, LengthUnit.Percent);
 
             var topBound = instance.Q<VisualElement>("TopBound");
+
+            var velPortrait = instance.Q<VisualElement>("VelPortrait");
+            switch (Network.CurrentAccountType)
+            {
+                case AccountType.Alice:
+                    velPortrait.style.backgroundImage = new StyleBackground(PortraitAlice);
+                    break;
+                case AccountType.Bob:
+                    velPortrait.style.backgroundImage = new StyleBackground(PortraitBob);
+                    break;
+                case AccountType.Charlie:
+                    velPortrait.style.backgroundImage = new StyleBackground(PortraitCharlie);
+                    break;
+                case AccountType.Dave:
+                    velPortrait.style.backgroundImage = new StyleBackground(PortraitDave);
+                    break;
+                case null:
+                    break;
+            }
 
             _lblManaValue = instance.Q<Label>("LblManaValue");
             _lblHumansValue = instance.Q<Label>("LblHumansValue");
@@ -92,7 +122,7 @@ namespace Assets.Scripts.ScreenStates
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
 
             // initial update
-            _lblRoundValue.text = $"{Storage.HexaGame.PlayerTurn}/{Storage.HexaGame.HexBoardRound}";
+            _lblRoundValue.text = $"R:{Storage.HexaGame.PlayerTurn} T:{Storage.HexaGame.HexBoardRound}";
             OnChangedHexaPlayer(Storage.HexaGame.HexaTuples[PlayerIndex].player);
             OnChangedHexaBoard(Storage.HexaGame.HexaTuples[PlayerIndex].board);
 
@@ -212,7 +242,7 @@ namespace Assets.Scripts.ScreenStates
 
         private void OnNextPlayerTurn(byte playerTurn)
         {
-            _lblRoundValue.text = $"{Storage.HexaGame.PlayerTurn}/{Storage.HexaGame.HexBoardRound}";
+            _lblRoundValue.text = $"R:{Storage.HexaGame.PlayerTurn} T:{Storage.HexaGame.HexBoardRound}";
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
         }

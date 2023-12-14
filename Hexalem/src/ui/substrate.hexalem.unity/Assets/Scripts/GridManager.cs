@@ -59,7 +59,7 @@ namespace Assets.Scripts
         public void RegisterBottomBound()
         {
             _root.Q("BottomBound").RegisterCallback<PointerEnterEvent>(e => isPointerOverUI = true);
-            _root.Q("Body").RegisterCallback<PointerEnterEvent>(e => isPointerOverUI = false);
+            _root.Q("FloatBody").RegisterCallback<PointerEnterEvent>(e => isPointerOverUI = false);
         }
 
         private void Update()

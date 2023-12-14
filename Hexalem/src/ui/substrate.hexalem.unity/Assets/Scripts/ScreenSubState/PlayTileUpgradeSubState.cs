@@ -21,10 +21,10 @@ namespace Assets.Scripts
         {
             Debug.Log($"[{this.GetType().Name}][SUB] EnterState");
 
-            var floatBody = FlowController.VelContainer.Q<VisualElement>("FloatBody");
-            floatBody.Clear();
+            var BootomPadding = FlowController.VelContainer.Q<VisualElement>("BottomPadding");
+            BootomPadding.Clear();
 
-            TemplateContainer elementInstance = ElementInstance("UI/Frames/PlayTileUpgradeFrame");
+            TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomTileUpgradeElemen");
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
 
@@ -38,7 +38,7 @@ namespace Assets.Scripts
             _lblActionCancel.RegisterCallback<ClickEvent>(OnCancelClicked);
 
             // add element
-            floatBody.Add(elementInstance);
+            BootomPadding.Add(elementInstance);
             // avoid raycast through bottom bound UI
             Grid.RegisterBottomBound();
 

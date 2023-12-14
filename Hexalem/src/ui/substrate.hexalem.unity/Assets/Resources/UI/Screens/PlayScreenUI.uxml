@@ -1,9 +1,9 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
     <ui:VisualElement name="Screen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0); justify-content: flex-end;">
-        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 300px; width: 100%; justify-content: flex-end; align-items: center;">
+        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 350px; width: 100%; justify-content: flex-end; align-items: center;">
             <ui:VisualElement name="TopPadding" style="flex-grow: 0; padding-right: 50px; padding-left: 50px; padding-top: 100px; padding-bottom: 0; flex-direction: column; flex-shrink: 0; width: 100%; height: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
-                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 65%; flex-direction: row; justify-content: space-around;">
+                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 130px; flex-direction: row; justify-content: space-around;">
                     <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 300px; height: 100%; flex-direction: row;">
                         <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 50%; height: 100%; padding-bottom: 45px; padding-right: 30px; padding-left: 0; padding-top: 20px;">
                             <ui:VisualElement style="flex-grow: 1; background-image: url(&apos;project://database/Assets/Images/icon_menu.png?fileID=2800000&amp;guid=f5af5c011e66f9c448bc8fdbfcb0d888&amp;type=3#icon_menu&apos;); -unity-background-scale-mode: scale-to-fit;" />
@@ -27,8 +27,8 @@
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="VelStats" class="stats-bg" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 35%; flex-direction: row;">
-                    <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 5%; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStats" class="stats-bg" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 70px; flex-direction: row; justify-content: space-around;">
+                    <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 15px; height: 100%; flex-shrink: 0;" />
                     <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 10%; height: 100%;">
                         <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblHumansValue" class="font-color font-comic" style="font-size: 35px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
                         <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
@@ -72,20 +72,28 @@
                             <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_gold_new.png?fileID=2800000&amp;guid=205df9ef8be3392458ca8e1f0416929d&amp;type=3#icon_gold_new&apos;); -unity-background-scale-mode: scale-to-fit;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
-                    <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 5%; height: 100%; flex-shrink: 0;" />
+                    <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 15px; height: 100%; flex-shrink: 0;" />
                 </ui:VisualElement>
-            </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 0; position: absolute; width: 300px; height: 100%; align-items: center; justify-content: flex-end; padding-bottom: 30px; flex-shrink: 0;">
-                <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; width: 220px; height: 220px; background-color: rgb(33, 76, 237); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; justify-content: center; align-items: center;">
-                    <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; background-color: rgb(51, 51, 51); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; align-items: flex-end;">
-                        <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 120px; height: 60px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; position: relative;">
-                            <ui:VisualElement name="VelStatManaBox" style="flex-grow: 0; width: 100%; height: 100%; flex-shrink: 0; flex-direction: row; background-color: rgb(255, 255, 255); border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-top: 0; padding-right: 0; padding-bottom: 5px; padding-left: 0; align-items: center; justify-content: center; margin-bottom: 0;">
-                                <ui:Label tabindex="-1" text="10/10" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblRoundValue" class="font-comic" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: middle-center; width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 5px; padding-right: 0; padding-bottom: 0; padding-left: 5px; align-items: auto; color: rgb(51, 51, 51);" />
-                            </ui:VisualElement>
+                <ui:VisualElement name="VelStats" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 50px; flex-direction: row; justify-content: space-between;">
+                    <ui:VisualElement name="VelLeftInfo" style="flex-grow: 0; width: 50%; height: 100%; flex-shrink: 0; align-items: flex-start;">
+                        <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 150px; height: 100%; background-color: rgba(204, 204, 204, 0.78); border-bottom-right-radius: 25px; flex-direction: row;">
+                            <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 20px; height: 100%; flex-shrink: 0;" />
+                            <ui:Label tabindex="-1" text="R:10 T:10" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblRoundValue" class="font-comic" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: middle-left; width: 85%; height: 100%; font-size: 25px; -unity-font-style: bold;" />
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="VelRightInfo" style="flex-grow: 0; width: 50%; height: 100%; flex-shrink: 0; flex-direction: row-reverse; justify-content: flex-start;">
+                        <ui:VisualElement style="flex-grow: 0; width: 400px; height: 100%; flex-shrink: 0; background-color: rgba(204, 204, 204, 0.78); border-bottom-left-radius: 25px; align-items: flex-end; flex-direction: row-reverse;">
+                            <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 20px; height: 100%; flex-shrink: 0;" />
+                            <ui:Label tabindex="-1" text="Run:0 - Info" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblExtriniscInfo" class="font-comic" style="padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; -unity-text-align: middle-right; width: 85%; height: 100%; font-size: 25px; -unity-font-style: normal;" />
                         </ui:VisualElement>
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 120px; height: 75px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; position: absolute;">
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; position: absolute; width: 300px; height: 100%; align-items: center; justify-content: flex-end; padding-bottom: 80px; flex-shrink: 0;">
+                <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; width: 220px; height: 220px; background-color: rgb(33, 76, 237); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; justify-content: center; align-items: center;">
+                    <ui:VisualElement name="VelPortrait" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; align-items: flex-end; background-image: none; -unity-background-scale-mode: scale-to-fit;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 120px; height: 70px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; position: absolute; bottom: 50px;">
                     <ui:VisualElement name="VelStatManaBox" style="flex-grow: 0; width: 100%; height: 100%; flex-shrink: 0; flex-direction: row; background-color: rgb(33, 76, 237); border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0;">
                         <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 50%; height: 100%; align-items: center; justify-content: center; padding-top: 12px; padding-right: 5px; padding-bottom: 12px; padding-left: 15px;">
                             <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_mana_new.png?fileID=2800000&amp;guid=4524ddc778578b544af4bf089a26bece&amp;type=3#icon_mana_new&apos;); -unity-background-scale-mode: scale-to-fit;" />
@@ -96,5 +104,8 @@
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="FloatBody" style="flex-grow: 1; height: 100%; width: 100%; flex-shrink: 1;" />
+        <ui:VisualElement name="BottomBound" style="flex-grow: 0; height: 600px; width: 100%; flex-shrink: 0;">
+            <ui:VisualElement name="BottomPadding" style="flex-grow: 0; padding-top: 50px; padding-right: 50px; padding-left: 50px; padding-bottom: 25px; flex-direction: column; flex-shrink: 0; width: 100%; height: 600px; border-left-color: rgb(75, 75, 75); border-right-color: rgb(75, 75, 75); border-top-color: rgb(75, 75, 75); border-bottom-color: rgb(75, 75, 75); border-top-width: 7px; border-top-left-radius: 35px; border-top-right-radius: 35px; background-color: rgb(250, 250, 250); border-right-width: 7px; border-bottom-width: 0; border-left-width: 7px; -unity-background-image-tint-color: rgba(255, 255, 255, 0);" />
+        </ui:VisualElement>
     </ui:VisualElement>
 </ui:UXML>

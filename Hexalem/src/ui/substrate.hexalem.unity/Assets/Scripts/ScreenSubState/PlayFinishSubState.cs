@@ -21,10 +21,10 @@ namespace Assets.Scripts
         {
             Debug.Log($"[{this.GetType().Name}][SUB] EnterState");
 
-            var floatBody = FlowController.VelContainer.Q<VisualElement>("FloatBody");
-            floatBody.Clear();
+            var BootomPadding = FlowController.VelContainer.Q<VisualElement>("BottomPadding");
+            BootomPadding.Clear();
 
-            TemplateContainer elementInstance = ElementInstance("UI/Frames/PlayFinishFrame");
+            TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomFinishElement");
 
             _btnBack = elementInstance.Q<Button>("BtnBack");
             _btnBack.SetEnabled(false);
@@ -54,7 +54,7 @@ namespace Assets.Scripts
             }
 
             // add element
-            floatBody.Add(elementInstance);
+            BootomPadding.Add(elementInstance);
             // avoid raycast through bottom bound UI
             Grid.RegisterBottomBound();
 

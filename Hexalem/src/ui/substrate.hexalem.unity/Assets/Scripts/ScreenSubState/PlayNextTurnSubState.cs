@@ -21,10 +21,10 @@ namespace Assets.Scripts
         {
             Debug.Log($"[{this.GetType().Name}][SUB] EnterState");
 
-            var floatBody = FlowController.VelContainer.Q<VisualElement>("FloatBody");
-            floatBody.Clear();
+            var BootomPadding = FlowController.VelContainer.Q<VisualElement>("BottomPadding");
+            BootomPadding.Clear();
 
-            TemplateContainer elementInstance = ElementInstance("UI/Frames/PlayNextTurnFrame");
+            TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomNextTurnElement");
 
             _btnYourTurn = elementInstance.Q<Button>("BtnYourTurn");
             _btnYourTurn.SetEnabled(false);
@@ -34,7 +34,7 @@ namespace Assets.Scripts
             _lblActionInfo = elementInstance.Q<Label>("LblActionInfo");
 
             // add element
-            floatBody.Add(elementInstance);
+            BootomPadding.Add(elementInstance);
             // avoid raycast through bottom bound UI
             Grid.RegisterBottomBound();
 

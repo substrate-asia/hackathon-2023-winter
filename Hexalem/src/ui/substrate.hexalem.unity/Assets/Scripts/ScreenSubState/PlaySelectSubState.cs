@@ -20,16 +20,16 @@ namespace Assets.Scripts
         {
             Debug.Log($"[{this.GetType().Name}][SUB] EnterState");
 
-            var floatBody = FlowController.VelContainer.Q<VisualElement>("FloatBody");
-            floatBody.Clear();
+            var BootomPadding = FlowController.VelContainer.Q<VisualElement>("BottomPadding");
+            BootomPadding.Clear();
 
-            TemplateContainer elementInstance = ElementInstance("UI/Frames/PlaySelectFrame");
+            TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomSelectionElement");
 
             _scvSelection = elementInstance.Q<ScrollView>("ScVSelection");
             _lblActionInfo = elementInstance.Q<Label>("LblActionInfo");
 
             // add element
-            floatBody.Add(elementInstance);
+            BootomPadding.Add(elementInstance);
             // avoid raycast through bottom bound UI
             Grid.RegisterBottomBound();
 
