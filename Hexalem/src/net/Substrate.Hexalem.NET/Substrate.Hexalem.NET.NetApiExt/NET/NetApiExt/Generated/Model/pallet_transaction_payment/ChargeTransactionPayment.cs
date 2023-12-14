@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_transaction_pay
     
     
     /// <summary>
-    /// >> 153 - Composite[pallet_transaction_payment.ChargeTransactionPayment]
+    /// >> 157 - Composite[pallet_transaction_payment.ChargeTransactionPayment]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class ChargeTransactionPayment : BaseType

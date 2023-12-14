@@ -1,0 +1,61 @@
+name: ci/cd
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - '**'
+
+jobs:
+    build:
+        name: Build
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                cache: yarn
+                node-version: '18'
+            - name: Install deps
+              run: yarn install --frozen-lockfile
+            - name: Build
+              run: yarn build
+            - name: Lint
+              run: yarn run lint
+            - name: Tests
+              run: yarn run test
+
+    maybe-release:
+        name: release
+        runs-on: ubuntu-latest
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        steps:
+            - uses: google-github-actions/release-please-action@v3
+              id: release
+              with:
+                release-type: node
+                package-name: release-please-action
+                changelog-types: '[{"type":"feat","section":"Features","hidden":false},{"type":"fix","section":"Bug Fixes","hidden":false},{"type":"chore","section":"Miscellaneous","hidden":true}]'
+            
+            - uses: actions/checkout@v3
+              if: ${{ steps.release.outputs.release_created }}
+            
+            - uses: actions/setup-node@v3
+              with:
+                cache: 'yarn'
+                node-version: 18
+                registry-url: 'https://registry.npmjs.org'
+              if: ${{ steps.release.outputs.release_created }}
+            
+            - run: yarn install --frozen-lockfile
+              if: ${{ steps.release.outputs.release_created }}
+            
+            - run: yarn build
+              if: ${{ steps.release.outputs.release_created }}
+
+            - run: yarn publish --access public
+              env:
+                NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+              if: ${{ steps.release.outputs.release_created }}

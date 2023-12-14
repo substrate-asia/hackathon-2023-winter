@@ -17,8 +17,6 @@ pub use pallet::*;
 //#[cfg(feature = "runtime-benchmarks")]
 //mod benchmarking;
 
-use crate::sp_runtime::Percent;
-
 pub mod weights;
 use frame_support::{
 	ensure, sp_runtime, sp_runtime::SaturatedConversion, traits::Get, StorageHasher,
@@ -43,44 +41,44 @@ pub mod pallet {
 
 	pub type GameId = [u8; 32];
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq)]
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone)]
 	pub enum GameState {
 		Matchmaking,
 		Playing,
-		Finished, // Ready to reward players
+		Finished {
+			winner: Option<u8>
+		}, // Ready to reward players
 	}
 
 	// Index used for referencing the TileCost
 	pub type TileCostIndex = u8;
 
+	pub type Players<T> = BoundedVec<AccountId<T>, <T as Config>::MaxPlayers>;
+
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	pub struct Game<T: Config> {
 		pub state: GameState,
-		pub max_rounds: u8, // maximum number of rounds
 
 		// These can be compressed to take only u8
 		pub round: u8,       // current round number
 		pub player_turn: u8, // Who is playing?
 		pub played: bool,
+		last_played_block: <frame_system::Pallet<T> as crate::sp_runtime::traits::BlockNumberProvider>::BlockNumber,
 
 		// pub number_of_players: u8,
-		pub players: BoundedVec<AccountId<T>, T::MaxPlayers>, // Player ids
+		pub players: Players<T>, // Player ids
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
 	}
 
-	impl<T: Config> GameProperties for Game<T> {
+	impl<T: Config> GameProperties<T> for Game<T> {
 		fn get_played(&self) -> bool {
 			self.played
 		}
 
 		fn set_played(&mut self, played: bool) -> () {
 			self.played = played;
-		}
-
-		fn get_max_rounds(&self) -> u8 {
-			self.max_rounds
 		}
 
 		fn get_round(&self) -> u8 {
@@ -98,14 +96,26 @@ pub mod pallet {
 		fn set_player_turn(&mut self, turn: u8) -> () {
 			self.player_turn = turn;
 		}
+
+		fn borrow_players(&self) -> &Players<T> {
+			&self.players
+		}
+
+		fn get_state(&self) -> GameState {
+			self.state
+		}
+
+		fn set_state(&mut self, state: GameState) -> () {
+			self.state = state;
+		}
 	}
 
-	pub type MaterialUnit = u8;
+	pub type ResourceUnit = u8;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Debug)]
-	pub enum Material {
+	pub enum ResourceType {
 		Mana = 0,
-		Humans = 1,
+		Human = 1,
 		Water = 2,
 		Food = 3,
 		Wood = 4,
@@ -126,9 +136,9 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
-	pub struct MaterialCost {
-		pub material_type: Material,
-		pub material_amount: MaterialUnit,
+	pub struct ResourceAmount {
+		pub resource_type: ResourceType,
+		pub amount: ResourceUnit,
 	}
 
 	impl TileType {
@@ -165,13 +175,24 @@ pub mod pallet {
 		}
 	}
 
-	#[derive(
-		Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, RuntimeDebugNoBound,
-	)]
+	#[derive(Encode, TypeInfo)]
+	pub enum ResourceProductions {
+		None,
+		One(ResourceProduction),
+		Two(ResourceProduction, ResourceProduction),
+	}
+
+	#[derive(Encode, TypeInfo)]
+	pub struct ResourceProduction {
+		pub produces: ResourceAmount,
+		pub human_requirements: ResourceUnit,
+	}
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq)]
 	#[scale_info(skip_type_params(T))]
 	pub struct TileCost<T: Config> {
 		pub tile_to_buy: T::Tile,
-		pub cost: MaterialCost,
+		pub cost: ResourceAmount,
 	}
 
 	// This type will get changed to be more generic, but I did not have time now.
@@ -184,17 +205,11 @@ pub mod pallet {
 	// The board hex grid
 	pub type HexGrid<T> = BoundedVec<<T as Config>::Tile, <T as Config>::MaxHexGridSize>;
 
-	// The board of the player, with all stats and materials
+	// The board of the player, with all stats and resources
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	pub struct HexBoard<T: Config> {
-		pub gold: MaterialUnit,
-		pub wood: MaterialUnit,
-		pub stone: MaterialUnit,
-		pub food: MaterialUnit,
-		pub water: MaterialUnit,
-		pub mana: MaterialUnit,
-		pub humans: MaterialUnit,
+		pub resources: [ResourceUnit; 7],
 		pub hex_grid: HexGrid<T>, // Board with all tiles
 		game_id: GameId,          // Game key
 	}
@@ -205,16 +220,10 @@ pub mod pallet {
 				.try_into()
 				.map_err(|_| Error::<T>::InternalError)?;
 
-			new_hex_grid[size / 2] = T::HomeTile::get();
+			new_hex_grid[size / 2] = T::Tile::get_home();
 
 			Ok(HexBoard::<T> {
-				gold: 255,
-				wood: 0,
-				stone: 0,
-				food: 0,
-				water: 0,
-				mana: 1,
-				humans: 1,
+				resources: T::DefaultPlayerResources::get(),
 				hex_grid: new_hex_grid,
 				game_id,
 			})
@@ -301,6 +310,12 @@ pub mod pallet {
 		type MinPlayers: Get<u8>;
 
 		#[pallet::constant]
+		type MaxRounds: Get<u8>;
+
+		#[pallet::constant]
+		type BlocksToPlayLimit: Get<u8>;
+
+		#[pallet::constant]
 		type MaxHexGridSize: Get<u32>;
 
 		#[pallet::constant]
@@ -318,10 +333,13 @@ pub mod pallet {
 			+ GetTileInfo;
 
 		#[pallet::constant]
-		type TileCosts: Get<[TileCost<Self>; 16]>;
+		type TileCosts: Get<[TileCost<Self>; 15]>;
 
 		#[pallet::constant]
-		type WaterPerHuman: Get<Percent>;
+		type TileResourceProductions: Get<[ResourceProductions; 8]>;
+
+		#[pallet::constant]
+		type WaterPerHuman: Get<u8>;
 
 		#[pallet::constant]
 		type FoodPerHuman: Get<u8>;
@@ -330,10 +348,16 @@ pub mod pallet {
 		type HomePerHumans: Get<u8>;
 
 		#[pallet::constant]
-		type FoodPerTree: Get<Percent>;
+		type FoodPerTree: Get<u8>;
 
 		#[pallet::constant]
-		type HomeTile: Get<Self::Tile>;
+		type DefaultPlayerResources: Get<[ResourceUnit; 7]>;
+
+		#[pallet::constant]
+		type TargetGoalGold: Get<ResourceUnit>;
+
+		#[pallet::constant]
+		type TargetGoalHuman: Get<ResourceUnit>;
 	}
 
 	// The pallet's runtime storage items.
@@ -369,11 +393,13 @@ pub mod pallet {
 		// Selection has been refilled
 		SelectionRefilled { game_id: GameId, selection: TileSelection<T> },
 
+		TurnForceFinished { game_id: GameId, player: T::AccountId },
+
 		// New turn
 		NewTurn { game_id: GameId, next_player: T::AccountId },
 
 		// Game has finished
-		GameFinished { game_id: GameId /*, winner: T::AccountId */ },
+		GameFinished { game_id: GameId /* , winner: T::AccountId */ },
 
 		// Event that is never used. It serves the purpose to expose hidden rust enums
 		ExposeEnums { tile_type: TileType, tile_pattern: TilePattern },
@@ -397,7 +423,7 @@ pub mod pallet {
 		// The game has already started. Can not create it twice.
 		GameAlreadyCreated,
 
-		// Other errors, that should never happen
+		// Other errors, that should never happen.
 		InternalError,
 
 		// Please set the number_of_players parameter to a bigger number.
@@ -406,16 +432,13 @@ pub mod pallet {
 		// Please set the number_of_players parameter to a smaller number.
 		NumberOfPlayersIsTooLarge,
 
-		// Math overflow
+		// Math overflow.
 		MathOverflow,
 
-		// Not enough resources to pay for the tile offer
+		// Not enough resources to pay for the tile offer.
 		NotEnoughResources,
 
-		// Not enough mana to pay for the tile offer
-		NotEnoughMana,
-
-		// Not enough population to play all moves
+		// Not enough population to play all moves.
 		NotEnoughPopulation,
 
 		// Entered index for buying is out of bounds.
@@ -424,29 +447,38 @@ pub mod pallet {
 		// Entered index for placing the tile is out of bounds.
 		PlaceIndexOutOfBounds,
 
-		// You have to buy and place at least one tile. You can instead use `skip_turn` call
-		NoMoves,
-
-		// Player is not on the turn
+		// Player is not on the turn.
 		PlayerNotOnTurn,
 
-		// Game has not started yet, or has been finished already
+		// Player is not playing this game
+		PlayerNotInGame,
+
+		// Current player cannot force finish his own turn
+		CurrentPlayerCannotForceFinishTurn,
+
+		// Game has not started yet, or has been finished already.
 		GameNotPlaying,
 
-		// The grid size is not 9, 25, 49
+		// The grid size is not 9, 25, 49.
 		BadGridSize,
 
 		// You can not place a tile on another tile, unless it is empty.
 		TileIsNotEmpty,
 
-		// Tile is already on the max level
+		// Tile is already on the max level.
 		TileOnMaxLevel,
 
-		// Can not level up empty tile
+		// Can not level up empty tile.
 		CannotLevelUpEmptyTile,
 
-		// This tile can not be leveled up
+		// This tile can not be leveled up.
 		CannotLevelUp,
+
+		// The tile is surrounded by empty tiles.
+		TileSurroundedByEmptyTiles,
+
+		// Not enough blocks have passed to force finish turn
+		BlocksToPlayLimitNotPassed,
 	}
 
 	#[pallet::call]
@@ -487,9 +519,9 @@ pub mod pallet {
 			// Default Game Config
 			let mut game = Game {
 				state: GameState::Playing,
-				max_rounds: 15,
 				round: 0,
 				played: false,
+				last_played_block: current_block_number,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
 				player_turn: 0,
 				selection_size: 2,
@@ -541,7 +573,7 @@ pub mod pallet {
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
 			ensure!(
-				game.players[game.get_player_turn() as usize] == who,
+				game.borrow_players()[game.get_player_turn() as usize] == who,
 				Error::<T>::PlayerNotOnTurn
 			);
 
@@ -573,7 +605,18 @@ pub mod pallet {
 			let max_distance: i8 = Self::max_distance_from_center(&grid_length);
 			let (tile_q, tile_r) =
 				Self::index_to_coords(move_played.place_index, &side_length, &max_distance)?;
+
 			let mut neighbours = Self::get_neighbouring_tiles(&max_distance, &tile_q, &tile_r)?;
+			ensure!(
+				Self::not_surrounded_by_empty_tiles(
+					&neighbours,
+					&hex_board.hex_grid,
+					&max_distance,
+					&side_length
+				),
+				Error::<T>::TileSurroundedByEmptyTiles
+			);
+
 			neighbours.push(Some((tile_q, tile_r)));
 
 			for option_tile in neighbours {
@@ -613,7 +656,7 @@ pub mod pallet {
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
 			ensure!(
-				game.players[game.get_player_turn() as usize] == who,
+				game.borrow_players()[game.get_player_turn() as usize] == who,
 				Error::<T>::PlayerNotOnTurn
 			);
 
@@ -629,14 +672,12 @@ pub mod pallet {
 			ensure!(tile_level != 3, Error::<T>::TileOnMaxLevel);
 
 			Self::spend_for_tile_upgrade(&mut hex_board, &tile_to_upgrade)?;
-			
-			Self::ensure_enough_humans_for_level_upgrade(&hex_board, &tile_level)?;
 
 			hex_board.hex_grid[place_index as usize].set_level(tile_level.saturating_add(1));
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
-			Self::deposit_event(Event::TileUpgraded { game_id, player: who, place_index } );
+			Self::deposit_event(Event::TileUpgraded { game_id, player: who, place_index });
 
 			Ok(())
 		}
@@ -662,28 +703,13 @@ pub mod pallet {
 
 			ensure!(game.state == GameState::Playing, Error::<T>::GameNotPlaying);
 
-			let player_turn = game.get_player_turn();
+			ensure!(
+				game.borrow_players()[game.get_player_turn() as usize] == who,
+				Error::<T>::PlayerNotOnTurn
+			);
 
-			ensure!(game.players[player_turn as usize] == who, Error::<T>::PlayerNotOnTurn);
-
-			let next_player_turn = (player_turn + 1) % game.players.len().saturated_into::<u8>();
-
-			game.set_player_turn(next_player_turn);
-
-			if next_player_turn == 0 {
-				let round = game.get_round() + 1;
-				game.set_round(round);
-
-				if round > game.get_max_rounds() {
-					game.state = GameState::Finished;
-
-					GameStorage::<T>::set(&game_id, Some(game));
-
-					Self::deposit_event(Event::GameFinished { game_id });
-
-					return Ok(())
-				}
-			}
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
+			game.last_played_block = current_block_number;
 
 			// If the player has not played, generate a new selection
 			if game.get_played() {
@@ -692,14 +718,21 @@ pub mod pallet {
 				Self::new_selection(&mut game, game_id)?;
 			}
 
-			let next_player = game.players[next_player_turn as usize].clone();
+			// Updating the resources
+			Self::evaluate_board(&mut hex_board);
+
+			if Self::is_game_won(&hex_board) {
+				game.state = GameState::Finished { winner: Some(game.get_player_turn()) };
+			}
+
+			// Handle next turn counting
+			game.next_turn();
+
+			let next_player = game.borrow_players()[game.get_player_turn() as usize].clone();
 
 			GameStorage::<T>::set(&game_id, Some(game));
 
 			Self::deposit_event(Event::NewTurn { game_id, next_player });
-
-			// Updating the resources
-			Self::evaluate_board(&mut hex_board);
 
 			HexBoardStorage::<T>::set(&who, Some(hex_board));
 
@@ -707,6 +740,53 @@ pub mod pallet {
 		}
 
 		#[pallet::call_index(4)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn force_finish_turn(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
+			let who: T::AccountId = ensure_signed(origin)?;
+
+			let mut game = match GameStorage::<T>::get(&game_id) {
+				Some(value) => value,
+				None => return Err(Error::<T>::GameNotInitialized.into()),
+			};
+
+			ensure!(game.borrow_players().contains(&who), Error::<T>::PlayerNotInGame);
+
+			let current_player = game.borrow_players()[game.get_player_turn() as usize].clone();
+			ensure!(current_player != who, Error::<T>::CurrentPlayerCannotForceFinishTurn);
+
+			// Handle next turn counting
+			game.next_turn();
+
+			let current_block_number = <frame_system::Pallet<T>>::block_number();
+
+			ensure!(
+				game.last_played_block
+					.saturated_into::<u128>()
+					.saturating_add(T::BlocksToPlayLimit::get() as u128) <
+					current_block_number.saturated_into::<u128>(),
+				Error::<T>::BlocksToPlayLimitNotPassed
+			);
+
+			game.last_played_block = current_block_number;
+
+			let next_player = game.borrow_players()[game.get_player_turn() as usize].clone();
+
+			GameStorage::<T>::set(&game_id, Some(game));
+
+			Self::deposit_event(Event::NewTurn { game_id, next_player });
+
+			Self::deposit_event(Event::TurnForceFinished { game_id, player: current_player });
+
+			Ok(())
+		}
+
+		#[pallet::call_index(5)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn receive_reward(_origin: OriginFor<T>) -> DispatchResult {
+			todo!()
+		}
+
+		#[pallet::call_index(6)]
 		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
 		pub fn root_delete_game(origin: OriginFor<T>, game_id: GameId) -> DispatchResult {
 			ensure_root(origin)?;
@@ -717,7 +797,7 @@ pub mod pallet {
 				None => return Err(Error::<T>::GameNotInitialized.into()),
 			};
 
-			for player in &game.players {
+			for player in game.borrow_players() {
 				HexBoardStorage::<T>::remove(player);
 			}
 
@@ -743,7 +823,10 @@ impl<T: Config> Pallet<T> {
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
 		for i in 0..game.selection_size {
-			new_selection.push(selection_base[((i + offset) % 32) as usize].clone() % 16);
+			new_selection.push(
+				selection_base[((i + offset) % 32) as usize].clone() %
+					T::TileCosts::get().len().saturated_into::<u8>(),
+			);
 		}
 
 		// Casting
@@ -764,7 +847,7 @@ impl<T: Config> Pallet<T> {
 	) -> Result<(), sp_runtime::DispatchError> {
 		let selection_len = game.selection.len();
 
-		if selection_len < (game.selection_size / 2 + 1) as usize {
+		if selection_len <= (game.selection_size / 2) as usize {
 			if game.selection_size as u32 != T::MaxTileSelection::get() {
 				game.selection_size = game.selection_size.saturating_add(2);
 			}
@@ -777,7 +860,10 @@ impl<T: Config> Pallet<T> {
 			let mut new_selection = game.selection.to_vec();
 
 			for i in selection_len..game.selection_size as usize {
-				new_selection.push(selection_base[(i + offset) % 32].clone() % 16);
+				new_selection.push(
+					selection_base[(i + offset) % 32].clone() %
+						T::TileCosts::get().len().saturated_into::<u8>(),
+				);
 			}
 
 			game.selection = new_selection.try_into().map_err(|_| Error::<T>::InternalError)?;
@@ -806,7 +892,7 @@ impl<T: Config> Pallet<T> {
 		ensure!(all_offers.len() > selected_offer_index as usize, Error::<T>::BuyIndexOutOfBounds);
 		let selected_offer = all_offers[selected_offer_index as usize].clone();
 
-		Self::spend_material(&selected_offer.cost, hex_board)?;
+		Self::spend_resource(&selected_offer.cost, hex_board)?;
 
 		Ok(selected_offer.tile_to_buy)
 	}
@@ -817,68 +903,45 @@ impl<T: Config> Pallet<T> {
 		tile_to_upgrade: &T::Tile,
 	) -> Result<(), sp_runtime::DispatchError> {
 		match (tile_to_upgrade.get_type(), tile_to_upgrade.get_level()) {
-			(TileType::Home, 0) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_amount: 5 }, hex_board),
-			(TileType::Home, 1) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_amount: 10 }, hex_board),
-			(TileType::Home, 2) => Self::spend_material(&MaterialCost { material_type: Material::Gold, material_amount: 15 }, hex_board),
-			(TileType::Empty, _) => Err(Error::<T>::CannotLevelUpEmptyTile.into()),
-			_ => Err(Error::<T>::CannotLevelUp.into()),
-		}
-	}
-
-	fn ensure_enough_humans_for_level_upgrade(
-		hex_board: &HexBoard<T>,
-		level: &u8,
-	) -> Result<(), sp_runtime::DispatchError> {
-		match level {
-			0 => ensure!(hex_board.humans >= 3, Error::<T>::NotEnoughPopulation),
-			1 => ensure!(hex_board.humans >= 5, Error::<T>::NotEnoughPopulation),
-			2 => ensure!(hex_board.humans >= 8, Error::<T>::NotEnoughPopulation),
+			(TileType::Home, tile_level) => {
+				Self::spend_resource(
+					&ResourceAmount {
+						resource_type: ResourceType::Wood,
+						amount: (tile_level + 1).saturating_mul(2),
+					},
+					hex_board,
+				)?;
+				Self::spend_resource(
+					&ResourceAmount {
+						resource_type: ResourceType::Stone,
+						amount: (tile_level + 1).saturating_mul(2),
+					},
+					hex_board,
+				)?;
+				Self::spend_resource(
+					&ResourceAmount {
+						resource_type: ResourceType::Gold,
+						amount: tile_level.saturating_mul(2),
+					},
+					hex_board,
+				)?;
+			},
+			(TileType::Empty, _) => return Err(Error::<T>::CannotLevelUpEmptyTile.into()),
 			_ => return Err(Error::<T>::CannotLevelUp.into()),
 		};
 
 		Ok(())
 	}
 
-	/// Helper method that spends the resources according to MaterialCost
-	fn spend_material(
-		material_cost: &MaterialCost,
+	/// Helper method that spends the resources according to ResourceAmount
+	fn spend_resource(
+		resource_cost: &ResourceAmount,
 		hex_board: &mut HexBoard<T>,
 	) -> Result<(), sp_runtime::DispatchError> {
-		match material_cost.material_type {
-			Material::Gold =>
-				hex_board.gold = hex_board
-					.gold
-					.checked_sub(material_cost.material_amount)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Wood =>
-				hex_board.wood = hex_board
-					.wood
-					.checked_sub(material_cost.material_amount)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Stone =>
-				hex_board.stone = hex_board
-					.stone
-					.checked_sub(material_cost.material_amount)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Mana =>
-				hex_board.mana = hex_board
-					.mana
-					.checked_sub(material_cost.material_amount)
-					.ok_or(Error::<T>::NotEnoughMana)?,
-			Material::Food =>
-				hex_board.food = hex_board
-					.food
-					.checked_sub(material_cost.material_amount)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Water =>
-				hex_board.water = hex_board
-					.water
-					.checked_sub(material_cost.material_amount)
-					.ok_or(Error::<T>::NotEnoughResources)?,
-			Material::Humans => (),
-		};
-
-		// Successfully paid
+		hex_board.resources[resource_cost.resource_type as usize] = hex_board.resources
+			[ResourceType::Gold as usize]
+			.checked_sub(resource_cost.amount)
+			.ok_or(Error::<T>::NotEnoughResources)?;
 		Ok(())
 	}
 
@@ -1064,18 +1127,52 @@ impl<T: Config> Pallet<T> {
 		}
 	}
 
+	fn is_game_won(hex_board: &HexBoard<T>) -> bool {
+		hex_board.resources[ResourceType::Human as usize] >= T::TargetGoalHuman::get()
+	}
+
+	fn tile_produce(
+		hex_board: &mut HexBoard<T>,
+		tile_resource_productions: &ResourceProductions,
+		multiplier: u8,
+	) -> () {
+		match tile_resource_productions {
+			ResourceProductions::None => (),
+			ResourceProductions::One(production1) => {
+				Self::produce(hex_board, production1, multiplier);
+			},
+			ResourceProductions::Two(production1, production2) => {
+				Self::produce(hex_board, production1, multiplier);
+				Self::produce(hex_board, production2, multiplier);
+			},
+		}
+	}
+
+	fn produce(hex_board: &mut HexBoard<T>, production: &ResourceProduction, multiplier: u8) {
+		if production.human_requirements == 0 {
+			hex_board.resources[production.produces.resource_type as usize] +=
+				production.produces.amount.saturating_mul(multiplier);
+		} else {
+			hex_board.resources[production.produces.resource_type as usize] += cmp::min(
+				production.produces.amount,
+				hex_board.resources[ResourceType::Human as usize] / production.human_requirements,
+			)
+			.saturating_mul(multiplier);
+		}
+	}
+
 	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
 		let board_stats: BoardStats = hex_board.get_stats();
 
-		hex_board.mana = hex_board
-			.mana
-			.saturating_add(hex_board.humans / 3)
+		hex_board.resources[ResourceType::Mana as usize] = hex_board.resources
+			[ResourceType::Mana as usize]
+			.saturating_add(hex_board.resources[ResourceType::Human as usize] / 3)
 			.saturating_add(board_stats.get_tiles(TileType::Home));
 
 		let food_and_water_eaten = cmp::min(
-			hex_board.food.saturating_mul(T::FoodPerHuman::get()),
-			T::WaterPerHuman::get() * hex_board.water, /* It is safe to multiply Percent, it
-			                                            * will never overflow */
+			hex_board.resources[ResourceType::Food as usize].saturating_mul(T::FoodPerHuman::get()),
+			hex_board.resources[ResourceType::Water as usize]
+				.saturating_mul(T::WaterPerHuman::get()),
 		);
 
 		let mut home_weighted: u8 = 0;
@@ -1094,39 +1191,46 @@ impl<T: Config> Pallet<T> {
 			1,
 		);
 
-		hex_board.water = hex_board.water.saturating_add(board_stats.get_tiles(TileType::Water));
+		let tile_resource_productions = T::TileResourceProductions::get();
 
-		hex_board.food = hex_board
-			.food
-			.saturating_add(board_stats.get_tiles(TileType::Grass))
-			.saturating_add(T::FoodPerTree::get() * board_stats.get_tiles(TileType::Tree));
+		for tile_type in [
+			TileType::Grass,
+			TileType::Water,
+			TileType::Mountain,
+			TileType::Tree,
+			TileType::Desert,
+			TileType::Cave,
+		] {
+			Self::tile_produce(hex_board, &tile_resource_productions[tile_type as usize], board_stats.get_tiles(tile_type));
+		}
 
-		hex_board.wood = hex_board.wood.saturating_add(cmp::min(
-			board_stats.get_tiles(TileType::Tree).saturating_mul(3),
-			hex_board.humans / 2,
-		));
-
-		hex_board.stone = hex_board
-			.stone
-			.saturating_add(cmp::min(
-				board_stats.get_tiles(TileType::Mountain) * 4,
-				hex_board.humans / 4,
-			))
-			.saturating_add(cmp::min(
-				board_stats.get_tiles(TileType::Cave) * 2,
-				hex_board.humans / 2,
-			));
-
-		hex_board.gold = hex_board
-			.gold
-			.saturating_add(cmp::min(board_stats.get_tiles(TileType::Cave), hex_board.humans / 3));
-
-		hex_board.humans = hex_board.humans.saturating_add(new_humans);
+		hex_board.resources[ResourceType::Human as usize] = new_humans;
 	}
 
 	/// Check if the hexagon at (q, r) is within the valid bounds of the grid
 	fn is_valid_hex(max_distance: &i8, q: &i8, r: &i8) -> bool {
 		&q.abs() <= max_distance && &r.abs() <= max_distance
+	}
+
+	/// Check if at least one of the neighbouring tiles is not Empty.
+	fn not_surrounded_by_empty_tiles(
+		neighbours: &Vec<Option<(i8, i8)>>,
+		hex_grid: &HexGrid<T>,
+		max_distance: &i8,
+		side_length: &i8,
+	) -> bool {
+		for neighbour in neighbours {
+			match neighbour {
+				Some((q, r)) =>
+					if hex_grid[Self::coords_to_index(max_distance, side_length, &q, &r) as usize]
+						.get_type() != TileType::Empty
+					{
+						return true
+					},
+				None => (),
+			};
+		}
+		false
 	}
 
 	/// Get the neighbors of a hex tile in the grid
@@ -1212,19 +1316,42 @@ pub trait GetTileInfo {
 	fn same(&self, other: &Self) -> bool {
 		self.get_type() == other.get_type()
 	}
+
+	fn get_home() -> Self;
 }
 
-trait GameProperties {
+trait GameProperties<T: Config> {
 	// Player made a move
 	// It is used for determining whether to generate a new selection
 	fn get_played(&self) -> bool;
 	fn set_played(&mut self, played: bool) -> ();
-
-	fn get_max_rounds(&self) -> u8;
 
 	fn get_round(&self) -> u8;
 	fn set_round(&mut self, round: u8) -> ();
 
 	fn get_player_turn(&self) -> u8;
 	fn set_player_turn(&mut self, turn: u8) -> ();
+
+	fn get_state(&self) -> GameState;
+	fn set_state(&mut self, state: GameState) -> ();
+
+	fn borrow_players(&self) -> &Players<T>;
+
+	fn next_turn(&mut self) -> () {
+		let player_turn = self.get_player_turn();
+
+		let next_player_turn =
+			(player_turn + 1) % self.borrow_players().len().saturated_into::<u8>();
+
+		self.set_player_turn(next_player_turn);
+
+		if next_player_turn == 0 {
+			let round = self.get_round() + 1;
+			self.set_round(round);
+
+			if round > T::MaxRounds::get() {
+				self.set_state(GameState::Finished{ winner: None });
+			}
+		}
+	}
 }

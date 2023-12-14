@@ -1,0 +1,19 @@
+{
+    "name": "svarog-runner",
+    "version": "0.0.1",
+    "description": "Svarog is a development framework for any networks that are based on the substrate FRAME node system",
+    "author": "Nikola CBS",
+    "repository": "https://github.com/Ceres-Blockchain-Solutions/svarog",
+    "license": "MIT",
+    "main": "dist/lib/es5/index.js",
+    "module": "dist/lib/es6/index.js",
+    "bin": "dist/lib/es5/svarog.js",
+    "dependencies": {
+        "chalk": "4.1.2"
+    },
+    "devDependencies": {
+        "@types/chalk": "^2.2.0",
+        "@types/node": "^20.10.0",
+        "typescript": "^5.2.2"
+    }
+}

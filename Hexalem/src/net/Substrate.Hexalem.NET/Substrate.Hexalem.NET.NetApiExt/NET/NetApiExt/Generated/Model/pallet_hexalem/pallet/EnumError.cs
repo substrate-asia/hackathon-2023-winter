@@ -38,17 +38,17 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         NotEnoughResources = 9,
         
-        NotEnoughMana = 10,
+        NotEnoughPopulation = 10,
         
-        NotEnoughPopulation = 11,
+        BuyIndexOutOfBounds = 11,
         
-        BuyIndexOutOfBounds = 12,
+        PlaceIndexOutOfBounds = 12,
         
-        PlaceIndexOutOfBounds = 13,
+        PlayerNotOnTurn = 13,
         
-        NoMoves = 14,
+        PlayerNotInGame = 14,
         
-        PlayerNotOnTurn = 15,
+        CurrentPlayerCannotForceFinishTurn = 15,
         
         GameNotPlaying = 16,
         
@@ -61,10 +61,14 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         CannotLevelUpEmptyTile = 20,
         
         CannotLevelUp = 21,
+        
+        TileSurroundedByEmptyTiles = 22,
+        
+        BlocksToPlayLimitNotPassed = 23,
     }
     
     /// <summary>
-    /// >> 138 - Variant[pallet_hexalem.pallet.Error]
+    /// >> 142 - Variant[pallet_hexalem.pallet.Error]
     /// The `Error` enum of this pallet.
     /// </summary>
     public sealed class EnumError : BaseEnum<Error>

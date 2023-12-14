@@ -26,14 +26,18 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         finish_turn = 3,
         
-        root_delete_game = 4,
+        force_finish_turn = 4,
+        
+        receive_reward = 5,
+        
+        root_delete_game = 6,
     }
     
     /// <summary>
     /// >> 123 - Variant[pallet_hexalem.pallet.Call]
     /// Contains a variant per dispatchable extrinsic that this pallet has.
     /// </summary>
-    public sealed class EnumCall : BaseEnumExt<Call, BaseTuple<Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32>, Substrate.NetApi.Model.Types.Primitive.U8>, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Move, Substrate.NetApi.Model.Types.Primitive.U8, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8>
+    public sealed class EnumCall : BaseEnumExt<Call, BaseTuple<Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32>, Substrate.NetApi.Model.Types.Primitive.U8>, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Move, Substrate.NetApi.Model.Types.Primitive.U8, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8>
     {
     }
 }

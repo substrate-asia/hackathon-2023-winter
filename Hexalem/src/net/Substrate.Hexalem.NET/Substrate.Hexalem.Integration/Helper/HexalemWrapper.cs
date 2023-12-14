@@ -28,18 +28,7 @@ namespace Substrate.Integration.Helper
 
             foreach (var (board, playerAddress) in boards.Zip(game.Players, (b, p) => (b, p)))
             {
-                var ressources = new List<byte>()
-                {
-                    board.Mana,
-                    board.Humans,
-                    board.Water,
-                    board.Food,
-                    board.Wood,
-                    board.Stone,
-                    board.Gold
-                };
-
-                var currentPlayer = new HexaPlayer(Utils.GetPublicKeyFrom(playerAddress), ressources.ToArray());
+                var currentPlayer = new HexaPlayer(Utils.GetPublicKeyFrom(playerAddress), board.Resources);
 
                 result.HexaTuples.Add((currentPlayer, GetHexaBoard(board)));
             }
