@@ -16,26 +16,22 @@ export default function BreadCrumb({ items }) {
         <ArrowCaretLeft className="w-[24px] h-[24px]" />
       </div>
       <div className="flex gap-[8px] text16semibold">
-        {items?.map((item, index) => {
-          if (item.url) {
-            return (
+        {items?.map((item, index) => (
+          <Fragment key={index}>
+            {!!index && <span className="text-text-tertiary">/</span>}
+            {item.url ? (
               <Link
-                key={index}
                 className="cursor-pointer text-text-primary"
                 href={item.url}
               >
                 {item.name}
               </Link>
-            );
-          }
-
-          return (
-            <Fragment key={index}>
-              <span className="text-text-tertiary">/</span>
+            ) : (
               <span className="text-text-tertiary">{item.name}</span>
-            </Fragment>
-          );
-        })}
+            )}
+          </Fragment>
+        ))}
+
       </div>
     </div>
   );

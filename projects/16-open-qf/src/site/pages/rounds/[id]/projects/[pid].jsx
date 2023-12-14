@@ -11,7 +11,7 @@ import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
 
 const ProjectPage = withCommonPageWrapper(() => {
-  const { roundId } = useServerSideProps();
+  const { roundId, detail } = useServerSideProps();
 
   return (
     <DetailLayout
@@ -19,11 +19,15 @@ const ProjectPage = withCommonPageWrapper(() => {
         <BreadCrumb
           items={[
             {
-              name: "Explorer",
+              name: `Home`,
+              url: `/`,
+            },
+            {
+              name: `Round #${roundId}`,
               url: `/rounds/${roundId}`,
             },
             {
-              name: "Project Detail",
+              name: detail?.name ?? "Project Detail",
             },
           ]}
         />
