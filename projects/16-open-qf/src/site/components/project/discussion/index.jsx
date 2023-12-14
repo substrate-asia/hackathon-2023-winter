@@ -45,7 +45,7 @@ export default function Discussion() {
         dispatch(newErrorToast(error.message));
       }
     },
-    [dispatch, router, roundId, projectId],
+    [dispatch, router, roundId, projectId, account?.address],
   );
 
   return (

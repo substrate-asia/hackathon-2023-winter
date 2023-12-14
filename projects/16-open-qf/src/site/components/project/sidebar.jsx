@@ -3,6 +3,8 @@ import { Button } from "@/components/button";
 import { useServerSideProps } from "@/context/serverSideProps";
 import { toPrecision } from "@osn/common";
 import NetworkUser from "../user/networkUser";
+import DonatePopup from "../donatePopup";
+import { useState } from "react";
 
 const Content = tw.div`flex flex-col gap-[16px]`;
 
@@ -23,6 +25,7 @@ function getDecimalsFromSymbol(symbol) {
 }
 
 export default function Sidebar() {
+  const [showDonatePopup, setShowDonatePopup] = useState(false);
   const { detail } = useServerSideProps();
   const contributors = detail?.contributors || [];
   const totalRaised = contributors
@@ -51,7 +54,12 @@ export default function Sidebar() {
             }
           />
         </Content>
-        <Button className="w-full">Donate</Button>
+        <Button className="w-full" onClick={() => setShowDonatePopup(true)}>
+          Donate
+        </Button>
+        {showDonatePopup && (
+          <DonatePopup open={showDonatePopup} setOpen={setShowDonatePopup} />
+        )}
       </div>
     </div>
   );

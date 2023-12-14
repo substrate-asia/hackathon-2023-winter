@@ -1,39 +1,17 @@
-import BreadCrumb from "@/components/breadCrumb";
+import BreadCrumb from "@/components/project/breadCrumb";
 import DetailLayout from "@/components/layouts/detailLayout";
 import Contributions from "@/components/project/contributors";
 import ProjectDetail from "@/components/project/detail";
 import Discussion from "@/components/project/discussion";
 import Sidebar from "@/components/project/sidebar";
-import { useServerSideProps } from "@/context/serverSideProps";
 import { ssrNextApi } from "@/services";
 import { EmptyList } from "@/utils/constants";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
 
 const ProjectPage = withCommonPageWrapper(() => {
-  const { roundId, detail } = useServerSideProps();
-
   return (
-    <DetailLayout
-      breadcrumb={
-        <BreadCrumb
-          items={[
-            {
-              name: `Home`,
-              url: `/`,
-            },
-            {
-              name: `Round #${roundId}`,
-              url: `/rounds/${roundId}`,
-            },
-            {
-              name: detail?.name ?? "Project Detail",
-            },
-          ]}
-        />
-      }
-      sidebar={<Sidebar />}
-    >
+    <DetailLayout breadcrumb={<BreadCrumb />} sidebar={<Sidebar />}>
       <div className="flex flex-col gap-[20px]">
         <ProjectDetail />
         <Contributions />

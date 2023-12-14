@@ -26,7 +26,7 @@ function Editor({ onSubmit: _onSubmit = noop }, ref) {
       setLoading(false);
       setContent("");
     }
-  }, [dispatch, _onSubmit, content]);
+  }, [dispatch, _onSubmit, content, setContent]);
 
   return (
     <div className="mt-[16px]">
