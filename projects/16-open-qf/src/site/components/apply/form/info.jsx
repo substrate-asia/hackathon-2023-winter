@@ -135,7 +135,7 @@ function RelatedLinksField({ defaultValue = [], onChangeValue = noop }) {
   return (
     <div>
       <div className="space-y-3">
-        {links.map((value, idx) => (
+        {links?.map((value, idx) => (
           <Input
             key={idx}
             value={value}
