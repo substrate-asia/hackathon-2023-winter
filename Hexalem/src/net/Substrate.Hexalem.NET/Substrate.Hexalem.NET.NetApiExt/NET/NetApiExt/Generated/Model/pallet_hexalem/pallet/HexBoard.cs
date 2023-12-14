@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 129 - Composite[pallet_hexalem.pallet.HexBoard]
+    /// >> 130 - Composite[pallet_hexalem.pallet.HexBoard]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class HexBoard : BaseType

@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     }
     
     /// <summary>
-    /// >> 139 - Variant[pallet_hexalem.pallet.ResourceProductions]
+    /// >> 140 - Variant[pallet_hexalem.pallet.ResourceProductions]
     /// </summary>
     public sealed class EnumResourceProductions : BaseEnumExt<ResourceProductions, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceProduction, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceProduction, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceProduction>>
     {

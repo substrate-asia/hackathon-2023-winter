@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 140 - Composite[pallet_hexalem.pallet.ResourceProduction]
+    /// >> 141 - Composite[pallet_hexalem.pallet.ResourceProduction]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class ResourceProduction : BaseType

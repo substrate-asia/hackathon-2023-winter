@@ -30,11 +30,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumGameState _state;
         
         /// <summary>
-        /// >> max_rounds
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _maxRounds;
-        
-        /// <summary>
         /// >> round
         /// </summary>
         private Substrate.NetApi.Model.Types.Primitive.U8 _round;
@@ -78,18 +73,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             set
             {
                 this._state = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 MaxRounds
-        {
-            get
-            {
-                return this._maxRounds;
-            }
-            set
-            {
-                this._maxRounds = value;
             }
         }
         
@@ -186,7 +169,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         {
             var result = new List<byte>();
             result.AddRange(State.Encode());
-            result.AddRange(MaxRounds.Encode());
             result.AddRange(Round.Encode());
             result.AddRange(PlayerTurn.Encode());
             result.AddRange(Played.Encode());
@@ -202,8 +184,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             State = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumGameState();
             State.Decode(byteArray, ref p);
-            MaxRounds = new Substrate.NetApi.Model.Types.Primitive.U8();
-            MaxRounds.Decode(byteArray, ref p);
             Round = new Substrate.NetApi.Model.Types.Primitive.U8();
             Round.Decode(byteArray, ref p);
             PlayerTurn = new Substrate.NetApi.Model.Types.Primitive.U8();

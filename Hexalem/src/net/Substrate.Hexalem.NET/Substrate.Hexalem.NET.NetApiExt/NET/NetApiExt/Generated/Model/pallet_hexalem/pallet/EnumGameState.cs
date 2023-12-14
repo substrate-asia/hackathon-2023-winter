@@ -23,14 +23,12 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         Playing = 1,
         
         Finished = 2,
-        
-        Draw = 3,
     }
     
     /// <summary>
     /// >> 127 - Variant[pallet_hexalem.pallet.GameState]
     /// </summary>
-    public sealed class EnumGameState : BaseEnumExt<GameState, BaseVoid, BaseVoid, Substrate.NetApi.Model.Types.Primitive.U8, BaseVoid>
+    public sealed class EnumGameState : BaseEnumExt<GameState, BaseVoid, BaseVoid, Substrate.NetApi.Model.Types.Base.BaseOpt<Substrate.NetApi.Model.Types.Primitive.U8>>
     {
     }
 }

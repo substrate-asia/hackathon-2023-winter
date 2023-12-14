@@ -46,9 +46,8 @@ pub mod pallet {
 		Matchmaking,
 		Playing,
 		Finished {
-			winner: u8
+			winner: Option<u8>
 		}, // Ready to reward players
-		Draw,
 	}
 
 	// Index used for referencing the TileCost
@@ -60,7 +59,6 @@ pub mod pallet {
 	#[scale_info(skip_type_params(T))]
 	pub struct Game<T: Config> {
 		pub state: GameState,
-		pub max_rounds: u8, // maximum number of rounds
 
 		// These can be compressed to take only u8
 		pub round: u8,       // current round number
@@ -81,10 +79,6 @@ pub mod pallet {
 
 		fn set_played(&mut self, played: bool) -> () {
 			self.played = played;
-		}
-
-		fn get_max_rounds(&self) -> u8 {
-			self.max_rounds
 		}
 
 		fn get_round(&self) -> u8 {
@@ -316,6 +310,9 @@ pub mod pallet {
 		type MinPlayers: Get<u8>;
 
 		#[pallet::constant]
+		type MaxRounds: Get<u8>;
+
+		#[pallet::constant]
 		type BlocksToPlayLimit: Get<u8>;
 
 		#[pallet::constant]
@@ -522,7 +519,6 @@ pub mod pallet {
 			// Default Game Config
 			let mut game = Game {
 				state: GameState::Playing,
-				max_rounds: 15,
 				round: 0,
 				played: false,
 				last_played_block: current_block_number,
@@ -726,7 +722,7 @@ pub mod pallet {
 			Self::evaluate_board(&mut hex_board);
 
 			if Self::is_game_won(&hex_board) {
-				game.state = GameState::Finished { winner: game.get_player_turn() };
+				game.state = GameState::Finished { winner: Some(game.get_player_turn()) };
 			}
 
 			// Handle next turn counting
@@ -1330,8 +1326,6 @@ trait GameProperties<T: Config> {
 	fn get_played(&self) -> bool;
 	fn set_played(&mut self, played: bool) -> ();
 
-	fn get_max_rounds(&self) -> u8;
-
 	fn get_round(&self) -> u8;
 	fn set_round(&mut self, round: u8) -> ();
 
@@ -1355,8 +1349,8 @@ trait GameProperties<T: Config> {
 			let round = self.get_round() + 1;
 			self.set_round(round);
 
-			if round > self.get_max_rounds() {
-				self.set_state(GameState::Draw);
+			if round > T::MaxRounds::get() {
+				self.set_state(GameState::Finished{ winner: None });
 			}
 		}
 	}

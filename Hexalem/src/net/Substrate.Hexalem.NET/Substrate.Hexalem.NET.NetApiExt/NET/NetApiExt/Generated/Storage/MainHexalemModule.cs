@@ -199,6 +199,16 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         }
         
         /// <summary>
+        /// >> MaxRounds
+        /// </summary>
+        public Substrate.NetApi.Model.Types.Primitive.U8 MaxRounds()
+        {
+            var result = new Substrate.NetApi.Model.Types.Primitive.U8();
+            result.Create("0x19");
+            return result;
+        }
+        
+        /// <summary>
         /// >> BlocksToPlayLimit
         /// </summary>
         public Substrate.NetApi.Model.Types.Primitive.U8 BlocksToPlayLimit()
