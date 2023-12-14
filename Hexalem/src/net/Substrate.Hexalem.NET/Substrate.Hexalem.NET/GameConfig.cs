@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace Substrate.Hexalem.Engine
 {
@@ -34,15 +33,6 @@ namespace Substrate.Hexalem.Engine
 
         public const int DEFAULT_WINNING_CONDITION_GOLD = 10;
         public const int DEFAULT_WINNING_CONDITION_HUMAN = 7;
-
-        /// <summary>
-        /// Upgradeable tile type
-        /// </summary>
-        /// <returns></returns>
-        public static List<TileType> UpgradableTypeTile()
-        {
-            return new List<TileType>() { TileType.Home }; // For now, only home can be upgrade
-        }
 
         /// <summary>
         /// Map tile upgrade cost
@@ -91,7 +81,7 @@ namespace Substrate.Hexalem.Engine
                 case TileType.Tree:
                 case TileType.Desert:
                 case TileType.Cave:
-                    materialCost[(int)RessourceType.Mana] = (byte) (1 + tileLevel);
+                    materialCost[(int)RessourceType.Mana] = (byte)(1 + tileLevel);
                     return materialCost;
 
                 case TileType.Home:

@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Substrate.Hexalem.Bot\Substrate.Hexalem.Game.csproj" />
     <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.Engine.csproj" />
   </ItemGroup>
 

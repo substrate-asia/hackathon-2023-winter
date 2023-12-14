@@ -1,4 +1,4 @@
-﻿namespace Substrate.Hexalem.Bot
+﻿namespace Substrate.Hexalem.Game
 {
     public class PlayAction
     {

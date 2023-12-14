@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Substrate.Hexalem.Bot
+namespace Substrate.Hexalem.Game
 {
     public class MonteCarlo : Strategy
     {
@@ -100,7 +100,7 @@ namespace Substrate.Hexalem.Bot
             .OrderBy(child => child.Visits)
                 .LastOrDefault();
 
-            return bestChild.Action ?? default(PlayAction);
+            return bestChild.Action ?? default;
         }
 
         // Implement the following methods based on your specific game rules:

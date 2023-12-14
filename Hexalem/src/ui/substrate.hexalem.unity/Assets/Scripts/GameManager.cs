@@ -1,19 +1,18 @@
 using Assets.Scripts;
 using Assets.Scripts.Shared;
 using Substrate.Hexalem;
+using Substrate.Integration.Client;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEditor;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.UIElements;
 using static Assets.Scripts.ScreensSubState.MainPlaySubState;
-using static Assets.Scripts.ScreenStates.MainScreenState;
-using static UnityEditor.PlayerSettings;
-using static UnityEngine.GraphicsBuffer;
 
 public class GameManager : MonoBehaviour
 {
+    protected NetworkManager Network => NetworkManager.GetInstance();
+
     [SerializeField]
     private GameObject _playerGrid;
     private List<MeshRenderer> _tileDefaultMesh;
@@ -36,6 +35,7 @@ public class GameManager : MonoBehaviour
     private int? _selectionIndex = null;
     private int? _boardIndex = null;
     private Vector3 _initialCameraPosition;
+    private Dictionary<string, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event> _state;
     public static HexaGame HexaGame;
 
     public GameManager()
@@ -164,7 +164,7 @@ public class GameManager : MonoBehaviour
         HandleBoardAction();
     }
 
-    void StartNewGame(string gameType)
+    private Task StartNewGame(string gameType)
     {
         if (gameType == "training")
         {
@@ -193,13 +193,47 @@ public class GameManager : MonoBehaviour
         else if (gameType == "local")
         {
             Debug.Log("Start a new local game (vs bots)");
-
         }
         else
         {
             Debug.Log("Start a new Pvp game");
+            //_state = new Dictionary<string, NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event>();
+
+            //Network.Client.ExtrinsicManager.ExtrinsicUpdated += async (string subscriptionId, ExtrinsicInfo queueInfo) =>
+            //{
+            //    if (queueInfo.IsSuccess)
+            //    {
+            //        Debug.Log("Extrinsic success");
+            //        if (_state.ContainsKey(subscriptionId))
+            //        {
+            //            Debug.Log($"{_state[subscriptionId]} successfully received !");
+
+            //            switch (_state[subscriptionId])
+            //            {
+            //                case Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.GameCreated:
+            //                case Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.NewTurn:
+            //                    _state.Remove(subscriptionId);
+            //                    await PlayTurnAsync(CancellationToken.None);
+            //                    break;
+
+            //                case Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Event.MovePlayed:
+            //                    _state.Remove(subscriptionId);
+            //                    await FinishTurnAsync(CancellationToken.None);
+            //                    break;
+            //            }
+            //        }
+            //    }
+            //};
+
+            //Network.Client.CreateGameAsync(
+            //    Network.Client.Account, 
+            //    new List<Substrate.NetApi.Model.Types.Account>() { Network.Client.Account, Network.Bob },
+            //    (byte)GridSize.Medium,
+            //    10, CancellationToken.None);
 
         }
+
+        return Task.CompletedTask;
     }
 
     public void PlayerPlayed()

@@ -1,22 +1,16 @@
-﻿using Newtonsoft.Json.Linq;
-using Serilog;
-using StrobeNet.Extensions;
+﻿using Serilog;
 using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Storage;
-using Substrate.Integration.Call;
 using Substrate.Integration.Client;
 using Substrate.Integration.Helper;
-using Substrate.Integration.Model;
 using Substrate.NetApi;
 using Substrate.NetApi.Model.Types;
 using Substrate.NetApi.Model.Types.Base;
 using Substrate.NetApi.Model.Types.Primitive;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Numerics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,8 +18,6 @@ namespace Substrate.Integration
 {
     public partial class SubstrateNetwork : BaseClient
     {
-
-
         #region storage
 
         /// <summary>
@@ -46,7 +38,7 @@ namespace Substrate.Integration
             key.Create(gameId);
 
             var result = await SubstrateClient.HexalemModuleStorage.GameStorage(key, token);
-            
+
             if (result == null) return null;
 
             return new GameSharp(gameId, result);
@@ -63,6 +55,7 @@ namespace Substrate.Integration
 
             return new BoardSharp(result);
         }
+
         #endregion storage
 
         #region call
@@ -106,6 +99,24 @@ namespace Substrate.Integration
             };
 
             var extrinsic = HexalemModuleCalls.Play(moveStruct);
+
+            return await GenericExtrinsicAsync(account, extrinsicType, extrinsic, concurrentTasks, token);
+        }
+
+        /// <summary>
+        /// Upgrade a tile
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="placeIndex"></param>
+        /// <param name="buyIndex"></param>
+        /// <param name="concurrentTasks"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<string?> UpgradeAsync(Account account, byte placeIndex, int concurrentTasks, CancellationToken token)
+        {
+            var extrinsicType = $"Hexalem.Upgrade";
+
+            var extrinsic = HexalemModuleCalls.Upgrade(new U8(placeIndex));
 
             return await GenericExtrinsicAsync(account, extrinsicType, extrinsic, concurrentTasks, token);
         }

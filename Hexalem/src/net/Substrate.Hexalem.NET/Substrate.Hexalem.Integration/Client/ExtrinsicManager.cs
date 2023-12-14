@@ -21,7 +21,7 @@ namespace Substrate.Integration.Client
         public IEnumerable<ExtrinsicInfo> PreInblock => _data.Values.Where(p => !p.IsInBlock && !p.IsCompleted);
 
         private readonly Dictionary<string, ExtrinsicInfo> _data;
-        
+
         public ExtrinsicManager(SubstrateClientExt client)
         {
             _data = new Dictionary<string, ExtrinsicInfo>();
@@ -106,7 +106,7 @@ namespace Substrate.Integration.Client
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="subscriptionId"></param>
         /// <param name="allExtrinsicEvents"></param>
@@ -122,9 +122,8 @@ namespace Substrate.Integration.Client
             ExtrinsicUpdated?.Invoke(subscriptionId, queueInfo);
         }
 
-
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="subscriptionId"></param>
         /// <param name="errorMsg"></param>
@@ -153,6 +152,5 @@ namespace Substrate.Integration.Client
                 subscriptionId,
                 queueInfo.TransactionEvent);
         }
-
     }
 }

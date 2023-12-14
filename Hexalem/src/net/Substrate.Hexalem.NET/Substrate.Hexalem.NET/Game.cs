@@ -1,9 +1,6 @@
 ﻿using Serilog;
 using System;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-
-[assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
 
 namespace Substrate.Hexalem.Engine
 {
@@ -49,7 +46,7 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         public static HexaGame? ChooseAndPlace(uint blockNumber, HexaGame hexaGame, byte playerIndex, int selectionIndex, int index)
         {
-            return ChooseAndPlace(blockNumber, hexaGame, playerIndex, selectionIndex, hexaGame.HexaTuples[0].board.ToCoords(index));
+            return ChooseAndPlace(blockNumber, hexaGame, playerIndex, selectionIndex, hexaGame.HexaTuples[playerIndex].board.ToCoords(index));
         }
 
         /// <summary>
@@ -72,6 +69,19 @@ namespace Substrate.Hexalem.Engine
             hexaGame.PostMove(blockNumber);
 
             return hexaGame;
+        }
+
+        /// <summary>
+        /// Player upgrade a tile
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <param name="index"></param>
+        /// <returns></returns>
+        public static HexaGame? Upgrade(uint blockNumber, HexaGame hexaGame, byte playerIndex, int index)
+        {
+            return Upgrade(blockNumber, hexaGame, playerIndex, hexaGame.HexaTuples[playerIndex].board.ToCoords(index));
         }
 
         /// <summary>
