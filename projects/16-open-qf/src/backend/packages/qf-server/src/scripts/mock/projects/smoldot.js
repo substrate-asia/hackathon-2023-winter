@@ -4,7 +4,8 @@ const smoldot = {
   name: "Smoldot",
   summary:
     "Smoldot is an alternative client of Substrate-based chains, including Polkadot.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "15kgSF6oSMFeaN7xYAykihoyQFZLRu1cF5FaBdiSDHJ233H5",
+  donationAddress: "138brKiwierdmvLz2m9kxq5MbmRFH6w34RbMh7vRXoXSAKLz",
   category: category.libs,
   links: ["https://github.com/smol-dot"],
   description: `As many of you might already know, smoldot is an alternative implementation of the Polkadot client focused on using as little CPU, memory, and bandwidth as possible. It can be embedded within a web page, and thus allow end users to connect directly to the Polkadot network.

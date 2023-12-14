@@ -4,7 +4,8 @@ const subsquare = {
   name: "SubSquare",
   summary:
     "A governance platform for substrate based chains. SubSquare enables community members to propose, discuss and vote on governance proposals.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "12sNU8BXivMj1xQmcd4T39ugCyHjmhir8jkPqfAw5ZDESrx4",
+  donationAddress: "15gJjTcH3Gv2o2YagueVRAMHStySDHRYX1Zrakh2HibpaScV",
   category: category.governance,
   links: [
     "https://www.subsquare.io/",

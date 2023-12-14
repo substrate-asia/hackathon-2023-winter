@@ -4,7 +4,8 @@ const subquery = {
   name: "SubQuery",
   summary:
     "SubQuery is a fast, flexible, and reliable open-source data indexer that provides you with custom APIs for your web3 project across all of our supported chains.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "121kSSsSRJAu84ZA2T1j8Lff7f1HzKGPu2kYTm26YJe8RJuh",
+  donationAddress: "13gm22yF2qKMiEkG6ton2iYpWZE2D2TB9TFTnQciJpTuuqqb",
   category: category.data,
   links: [
     "https://linktr.ee/subquerynetwork",

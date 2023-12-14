@@ -4,7 +4,8 @@ const subwallet = {
   name: "SubWallet",
   summary:
     "A non-custodial Polkadot & Ethereum wallet. Available on browser extension, mobile app & web dashboard.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "5CFktU1BC5sXSfs64PJ9vBVUGZp2ezpVRGUCjAXv7spRZR3W",
+  donationAddress: "15ASYNVVbjR44YZCV34yzQk8ZyNoXZbNYvC4piLxa5LGY8s2",
   category: category.wallet,
   links: [
     "https://linktr.ee/subwallet.app",

@@ -4,7 +4,8 @@ const polkassembly = {
   name: "Polkassembly",
   summary:
     "Polkassembly is a governance forum for Polkadot & Kusama and all substrate chains!",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "13SceNt2ELz3ti4rnQbY1snpYH4XE4fLFsW8ph9rpwJd6HFC",
+  donationAddress: "15VobmA4kybmJW6dLJ4Sd5YkdugqqeNcadTwtBfarvBuB6Ad",
   category: category.governance,
   links: ["https://polkassembly.io/", "https://twitter.com/polk_gov"],
   description: `Polkassembly is an integral part of Polkadot and Kusama governance.

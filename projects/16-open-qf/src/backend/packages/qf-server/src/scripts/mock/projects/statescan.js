@@ -3,7 +3,8 @@ const { category } = require("../../../utils/consts/category");
 const statescan = {
   name: "Statescan",
   summary: "A set of explorers for substrate chains.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "12sNU8BXivMj1xQmcd4T39ugCyHjmhir8jkPqfAw5ZDESrx4",
+  donationAddress: "15YWmEvoUueukbKHzCgpg4SCpsZVgabpftMiCRQbryFXszQx",
   category: category.explorer,
   links: ["https://polkadot.statescan.io/"],
   description: `## Statescan on-chain NFT metadata support

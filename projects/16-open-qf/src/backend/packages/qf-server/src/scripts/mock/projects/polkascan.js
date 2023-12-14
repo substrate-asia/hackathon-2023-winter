@@ -4,7 +4,8 @@ const polkascan = {
   name: "Polkascan",
   summary:
     "Polkascan is a publicly available instance of a general-purpose open-source explorer that disseminates the highest granularity of data found on the Polkadot Ecosystem’s Relay Chains and supported Parachains.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "14DNg1HuobydE4BQ4jmy4VsuupoUzmhrHhAWnGpuXVZCZ6ig",
+  donationAddress: "143tthLwRZrMxJ9GPuVEucR7mn6wmTwaSathYNAxhW1U9J7W",
   category: category.explorer,
   links: ["https://explorer.polkascan.io/", "https://twitter.com/polkascan"],
   description: `Now, we aim to enhance the Polkascan Explorer by tapping into the rich data resource Subsquid offers, making the tool more powerful and user-friendly.

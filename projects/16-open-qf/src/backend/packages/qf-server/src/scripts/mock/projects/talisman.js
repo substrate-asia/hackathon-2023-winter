@@ -4,7 +4,8 @@ const talisman = {
   name: "Talisman",
   summary:
     "A user-friendly wallet built for Polkadot & Ethereum. The better way to explore Web3.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "1RVe7FHwgGZVKcGWm4NQ2TVK3u9R7xxDADiGE2y5fx2heTH",
+  donationAddress: "12NaXSZCjDefz1b9vWvwJMasJSxQ2yewuTw92Q1m5XpxcsU3",
   category: category.wallet,
   links: ["https://www.talisman.xyz/", "https://twitter.com/wearetalisman"],
   description: `Talisman is a community-owned wallet that enables users to “traverse the Paraverse” with ease. We believe in a future where everyone has freedom via true agency over their intentions and finances, and we believe that DotSama will bring this to fruition.

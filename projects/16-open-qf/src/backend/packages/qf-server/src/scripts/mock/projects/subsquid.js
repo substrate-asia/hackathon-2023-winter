@@ -4,7 +4,8 @@ const subsquid = {
   name: "SubSquid",
   summary:
     "Subsquid Network is a decentralized query engine optimized for batch extraction of large volumes of data. It currently serves historial on-chain data ingested from 100+ EVM and Substrate networks, including event logs, transaction receipts, traces and per-transaction state diffs.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "13bfKSQXoBn3AMLtZaW6BKv797fqZzsD3PYF6xpJDir3tdoE",
+  donationAddress: "129owa3dUqv3BNPYTq28mj5bjsAwuFXufpFM8VHXbXFqX9Yx",
   category: category.data,
   links: ["https://subsquid.io/", "https://twitter.com/subsquid"],
   description: `This proposal has been put forward to cover for the infrastructure costs of running an indexing service for the community.

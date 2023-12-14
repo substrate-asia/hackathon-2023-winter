@@ -4,7 +4,8 @@ const subscan = {
   name: "Subscan",
   summary:
     "Subscan is a high-precision Web3 blockchain explorer that aggregate Substrate ecological network.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "14RYaXRSqb9rPqMaAVp1UZW2czQ6dMNGMbvukwfifi6m8ZgZ",
+  donationAddress: "14GsJZtnWDuExdz8g3EU48NS1AzEyn8LeU31oiBKZFhmSPvH",
   category: category.explorer,
   links: ["https://www.subscan.io/", "https://twitter.com/subscan_io/"],
   description: `## Overview

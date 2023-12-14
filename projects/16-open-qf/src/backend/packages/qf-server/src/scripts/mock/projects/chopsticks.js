@@ -3,7 +3,8 @@ const { category } = require("../../../utils/consts/category");
 const chopsticks = {
   name: "Chopsticks by Acala Network",
   summary: "Create parallel reality of your Substrate network.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "12eWtdVxQ9ScYD9AzyMuSsX8B9iEikWtUGiirJ1YJtDCCuwu",
+  donationAddress: "16dS95vdZ6DpvHobQ32YiUiDhYeNWV9KYny2QAUqSthBkX1y",
   category: category.libs,
   links: ["https://github.com/AcalaNetwork/chopsticks"],
   description: `Chopsticks is a testing client that enables 1-step creation of a mainnet replica of substrate-based network, for safely testing action and reviewing outcome. Projects can test new runtime, proposal actions, XCM, different configurations, dry run transactions, etc, to discover and eliminate issues before they arrive to the live network.

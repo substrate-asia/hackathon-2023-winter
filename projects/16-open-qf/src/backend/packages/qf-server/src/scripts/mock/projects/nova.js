@@ -3,7 +3,8 @@ const { category } = require("../../../utils/consts/category");
 const nova = {
   name: "Nova Wallet",
   summary: "Next-gen iOS/Android app for Polkadot & Kusam eco.",
-  creator: "5DctGWV3aRtMiapszBwAE4GR9AYEzGM4Gkn5gqyU5nU7R9uk",
+  creator: "15cfSaBcTxNr8rV59cbhdMNCRagFr3GE6B3zZRsCp4QHHKPu",
+  donationAddress: "1TPqWnkSK6MkUewriYXvvzVtJv7nSQFwrbNYghM3jehtx9T",
   category: category.wallet,
   links: ["https://novawallet.io/", "https://twitter.com/NovaWalletApp"],
   description: `## Leading mobile application for Polkadot ecosystem
