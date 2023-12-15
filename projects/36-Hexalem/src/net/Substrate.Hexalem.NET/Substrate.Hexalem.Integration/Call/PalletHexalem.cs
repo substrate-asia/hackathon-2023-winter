@@ -73,10 +73,10 @@ namespace Substrate.Integration.Call
         }
 
         /// <summary>
-        /// Finish turn
+        /// Root delete game
         /// </summary>
         /// <returns></returns>
-        public static EnumRuntimeCall HexalemFinishTurn(byte[] gameIdBytes)
+        public static EnumRuntimeCall HexalemRootDeleteGame(byte[] gameIdBytes)
         {
             Arr32U8 gameId = new Arr32U8();
             gameId.Create(gameIdBytes.Select(p => new U8(p)).ToArray());
