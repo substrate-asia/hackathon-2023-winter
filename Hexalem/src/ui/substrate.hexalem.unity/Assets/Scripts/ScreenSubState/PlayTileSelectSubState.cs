@@ -137,7 +137,7 @@ namespace Assets.Scripts
             }
             else if (!Network.Client.ExtrinsicManager.PreInblock.Any())
             {
-                var subscriptionId = await Network.Client.PlayAsync(Network.Client.Account, (byte)PlayScreenState.SelectedGridIndex, (byte)PlayScreenState.SelectedCardIndex, 1, CancellationToken.None);
+                var subscriptionId = await Network.Client.PlayAsync(Network.Client.Account, (byte)PlayScreenState.SelectedGridIndex, (byte)PlayScreenState.SelectedCardIndex, 2, CancellationToken.None);
                 if (subscriptionId == null)
                 {
                     _btnActionTitle.SetEnabled(true);
