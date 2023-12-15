@@ -1,6 +1,7 @@
 ﻿using Serilog;
 using Substrate.Hexalem.Engine.Extensions;
 using Substrate.Hexalem.Engine.GameException;
+using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,8 +39,15 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         public HexaPlayer CurrentPlayer => HexaTuples[PlayerTurn].player;
 
+        protected HexaGame()
+        {
+        }
+
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
+            if (id.Length != GameConfig.GAME_STORAGE_ID)
+                throw new ArgumentException($"id is not {GameConfig.GAME_STORAGE_ID} bytes length (currently = {id.Length})");
+
             Id = id;
             Value = new byte[GameConfig.GAME_STORAGE_SIZE];
 
@@ -92,26 +100,80 @@ namespace Substrate.Hexalem.Engine
             }
         }
 
-        /// <summary>
-        /// New selection
-        /// </summary>
-        /// <param name="blockNumber"></param>
-        /// <param name="selectBase">selection size</param>
-        /// <returns></returns>
-        //internal List<byte> NewSelection(uint blockNumber, int selectBase)
-        //{
-        //    var offSet = (byte)(blockNumber % 32);
+        public string Export()
+        {
+            var result = new List<byte>();
 
-        //    var result = new List<byte>();
+            result.AddRange(Id);
+            result.AddRange(Value);
 
-        //    for (int i = 0; i < selectBase; i++)
-        //    {
-        //        byte tileIndex = (byte)(Id[(offSet + i) % 32] % 16);
+            // Unbounded tiles are always <= SelectBase, we fill missing tiles (already draw) with -1
+            var unsetTile = Enumerable.Range(0, SelectBase).Select(x => (byte)0);
+            result.AddRange(UnboundTileOffers.Concat(unsetTile.Skip(UnboundTileOffers.Count)));
 
-        //        result.Add(tileIndex);
-        //    }
-        //    return result;
-        //}
+            foreach (var (player, board) in HexaTuples)
+            {
+                result.AddRange(player.Id);
+                result.AddRange(player.Value);
+
+                result.AddRange(board.Value);
+            }
+
+            return Utils.Bytes2HexString(result.ToArray());
+        }
+
+        public static HexaGame Import(string hex)
+        {
+            int p = 0;
+            var data = Utils.HexToByteArray(hex);
+            var id = data.Take(GameConfig.GAME_STORAGE_ID).ToArray();
+            p += GameConfig.GAME_STORAGE_ID;
+
+            var value = data.Skip(p).Take(GameConfig.GAME_STORAGE_SIZE).ToArray();
+            p += GameConfig.GAME_STORAGE_SIZE;
+
+            var playerCount = value[3];
+            var selectBase = value[5];
+
+            var unboundTile = data.Skip(p).Take(selectBase).Where(x => x > 0).ToArray();
+            p += selectBase;
+
+            var gridSize = (data.Skip(p).ToArray().Length - ((GameConfig.PLAYER_ADDRESS_STORAGE_SIZE + GameConfig.PLAYER_STORAGE_SIZE) * playerCount)) / playerCount;
+
+            if(gridSize != (int)GridSize.Small && gridSize != (int)GridSize.Medium && gridSize != (int)GridSize.Large)
+            {
+                throw new InvalidOperationException("Grid size is not valid");
+            }
+
+            var hexaTuple = new List<(HexaPlayer player, HexaBoard board)>();
+
+            for (int i = 0; i < playerCount; i++)
+            {
+                var pId = data.Skip(p).Take(GameConfig.PLAYER_ADDRESS_STORAGE_SIZE).ToArray();
+                p += GameConfig.PLAYER_ADDRESS_STORAGE_SIZE;
+
+                var pValue = data.Skip(p).Take(GameConfig.PLAYER_STORAGE_SIZE).ToArray();
+                p += GameConfig.PLAYER_STORAGE_SIZE;
+
+                var board = data.Skip(p).Take(gridSize).ToArray();
+                p += gridSize;
+
+                hexaTuple.Add((new HexaPlayer(pId, pValue), new HexaBoard(board)));
+            }
+            
+            if(p != data.Length)
+            {
+                throw new InvalidOperationException("Every bytes has not been set");
+            }
+
+            return new HexaGame()
+            {
+                Id = id,
+                Value = value,
+                UnboundTileOffers = unboundTile.ToList(),
+                HexaTuples = hexaTuple
+            };
+        }
 
         /// <summary>
         /// Refill selection

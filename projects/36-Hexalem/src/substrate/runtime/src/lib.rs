@@ -77,21 +77,28 @@ impl GetTileInfo for HexalemTile {
 		(self.0 >> 6) & 0x3
 	}
 
-	fn set_level(&mut self, level: u8) -> () {
-		self.0 = (self.0 & 0x3F) | ((level & 0x3) << 6);
-	}
+    fn set_level(&mut self, level: u8) {
+        self.0 = (self.0 & 0x3F) | (level << 6);
+    }
 
 	fn get_pattern(&self) -> TilePattern {
 		TilePattern::from_u8(self.0 & 0x7)
 	}
 
-	fn set_pattern(&mut self, value: TilePattern) -> () {
-		self.0 = (self.0 & 0xF8) | (value as u8 & 0x7)
-	}
+    fn set_pattern(&mut self, pattern: TilePattern) {
+        self.0 = (self.0 & 0xF8) | (pattern as u8);
+    }
 
 	fn get_home() -> Self {
 		Self(8) // Home level 0
 	}
+}
+
+impl HexalemTile {
+    pub fn new(tile_type: TileType, level: u8, pattern: TilePattern) -> Self {
+        let encoded = ((tile_type as u8) << 3) | ((level & 0x3) << 6) | (pattern as u8 & 0x7);
+        Self(encoded)
+    }
 }
 
 impl Default for HexalemTile {
@@ -385,112 +392,72 @@ parameter_types! {
 	];
 
 	pub const HexalemTileCosts: [TileCost<Runtime>; 15] = [
-		TileCost {
-			tile_to_buy: HexalemTile(40), // Tree, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
-		TileCost {
-			tile_to_buy: HexalemTile(40), // Tree, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
-		TileCost {
-			tile_to_buy: HexalemTile(40), // Tree, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
-		TileCost {
-			tile_to_buy: HexalemTile(32), // Mountain, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
-		TileCost {
-			tile_to_buy: HexalemTile(32), // Mountain, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
-		TileCost {
-			tile_to_buy: HexalemTile(32), // Mountain, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
-		},
+		// tile_to_buy: HexalemTile(16), // Grass, level 0
+		// tile_to_buy: HexalemTile(24), // Water, level 0
+		// tile_to_buy: HexalemTile(32), // Mountain, level 0
+		// tile_to_buy: HexalemTile(40), // Tree, level 0
+		// tile_to_buy: HexalemTile(56), // Cave, level 0
 
 		TileCost {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(16), // Grass, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
+		},
+		TileCost {
+			tile_to_buy: HexalemTile(24), // Water, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
+		},
+		TileCost {
+			tile_to_buy: HexalemTile(24), // Water, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
+		},
+		TileCost {
+			tile_to_buy: HexalemTile(24), // Water, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 
 		TileCost {
-			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			tile_to_buy: HexalemTile(32), // Mountain, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
-			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			tile_to_buy: HexalemTile(32), // Mountain, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
-			tile_to_buy: HexalemTile(24), // Water, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			tile_to_buy: HexalemTile(32), // Mountain, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
-			tile_to_buy: HexalemTile(56), // Cave, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			tile_to_buy: HexalemTile(40), // Tree, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
-			tile_to_buy: HexalemTile(56), // Cave, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			tile_to_buy: HexalemTile(40), // Tree, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
+		},
+		TileCost {
+			tile_to_buy: HexalemTile(40), // Tree, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
+		},
+		TileCost {
+			tile_to_buy: HexalemTile(48), // Desert, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 		TileCost {
 			tile_to_buy: HexalemTile(56), // Cave, level 0
-			cost: ResourceAmount {
-				resource_type: ResourceType::Mana,
-				amount: 1,
-			}
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
+		},
+		TileCost {
+			tile_to_buy: HexalemTile(56), // Cave, level 0
+			cost: ResourceAmount { resource_type: ResourceType::Mana, amount: 1, }
 		},
 	];
 
