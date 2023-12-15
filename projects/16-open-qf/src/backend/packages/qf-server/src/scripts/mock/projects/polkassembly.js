@@ -59,7 +59,6 @@ These upgrades aim to enhance user engagement, transparency, and the overall exp
 `,
   bannerCid: "bafybeih56atbgorfipdrdgufsvghohjkio3iadpbh4jywhdm3s3glmglae",
   logoCid: "bafybeiebkbxkhxsm7mcf7grsah4fogdikdpk6wvlzsixlukqa3p2zj4cri",
-  contributors: [],
 };
 
 module.exports = {

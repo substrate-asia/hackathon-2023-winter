@@ -50,7 +50,6 @@ Link: https://api.novasama.io/
 `,
   bannerCid: "bafybeif25u7wshxzd5dmbnwtqk7i4fvfh4u66xry66gffc4rt7yb5p7gmy",
   logoCid: "bafybeibu5t45ofqnhela5tk3zyr4hdyddswbcoa637bwcew2sucmerhfla",
-  contributors: [],
 };
 
 module.exports = {

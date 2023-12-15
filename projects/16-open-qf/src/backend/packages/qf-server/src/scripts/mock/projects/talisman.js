@@ -26,7 +26,6 @@ Thank you everyone who has commented during the community feedback stage of this
 `,
   bannerCid: "bafybeifw6ibaf2p4jw5ryvge3goahejf2fk7hhqbtna3qyfxzqw5h75ski",
   logoCid: "bafybeib6bshjfcbbbyg3uw4hp5hmfmlqoju6hq6g3c54nylzksrri7tdka",
-  contributors: [],
 };
 
 module.exports = {

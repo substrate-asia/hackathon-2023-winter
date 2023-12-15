@@ -105,7 +105,6 @@ Many community members have expressed their positive comments about subsquare's 
 `,
   bannerCid: "bafybeibddhrymw56omwsj22cbwzbxhb2355xyha35u5sqoyn5tvoyrr63y",
   logoCid: "bafybeicwoec2onzrh72gvo6y6huz4nkhdoc3ujiizhax5ejkbjupdc4a3u",
-  contributors: [],
 };
 
 module.exports = {

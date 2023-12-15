@@ -23,7 +23,6 @@ Taking an hour rate $80 and it will take 60 hours working time. The total cost i
 `,
   bannerCid: "bafybeif6earkknc4jerhmkjlrq7ktcfwleqpdhsmvfaaws73wfjpf2rk4u",
   logoCid: "bafybeidbqmpjx5f726ozc3mmjcqvwugqymcm6xxh53qppwonpt3vmqdzbu",
-  contributors: [],
 };
 
 module.exports = {

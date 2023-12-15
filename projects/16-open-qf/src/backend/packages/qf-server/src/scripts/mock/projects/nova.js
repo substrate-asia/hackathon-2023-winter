@@ -24,7 +24,6 @@ Requested allocation: 125 484 DOT | 621 400 USD
 `,
   bannerCid: "bafybeifgnmpcalzyjw6nzh25krvfmns4uevmls6vzzb4jxja2cgo6kjcqm",
   logoCid: "bafybeifqcjkb7p2fnxarnq76cbpjf64ghcqntczhfomzachw736vug3eny",
-  contributors: [],
 };
 
 module.exports = {

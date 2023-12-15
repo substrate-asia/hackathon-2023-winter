@@ -25,7 +25,6 @@ Please let me know what you think in the comments.
 `,
   bannerCid: "bafybeidiyza4ulzzqtiw3ryvjyeehtlnorkhkp4hsu5tudunnghvzujqz4",
   logoCid: "bafybeifbhb3zuulk4xshqqiinqy2uxoc62vrun3frypjktl5jha6clsa3m",
-  contributors: [],
 };
 
 module.exports = {

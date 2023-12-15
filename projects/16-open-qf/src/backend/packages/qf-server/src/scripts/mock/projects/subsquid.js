@@ -21,7 +21,6 @@ Thank you for your consideration.
 `,
   bannerCid: "bafybeigkhrkznc27yk6fm5o5fztuhxnldbug7knnkn5ktgzzpbrd7eocmq",
   logoCid: "bafybeiaa63d3abqdphxjsp5usewedtfm2txdvd2imz7xn6262ohdljqvfy",
-  contributors: [],
 };
 
 module.exports = {

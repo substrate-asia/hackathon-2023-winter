@@ -44,7 +44,6 @@ We would love to hear feedback/recommendations from the community.
 `,
   bannerCid: "bafybeiae5atns5bdszlvlht3pbvnpzqufcqhpx72utwnybtvczxw2bid5i",
   logoCid: "bafybeihskoeeejs4gia3bizo5bfqg5fxogifoiqcdzjubb4yfelx6pvkvu",
-  contributors: [],
 };
 
 module.exports = {

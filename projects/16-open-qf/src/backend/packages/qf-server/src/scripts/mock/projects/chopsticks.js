@@ -76,7 +76,6 @@ Thank you for reading and questions are welcome. :)
 `,
   bannerCid: "bafybeifseowcqivdayzsvhqyjcuafire2wrgudrdfoliek3sr3t7a7f2gm",
   logoCid: "bafybeibicx5krldhxhws2vc3i22dmu43rz7hxnh545r335v5evazkkvh3i",
-  contributors: [],
 };
 
 module.exports = {
