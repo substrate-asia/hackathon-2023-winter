@@ -69,6 +69,8 @@ namespace Assets.Scripts
 
         private void OnChangedHexaSelection(List<byte> hexaSelection)
         {
+            _scvSelection.Clear();
+
             for (int i = 0; i < hexaSelection.Count; i++)
             {
                 var p = hexaSelection[i];
