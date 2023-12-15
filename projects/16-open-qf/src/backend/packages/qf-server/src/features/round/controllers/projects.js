@@ -1,5 +1,6 @@
 const { qf: { getProjectCol, getContributorCol } } = require("@open-qf/mongo");
 const { extractPage } = require("../../../utils/extractPage");
+const { utils: { bigAdd } } = require("@osn/scan-common");
 
 async function getRoundProjects(ctx) {
   const { page, pageSize } = extractPage(ctx);
@@ -22,10 +23,15 @@ async function getRoundProjects(ctx) {
   const contributorCol = await getContributorCol();
   const projects = [];
   for (const item of items) {
-    const contributorsCount = await contributorCol.countDocuments({ projectId: item.id });
+    const contributors = await contributorCol.find(
+      { projectId: item.id },
+      { projection: { _id: 0, address: 0, roundId: 0, projectId: 0, isMock: 0 } }
+    ).toArray();
+    const raised = contributors.reduce((result, contributor) => bigAdd(result, contributor.balance), 0);
     projects.push({
       ...item,
-      contributorsCount,
+      contributorsCount: contributors.length,
+      raised,
     })
   }
 

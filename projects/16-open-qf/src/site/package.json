@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.4",
+    "@next/env": "^14.0.4",
     "@osn/common": "^1.3.5",
     "@osn/common-ui": "^1.18.11",
     "@osn/constants": "^1.1.2",

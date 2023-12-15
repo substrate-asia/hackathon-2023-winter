@@ -22,19 +22,16 @@ function getDecimalsFromSymbol(symbol) {
   if (symbol === "DOT") {
     return 10;
   }
-  return 12;
+
+  throw new Error(`Unknown symbol: ${ symbol }`);
 }
 
 export default function Sidebar() {
   const account = useAccount();
   const [showDonatePopup, setShowDonatePopup] = useState(false);
   const { detail } = useServerSideProps();
-  const contributors = detail?.contributors || [];
-  const totalRaised = contributors
-    .filter((item) => item.symbol === "DOT")
-    .reduce((acc, cur) => acc + BigInt(cur.amount), 0n);
   const totalDot = toPrecision(
-    totalRaised.toString(),
+    detail.raised || 0,
     getDecimalsFromSymbol("DOT"),
   );
 
