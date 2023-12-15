@@ -8,7 +8,7 @@ import {
   getRoundCategoriesList,
   getRoundProjectsList,
 } from "@/services/rounds";
-import { withCommonPageWrapper } from "@/utils/ssr";
+import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 
 const UserPage = withCommonPageWrapper(() => {
   return (
@@ -30,7 +30,7 @@ const UserPage = withCommonPageWrapper(() => {
 
 export default UserPage;
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const [{ result: projectsResult }, { result: categories }] =
     await Promise.all([
       getRoundProjectsList(1, { page_size: 25 }),
@@ -38,9 +38,9 @@ export async function getServerSideProps() {
     ]);
 
   const projects = projectsResult?.items ?? [];
-
   return {
     props: {
+      ...loadCommonServerSideProps(context),
       projects,
       categories,
     },
