@@ -166,5 +166,15 @@ namespace Substrate.Hexalem.Test
             _hexaGame.Played = false;
             Assert.That(_hexaGame.Played, Is.False);
         }
+
+        [Test]
+        public void HexaGame_ExportAndImportState_Init_ShouldSucceed()
+        {
+            var gameHex = _hexaGame.Export();
+            Assert.That(gameHex, Is.Not.Empty);
+
+            var loadedGame = HexaGame.Import(gameHex);
+            Assert.That(_hexaGame.IsSame(loadedGame), Is.True);
+        }
     }
 }

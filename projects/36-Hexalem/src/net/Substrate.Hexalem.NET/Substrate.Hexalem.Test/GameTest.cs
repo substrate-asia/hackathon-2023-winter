@@ -57,19 +57,24 @@ namespace Substrate.Hexalem.Test
             var indexSelection = 1;
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 1, hexaGame, hexaGame.PlayerTurn, indexSelection, (-1, 1));
+            hexaGame = Game.ChooseAndPlace(_defaultBlockStart, hexaGame, hexaGame.PlayerTurn, indexSelection, (-1, 1));
 
-            Game.FinishTurn(_defaultBlockStart + 2, hexaGame, hexaGame.PlayerTurn);
+            Game.FinishTurn(_defaultBlockStart, hexaGame, hexaGame.PlayerTurn);
 
             // Allways player 1 index
             Assert.That(hexaGame.PlayerTurn, Is.EqualTo(_player1_Index));
 
-            hexaGame = Game.ChooseAndPlace(_defaultBlockStart + 5, hexaGame, hexaGame.PlayerTurn, 0, (0, 1));
+            hexaGame = Game.ChooseAndPlace(_defaultBlockStart, hexaGame, hexaGame.PlayerTurn, 0, (0, 1));
 
             // Selection is 4
             Assert.That(hexaGame.SelectBase, Is.EqualTo(4));
 
-            Game.FinishTurn(_defaultBlockStart + 6, hexaGame, hexaGame.PlayerTurn);
+            Game.FinishTurn(_defaultBlockStart, hexaGame, hexaGame.PlayerTurn);
+
+            // Export game state
+            var boardHex = hexaGame.Export();
+            var importedGame = HexaGame.Import(boardHex);
+            Assert.That(hexaGame.IsSame(importedGame), Is.True);
         }
 
         [Test]

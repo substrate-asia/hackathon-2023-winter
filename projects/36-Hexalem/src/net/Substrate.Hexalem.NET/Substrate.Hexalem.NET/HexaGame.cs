@@ -39,6 +39,10 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         public HexaPlayer CurrentPlayer => HexaTuples[PlayerTurn].player;
 
+        protected HexaGame()
+        {
+        }
+
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
             if (id.Length != GameConfig.GAME_STORAGE_ID)
@@ -102,7 +106,10 @@ namespace Substrate.Hexalem.Engine
 
             result.AddRange(Id);
             result.AddRange(Value);
-            result.AddRange(UnboundTileOffers);
+
+            // Unbounded tiles are always <= SelectBase, we fill missing tiles (already draw) with -1
+            var unsetTile = Enumerable.Range(0, SelectBase).Select(x => (byte)0);
+            result.AddRange(UnboundTileOffers.Concat(unsetTile.Skip(UnboundTileOffers.Count)));
 
             foreach (var (player, board) in HexaTuples)
             {
@@ -115,7 +122,7 @@ namespace Substrate.Hexalem.Engine
             return Utils.Bytes2HexString(result.ToArray());
         }
 
-        public static HexaGame Build(string hex)
+        public static HexaGame Import(string hex)
         {
             int p = 0;
             var data = Utils.HexToByteArray(hex);
@@ -125,24 +132,25 @@ namespace Substrate.Hexalem.Engine
             var value = data.Skip(p).Take(GameConfig.GAME_STORAGE_SIZE).ToArray();
             p += GameConfig.GAME_STORAGE_SIZE;
 
-            var unboundTile = data.Skip(p).Take(value[5]).ToArray();
-            p += value[5];
+            var playerCount = value[3];
+            var selectBase = value[5];
 
-            
+            var unboundTile = data.Skip(p).Take(selectBase).Where(x => x > 0).ToArray();
+            p += selectBase;
 
-            var gridSize = (data.Skip(p).ToArray().Length / ((32 + GameConfig.PLAYER_STORAGE_SIZE) * 2)) / 2;
+            var gridSize = (data.Skip(p).ToArray().Length - ((GameConfig.PLAYER_ADDRESS_STORAGE_SIZE + GameConfig.PLAYER_STORAGE_SIZE) * playerCount)) / playerCount;
 
-            if(gridSize != (int)GridSize.Small || gridSize != (int)GridSize.Medium || gridSize != (int)GridSize.Large)
+            if(gridSize != (int)GridSize.Small && gridSize != (int)GridSize.Medium && gridSize != (int)GridSize.Large)
             {
                 throw new InvalidOperationException("Grid size is not valid");
             }
 
             var hexaTuple = new List<(HexaPlayer player, HexaBoard board)>();
 
-            for (int i = 0; i < value[3]; i++)
+            for (int i = 0; i < playerCount; i++)
             {
-                var pId = data.Skip(p).Take(32).ToArray();
-                p += 32;
+                var pId = data.Skip(p).Take(GameConfig.PLAYER_ADDRESS_STORAGE_SIZE).ToArray();
+                p += GameConfig.PLAYER_ADDRESS_STORAGE_SIZE;
 
                 var pValue = data.Skip(p).Take(GameConfig.PLAYER_STORAGE_SIZE).ToArray();
                 p += GameConfig.PLAYER_STORAGE_SIZE;
@@ -158,7 +166,13 @@ namespace Substrate.Hexalem.Engine
                 throw new InvalidOperationException("Every bytes has not been set");
             }
 
-            return new HexaGame(id, hexaTuple);
+            return new HexaGame()
+            {
+                Id = id,
+                Value = value,
+                UnboundTileOffers = unboundTile.ToList(),
+                HexaTuples = hexaTuple
+            };
         }
 
         /// <summary>

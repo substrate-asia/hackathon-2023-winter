@@ -16,6 +16,7 @@ namespace Substrate.Hexalem.Engine
 
         public const int GAME_STORAGE_ID = 32;
         public const int GAME_STORAGE_SIZE = 16;
+        public const int PLAYER_ADDRESS_STORAGE_SIZE = 32;
         public const int PLAYER_STORAGE_SIZE = 10;
 
         // Default player ressources
