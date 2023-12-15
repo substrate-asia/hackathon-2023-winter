@@ -91,7 +91,7 @@ function CardBase({ className, project, children }) {
 }
 
 export function SimpleProjectCard({ project }) {
-  return <CardBase className="shadow-none" project={project} />;
+  return <CardBase className="!shadow-none" project={project} />;
 }
 
 export default function ProjectCard({ project }) {
