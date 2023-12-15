@@ -143,7 +143,7 @@ namespace Substrate.Hexalem.Engine
                 SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
-                TileToBuy = new HexaTile(TileType.Cave, 0, TilePattern.Normal),
+                TileToBuy = new HexaTile(TileType.Desert, 0, TilePattern.Normal),
                 SelectCost = new MaterialCost { MaterialType = RessourceType.Mana, Cost = 1, }
             },
             new TileOffer {
