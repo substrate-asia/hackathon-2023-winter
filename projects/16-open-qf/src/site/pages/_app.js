@@ -11,6 +11,7 @@ import "semantic-ui-css/semantic.min.css";
 import "styles/globals.css";
 import { cn } from "utils";
 import { ThemeProvider } from "styled-components";
+import Toast from "@/components/toast";
 
 NProgress.configure({
   minimum: 0.3,
@@ -56,6 +57,7 @@ function MyApp({ Component, pageProps }) {
           >
             <Component {...pageProps} />
           </main>
+          <Toast />
         </ThemeProvider>
       </Provider>
     </>

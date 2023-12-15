@@ -9,7 +9,7 @@ export const AccountProvider = ({ account: _account, children }) => {
   const login = useCallback((account) => {
     setAccount(account);
     if (typeof window !== "undefined") {
-      const data = `${account.network}/${account.address}`;
+      const data = `${account.network}/${account.address}/${account.wallet}`;
       setCookie("address", data, 7);
     }
   }, []);

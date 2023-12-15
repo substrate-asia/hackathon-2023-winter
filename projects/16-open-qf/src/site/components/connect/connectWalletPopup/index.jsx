@@ -12,10 +12,11 @@ export default function ConnectWalletPopup({ open, setOpen }) {
       login({
         network: "polkadot",
         address: account.address,
+        wallet: walletExtensionType,
       });
       setOpen(false);
     },
-    [login, setOpen],
+    [login, setOpen, walletExtensionType],
   );
 
   if (walletExtensionType) {

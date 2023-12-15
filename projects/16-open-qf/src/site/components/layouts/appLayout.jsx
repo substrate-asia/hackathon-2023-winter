@@ -1,6 +1,5 @@
 import { Footer } from "@osn/common-ui";
 import Header from "../header";
-import Toast from "../toast";
 
 export default function AppLayout({ children }) {
   return (
@@ -8,7 +7,6 @@ export default function AppLayout({ children }) {
       <Header />
       <div className="flex-1">{children}</div>
       <Footer />
-      <Toast />
     </div>
   );
 }

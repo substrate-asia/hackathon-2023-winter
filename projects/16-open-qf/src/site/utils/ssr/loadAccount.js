@@ -5,10 +5,11 @@ export function loadAccount(context) {
   const cookies = new Cookies(context.req, context.res);
   const cookieAddress = cookies.get("address");
   if (cookieAddress) {
-    const [network, address] = cookieAddress.split("/");
+    const [network, address, wallet = null] = cookieAddress.split("/");
     account = {
       address,
       network,
+      wallet,
     };
   }
 
