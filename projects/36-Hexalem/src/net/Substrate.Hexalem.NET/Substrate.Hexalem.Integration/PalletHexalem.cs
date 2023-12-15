@@ -3,6 +3,7 @@ using Substrate.Hexalem.Integration.Model;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Storage;
+using Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base;
 using Substrate.Integration.Client;
 using Substrate.Integration.Helper;
 using Substrate.NetApi;
@@ -133,6 +134,26 @@ namespace Substrate.Integration
             var extrinsicType = $"Hexalem.FinishTurn";
 
             var extrinsic = HexalemModuleCalls.FinishTurn();
+
+            return await GenericExtrinsicAsync(account, extrinsicType, extrinsic, concurrentTasks, token);
+        }
+
+        /// <summary>
+        /// Root delete game
+        /// </summary>
+        /// <param name="account"></param>
+        /// <param name="GameIdBytes"></param>
+        /// <param name="concurrentTasks"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<string?> RootDeleteGameAsync(Account account, byte[] GameIdBytes, int concurrentTasks, CancellationToken token)
+        {
+            var extrinsicType = $"Hexalem.RootDeleteGame";
+
+            Arr32U8 gameId = new Arr32U8();
+            gameId.Create(GameIdBytes.Select(p => new U8(p)).ToArray());
+
+            var extrinsic = HexalemModuleCalls.RootDeleteGame(gameId);
 
             return await GenericExtrinsicAsync(account, extrinsicType, extrinsic, concurrentTasks, token);
         }
