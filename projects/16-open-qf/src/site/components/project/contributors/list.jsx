@@ -1,5 +1,4 @@
 import NetworkUser from "@/components/user/networkUser";
-import { useServerSideProps } from "@/context/serverSideProps";
 import { toPrecision } from "@osn/common";
 import dayjs from "dayjs";
 import { cn } from "@/utils";
@@ -7,11 +6,12 @@ import Tag from "@/components/tag";
 import { Pagination } from "@osn/common-ui";
 import { useState } from "react";
 import { useProjectContributorsData } from "@/hooks/project/useProjectContributorsData";
+import { useAccount } from "@/context/account";
 
 export default function ContributionsList() {
   const [page, setPage] = useState(1);
   const pageSize = 10;
-  const { account } = useServerSideProps();
+  const account = useAccount();
   const { data: contributors } = useProjectContributorsData(page, pageSize);
 
   if (!contributors?.total) {
