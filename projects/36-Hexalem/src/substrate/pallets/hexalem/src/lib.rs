@@ -275,21 +275,24 @@ pub mod pallet {
 		}
 
 		pub fn get_levels(&self, tile_type: TileType, level: u8) -> u8 {
-			self.levels[(tile_type as usize).saturating_mul(8).saturating_add(level as usize)]
+			// level variations = 4
+			self.levels[(tile_type as usize).saturating_mul(4).saturating_add(level as usize)]
 		}
 
 		pub fn set_levels(&mut self, tile_type: TileType, level: u8, value: u8) -> () {
-			self.levels[(tile_type as usize).saturating_mul(8).saturating_add(level as usize)] =
+			// level variations = 4
+			self.levels[(tile_type as usize).saturating_mul(4).saturating_add(level as usize)] =
 				value;
 		}
 
 		pub fn get_patterns(&self, tile_type: TileType, pattern: TilePattern) -> u8 {
+			// pattern variations = 8
 			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)]
 		}
 
 		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
-			self.patterns
-				[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
+			// pattern variations = 8
+			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -1305,6 +1308,7 @@ impl<T: Config> Pallet<T> {
 
 // Custom trait for Tile definition
 pub trait GetTileInfo {
+
 	fn get_level(&self) -> u8;
 	fn set_level(&mut self, level: u8) -> ();
 
