@@ -1,8 +1,10 @@
 ﻿using Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto;
+using Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base;
 using Substrate.NetApi.Model.Types.Base;
 using Substrate.NetApi.Model.Types.Primitive;
+using System.Linq;
 using System.Numerics;
 
 namespace Substrate.Integration.Call
@@ -63,6 +65,24 @@ namespace Substrate.Integration.Call
         {
             var enumPalletCall = new EnumCall();
             enumPalletCall.Create(Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Call.finish_turn, new BaseVoid());
+
+            var enumCall = new EnumRuntimeCall();
+            enumCall.Create(RuntimeCall.HexalemModule, enumPalletCall);
+
+            return enumCall;
+        }
+
+        /// <summary>
+        /// Finish turn
+        /// </summary>
+        /// <returns></returns>
+        public static EnumRuntimeCall HexalemFinishTurn(byte[] gameIdBytes)
+        {
+            Arr32U8 gameId = new Arr32U8();
+            gameId.Create(gameIdBytes.Select(p => new U8(p)).ToArray());
+
+            var enumPalletCall = new EnumCall();
+            enumPalletCall.Create(Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Call.root_delete_game, gameId);
 
             var enumCall = new EnumRuntimeCall();
             enumCall.Create(RuntimeCall.HexalemModule, enumPalletCall);

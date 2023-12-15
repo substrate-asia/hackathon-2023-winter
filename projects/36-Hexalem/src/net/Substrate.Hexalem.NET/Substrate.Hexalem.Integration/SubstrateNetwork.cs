@@ -436,6 +436,27 @@ namespace Substrate.Integration
             return await GenericExtrinsicAsync(Account, extrinsicType, extrinsic, concurrentTasks, token);
         }
 
+        /// <summary>
+        /// Submit a sudo extrinsic.
+        /// </summary>
+        /// <param name="call"></param>
+        /// <param name="concurrentTasks"></param>
+        /// <param name="token"></param>
+        /// <returns></returns>
+        public async Task<string> SudoAsync(Account sudoAccount, EnumRuntimeCall call, int concurrentTasks, CancellationToken token)
+        {
+            var extrinsicType = "Sudo.Sudo";
+
+            if (!IsConnected || sudoAccount == null || call == null)
+            {
+                return null;
+            }
+
+            var extrinsic = SudoCalls.Sudo(call);
+
+            return await GenericExtrinsicAsync(sudoAccount, extrinsicType, extrinsic, concurrentTasks, token);
+        }
+
         #endregion extrinsics
     }
 }
