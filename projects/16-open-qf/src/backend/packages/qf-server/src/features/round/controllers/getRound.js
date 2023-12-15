@@ -1,4 +1,4 @@
-const { qf: { getRoundCol } } = require("@open-qf/mongo");
+const { qf: { getRoundCol, getContributorCol } } = require("@open-qf/mongo");
 const { HttpError } = require("../../../utils/httpError");
 
 async function getRound(ctx) {
@@ -10,7 +10,13 @@ async function getRound(ctx) {
     throw new HttpError(404, "round not found");
   }
 
-  ctx.body = round;
+  const contributorCol = await getContributorCol();
+  const contributorsCount = await contributorCol.countDocuments({ roundId: round.id });
+
+  ctx.body = {
+    ...round,
+    contributorsCount,
+  };
 }
 
 module.exports = {

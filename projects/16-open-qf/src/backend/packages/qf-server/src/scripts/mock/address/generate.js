@@ -1,8 +1,6 @@
-require("dotenv").config();
-
 const {
   treasury: { getProposalBeneficiaryCol, getBountyBeneficiaryCol, getTipBeneficiaryCol },
-  governance: { getReferendaVoteCol, getReferendaReferendumCol },
+  governance: { getReferendaVoteCol },
 } = require("@open-qf/mongo");
 
 async function queryAddresses(col) {
@@ -10,7 +8,7 @@ async function queryAddresses(col) {
   return records.map(i => i.address);
 }
 
-(async () => {
+async function getAddresses() {
   const proposalBeneficiaries = await queryAddresses(await getProposalBeneficiaryCol());
   const tipBeneficiaries = await queryAddresses(await getTipBeneficiaryCol());
   const bountyBeneficiaries = await queryAddresses(await getBountyBeneficiaryCol());
@@ -23,9 +21,9 @@ async function queryAddresses(col) {
   const voterCol = await getReferendaVoteCol();
   const voters = await voterCol.distinct("account");
 
-  const all = [
-    ...new Set([...beneficiaries, ...voters]),
-  ]
+  return [...new Set([...beneficiaries, ...voters])]
+}
 
-  console.log(all);
-})();
+module.exports = {
+  getAddresses,
+}

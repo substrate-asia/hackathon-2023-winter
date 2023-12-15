@@ -13,7 +13,6 @@ const round1 = {
   },
   founders: ["Polkadot Treasury"],
   bannerCid: "bafybeif2tc7sfljjbg5ftkqderjb3dovawfncucjvga2uiqk6xfhhtcmsu",
-  contributorsCount: 2,
   category: "Infrastructure",
 };
 

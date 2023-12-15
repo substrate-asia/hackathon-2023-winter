@@ -8,6 +8,7 @@ let db = null;
 let roundCol = null;
 let projectCol = null;
 let projectCommentCol = null;
+let contributorCol = null;
 
 async function initQfServerDb() {
   db = new ScanDb(
@@ -19,6 +20,7 @@ async function initQfServerDb() {
   roundCol = await db.createCol("round");
   projectCol = await db.createCol("project");
   projectCommentCol = await db.createCol("projectComment");
+  contributorCol = await db.createCol("contributor");
   _createIndexes().then(() => console.log("DB indexes created!"));
 }
 
@@ -50,6 +52,11 @@ async function getProjectCommentCol() {
   return projectCommentCol;
 }
 
+async function getContributorCol() {
+  await makeSureInit(contributorCol);
+  return contributorCol;
+}
+
 function getQfServerDb() {
   return db;
 }
@@ -59,4 +66,5 @@ module.exports = {
   getRoundCol,
   getProjectCol,
   getProjectCommentCol,
+  getContributorCol,
 };
