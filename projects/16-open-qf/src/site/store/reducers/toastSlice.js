@@ -50,6 +50,14 @@ export const newPendingToast = (id, message) =>
     sticky: true,
   });
 
+export const updatePendingToast = (id, message) =>
+  updateToast({
+    id,
+    type: TOAST_TYPES.PENDING,
+    message,
+    sticky: true,
+  });
+
 export const newSuccessToast = (message) =>
   addToast({
     type: TOAST_TYPES.SUCCESS,

@@ -4,7 +4,7 @@ import {
   newPendingToast,
   newToastId,
   removeToast,
-  updateToast,
+  updatePendingToast,
 } from "../store/reducers/toastSlice";
 import { PROJECT_NAME } from "./constants";
 
@@ -109,7 +109,7 @@ export async function sendTx({
             dispatch(removeToast(toastId));
           } else {
             dispatch(
-              updateToast(
+              updatePendingToast(
                 toastId,
                 `(3/${totalSteps}) Inblock, waiting for finalization...`,
               ),
@@ -134,7 +134,7 @@ export async function sendTx({
     );
 
     dispatch(
-      updateToast(
+      updatePendingToast(
         toastId,
         `(2/${totalSteps}) Submitted, waiting for wrapping...`,
       ),
