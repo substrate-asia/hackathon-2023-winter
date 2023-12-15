@@ -4,6 +4,7 @@ import com.hackathon.framework.utils.Result;
 
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 /**
  * 生成工程
@@ -12,14 +13,13 @@ public interface GenerateEngine {
 
     /**
      * 生成工程读取策略配置
-     * @param yamlPath yaml路径 Yaml文件在工程目录resources下面
      * @param generateType yaml节点名称
      * @return
      * @throws FileNotFoundException
      * @throws InvocationTargetException
      * @throws IllegalAccessException
      */
-    Result getStrategy(String yamlPath, String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException;
+    Result getStrategy(String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException;
 
     /**
      * 生成前检查生成环境是否缺失
@@ -34,7 +34,7 @@ public interface GenerateEngine {
      * 初始化生成目录
      * @param generateDstDirectory 最终生成的目录位置
      */
-    Result initDirectory(String generateDstDirectory);
+    Result initDirectory(String generateDstDirectory, List<String> strategyList);
 
     /**
      * 载入合约

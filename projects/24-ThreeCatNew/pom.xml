@@ -35,4 +35,29 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- 外部依赖jar包的最终位置 -->
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <!-- 此处为主入口-->
+                            <mainClass>com.hackathon.framework.ThreeCat</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

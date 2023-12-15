@@ -20,13 +20,14 @@ public class StrategyConfigUtil {
     /**
      * 读取策略，yaml数据转Bean对象
      * Bean进行环境检测
-     * @param yamlPath     yaml文件
      * @param generateType 生成类型
      * @return
      * @throws FileNotFoundException
      */
-    public static StrategyBean getStrategy(String yamlPath, String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
-        FileInputStream fileInputStream = new FileInputStream(yamlPath);
+    public static StrategyBean getStrategy(String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
+        URL resource = ClassLoader.getSystemResource("base.yaml");
+        String path = resource == null ? "" : resource.getPath();
+        FileInputStream fileInputStream = new FileInputStream(path);
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(fileInputStream);
         Map<String, Object> ret = (Map<String, Object>) data.get(generateType);
@@ -38,6 +39,12 @@ public class StrategyConfigUtil {
     public static void main(String[] args) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
         URL resource = ClassLoader.getSystemResource("base.yaml");
         String path = resource == null ? "" : resource.getPath();
-        System.out.println(StrategyConfigUtil.getStrategy(path, "generateEngine"));
+        // 读取指定节点
+        StrategyBean strategy = StrategyConfigUtil.getStrategy("generateEngine");
+        System.out.println(strategy);
+        // 读取UI界面逻辑节点
+        strategy = StrategyConfigUtil.getStrategy("guiCommand");
+        Map<String,String> uiMap = strategy.getComboBox();
+        System.out.println(uiMap);
     }
 }
