@@ -45,6 +45,9 @@ namespace Assets.Scripts
         public MiniSecret MiniSecretDave => new MiniSecret(Utils.HexToByteArray("0x868020ae0687dda7d57565093a69090211449845a7e11453612800b663307246"), ExpandMode.Ed25519);
         public Account Dave => Account.Build(KeyType.Sr25519, MiniSecretDave.ExpandToSecret().ToBytes(), MiniSecretDave.GetPair().Public.Key);
 
+        // Sudo account if needed
+        public Account Sudo => Alice;
+
         private readonly string _nodeUrl = "ws://127.0.0.1:9944";
         public string NodeUrl => _nodeUrl;
 

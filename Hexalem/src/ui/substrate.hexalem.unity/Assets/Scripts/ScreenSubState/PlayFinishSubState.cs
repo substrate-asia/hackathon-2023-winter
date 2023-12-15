@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     internal class PlayFinishSubState : ScreenBaseState
     {
-        public PlayScreenState MainScreenState => ParentState as PlayScreenState;
+        public PlayScreenState PlayScreenState => ParentState as PlayScreenState;
 
         private Button _btnBack;
 
@@ -33,7 +33,7 @@ namespace Assets.Scripts
             _lblActionTitle = elementInstance.Q<Label>("LblActionTitle");
             _lblActionInfo = elementInstance.Q<Label>("LblActionInfo");
 
-            var player = Storage.Player(MainScreenState.PlayerIndex);
+            var player = Storage.Player(PlayScreenState.PlayerIndex);
 
             switch (player.TargetState)
             {

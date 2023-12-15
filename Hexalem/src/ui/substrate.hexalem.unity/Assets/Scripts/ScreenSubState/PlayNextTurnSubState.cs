@@ -7,7 +7,7 @@ namespace Assets.Scripts
 {
     internal class PlayNextTurnSubState : ScreenBaseState
     {
-        public PlayScreenState MainScreenState => ParentState as PlayScreenState;
+        public PlayScreenState PlayScreenState => ParentState as PlayScreenState;
 
         private Button _btnYourTurn;
 
@@ -52,9 +52,9 @@ namespace Assets.Scripts
 
         private void OnNextPlayerTurn(byte playerTurn)
         {
-            _btnYourTurn.SetEnabled(playerTurn == MainScreenState.PlayerIndex);
+            _btnYourTurn.SetEnabled(playerTurn == PlayScreenState.PlayerIndex);
 
-            if (playerTurn != MainScreenState.PlayerIndex)
+            if (playerTurn != PlayScreenState.PlayerIndex)
             {
                 _lblActionTitle.text = $"Waiting on player {playerTurn} turn ...";
             }

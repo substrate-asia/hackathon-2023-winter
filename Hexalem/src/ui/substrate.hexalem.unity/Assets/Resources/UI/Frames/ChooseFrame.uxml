@@ -9,13 +9,13 @@
                 <ui:Button text="TRAIN" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnTrain" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
-                <ui:Button text="PLAY" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnPlay" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
-            </ui:VisualElement>
-            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
-                <ui:Button text="SCORE" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnScore" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
+                <ui:Button text="WAIT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnPlay" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
                 <ui:Button text="EXIT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnExit" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Button text="RESET" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnReset" class="font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal; color: rgb(255, 255, 255); border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px; background-color: rgb(219, 61, 61);" />
             </ui:VisualElement>
             <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
                 <ui:Label tabindex="-1" text="hexalem.unity-v0.0.1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-comic font-color" style="font-size: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; -unity-text-align: middle-center;" />

@@ -11,16 +11,17 @@ namespace Assets.Scripts.ScreenStates
 {
     internal class MainChooseSubState : ScreenBaseState
     {
+        public MainScreenState PlayScreenState => ParentState as MainScreenState;
+
         private System.Random _random = new System.Random();
 
         private Button _btnPlay;
         private Button _btnTrain;
+        private Button _btnReset;
 
         private Label _lblExtriniscUpdate;
 
         private string _subscriptionId;
-
-        public MainScreenState MainScreenState => ParentState as MainScreenState;
 
         public MainChooseSubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent) { }
@@ -46,11 +47,12 @@ namespace Assets.Scripts.ScreenStates
             _btnPlay.SetEnabled(false);
             _btnPlay.RegisterCallback<ClickEvent>(OnBtnPlayClicked);
 
-            var btnScore = elementInstance.Q<Button>("BtnScore");
-            btnScore.RegisterCallback<ClickEvent>(OnBtnScoreClicked);
-
             var btnExit = elementInstance.Q<Button>("BtnExit");
             btnExit.RegisterCallback<ClickEvent>(OnBtnExitClicked);
+
+            _btnReset = elementInstance.Q<Button>("BtnReset");
+            _btnReset.SetEnabled(false);
+            _btnReset.RegisterCallback<ClickEvent>(OnBtnResetClicked);
 
             _lblExtriniscUpdate = elementInstance.Q<Label>("LblExtriniscUpdate");
 
@@ -59,7 +61,7 @@ namespace Assets.Scripts.ScreenStates
 
             // subscribe to connection changes
             Network.ConnectionStateChanged += OnConnectionStateChanged;
-            Storage.OnNextBlocknumber += OnNextBlocknumber;
+            Storage.OnStorageUpdated += OnStorageUpdated;
             Network.Client.ExtrinsicManager.ExtrinsicUpdated += OnExtrinsicUpdated;
             Network.ExtrinsicCheck += OnExtrinsicCheck;
 
@@ -72,7 +74,7 @@ namespace Assets.Scripts.ScreenStates
 
             // unsubscribe from event
             Network.ConnectionStateChanged -= OnConnectionStateChanged;
-            Storage.OnNextBlocknumber -= OnNextBlocknumber;
+            Storage.OnStorageUpdated -= OnStorageUpdated;
             Network.Client.ExtrinsicManager.ExtrinsicUpdated -= OnExtrinsicUpdated;
             Network.ExtrinsicCheck -= OnExtrinsicCheck;
         }
@@ -85,11 +87,12 @@ namespace Assets.Scripts.ScreenStates
             }
         }
 
-        private void OnNextBlocknumber(uint blocknumber)
+        private void OnStorageUpdated(uint blocknumber)
         {
             if (Network.Client.ExtrinsicManager.Running.Any())
             {
                 _btnPlay.SetEnabled(false);
+                _btnReset.SetEnabled(false);
                 return;
             }
 
@@ -102,6 +105,7 @@ namespace Assets.Scripts.ScreenStates
             {
                 _btnPlay.text = "JOIN";
                 _lblExtriniscUpdate.text = $"\"Hey bro, {Storage.HexaGame.PlayersCount} buddies, waiting!\"";
+                _btnReset.SetEnabled(true);
             }
 
             _btnPlay.SetEnabled(true);
@@ -188,7 +192,7 @@ namespace Assets.Scripts.ScreenStates
                 _btnTrain.SetEnabled(false);
                 _btnPlay.SetEnabled(false);
                 _btnPlay.text = "WAIT";
-                var subscriptionId = await Network.Client.CreateGameAsync(Network.Client.Account, new List<Account>() { Network.Client.Account, Network.Bob }, 25, 1, CancellationToken.None);
+                var subscriptionId = await Network.Client.CreateGameAsync(Network.Client.Account, new List<Account>() { Network.Client.Account }, 25, 1, CancellationToken.None);
                 if (subscriptionId == null)
                 {
                     _btnTrain.SetEnabled(true);
@@ -196,15 +200,33 @@ namespace Assets.Scripts.ScreenStates
                     return;
                 }
 
-                Debug.Log($"extrinisc submited: {subscriptionId}");
+                Debug.Log($"Extrinsic[CreateGameAsync] submited: {subscriptionId}");
 
                 _subscriptionId = subscriptionId;
             }
         }
 
-        private void OnBtnScoreClicked(ClickEvent evt)
+        private async void OnBtnResetClicked(ClickEvent evt)
         {
-            Debug.Log($"[{this.GetType().Name}][SUB] OnBtnScoreClicked");
+            if (Storage.HexaGame != null && !Network.Client.ExtrinsicManager.Running.Any())
+            {
+                _btnPlay.SetEnabled(false);
+                _btnPlay.text = "WAIT";
+                _btnReset.SetEnabled(false);
+                var call = Substrate.Integration.Call.PalletHexalem.HexalemRootDeleteGame(Storage.HexaGame.Id);
+                // TODO: make sure we use SUDO for this call
+                var subscriptionId = await Network.Client.SudoAsync(Network.Sudo, call, 1, CancellationToken.None);
+                if (subscriptionId == null)
+                {
+                    _btnPlay.SetEnabled(true);
+                    _btnReset.SetEnabled(true);
+                    return;
+                }
+
+                Debug.Log($"Extrinsic[RootDeleteGameAsync] submited: {subscriptionId}");
+
+                _subscriptionId = subscriptionId;
+            }
         }
 
         private void OnBtnExitClicked(ClickEvent evt)

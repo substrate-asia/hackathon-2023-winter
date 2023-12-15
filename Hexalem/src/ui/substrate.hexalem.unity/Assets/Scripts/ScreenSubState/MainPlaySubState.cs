@@ -6,7 +6,7 @@ namespace Assets.Scripts
 {
     internal class MainPlaySubState : ScreenBaseState
     {
-        public MainScreenState MainScreenState => ParentState as MainScreenState;
+        public MainScreenState PlayScreenState => ParentState as MainScreenState;
 
         public MainPlaySubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent) { }

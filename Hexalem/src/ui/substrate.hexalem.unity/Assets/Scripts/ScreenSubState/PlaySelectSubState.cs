@@ -1,5 +1,7 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -8,7 +10,7 @@ namespace Assets.Scripts
 {
     internal class PlaySelectSubState : ScreenBaseState
     {
-        public PlayScreenState MainScreenState => ParentState as PlayScreenState;
+        public PlayScreenState PlayScreenState => ParentState as PlayScreenState;
 
         private ScrollView _scvSelection;
         private Label _lblActionInfo;
@@ -33,9 +35,10 @@ namespace Assets.Scripts
             // avoid raycast through bottom bound UI
             Grid.RegisterBottomBound();
 
-            UpdateSelection();
+            OnChangedHexaSelection(Storage.HexaGame.UnboundTileOffers);
 
             Grid.OnGridTileClicked += OnGridTileClicked;
+            Storage.OnChangedHexaSelection += OnChangedHexaSelection;
         }
 
         public override void ExitState()
@@ -43,6 +46,7 @@ namespace Assets.Scripts
             Debug.Log($"[{this.GetType().Name}][SUB] ExitState");
 
             Grid.OnGridTileClicked -= OnGridTileClicked;
+            Storage.OnChangedHexaSelection -= OnChangedHexaSelection;
         }
 
         private void OnGridTileClicked(GameObject tileObject, int index)
@@ -58,21 +62,19 @@ namespace Assets.Scripts
                 return;
             }
 
-            MainScreenState.SelectedGridIndex = index;
+            PlayScreenState.SelectedGridIndex = index;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileUpgrade);
         }
 
-        private void UpdateSelection()
+        private void OnChangedHexaSelection(List<byte> hexaSelection)
         {
-            var offer = Storage.HexaGame.UnboundTileOffers;
-
-            for (int i = 0; i < offer.Count; i++)
+            for (int i = 0; i < hexaSelection.Count; i++)
             {
-                var p = offer[i];
+                var p = hexaSelection[i];
                 var tileOffer = GameConfig.TILE_COSTS[p];
 
-                var tileCard = MainScreenState.TileCardElement.Instantiate();
+                var tileCard = PlayScreenState.TileCardElement.Instantiate();
 
                 tileCard.Q<Label>("LblTileName").text = tileOffer.TileToBuy.TileType.ToString() + "(Norm)";
 
@@ -83,31 +85,31 @@ namespace Assets.Scripts
                 switch (tileOffer.TileToBuy.TileType)
                 {
                     case TileType.Home:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileHome);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileHome);
                         break;
 
                     case TileType.Grass:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileGrass);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileGrass);
                         break;
 
                     case TileType.Water:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileWater);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileWater);
                         break;
 
                     case TileType.Tree:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileTrees);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileTrees);
                         break;
 
                     case TileType.Mountain:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileMountain);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileMountain);
                         break;
 
                     case TileType.Cave:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileCave);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileCave);
                         break;
 
                     case TileType.Desert:
-                        velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileDesert);
+                        velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileDesert);
                         break;
                 }
 
@@ -124,7 +126,7 @@ namespace Assets.Scripts
         private void OnTileCardClicked(byte index)
         {
             Debug.Log($"OnTileCardClicked: index {index}");
-            MainScreenState.SelectedCardIndex = index;
+            PlayScreenState.SelectedCardIndex = index;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileSelect);
         }

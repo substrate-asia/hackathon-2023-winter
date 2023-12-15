@@ -2,6 +2,8 @@
 using Substrate.Integration.Client;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -42,7 +44,11 @@ namespace Assets.Scripts.ScreenStates
         private Label _lblRoundValue;
 
         private VisualElement _velEndTurnBox;
+        private VisualElement _velExtrinsicFrame;
 
+        private Label _lblExtriniscInfo;
+
+        private int _subscriptionIndex;
         private List<string> _subscriptionOrder;
         private Dictionary<string, ExtrinsicInfo> _subscriptionDict;
 
@@ -69,6 +75,10 @@ namespace Assets.Scripts.ScreenStates
         public override void EnterState()
         {
             Debug.Log($"[{this.GetType().Name}] EnterState");
+
+            _subscriptionIndex = 0;
+            _subscriptionOrder = new List<string>();
+            _subscriptionDict = new Dictionary<string, ExtrinsicInfo>();
 
             PlayerIndex = Storage.PlayerIndex(Network.Client.Account).Value;
 
@@ -102,18 +112,22 @@ namespace Assets.Scripts.ScreenStates
                     break;
             }
 
-            _lblManaValue = instance.Q<Label>("LblManaValue");
-            _lblHumansValue = instance.Q<Label>("LblHumansValue");
-            _lblWaterValue = instance.Q<Label>("LblWaterValue");
-            _lblFoodValue = instance.Q<Label>("LblFoodValue");
-            _lblWoodValue = instance.Q<Label>("LblWoodValue");
-            _lblStoneValue = instance.Q<Label>("LblStoneValue");
-            _lblGoldValue = instance.Q<Label>("LblGoldValue");
+            _lblManaValue = topBound.Q<Label>("LblManaValue");
+            _lblHumansValue = topBound.Q<Label>("LblHumansValue");
+            _lblWaterValue = topBound.Q<Label>("LblWaterValue");
+            _lblFoodValue = topBound.Q<Label>("LblFoodValue");
+            _lblWoodValue = topBound.Q<Label>("LblWoodValue");
+            _lblStoneValue = topBound.Q<Label>("LblStoneValue");
+            _lblGoldValue = topBound.Q<Label>("LblGoldValue");
 
-            _lblRoundValue = instance.Q<Label>("LblRoundValue");
+            _lblRoundValue = topBound.Q<Label>("LblRoundValue");
 
-            _velEndTurnBox = instance.Q<VisualElement>("VelEndTurnBox");
+            _velEndTurnBox = topBound.Q<VisualElement>("VelEndTurnBox");
+            _velEndTurnBox.SetEnabled(false);
             _velEndTurnBox.RegisterCallback<ClickEvent>(OnEndTurnClicked);
+
+            _lblExtriniscInfo = topBound.Q<Label>("LblExtriniscInfo");
+            _velExtrinsicFrame = topBound.Q<VisualElement>("VelExtrinsicFrame");
 
             // add container
             FlowController.VelContainer.Add(instance);
@@ -130,6 +144,10 @@ namespace Assets.Scripts.ScreenStates
             Storage.OnChangedHexaPlayer += OnChangedHexaPlayer;
             Storage.OnNextPlayerTurn += OnNextPlayerTurn;
             Storage.OnBoardStateChanged += OnBoardStateChanged;
+            Storage.OnStorageUpdated += OnStorageUpdated;
+
+            Network.Client.ExtrinsicManager.ExtrinsicUpdated += OnExtrinsicUpdated; 
+            Network.ExtrinsicCheck += OnExtrinsicCheck;
         }
 
         public override void ExitState()
@@ -143,18 +161,35 @@ namespace Assets.Scripts.ScreenStates
             Storage.OnChangedHexaPlayer -= OnChangedHexaPlayer;
             Storage.OnNextPlayerTurn -= OnNextPlayerTurn;
             Storage.OnBoardStateChanged -= OnBoardStateChanged;
+
+            Network.Client.ExtrinsicManager.ExtrinsicUpdated -= OnExtrinsicUpdated;
+            Network.ExtrinsicCheck -= OnExtrinsicCheck;
+            Storage.OnStorageUpdated -= OnStorageUpdated;
+        }
+
+        private void OnStorageUpdated(uint blocknumber)
+        {
+            if (!Network.Client.ExtrinsicManager.PreInblock.Any())
+            {
+                _velEndTurnBox.SetEnabled(PlayerIndex == Storage.HexaGame.PlayerTurn);
+            }
+
+            _lblRoundValue.text = $"R:{Storage.HexaGame.PlayerTurn} T:{Storage.HexaGame.HexBoardRound}";
         }
 
         private void OnExtrinsicCheck()
         {
-            if (_subscriptionOrder.Count == 0)
-            {
-            }
-
             if (!Network.Client.IsConnected)
             {
+                //_lblExtriniscInfo.text = "Not connected";
+                //_velExtrinsicFrame.style.backgroundColor = GameConstant.PastelRed;
                 _subscriptionOrder.Clear();
                 _subscriptionDict.Clear();
+            }
+            else if(!Network.Client.ExtrinsicManager.Running.Any())
+            {
+                _velExtrinsicFrame.style.backgroundColor = GameConstant.PastelGray;
+                _lblExtriniscInfo.text = "No extrinsics";
             }
         }
 
@@ -178,6 +213,8 @@ namespace Assets.Scripts.ScreenStates
                 infoStr = extrinsicInfo.ExtrinsicType.Contains(".") ? extrinsicInfo.ExtrinsicType.Split(".")[1] : extrinsicInfo.ExtrinsicType;
             }
 
+            var color = GameConstant.GetColor(extrinsicInfo.TransactionEvent.Value);
+
             // dispatch to main thread as the call comes from outside
             UnityMainThreadDispatcher.Instance().Enqueue(() =>
             {
@@ -186,23 +223,40 @@ namespace Assets.Scripts.ScreenStates
                 {
                     if (extrinsicInfo.Error != null)
                     {
+                        _lblExtriniscInfo.text = $"[APIError] {extrinsicInfo.Error}";
                     }
                     else if (extrinsicInfo.SystemExtrinsicEvent(out Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.Event? systemExtrinsicEvent, out string errorMsg))
                     {
+                        _velExtrinsicFrame.style.backgroundColor = systemExtrinsicEvent.Value ==
+                        Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.Event.ExtrinsicSuccess ?
+                        GameConstant.PastelGreen :
+                        GameConstant.PastelOrange;
+                        _lblExtriniscInfo.text = $"{systemExtrinsicEvent.Value}";
+                        Debug.Log($"{systemExtrinsicEvent.Value}]" + (errorMsg != null ? errorMsg : ""));
                     }
                     else
                     {
+                        _lblExtriniscInfo.text = $"[APIError] Unable system event";
                     }
+                } 
+                else
+                {
+                    _velExtrinsicFrame.style.backgroundColor = color;
+                    _lblExtriniscInfo.text = $"[{extrinsicInfo.TransactionEvent}] {infoStr}";
                 }
             });
 
             if (extrinsicInfo.IsCompleted)
             {
+                _subscriptionOrder.Remove(subscriptionId);
+                _subscriptionDict.Remove(subscriptionId);
             }
         }
 
-        private void OnEndTurnClicked(ClickEvent evt)
+        private async void OnEndTurnClicked(ClickEvent evt)
         {
+            _velEndTurnBox.SetEnabled(false);
+
             if (!Storage.UpdateHexalem)
             {
                 // increment block number
@@ -212,15 +266,24 @@ namespace Assets.Scripts.ScreenStates
 
                 if (result == null)
                 {
+                    _velEndTurnBox.SetEnabled(true);
                     Debug.Log("Failed to finish turn!");
                     return;
                 }
 
                 Storage.SetTrainGame(result, PlayerIndex);
             }
-            else
+            else if (!Network.Client.ExtrinsicManager.PreInblock.Any())
             {
-                Debug.Log("Not implemented!!!!");
+                var subscriptionId = await Network.Client.FinishTurnAsync(Network.Client.Account, 1, CancellationToken.None);
+                if (subscriptionId == null)
+                {
+                    _velEndTurnBox.SetEnabled(true);
+                    return;
+                }
+
+                Debug.Log($"Extrinsic[PlayAsync] submited: {subscriptionId}");
+                FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayWaiting);
             }
         }
 
@@ -242,9 +305,7 @@ namespace Assets.Scripts.ScreenStates
 
         private void OnNextPlayerTurn(byte playerTurn)
         {
-            _lblRoundValue.text = $"R:{Storage.HexaGame.PlayerTurn} T:{Storage.HexaGame.HexBoardRound}";
-
-            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
+            //FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
         }
 
         private void OnBoardStateChanged(HexBoardState boardState)

@@ -1,6 +1,11 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
+using Substrate.Integration.Client;
+using Substrate.NetApi.Model.Types;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,7 +14,7 @@ namespace Assets.Scripts
 {
     internal class PlayTileSelectSubState : ScreenBaseState
     {
-        public PlayScreenState MainScreenState => ParentState as PlayScreenState;
+        public PlayScreenState PlayScreenState => ParentState as PlayScreenState;
 
         private Material _emptyMat;
         private Material _selectedMat;
@@ -61,6 +66,8 @@ namespace Assets.Scripts
 
             Grid.OnGridTileClicked -= OnGridTileClicked;
             Storage.OnChangedHexaSelection -= OnChangedHexaSelection;
+
+            ClearTileSelection();
         }
 
         private void OnGridTileClicked(GameObject tileObject, int index)
@@ -74,84 +81,107 @@ namespace Assets.Scripts
                 return;
             }
 
-            if (!Storage.HexaGame.CanChooseAndPlace((byte)pIndex, MainScreenState.SelectedCardIndex, index))
+            // No selections ..
+            if (Network.Client.ExtrinsicManager.PreInblock.Any())
             {
-                Debug.Log($"Bad Chose & Place player {pIndex}, selection index {MainScreenState.SelectedCardIndex} and grid index {index}");
+                Debug.Log("Still some transactions pre in block.");
                 return;
             }
 
-            if (MainScreenState.SelectedGridIndex < 0)
+            if (!Storage.HexaGame.CanChooseAndPlace((byte)pIndex, PlayScreenState.SelectedCardIndex, index))
             {
-                MainScreenState.SelectedGridIndex = index;
+                Debug.Log($"Bad Chose & Place player {pIndex}, selection index {PlayScreenState.SelectedCardIndex} and grid index {index}");
+                return;
+            }
+
+            if (PlayScreenState.SelectedGridIndex < 0)
+            {
+                PlayScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
                 _btnActionTitle.SetEnabled(true);
             }
-            else if (MainScreenState.SelectedGridIndex == index)
+            else if (PlayScreenState.SelectedGridIndex == index)
             {
-                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-                MainScreenState.SelectedGridIndex = -1;
+                Grid.PlayerGrid.transform.GetChild(PlayScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                PlayScreenState.SelectedGridIndex = -1;
                 _btnActionTitle.SetEnabled(false);
             }
             else
             {
-                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-                MainScreenState.SelectedGridIndex = index;
+                Grid.PlayerGrid.transform.GetChild(PlayScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                PlayScreenState.SelectedGridIndex = index;
                 Renderer renderer = tileObject.GetComponent<Renderer>();
                 renderer.material = new Material(_selectedMat);
                 _btnActionTitle.SetEnabled(true);
             }
         }
 
-        private void OnActionClicked(ClickEvent evt)
+        private async void OnActionClicked(ClickEvent evt)
         {
+            _btnActionTitle.SetEnabled(false);
+
             if (!Storage.UpdateHexalem)
             {
-                MainScreenState.Blocknumber++;
+                PlayScreenState.Blocknumber++;
 
-                var result = Game.ChooseAndPlace(MainScreenState.Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)MainScreenState.PlayerIndex, MainScreenState.SelectedCardIndex, MainScreenState.SelectedGridIndex);
+                var result = Game.ChooseAndPlace(PlayScreenState.Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedCardIndex, PlayScreenState.SelectedGridIndex);
 
                 if (result == null)
                 {
+                    _btnActionTitle.SetEnabled(true);
                     return;
                 }
 
-                Storage.SetTrainGame(result, MainScreenState.PlayerIndex);
+                Storage.SetTrainGame(result, PlayScreenState.PlayerIndex);
             }
-            else
+            else if (!Network.Client.ExtrinsicManager.PreInblock.Any())
             {
-                // TODO ADD On chain action ...
+                var subscriptionId = await Network.Client.PlayAsync(Network.Client.Account, (byte)PlayScreenState.SelectedGridIndex, (byte)PlayScreenState.SelectedCardIndex, 1, CancellationToken.None);
+                if (subscriptionId == null)
+                {
+                    _btnActionTitle.SetEnabled(true);
+                    return;
+                }
+
+                Debug.Log($"Extrinsic[PlayAsync] submited: {subscriptionId}");
+                FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayWaiting);
             }
+        }
+
+        public void ClearTileSelection()
+        {
+            if (PlayScreenState.SelectedGridIndex > -1)
+            {
+                Grid.PlayerGrid.transform.GetChild(PlayScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                PlayScreenState.SelectedGridIndex = -1;
+            }
+
+            PlayScreenState.SelectedCardIndex = -1;
         }
 
         private void OnCancelClicked(ClickEvent evt)
         {
-            if (MainScreenState.SelectedGridIndex > -1)
+            if (PlayScreenState.SelectedGridIndex > -1)
             {
-                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-                MainScreenState.SelectedGridIndex = -1;
+                Grid.PlayerGrid.transform.GetChild(PlayScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
+                PlayScreenState.SelectedGridIndex = -1;
             }
-            MainScreenState.SelectedCardIndex = -1;
+            PlayScreenState.SelectedCardIndex = -1;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
 
         private void OnChangedHexaSelection(List<byte> hexaSelection)
         {
-            if (MainScreenState.SelectedGridIndex > -1) {
-                Grid.PlayerGrid.transform.GetChild(MainScreenState.SelectedGridIndex).GetChild(0).GetComponent<Renderer>().material = _emptyMat;
-                MainScreenState.SelectedGridIndex = -1;
-            }
-
-            MainScreenState.SelectedCardIndex = -1;
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlaySelect);
         }
 
         private void UpdateTileSelection()
         {
-            var tileCard = MainScreenState.TileCardElement.Instantiate();
+            var tileCard = PlayScreenState.TileCardElement.Instantiate();
 
-            var selectTile = GameConfig.TILE_COSTS[Storage.HexaGame.UnboundTileOffers[MainScreenState.SelectedCardIndex]];
+            var selectTile = GameConfig.TILE_COSTS[Storage.HexaGame.UnboundTileOffers[PlayScreenState.SelectedCardIndex]];
 
             tileCard.Q<Label>("LblTileName").text = selectTile.TileToBuy.TileType.ToString() + "(Norm)";
 
@@ -162,31 +192,31 @@ namespace Assets.Scripts
             switch (selectTile.TileToBuy.TileType)
             {
                 case TileType.Home:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileHome);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileHome);
                     break;
 
                 case TileType.Grass:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileGrass);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileGrass);
                     break;
 
                 case TileType.Water:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileWater);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileWater);
                     break;
 
                 case TileType.Tree:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileTrees);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileTrees);
                     break;
 
                 case TileType.Mountain:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileMountain);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileMountain);
                     break;
 
                 case TileType.Cave:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileCave);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileCave);
                     break;
 
                 case TileType.Desert:
-                    velTileImage.style.backgroundImage = new StyleBackground(MainScreenState.TileDesert);
+                    velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileDesert);
                     break;
             }
 

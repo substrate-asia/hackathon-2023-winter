@@ -15,6 +15,10 @@ public class StorageManager : Singleton<StorageManager>
 
     public event NextBlocknumberHandler OnNextBlocknumber;
 
+    public delegate void StorageUpdatedHandler(uint blocknumber);
+
+    public event StorageUpdatedHandler OnStorageUpdated;
+
     public delegate void HexaBoardChangedHandler(HexaBoard hexaBoard);
 
     public event HexaBoardChangedHandler OnChangedHexaBoard;
@@ -63,7 +67,7 @@ public class StorageManager : Singleton<StorageManager>
     /// </summary>
     private void Start()
     {
-        InvokeRepeating(nameof(UpdatedBaseData), 4.0f, 10.0f);
+        InvokeRepeating(nameof(UpdatedBaseData), 1.0f, 2.0f);
     }
 
     /// <summary>
@@ -129,27 +133,31 @@ public class StorageManager : Singleton<StorageManager>
         if (myBoard == null || playerGame == null)
         {
             HexaGame = null;
-            return;
         }
-
-        var playerBoards = new List<BoardSharp>();
-        foreach (var player in playerGame.Players)
+        else
         {
-            var playerBoard = await Network.Client.GetBoardAsync(player, CancellationToken.None);
-            if (playerBoard != null)
+
+            var playerBoards = new List<BoardSharp>();
+            foreach (var player in playerGame.Players)
             {
-                playerBoards.Add(playerBoard);
+                var playerBoard = await Network.Client.GetBoardAsync(player, CancellationToken.None);
+                if (playerBoard != null)
+                {
+                    playerBoards.Add(playerBoard);
+                }
             }
+
+            HexaGame oldGame = null;
+            if (HexaGame != null)
+            {
+                oldGame = (HexaGame)HexaGame.Clone();
+            }
+            HexaGame = HexalemWrapper.GetHexaGame(playerGame, playerBoards.ToArray());
+            // check for the event
+            HexaGameDiff(oldGame, HexaGame, PlayerIndex(Network.Client.Account).Value);
         }
 
-        HexaGame oldGame = null;
-        if (HexaGame != null)
-        {
-            oldGame = (HexaGame)HexaGame.Clone();
-        }
-        HexaGame = HexalemWrapper.GetHexaGame(playerGame, playerBoards.ToArray());
-        // check for the event
-        HexaGameDiff(oldGame, HexaGame, PlayerIndex(Network.Client.Account).Value);
+        OnStorageUpdated?.Invoke(blockNumber.Value);
     }
 
     public void HexaGameDiff(HexaGame oldGame, HexaGame newGame, int playerIndex)
