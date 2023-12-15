@@ -125,6 +125,7 @@ public class StorageManager : Singleton<StorageManager>
         // don't update hexalem on chain informations ...
         if (!UpdateHexalem)
         {
+            OnStorageUpdated?.Invoke(blockNumber.Value);
             return;
         }
 
