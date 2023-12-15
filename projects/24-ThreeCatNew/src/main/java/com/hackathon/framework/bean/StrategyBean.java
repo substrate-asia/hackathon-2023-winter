@@ -8,13 +8,30 @@ import java.util.Map;
  */
 public class StrategyBean {
 
+    /**
+     * 编译方式 会关联一个映射
+     */
     private String compile;
 
+    /**
+     * 编译名称
+     */
     private String compiledNames;
 
+    /**
+     * 生成目录的目录
+     */
     private List<String> directory;
 
+    /**
+     * SDK名称用于关联接口请求方式
+     */
     private String sdkName;
+
+    /**
+     * 客户端界面的选择框
+     */
+    private Map<String,String> comboBox;
 
     public List<String> getDirectory() {
         return directory;
@@ -130,5 +147,13 @@ public class StrategyBean {
 
     public StrategyBean(){
 
+    }
+
+    public Map<String, String> getComboBox() {
+        return comboBox;
+    }
+
+    public void setComboBox(Map<String, String> comboBox) {
+        this.comboBox = comboBox;
     }
 }
