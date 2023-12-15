@@ -1,0 +1,71 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Currency Exchange</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <style>
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+        }
+        /* Custom styles for select dropdown */
+        .custom-select {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            padding-right: 2.5rem;
+            background-image: url('data:image/svg+xml;charset=US-ASCII,<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M5 7.5L10 12.5L15 7.5" stroke="%239CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1em;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <div class="min-h-screen flex items-center justify-center">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-96">
+            <div class="flex justify-between items-center mb-6">
+                <h1 class="text-2xl font-bold">买入</h1>
+                <h2 class="text-xl font-semibold text-gray-500">卖出</h2>
+            </div>
+            <div class="mb-4">
+                <label for="buyAmount" class="block text-gray-700 text-sm font-bold mb-2">我要支付</label>
+                <div class="flex items-center border border-gray-300 rounded">
+                    <input id="buyAmount" type="text" value="72" class="p-2 block w-full text-lg rounded-l focus:outline-none">
+                    <div class="relative">
+                        <select class="custom-select px-4 py-2 bg-red-100 text-red-500 rounded-r cursor-pointer">
+                            <option>CNY</option>
+                            <option>USD</option>
+                            <option>EUR</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-6">
+                <label for="sellAmount" class="block text-gray-700 text-sm font-bold mb-2">我将收到</label>
+                <div class="flex items-center border border-gray-300 rounded">
+                    <input id="sellAmount" type="text" value="9.93" class="p-2 block w-full text-lg rounded-l focus:outline-none">
+                    <div class="relative">
+                        <select class="custom-select px-4 py-2 bg-green-100 text-green-500 rounded-r cursor-pointer">
+                            <option>USDT</option>
+                            <option>USD</option>
+                            <option>EUR</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-between text-sm text-gray-500 mb-6">
+                <span>预计价格</span>
+                <span>1 USDT ≈ 7.25 CNY</span>
+            </div>
+            <button class="w-full bg-green-500 text-white py-3 rounded font-bold text-lg">0手续费购买</button>
+            <div class="text-sm text-gray-500 mt-4">
+                <p>T+1: 为了保护资产安全，您对某个资产买卖T+1日解限制。</p>
+                <a href="#" class="text-green-500">了解更多 ></a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
