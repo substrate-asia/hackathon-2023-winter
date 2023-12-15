@@ -6,4 +6,5 @@ module.exports = {
   ...require("./categories"),
   ...require("./getComments"),
   ...require("./postComment"),
+  ...require("./getContributors"),
 };

@@ -1,4 +1,4 @@
-const { qf: { getProjectCol } } = require("@open-qf/mongo");
+const { qf: { getProjectCol, getContributorCol } } = require("@open-qf/mongo");
 const { extractPage } = require("../../../utils/extractPage");
 
 async function getRoundProjects(ctx) {
@@ -19,8 +19,18 @@ async function getRoundProjects(ctx) {
     .toArray();
   let total = await col.estimatedDocumentCount();
 
+  const contributorCol = await getContributorCol();
+  const projects = [];
+  for (const item of items) {
+    const contributorsCount = await contributorCol.countDocuments({ projectId: item.id });
+    projects.push({
+      ...item,
+      contributorsCount,
+    })
+  }
+
   ctx.body = {
-    items,
+    items: projects,
     page,
     pageSize,
     total,
