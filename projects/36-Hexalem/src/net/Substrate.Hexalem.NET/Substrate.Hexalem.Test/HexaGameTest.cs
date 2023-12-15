@@ -34,6 +34,25 @@ namespace Substrate.Hexalem.Test
         }
 
         [Test]
+        public void InvalidId_ShouldFail()
+        {
+            uint blockNumber = 1;
+            Random random = new Random((int)blockNumber);
+            var randomHash = new byte[20];
+            random.NextBytes(randomHash);
+
+            var players = new List<HexaPlayer>() { new HexaPlayer(new byte[32]), new HexaPlayer(new byte[32]) };
+            var hexaTuple = new List<(HexaPlayer, HexaBoard)>();
+            foreach (var player in players)
+            {
+                var hexaBoard = new HexaBoard(new byte[(int)GridSize.Medium]);
+                hexaTuple.Add((player, hexaBoard));
+            }
+
+            Assert.Throws<ArgumentException>(() => new HexaGame(randomHash, hexaTuple));
+        }
+
+        [Test]
         public void ClonedHexaGame_ShouldBeEqual()
         {
             Assert.True(((HexaGame)_hexaGame.Clone()).IsSame(_hexaGame));

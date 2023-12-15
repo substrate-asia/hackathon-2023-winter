@@ -14,6 +14,7 @@ namespace Substrate.Hexalem.Engine
         public const double FOOD_PER_GRASS = 2;
         public const double FOOD_PER_TREE = 1;
 
+        public const int GAME_STORAGE_ID = 32;
         public const int GAME_STORAGE_SIZE = 16;
         public const int PLAYER_STORAGE_SIZE = 10;
 
