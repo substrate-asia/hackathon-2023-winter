@@ -939,7 +939,7 @@ impl<T: Config> Pallet<T> {
 		hex_board: &mut HexBoard<T>,
 	) -> Result<(), sp_runtime::DispatchError> {
 		hex_board.resources[resource_cost.resource_type as usize] = hex_board.resources
-			[ResourceType::Gold as usize]
+			[resource_cost.resource_type as usize]
 			.checked_sub(resource_cost.amount)
 			.ok_or(Error::<T>::NotEnoughResources)?;
 		Ok(())
