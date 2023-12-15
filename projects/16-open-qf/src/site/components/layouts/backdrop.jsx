@@ -7,7 +7,7 @@ export default function Backdrop(props) {
       {...props}
       className={cn(
         "w-full h-[308px] border-b border-stroke-border-default bg-fill-bg-primary",
-        "absolute top-20",
+        "absolute top-[81px] max-sm:top-[71px]",
         "-z-50",
         props.className,
       )}

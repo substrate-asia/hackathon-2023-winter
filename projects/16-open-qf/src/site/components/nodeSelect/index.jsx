@@ -14,6 +14,7 @@ import { ReactComponent as SignalMedium } from "./signal-medium.svg";
 import { ReactComponent as SignalSlow } from "./signal-slow.svg";
 import { NodeDelayProvider, useNodesDelay } from "@/context/nodeDelay";
 import useWindowSize from "@/hooks/useWindowSize";
+import { cn } from "@/utils";
 
 const Wrapper = styled.div`
   position: relative;
@@ -36,13 +37,14 @@ const SmallSelect = styled(FlexCenter)`
 
 const Select = styled(Flex)`
   border: 1px solid ${(p) => p.theme["--stroke-action-default"]};
-  border-radius: 4px;
   height: 38px;
   padding: 0 12px;
   cursor: pointer;
   font-weight: 500;
   font-size: 14px;
   line-height: 100%;
+  justify-content: space-between;
+  gap: 8px;
   > :not(:first-child) {
     margin-left: 8px;
   }
@@ -161,10 +163,19 @@ function NodeSelectImpl({ small }) {
         </SmallSelect>
       )}
       {!small && (
-        <Select onClick={() => setShow(!show)}>
-          {getSignalImg(currentNodeDelay)}
-          <div>{currentNodeSetting?.name}</div>
-          <img src="/imgs/icons/caret-down.svg" alt="" width={14} height={14} />
+        <Select onClick={() => setShow(!show)} className="text14medium">
+          <div className="flex items-center gap-x-2">
+            {getSignalImg(currentNodeDelay)}
+            <div>{currentNodeSetting?.name}</div>
+          </div>
+          <div
+            style={{
+              color: getSignalColor(currentNodeDelay),
+            }}
+            className={cn("text-right", !currentNodeDelay && "hidden")}
+          >
+            {currentNodeDelay}ms
+          </div>
         </Select>
       )}
       {show && (

@@ -1,6 +1,7 @@
 import { Header as CommonHeader } from "@osn/common-ui";
 import Connect from "../connect";
 import Link from "next/link";
+import HeaderMobileMenu from "./menu";
 
 export default function Header() {
   return (
@@ -11,7 +12,11 @@ export default function Header() {
           <span className="ml-3 text18semibold">OpenQF</span>
         </div>
 
-        <Connect />
+        <div className="max-sm:hidden">
+          <Connect />
+        </div>
+
+        <HeaderMobileMenu className="sm:hidden" />
       </div>
     </CommonHeader>
   );
