@@ -41,7 +41,7 @@ export default function Sidebar() {
       <div className="flex flex-col gap-[20px] items-center">
         <Content>
           <Info title="Total Raised" value={`${totalDot} DOT`} />
-          <Info title="Contributors" value={contributors.length} />
+          <Info title="Contributors" value={detail.contributorsCount || 0} />
           <Info
             title="Donation Address"
             value={

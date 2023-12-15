@@ -3,8 +3,8 @@ import CardTitle from "../title";
 import ContributionsList from "./list";
 
 export default function Contributions() {
-  const { detail } = useServerSideProps();
-  const count = detail?.contributors?.length || 0;
+  const { contributors } = useServerSideProps();
+  const count = contributors?.total || 0;
 
   if (!count) {
     return null;

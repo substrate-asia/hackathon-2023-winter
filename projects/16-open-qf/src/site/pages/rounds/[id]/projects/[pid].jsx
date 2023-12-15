@@ -8,6 +8,7 @@ import { ssrNextApi } from "@/services";
 import { EmptyList } from "@/utils/constants";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
+import { getProjectContributors } from "@/services/project";
 
 const ProjectPage = withCommonPageWrapper(() => {
   return (
@@ -37,12 +38,18 @@ export const getServerSideProps = async (context) => {
     `/rounds/${roundId}/projects/${projectId}/comments`,
   );
 
+  const { result: contributorsResult } = await getProjectContributors(
+    roundId,
+    projectId,
+  );
+
   return {
     props: {
       roundId,
       projectId,
       detail: detail ?? null,
       comments: comments ?? EmptyList,
+      contributors: contributorsResult ?? EmptyList,
       ...loadCommonServerSideProps(context),
     },
   };

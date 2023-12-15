@@ -46,7 +46,7 @@ export default function ProjectCard({ project }) {
             <div className="text12medium text-text-tertiary">
               from{" "}
               <span className="text-text-primary">
-                {project.contributors?.length || 0}
+                {project.contributorsCount || 0}
               </span>{" "}
               Contributors
             </div>
