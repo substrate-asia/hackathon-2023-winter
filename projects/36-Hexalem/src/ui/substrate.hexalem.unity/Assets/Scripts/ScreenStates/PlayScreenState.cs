@@ -102,16 +102,17 @@ namespace Assets.Scripts.ScreenStates
                 case AccountType.Alice:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitAlice);
                     break;
+                
                 case AccountType.Bob:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitBob);
                     break;
+                
                 case AccountType.Charlie:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitCharlie);
                     break;
+                
                 case AccountType.Dave:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitDave);
-                    break;
-                case null:
                     break;
             }
 
