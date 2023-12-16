@@ -187,6 +187,8 @@ namespace Assets.Scripts.ScreenStates
             if (Storage.HexaGame.PlayerTurn != PlayerIndex)
             {
                 // Add red progress bar
+                _velTimerProgress.style.height = Length.Percent(100);
+                _velTimerProgress.style.backgroundColor = GameConstant.PastelRed;
                 return;
             }
 
@@ -194,9 +196,20 @@ namespace Assets.Scripts.ScreenStates
             lastBlockNumber.Create(Storage.HexaGame.LastMove);
             var blockNumberPassed = blocknumber - lastBlockNumber;
 
-            var percentage = ((float)blockNumberPassed / GameConfig.MAX_TURN_BLOCKS) * 100;
+            var percentage = Math.Min((float)blockNumberPassed / GameConfig.MAX_TURN_BLOCKS * 100, 100);
             Debug.Log($"PlayScreenState LastBlockNumber = {lastBlockNumber} | blockNumberPassed = {blockNumberPassed} | percentage = {percentage}");
             _velTimerProgress.style.height = Length.Percent(percentage);
+
+            if(percentage <= 60)
+            {
+                _velTimerProgress.style.backgroundColor = GameConstant.PastelGreen;
+            } else if(percentage <= 80)
+            {
+                _velTimerProgress.style.backgroundColor = GameConstant.PastelOrange;
+            } else
+            {
+                _velTimerProgress.style.backgroundColor = GameConstant.PastelRed;
+            }
         }
 
         private void OnStorageUpdated(uint blocknumber)

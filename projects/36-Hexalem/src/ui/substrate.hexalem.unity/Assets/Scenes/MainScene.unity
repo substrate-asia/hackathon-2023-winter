@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -245,6 +245,8 @@ MonoBehaviour:
   _treesTile: {fileID: 3202582487521064602, guid: d50c9ed70326c9a47939cf1539623b9e, type: 3}
   _desertTile: {fileID: 8706329026578284017, guid: fc9eb7854517e1d449a63b950712b60e, type: 3}
   _caveTile: {fileID: 2758082140818558022, guid: 03c4ad2224bbae44e835b1be8327c163, type: 3}
+  swipeThreshold: 50
+  cameraMoveSpeed: 1
 --- !u!1 &185871275
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,9 +703,9 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
-  m_Intensity: 1
-  m_Range: 10
+  m_Color: {r: 0.990566, g: 0.9792837, b: 0.9485137, a: 1}
+  m_Intensity: 1.2
+  m_Range: 20
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -711,9 +713,9 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 1
-    m_Bias: 0.05
-    m_NormalBias: 0.4
+    m_Strength: 0.25
+    m_Bias: 1
+    m_NormalBias: 0.6
     m_NearPlane: 0.2
     m_CullingMatrixOverride:
       e00: 1
