@@ -312,6 +312,21 @@ namespace Substrate.Hexalem.Engine
         /// Can upgrade a tile
         /// </summary>
         /// <param name="playerIndex"></param>
+        /// <param name="gridIndex"></param>
+        /// <returns></returns>
+        public bool CanUpgrade(byte playerIndex, int gridIndex)
+        {
+            var (_, board) = HexaTuples[playerIndex];
+
+            var coords = board.ToCoords(gridIndex);
+
+            return CanUpgrade(playerIndex, coords);
+        }
+
+        /// <summary>
+        /// Can upgrade a tile
+        /// </summary>
+        /// <param name="playerIndex"></param>
         /// <param name="coords"></param>
         /// <returns></returns>
         public bool CanUpgrade(byte playerIndex, (int q, int r) coords)

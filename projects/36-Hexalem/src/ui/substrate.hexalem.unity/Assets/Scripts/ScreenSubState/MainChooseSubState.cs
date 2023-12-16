@@ -13,7 +13,7 @@ namespace Assets.Scripts.ScreenStates
     {
         public MainScreenState PlayScreenState => ParentState as MainScreenState;
 
-        private System.Random _random = new System.Random();
+        private readonly System.Random _random = new System.Random();
 
         private Button _btnPlay;
         private Button _btnTrain;
@@ -166,10 +166,10 @@ namespace Assets.Scripts.ScreenStates
 
             var hexaTuple = new List<(HexaPlayer, HexaBoard)>
             {
-                { (new HexaPlayer(Network.Client.Account.Bytes), new HexaBoard(new byte[25])) }
+                { (new HexaPlayer(Network.Client.Account.Bytes), new HexaBoard(new byte[(int)GridSize.Medium])) }
             };
 
-            var gameId = new byte[32];
+            var gameId = new byte[GameConfig.GAME_STORAGE_ID];
             _random.NextBytes(gameId);
             var hexaGame = new HexaGame(gameId, hexaTuple);
             hexaGame.Init(1234567);
