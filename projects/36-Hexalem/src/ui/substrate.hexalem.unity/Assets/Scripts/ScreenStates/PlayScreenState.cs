@@ -41,6 +41,7 @@ namespace Assets.Scripts.ScreenStates
 
         private Label _lblRoundValue;
 
+        private VisualElement _velRankingBox;
         private VisualElement _velEndTurnBox;
         private VisualElement _velExtrinsicFrame;
 
@@ -119,6 +120,9 @@ namespace Assets.Scripts.ScreenStates
             _lblGoldValue = topBound.Q<Label>("LblGoldValue");
 
             _lblRoundValue = topBound.Q<Label>("LblRoundValue");
+
+            _velRankingBox = topBound.Q<VisualElement>("VelRankingBox");
+            _velRankingBox.RegisterCallback<ClickEvent>(OnRankingClicked);
 
             _velEndTurnBox = topBound.Q<VisualElement>("VelEndTurnBox");
             _velEndTurnBox.SetEnabled(false);
@@ -251,6 +255,12 @@ namespace Assets.Scripts.ScreenStates
                 _subscriptionDict.Remove(subscriptionId);
             }
         }
+
+        private void OnRankingClicked(ClickEvent evt)
+        {
+            FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayRanking);
+        }
+
 
         private async void OnEndTurnClicked(ClickEvent evt)
         {
