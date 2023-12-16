@@ -13,28 +13,28 @@ using Substrate.NetApi.Model.Types.Metadata.V14;
 using System.Collections.Generic;
 
 
-namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
+namespace Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base
 {
     
     
     /// <summary>
-    /// >> 139 - Array
+    /// >> 135 - Array
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Array)]
-    public sealed class Arr8EnumResourceProductions : BaseType
+    public sealed class Arr16U8 : BaseType
     {
         
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceProductions[] _value;
+        private Substrate.NetApi.Model.Types.Primitive.U8[] _value;
         
         public override int TypeSize
         {
             get
             {
-                return 8;
+                return 16;
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceProductions[] Value
+        public Substrate.NetApi.Model.Types.Primitive.U8[] Value
         {
             get
             {
@@ -48,7 +48,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         public override string TypeName()
         {
-            return string.Format("[{0}; {1}]", new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceProductions().TypeName(), this.TypeSize);
+            return string.Format("[{0}; {1}]", new Substrate.NetApi.Model.Types.Primitive.U8().TypeName(), this.TypeSize);
         }
         
         public override byte[] Encode()
@@ -61,15 +61,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            var array = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceProductions[TypeSize];
-            for (var i = 0; i < array.Length; i++) {var t = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceProductions();t.Decode(byteArray, ref p);array[i] = t;};
+            var array = new Substrate.NetApi.Model.Types.Primitive.U8[TypeSize];
+            for (var i = 0; i < array.Length; i++) {var t = new Substrate.NetApi.Model.Types.Primitive.U8();t.Decode(byteArray, ref p);array[i] = t;};
             var bytesLength = p - start;
             Bytes = new byte[bytesLength];
             System.Array.Copy(byteArray, start, Bytes, 0, bytesLength);
             Value = array;
         }
         
-        public void Create(Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumResourceProductions[] array)
+        public void Create(Substrate.NetApi.Model.Types.Primitive.U8[] array)
         {
             Value = array;
             Bytes = Encode();

@@ -12,12 +12,12 @@ namespace Substrate.Hexalem.Integration.Model
         {
             GameId = gameId;
             State = game.State.Value;
-            Round = game.Round.Value;
-            PlayerTurn = game.PlayerTurn.Value;
-            Played = game.Played.Value;
+            Round = (byte)(game.RoundAndSelectionSize.Value & 0x1F);
+            PlayerTurn = (byte)(game.PlayerTurnAndPlayed.Value & 0x7F);
+            Played = ((game.PlayerTurnAndPlayed.Value & 0x80) >> 7) == 1;
             Players = ((AccountId32[])game.Players.Value).Select(p => p.ToAddress()).ToArray();
             Selection = ((U8[])game.Selection.Value).Select(p => p.Value).ToArray();
-            SelectionSize = game.SelectionSize.Value;
+            SelectionSize = (byte)(((game.RoundAndSelectionSize.Value & 0xE0) >> 5) * 2);
         }
 
         public byte[] GameId { get; private set; }

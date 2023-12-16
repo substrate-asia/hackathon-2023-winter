@@ -34,7 +34,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     }
     
     /// <summary>
-    /// >> 138 - Variant[pallet_hexalem.pallet.ResourceType]
+    /// >> 139 - Variant[pallet_hexalem.pallet.ResourceType]
     /// </summary>
     public sealed class EnumResourceType : BaseEnum<ResourceType>
     {

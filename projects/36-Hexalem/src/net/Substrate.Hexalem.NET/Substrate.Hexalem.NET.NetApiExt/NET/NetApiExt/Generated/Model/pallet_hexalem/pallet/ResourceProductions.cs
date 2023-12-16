@@ -18,23 +18,23 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 141 - Composite[pallet_hexalem.pallet.ResourceProduction]
+    /// >> 141 - Composite[pallet_hexalem.pallet.ResourceProductions]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
-    public sealed class ResourceProduction : BaseType
+    public sealed class ResourceProductions : BaseType
     {
         
         /// <summary>
         /// >> produces
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount _produces;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 _produces;
         
         /// <summary>
         /// >> human_requirements
         /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _humanRequirements;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 _humanRequirements;
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount Produces
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 Produces
         {
             get
             {
@@ -46,7 +46,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 HumanRequirements
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8 HumanRequirements
         {
             get
             {
@@ -60,7 +60,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         public override string TypeName()
         {
-            return "ResourceProduction";
+            return "ResourceProductions";
         }
         
         public override byte[] Encode()
@@ -74,9 +74,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            Produces = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount();
+            Produces = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8();
             Produces.Decode(byteArray, ref p);
-            HumanRequirements = new Substrate.NetApi.Model.Types.Primitive.U8();
+            HumanRequirements = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8();
             HumanRequirements.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
