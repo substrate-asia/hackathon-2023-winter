@@ -1,9 +1,11 @@
 ﻿using Substrate.Hexalem.Engine;
 using Substrate.Integration.Client;
+using Substrate.NetApi.Model.Types.Primitive;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Timers;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -44,6 +46,8 @@ namespace Assets.Scripts.ScreenStates
         private VisualElement _velRankingBox;
         private VisualElement _velEndTurnBox;
         private VisualElement _velExtrinsicFrame;
+
+        private VisualElement _velTimerProgress;
 
         private Label _lblExtriniscInfo;
 
@@ -128,6 +132,8 @@ namespace Assets.Scripts.ScreenStates
             _velEndTurnBox.SetEnabled(false);
             _velEndTurnBox.RegisterCallback<ClickEvent>(OnEndTurnClicked);
 
+            _velTimerProgress = _velEndTurnBox.Q<VisualElement>("VelTimerProgress");
+
             _lblExtriniscInfo = topBound.Q<Label>("LblExtriniscInfo");
             _velExtrinsicFrame = topBound.Q<VisualElement>("VelExtrinsicFrame");
 
@@ -147,6 +153,7 @@ namespace Assets.Scripts.ScreenStates
             Storage.OnNextPlayerTurn += OnNextPlayerTurn;
             Storage.OnBoardStateChanged += OnBoardStateChanged;
             Storage.OnStorageUpdated += OnStorageUpdated;
+            Storage.OnNextBlocknumber += OnNextBlockNumber;
 
             Network.Client.ExtrinsicManager.ExtrinsicUpdated += OnExtrinsicUpdated; 
             Network.ExtrinsicCheck += OnExtrinsicCheck;
@@ -167,6 +174,26 @@ namespace Assets.Scripts.ScreenStates
             Network.Client.ExtrinsicManager.ExtrinsicUpdated -= OnExtrinsicUpdated;
             Network.ExtrinsicCheck -= OnExtrinsicCheck;
             Storage.OnStorageUpdated -= OnStorageUpdated;
+            Storage.OnNextBlocknumber -= OnNextBlockNumber;
+        }
+
+        private void OnNextBlockNumber(uint blocknumber)
+        {
+            Debug.Log($"PlayScreenState OnNextBlockNumber > {blocknumber}");
+
+            if (Storage.HexaGame.PlayerTurn != PlayerIndex)
+            {
+                // Add red progress bar
+                return;
+            }
+
+            var lastBlockNumber = new U32();
+            lastBlockNumber.Create(Storage.HexaGame.LastMove);
+            var blockNumberPassed = blocknumber - lastBlockNumber;
+
+            var percentage = ((float)blockNumberPassed / GameConfig.MAX_TURN_BLOCKS) * 100;
+            Debug.Log($"PlayScreenState LastBlockNumber = {lastBlockNumber} | blockNumberPassed = {blockNumberPassed} | percentage = {percentage}");
+            _velTimerProgress.style.height = Length.Percent(percentage);
         }
 
         private void OnStorageUpdated(uint blocknumber)
@@ -313,6 +340,17 @@ namespace Assets.Scripts.ScreenStates
         {
             //FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayNextTurn);
         }
+
+        //private void UpdateTimerProgress(object source, ElapsedEventArgs e)
+        //{
+        //    // ChangeEvent height
+        //    var currentHeight = _velTimerProgress.style.height.value;
+        //    var nextHeight = currentHeight.value + Length.Percent(10).value;
+        //    if (nextHeight >= 100) nextHeight = 100;
+
+        //    Debug.Log($"Timer progress, height = {currentHeight}");
+        //    _velTimerProgress.style.height = Length.Percent(40);
+        //}
 
         private void OnBoardStateChanged(HexBoardState boardState)
         {

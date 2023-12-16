@@ -22,7 +22,7 @@
                                 <ui:Label tabindex="-1" text="END&#10;TURN" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; font-size: 35px; -unity-text-align: upper-center;" />
                             </ui:VisualElement>
                             <ui:VisualElement name="VelTimmerBg" style="flex-grow: 0; width: 5%; height: 100%; background-color: rgb(214, 214, 214); justify-content: flex-end; flex-shrink: 0;">
-                                <ui:VisualElement name="VelTimerProgress" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 45%; background-color: rgb(51, 51, 51);" />
+                                <ui:VisualElement name="VelTimerProgress" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 0; background-color: rgb(51, 51, 51);" />
                             </ui:VisualElement>
                         </ui:VisualElement>
                     </ui:VisualElement>
