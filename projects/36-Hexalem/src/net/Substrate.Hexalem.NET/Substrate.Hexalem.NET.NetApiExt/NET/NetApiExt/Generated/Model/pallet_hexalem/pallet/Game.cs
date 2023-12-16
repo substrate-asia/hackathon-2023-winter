@@ -50,9 +50,14 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1 _selection;
         
         /// <summary>
-        /// >> round_and_selection_size
+        /// >> selection_size
         /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _roundAndSelectionSize;
+        private Substrate.NetApi.Model.Types.Primitive.U8 _selectionSize;
+        
+        /// <summary>
+        /// >> round
+        /// </summary>
+        private Substrate.NetApi.Model.Types.Primitive.U8 _round;
         
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumGameState State
         {
@@ -114,15 +119,27 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 RoundAndSelectionSize
+        public Substrate.NetApi.Model.Types.Primitive.U8 SelectionSize
         {
             get
             {
-                return this._roundAndSelectionSize;
+                return this._selectionSize;
             }
             set
             {
-                this._roundAndSelectionSize = value;
+                this._selectionSize = value;
+            }
+        }
+        
+        public Substrate.NetApi.Model.Types.Primitive.U8 Round
+        {
+            get
+            {
+                return this._round;
+            }
+            set
+            {
+                this._round = value;
             }
         }
         
@@ -139,7 +156,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             result.AddRange(LastPlayedBlock.Encode());
             result.AddRange(Players.Encode());
             result.AddRange(Selection.Encode());
-            result.AddRange(RoundAndSelectionSize.Encode());
+            result.AddRange(SelectionSize.Encode());
+            result.AddRange(Round.Encode());
             return result.ToArray();
         }
         
@@ -156,8 +174,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             Players.Decode(byteArray, ref p);
             Selection = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1();
             Selection.Decode(byteArray, ref p);
-            RoundAndSelectionSize = new Substrate.NetApi.Model.Types.Primitive.U8();
-            RoundAndSelectionSize.Decode(byteArray, ref p);
+            SelectionSize = new Substrate.NetApi.Model.Types.Primitive.U8();
+            SelectionSize.Decode(byteArray, ref p);
+            Round = new Substrate.NetApi.Model.Types.Primitive.U8();
+            Round.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];
