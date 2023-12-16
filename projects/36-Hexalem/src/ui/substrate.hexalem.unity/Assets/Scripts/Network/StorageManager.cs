@@ -142,7 +142,6 @@ public class StorageManager : Singleton<StorageManager>
         }
         else
         {
-
             var playerBoards = new List<BoardSharp>();
             foreach (var player in playerGame.Players)
             {
@@ -199,7 +198,7 @@ public class StorageManager : Singleton<StorageManager>
             OnNextPlayerTurn?.Invoke(newGame.PlayerTurn);
         }
 
-        if (oldGame == null || oldGame.HexBoardState != newGame.HexBoardState )
+        if (oldGame == null || oldGame.HexBoardState != newGame.HexBoardState)
         {
             Debug.Log("[EVENT] OnBoardStateChanged");
             OnBoardStateChanged?.Invoke(newGame.HexBoardState);
@@ -221,5 +220,6 @@ public class StorageManager : Singleton<StorageManager>
     public int? PlayerIndex(Account account) => HexaGame?.HexaTuples.FindIndex(p => p.player.Id.SequenceEqual(account.Bytes));
 
     public HexaPlayer Player(int playerIndex) => HexaGame?.HexaTuples[playerIndex].player;
+
     public HexaBoard Board(int playerIndex) => HexaGame?.HexaTuples[playerIndex].board;
 }

@@ -57,7 +57,6 @@ namespace Assets.Scripts
             BootomPadding.Add(elementInstance);
             // avoid raycast through bottom bound UI
             Grid.RegisterBottomBound();
-
         }
 
         public override void ExitState()

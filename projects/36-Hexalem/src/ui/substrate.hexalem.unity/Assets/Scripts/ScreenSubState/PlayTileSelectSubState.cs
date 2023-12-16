@@ -1,12 +1,8 @@
 ﻿using Assets.Scripts.ScreenStates;
 using Substrate.Hexalem.Engine;
-using Substrate.Integration.Client;
-using Substrate.NetApi.Model.Types;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using UnityEditor.MemoryProfiler;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -219,8 +215,6 @@ namespace Assets.Scripts
             }
 
             _velTileCardBox.Add(tileCard);
-
-            
         }
     }
 }

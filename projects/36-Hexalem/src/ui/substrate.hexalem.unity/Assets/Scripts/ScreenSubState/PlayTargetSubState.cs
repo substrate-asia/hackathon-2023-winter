@@ -1,12 +1,10 @@
 ﻿using Assets.Scripts.ScreenStates;
-using Substrate.Hexalem.Engine;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace Assets.Scripts
 {
-    internal class PlayRankingSubState : ScreenBaseState
+    internal class PlayTargetSubState : ScreenBaseState
     {
         public PlayScreenState PlayScreenState => ParentState as PlayScreenState;
 
@@ -21,7 +19,7 @@ namespace Assets.Scripts
 
         private Label _lblActionInfo;
 
-        public PlayRankingSubState(FlowController flowController, ScreenBaseState parent)
+        public PlayTargetSubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent)
         {
             _playerScoreElement = Resources.Load<VisualTreeAsset>($"UI/Elements/PlayerScoreElement");
@@ -41,7 +39,7 @@ namespace Assets.Scripts
             _bodyPadding = FlowController.VelContainer.Q<VisualElement>("BodyPadding");
             _bodyPadding.style.backgroundColor = new StyleColor(new Color32(255, 255, 255, 255));
 
-            TemplateContainer frameInstance = ElementInstance("UI/Frames/RankingFrame");
+            TemplateContainer frameInstance = ElementInstance("UI/Frames/TargetFrame");
             _velCancelBox = frameInstance.Q<VisualElement>("VelCancelBox");
             _velCancelBox.RegisterCallback<ClickEvent>(OnCancelClicked);
             _scvPlayerScores = frameInstance.Q<ScrollView>("ScVPlayerScores");
@@ -86,44 +84,6 @@ namespace Assets.Scripts
             if (Storage.HexaGame == null)
             {
                 return;
-            }
-
-            HexaPlayer[] array = Storage.HexaGame.HexaTuples.Select(p => p.player).ToArray();
-            for (int i = 0; i < array.Length; i++)
-            {
-                HexaPlayer player = array[i];
-                var playerScoreInstance = _playerScoreElement.Instantiate();
-                playerScoreInstance.Q<Label>("LblPlayerIndex").text = (i + 1).ToString();
-                playerScoreInstance.Q<Label>("LblTurn").text = i == PlayScreenState.PlayerIndex ? "TURN" : "";
-                var velPortrait = playerScoreInstance.Q<VisualElement>("VelPlayerPort");
-                switch (Network.CurrentAccountType)
-                {
-                    case AccountType.Alice:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitAlice);
-                        break;
-
-                    case AccountType.Bob:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitBob);
-                        break;
-
-                    case AccountType.Charlie:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitCharlie);
-                        break;
-
-                    case AccountType.Dave:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitDave);
-                        break;
-                }
-
-                playerScoreInstance.Q<Label>("LblManaValue").text = player[RessourceType.Mana].ToString(); ;
-                playerScoreInstance.Q<Label>("LblHumansValue").text = player[RessourceType.Humans].ToString();
-                playerScoreInstance.Q<Label>("LblWaterValue").text = player[RessourceType.Water].ToString();
-                playerScoreInstance.Q<Label>("LblFoodValue").text = player[RessourceType.Food].ToString();
-                playerScoreInstance.Q<Label>("LblWoodValue").text = player[RessourceType.Wood].ToString();
-                playerScoreInstance.Q<Label>("LblStoneValue").text = player[RessourceType.Stone].ToString();
-                playerScoreInstance.Q<Label>("LblGoldValue").text = player[RessourceType.Gold].ToString();
-
-                _scvPlayerScores.Add(playerScoreInstance);
             }
         }
     }
