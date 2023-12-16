@@ -1,0 +1,234 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exchange Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    </link>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto mt-10 max-w-screen-xl">
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <!-- Header with buttons and currency selector -->
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex space-x-2">
+                    <button class="bg-green-500 text-white px-4 py-2 rounded">买入</button>
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded">卖出</button>
+                </div>
+                <div class="flex space-x-2">
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">USDT</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">BTC</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">FDUSD</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">BNB</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">ETH</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">TRX</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">SHIB</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">DOGE</button>
+                    <button
+                        class="bg-gray-200 text-gray-700 hover:bg-green-500 hover:text-white px-4 py-2 rounded">ADA</button>
+                </div>
+            </div>
+
+            <!-- Filters -->
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex space-x-2">
+                    <div class="relative">
+                        <select
+                            class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option>所有支付方式</option>
+                            <option>银行借记卡</option>
+                            <option>银行现金存款</option>
+                            <option>银行转账（中东地区）</option>
+                            <option>通过指定银行转账</option>
+                            <option>Wise</option>
+                            <option>支付宝</option>
+                            <option>Cash app</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                    <div class="relative">
+                        <select
+                            class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-2 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option>AED</option>
+                            <option>AFN</option>
+                            <option>ALL</option>
+                            <option>AMD</option>
+                            <option>AOA</option>
+                            <option>ARS</option>
+                            <option>AUD</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex space-x-2">
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded">
+                        <i class="fas fa-sort-amount-down-alt"></i>
+                    </button>
+                    <button class="bg-gray-200 text-gray-700 px-4 py-2 rounded">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                </div>
+            </div>
+            <!-- Repeat for each exchange item -->
+            <!-- ... other exchange items ... -->
+        </div>
+    </div>
+    </div>
+    <div class="bg-gray-100 p-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid gap-4">
+                <!-- Repeat this block for each item -->
+                <div class="bg-white p-4 flex items-center justify-between rounded shadow">
+                    <div class="flex items-center">
+                        <img alt="Placeholder image representing a user's avatar" class="rounded-full mr-4" height="40"
+                            src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-IOvS0NkWls4AsYda9d2FzV3d/user-mzBPJnFSFy0GO9gJqZDzlKGr/img-XblCrgMlmIri0MQ8HiZkjBcx.png?st=2023-12-15T05%3A44%3A45Z&amp;se=2023-12-15T07%3A44%3A45Z&amp;sp=r&amp;sv=2021-08-06&amp;sr=b&amp;rscd=inline&amp;rsct=image/png&amp;skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&amp;sktid=a48cca56-e6da-484e-a814-9c849652bcb3&amp;skt=2023-12-14T18%3A32%3A22Z&amp;ske=2023-12-15T18%3A32%3A22Z&amp;sks=b&amp;skv=2021-08-06&amp;sig=RfdK3VXOuq8oEUPY/NVuB7HSjz%2BNKfTSw%2BpxG/OXy/A%3D"
+                            width="40" />
+                        <div>
+                            <div class="text-sm font-semibold text-gray-800">
+                                AlmansooriGCC
+                                <span
+                                    class="bg-purple-200 text-purple-800 text-xs font-bold px-2 py-1 rounded-full ml-2">
+                                    Pro
+                                </span>
+                            </div>
+                            <div class="text-xs text-green-600">
+                                2 成交量 | 100.00% 成交率
+                            </div>
+                            <div class="text-xs text-green-600">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-semibold text-gray-800">
+                            3.682 AED
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            25,408.29 USDT
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            10,000.000 - 10,001.000
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-600 mb-2">
+                            通过指定银行转账
+                        </div>
+                        <a href="trade1.html"><button
+                            class="text-xs text-gray-500 hover:bg-green-500 hover:text-white border border-gray-300 px-4 py-2 rounded"> 
+                            购买USDT
+                        </button></a>
+                    </div>
+                </div>
+                <!-- Repeat this block for each item -->
+                <div class="bg-white p-4 flex items-center justify-between rounded shadow">
+                    <div class="flex items-center">
+                        <img alt="Placeholder image representing a user's avatar" class="rounded-full mr-4" height="40"
+                            src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-IOvS0NkWls4AsYda9d2FzV3d/user-mzBPJnFSFy0GO9gJqZDzlKGr/img-XblCrgMlmIri0MQ8HiZkjBcx.png?st=2023-12-15T05%3A44%3A45Z&amp;se=2023-12-15T07%3A44%3A45Z&amp;sp=r&amp;sv=2021-08-06&amp;sr=b&amp;rscd=inline&amp;rsct=image/png&amp;skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&amp;sktid=a48cca56-e6da-484e-a814-9c849652bcb3&amp;skt=2023-12-14T18%3A32%3A22Z&amp;ske=2023-12-15T18%3A32%3A22Z&amp;sks=b&amp;skv=2021-08-06&amp;sig=RfdK3VXOuq8oEUPY/NVuB7HSjz%2BNKfTSw%2BpxG/OXy/A%3D"
+                            width="40" />
+                        <div>
+                            <div class="text-sm font-semibold text-gray-800">
+                                ExchangeCryptoPro
+                            </div>
+                            <div class="text-xs text-green-600">
+                                125 成交量 | 100.00% 成交率
+                            </div>
+                            <div class="text-xs text-green-600">
+                                100%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-semibold text-gray-800">
+                            3.683 AED
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            328.76 USDT
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            136.000 - 1,196.000
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-600 mb-2">
+
+                            银行现金存款
+                        </div>
+                        <a href="trade1.html"><button
+                            class="text-xs text-gray-500 hover:bg-green-500 hover:text-white border border-gray-300 px-4 py-2 rounded"> 
+                            购买USDT
+                        </button></a>
+                    </div>
+                </div>
+                <!-- Repeat this block for each item -->
+                <div class="bg-white p-4 flex items-center justify-between rounded shadow">
+                    <div class="flex items-center">
+                        <img alt="Placeholder image representing a user's avatar" class="rounded-full mr-4" height="40"
+                            src="https://oaidalleapiprodscus.blob.core.windows.net/private/org-IOvS0NkWls4AsYda9d2FzV3d/user-mzBPJnFSFy0GO9gJqZDzlKGr/img-XblCrgMlmIri0MQ8HiZkjBcx.png?st=2023-12-15T05%3A44%3A45Z&amp;se=2023-12-15T07%3A44%3A45Z&amp;sp=r&amp;sv=2021-08-06&amp;sr=b&amp;rscd=inline&amp;rsct=image/png&amp;skoid=6aaadede-4fb3-4698-a8f6-684d7786b067&amp;sktid=a48cca56-e6da-484e-a814-9c849652bcb3&amp;skt=2023-12-14T18%3A32%3A22Z&amp;ske=2023-12-15T18%3A32%3A22Z&amp;sks=b&amp;skv=2021-08-06&amp;sig=RfdK3VXOuq8oEUPY/NVuB7HSjz%2BNKfTSw%2BpxG/OXy/A%3D"
+                            width="40" />
+                        <div>
+                            <div class="text-sm font-semibold text-gray-800">
+                                CryptoBantar
+                                <span
+                                    class="bg-yellow-200 text-yellow-600 text-xs font-bold px-2 py-1 rounded-full ml-2">
+                                    Gold
+                                </span>
+                            </div>
+                            <div class="text-xs text-green-600">
+                                532 成交量 | 98.80% 成交率
+                            </div>
+                            <div class="text-xs text-green-600">
+                                99.1%
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <div class="text-lg font-semibold text-gray-800">
+                            3.683 AED
+                        </div>
+                        <div class="text-sm text-gray-600">
+                            22,605.42 USDT
+                        </div>
+                        <div class="text-xs text-gray-500">
+                            7,000.000 - 50,000.000
+                        </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-xs text-gray-600 mb-2">
+                            Cash app
+                        </div>
+                        <a href="trade1.html"><button
+                            class="text-xs text-gray-500 hover:bg-green-500 hover:text-white border border-gray-300 px-4 py-2 rounded"> 
+                            购买USDT
+                        </button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

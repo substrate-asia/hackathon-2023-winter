@@ -6,11 +6,22 @@ NeMA
 
 ### 项目立项日期
 
-## 项目整体简介（English）
+2023年12月
+
+## 项目整体简介
 
 ### Project background
 
-### Project Introduction
+* 信任关系：场外交易市场是去中心化的，与常规交易所不同，没有中央机构的监督。如果交易一方选择不履行义务，另一方就会遭受重大损失，于是就出现了交易双方以及交易双方对担保人的信任危机。
+* 传统OTC人工担保风险高，手续费昂贵。。
+
+* 邀请平台缺失：缺乏合适的平台以购买真实用户邀请。
+
+* KOL经常需要在平台发布抽奖活动，增加曝光，但这其中同样存在抽奖的信任危机：（1）Web2中大量抽奖活动都是打着“抽奖”的名义，实为广告营销，“套路”消费者腰包，并有套取个人信息之嫌（2）平台利用开奖过程的不透明而操纵开奖过程，后台完全自己操控，可以控制流量、粉丝以及指定中奖人，涉嫌欺诈（3）中奖的账户并不一定是真人而是机器人，真实用户不明真相，被蒙在鼓里。
+
+  **NeMA平台通过区块链技术解决上述信任危机，保护用户以及KOL的利益。**
+
+### Proect Introduction
 
 该项目是一个基于Solidity的链上钱包合约，集成了多项功能，包括ERC-20代币管理、NFT白名单服务、场外交易支持和哈希锁定功能。
 
@@ -40,11 +51,30 @@ NFT白名单服务允许将特定的NFT合约地址添加到白名单中或从�
 
 "Over-the-counter (OTC) trading support enables users to deposit tokens into the contract and withdraw them when needed. Users can deposit tokens into the contract, akin to storing tokens in a secure wallet for future use. When users need to withdraw tokens, they can perform withdrawal operations through the interfaces provided by the contract. This OTC trading support facilitates more convenient and secure token transfers among users."
 
+#### 抽奖全流程上链
+
+奖项信息： 存储各个奖项的描述和数量。
+
+抽奖结果： 将抽奖结果（包括中奖者和奖项）存储在区块链上，确保可验证和透明。
+参与者记录： 将参与者的信息（地址、参与时间等）记录上链。
+
+抽奖逻辑（合约细节）： 在智能合约中执行抽奖逻辑，确定中奖者。
+
+#### 邀请分佣机制
+
+一级分佣，永久绑定。暂定分下级收益1%+平台收益3%
+
+![image-20231216000526281](./static/invite2.png)
+
+#### 
+
 ### Project demo
+
+todo
 
 ## 黑客松期间计划完成的事项
 
-### 区块链端
+### 链端
 
 ### 客户端
 
@@ -73,8 +103,7 @@ NFT白名单服务允许将特定的NFT合约地址添加到白名单中或从�
 
 ## 使用方法
 
-1. 部署链上钱包合约到以太坊网络
-2. 使用合约提供的接口进行代币存款、提款、NFT白名单管理和哈希锁定操作
+1. 使用合约提供的接口进行代币存款、提款、NFT白名单管理和哈希锁定操作
 
 ## 测试
 
