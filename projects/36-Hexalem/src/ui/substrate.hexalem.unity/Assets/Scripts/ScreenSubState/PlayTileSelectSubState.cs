@@ -16,6 +16,8 @@ namespace Assets.Scripts
         private Material _selectedMat;
 
         private VisualElement _velTileCardBox;
+        private VisualElement _imgManaEnough;
+        private VisualElement _imgManaNotEnough;
 
         private Button _btnActionTitle;
         private Button _btnActionCancel;
@@ -214,7 +216,26 @@ namespace Assets.Scripts
                     break;
             }
 
+            DisplayManaBottle(tileCard, Storage.HexaGame.CurrentPlayer);
+
             _velTileCardBox.Add(tileCard);
+        }
+
+        public static void DisplayManaBottle(TemplateContainer tileCard, HexaPlayer player)
+        {
+            var imgManaEnough = tileCard.Q<VisualElement>("ImgManaEnough");
+            var imgManaNotEnough = tileCard.Q<VisualElement>("ImgManaNotEnough");
+
+            if (player[RessourceType.Mana] > 0) // Change with HaveEnoughRessource or smth similar
+            {
+                imgManaEnough.style.display = DisplayStyle.Flex;
+                imgManaNotEnough.style.display = DisplayStyle.None;
+            }
+            else
+            {
+                imgManaEnough.style.display = DisplayStyle.None;
+                imgManaNotEnough.style.display = DisplayStyle.Flex;
+            }
         }
     }
 }
