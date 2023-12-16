@@ -93,7 +93,7 @@ namespace Assets.Scripts
             {
                 HexaPlayer player = array[i];
                 var playerScoreInstance = _playerScoreElement.Instantiate();
-
+                playerScoreInstance.Q<Label>("LblPlayerIndex").text = i.ToString();
                 var velPortrait = playerScoreInstance.Q<VisualElement>("VelPlayerPort");
                 switch (Network.CurrentAccountType)
                 {
