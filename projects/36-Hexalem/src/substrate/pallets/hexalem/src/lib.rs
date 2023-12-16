@@ -59,42 +59,47 @@ pub mod pallet {
 	#[scale_info(skip_type_params(T))]
 	pub struct Game<T: Config> {
 		pub state: GameState,
-
-		// These can be compressed to take only u8
-		pub round: u8,       // current round number
-		pub player_turn: u8, // Who is playing?
-		pub played: bool,
+		pub player_turn_and_played: u8,
 		last_played_block: <frame_system::Pallet<T> as crate::sp_runtime::traits::BlockNumberProvider>::BlockNumber,
-
-		// pub number_of_players: u8,
-		pub players: Players<T>, // Player ids
+		pub players: Players<T>, // Player AccountIds
 		pub selection: TileSelection<T>,
-		pub selection_size: u8,
+		pub round_and_selection_size: u8,
 	}
 
 	impl<T: Config> GameProperties<T> for Game<T> {
 		fn get_played(&self) -> bool {
-			self.played
+			((self.player_turn_and_played & 0x80) >> 7) == 1
 		}
 
 		fn set_played(&mut self, played: bool) -> () {
-			self.played = played;
+			self.player_turn_and_played = (self.player_turn_and_played & 0x7F) | (played as u8) << 7
+		}
+
+		fn get_selection_size(&self) -> u8 {
+			(((self.round_and_selection_size & 0xE0) >> 5) as u8).saturating_mul(2)
+		}
+
+		fn set_selection_size(&mut self, selection_size: u8) -> () {
+			let compressed_selection_size = selection_size / 2;
+
+			self.round_and_selection_size =
+				(self.round_and_selection_size & 0x1F) | (compressed_selection_size << 5);
 		}
 
 		fn get_round(&self) -> u8 {
-			self.round
+			self.round_and_selection_size & 0x1F
 		}
 
 		fn set_round(&mut self, round: u8) -> () {
-			self.round = round;
+			self.round_and_selection_size = (self.round_and_selection_size & 0xE0) | round;
 		}
 
 		fn get_player_turn(&self) -> u8 {
-			self.player_turn
+			self.player_turn_and_played & 0x7F
 		}
 
 		fn set_player_turn(&mut self, turn: u8) -> () {
-			self.player_turn = turn;
+			self.player_turn_and_played = (self.player_turn_and_played & 0x80) | turn;
 		}
 
 		fn borrow_players(&self) -> &Players<T> {
@@ -198,8 +203,8 @@ pub mod pallet {
 	// This type will get changed to be more generic, but I did not have time now.
 	#[derive(Encode, Decode, TypeInfo, PartialEq, Clone, Debug)]
 	pub struct Move {
-		place_index: u8,
-		buy_index: u8, // We can fit buy_index and pay_type together
+		pub place_index: u8,
+		pub buy_index: u8, // We can fit buy_index and pay_type together
 	}
 
 	// The board hex grid
@@ -211,7 +216,7 @@ pub mod pallet {
 	pub struct HexBoard<T: Config> {
 		pub resources: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
 		pub hex_grid: HexGrid<T>, // Board with all tiles
-		pub game_id: GameId,          // Game key
+		pub game_id: GameId,      // Game key
 	}
 
 	impl<T: Config> HexBoard<T> {
@@ -261,7 +266,11 @@ pub mod pallet {
 
 	impl Default for BoardStats {
 		fn default() -> Self {
-			Self { tiles: [0; NUMBER_OF_TILE_TYPES], levels: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_LEVELS], patterns: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_PATTERNS] }
+			Self {
+				tiles: [0; NUMBER_OF_TILE_TYPES],
+				levels: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_LEVELS],
+				patterns: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_PATTERNS],
+			}
 		}
 	}
 
@@ -279,25 +288,25 @@ pub mod pallet {
 		}
 
 		pub fn get_levels(&self, tile_type: TileType, level: usize) -> u8 {
-			
 			self.levels[(tile_type as usize).saturating_mul(NUMBER_OF_LEVELS).saturating_add(level)]
 		}
 
 		pub fn set_levels(&mut self, tile_type: TileType, level: u8, value: u8) -> () {
-			
-			self.levels[(tile_type as usize).saturating_mul(NUMBER_OF_LEVELS).saturating_add(level as usize)] =
-				value;
+			self.levels[(tile_type as usize)
+				.saturating_mul(NUMBER_OF_LEVELS)
+				.saturating_add(level as usize)] = value;
 		}
 
 		pub fn get_patterns(&self, tile_type: TileType, pattern: TilePattern) -> u8 {
-			
-			self.patterns[(tile_type as usize).saturating_mul(NUMBER_OF_PATTERNS).saturating_add(pattern as usize)]
+			self.patterns[(tile_type as usize)
+				.saturating_mul(NUMBER_OF_PATTERNS)
+				.saturating_add(pattern as usize)]
 		}
 
 		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
-			
-			self.patterns
-				[(tile_type as usize).saturating_mul(NUMBER_OF_PATTERNS).saturating_add(pattern as usize)] = value;
+			self.patterns[(tile_type as usize)
+				.saturating_mul(NUMBER_OF_PATTERNS)
+				.saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -532,12 +541,11 @@ pub mod pallet {
 			// Default Game Config
 			let mut game = Game {
 				state: GameState::Playing,
-				round: 0,
-				played: false,
+				round_and_selection_size: 32, /* 2 selection_size, 0 round
+											  in bits: 00100000 */
+				player_turn_and_played: 0,
 				last_played_block: current_block_number,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
-				player_turn: 0,
-				selection_size: 2,
 				selection: Default::default(),
 			};
 
@@ -835,7 +843,7 @@ impl<T: Config> Pallet<T> {
 
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
-		for i in 0..game.selection_size {
+		for i in 0..game.get_selection_size() {
 			new_selection.push(
 				selection_base[((i + offset) % 32) as usize].clone() %
 					T::TileCosts::get().len().saturated_into::<u8>(),
@@ -860,9 +868,9 @@ impl<T: Config> Pallet<T> {
 	) -> Result<(), sp_runtime::DispatchError> {
 		let selection_len = game.selection.len();
 
-		if selection_len <= (game.selection_size / 2) as usize {
-			if game.selection_size as u32 != T::MaxTileSelection::get() {
-				game.selection_size = game.selection_size.saturating_add(2);
+		if selection_len <= (game.get_selection_size() / 2) as usize {
+			if game.get_selection_size() as u32 != T::MaxTileSelection::get() {
+				game.set_selection_size(game.get_selection_size().saturating_add(2));
 			}
 
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
@@ -872,7 +880,7 @@ impl<T: Config> Pallet<T> {
 
 			let mut new_selection = game.selection.to_vec();
 
-			for i in selection_len..game.selection_size as usize {
+			for i in selection_len..game.get_selection_size() as usize {
 				new_selection.push(
 					selection_base[(i + offset) % 32].clone() %
 						T::TileCosts::get().len().saturated_into::<u8>(),
@@ -1150,16 +1158,21 @@ impl<T: Config> Pallet<T> {
 		multiplier: u8,
 	) -> () {
 		for resource_type_index in 0..NUMBER_OF_RESOURCE_TYPES {
-			match (resource_productions.produces[resource_type_index], resource_productions.human_requirements[resource_type_index]){
+			match (
+				resource_productions.produces[resource_type_index],
+				resource_productions.human_requirements[resource_type_index],
+			) {
 				(0, _) => (),
-				(produces, 0) => hex_board.resources[resource_type_index] = hex_board.resources[resource_type_index].saturating_add(
-				produces.saturating_mul(multiplier)),
-				(produces, human_requirement) => hex_board.resources[resource_type_index] = hex_board.resources[resource_type_index].saturating_add(
-					cmp::min(
-					produces.saturating_mul(multiplier),
-					hex_board.resources[ResourceType::Human as usize] / human_requirement,
-				)
-				),
+				(produces, 0) =>
+					hex_board.resources[resource_type_index] = hex_board.resources
+						[resource_type_index]
+						.saturating_add(produces.saturating_mul(multiplier)),
+				(produces, human_requirement) =>
+					hex_board.resources[resource_type_index] =
+						hex_board.resources[resource_type_index].saturating_add(cmp::min(
+							produces.saturating_mul(multiplier),
+							hex_board.resources[ResourceType::Human as usize] / human_requirement,
+						)),
 			}
 		}
 	}
@@ -1336,6 +1349,9 @@ trait GameProperties<T: Config> {
 	fn set_state(&mut self, state: GameState) -> ();
 
 	fn borrow_players(&self) -> &Players<T>;
+
+	fn get_selection_size(&self) -> u8;
+	fn set_selection_size(&mut self, selection_size: u8) -> ();
 
 	fn next_turn(&mut self) -> () {
 		let player_turn = self.get_player_turn();
