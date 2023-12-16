@@ -3,11 +3,9 @@ package com.hackathon.framework.utils;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -15,11 +13,20 @@ public class ReportUtil {
 
     public static List<Result>resultList = new ArrayList<>();
 
+    /**
+     * 记录请求,执行.java文件记录，覆盖率记录
+     * @param result
+     */
     public static void recordResult(Result result){
+        // TODO 读取文件Json把数据转成result在提交
         resultList.add(result);
     }
 
+    /**
+     * 初始执行和生成报告后清除数据都会用上
+     */
     public static void clearReport(){
+        FileUtil.deleteFilesByName("json");
         resultList.clear();
     }
 
@@ -30,7 +37,7 @@ public class ReportUtil {
      * @return
      */
     public static String featureMatchForCaseTitle(Integer index,Object result){
-        // TODO 传完流程一起补
+        // TODO 传完流程一起补 pid
         return "";
     }
 
@@ -79,6 +86,7 @@ public class ReportUtil {
 //                e.printStackTrace();
 //            }
         }
+        clearReport();
         return FileUtil.existsFile(reportPath);
     }
 

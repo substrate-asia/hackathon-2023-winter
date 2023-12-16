@@ -2,11 +2,15 @@ package com.hackathon.framework.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileUtil {
 
@@ -85,6 +89,9 @@ public class FileUtil {
         return fileList;
     }
 
+
+
+
     /**
      * 删除文件夹以及下面的目录支持递归删除
      * @param dirPath 文件夹目录
@@ -105,6 +112,29 @@ public class FileUtil {
             }
         }
     }
+
+    /**
+     * 删除当前文件夹下面指定后缀的文件
+     * @param fileSuffix 文件后缀
+     */
+    public static void deleteFilesByName(String fileSuffix){
+        Path dir = Paths.get(".");  // 获取当前目录
+        try (Stream<Path> stream = Files.list(dir)) {
+            stream
+                    .filter(path -> path.toString().endsWith("."+fileSuffix))  // 只保留json文件
+                    .forEach(path -> {
+                        try {
+                            Files.delete(path);  // 删除文件
+                            System.out.println("Deleted: " + path);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    });
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public static void main(String[] args) {
         System.out.println(FileUtil.joinFiles("test","TestLoader.java"));

@@ -7,13 +7,14 @@ guiCommand:
 generateEngine:
   # 编译命令行方式 检查编译方式对应的合约目录
   compile: truffle
-  # 配置对应目录
+  # 服务器上面配置对应目录
   directory:
     - contracts
     - migrations
     - test
-  # 编译后文件命名
+  # 编译后文件命名 compiledKey隐藏在代码工程
   compiledNames: abi
+
   # Sdk名称
   sdkName: xxx
   # 选择断言模板l路径-匹配模板
@@ -39,6 +40,6 @@ generateTestCaseFile:
   # 报告模式(也代表报告后缀)
   reportMode: html
   # 报告保存路径位置和名称(如果不填写默认是yyyy-MM-dd HHmmss.报告后缀)
-  reportSavePath: xxx
+  reportSavePath:
 
 

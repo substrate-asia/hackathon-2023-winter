@@ -2,6 +2,7 @@ package com.hackathon.framework;
 import com.hackathon.framework.bean.StrategyBean;
 import com.hackathon.framework.provider.GenerateEngine;
 import com.hackathon.framework.provider.impl.GenerateEngineImpl;
+import com.hackathon.framework.utils.ReportUtil;
 import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.StrategyConfigUtil;
 
@@ -92,6 +93,7 @@ public class ThreeCat extends JFrame {
                 GenerateEngine generateEngine = new GenerateEngineImpl();
                 System.out.println(command);
                 if (command.contains("init")) {
+                    ReportUtil.clearReport();
                     String parameter = command.replace("init","").trim();
                     System.out.println(parameter);
                     try {
