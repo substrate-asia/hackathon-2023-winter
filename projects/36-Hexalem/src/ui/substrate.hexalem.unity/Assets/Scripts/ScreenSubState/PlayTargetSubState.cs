@@ -1,6 +1,4 @@
 ﻿using Assets.Scripts.ScreenStates;
-using Substrate.Hexalem.Engine;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -87,7 +85,6 @@ namespace Assets.Scripts
             {
                 return;
             }
-
         }
     }
 }

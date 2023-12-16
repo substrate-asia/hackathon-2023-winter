@@ -1,6 +1,4 @@
 ﻿using Assets.Scripts.ScreenStates;
-using Substrate.Integration.Helper;
-using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -64,7 +62,7 @@ namespace Assets.Scripts
                 return;
             }
 
-            if ( PlayScreenState.PlayerIndex != Storage.HexaGame.PlayerTurn)
+            if (PlayScreenState.PlayerIndex != Storage.HexaGame.PlayerTurn)
             {
                 _lblActionInfo.text = "Patience you must have, my young Polkawan!";
                 return;

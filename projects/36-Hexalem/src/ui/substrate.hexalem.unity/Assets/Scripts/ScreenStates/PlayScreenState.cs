@@ -1,11 +1,9 @@
 ﻿using Substrate.Hexalem.Engine;
 using Substrate.Integration.Client;
 using Substrate.NetApi.Model.Types.Primitive;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Timers;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -103,15 +101,15 @@ namespace Assets.Scripts.ScreenStates
                 case AccountType.Alice:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitAlice);
                     break;
-                
+
                 case AccountType.Bob:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitBob);
                     break;
-                
+
                 case AccountType.Charlie:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitCharlie);
                     break;
-                
+
                 case AccountType.Dave:
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitDave);
                     break;
@@ -160,7 +158,7 @@ namespace Assets.Scripts.ScreenStates
             Storage.OnStorageUpdated += OnStorageUpdated;
             Storage.OnNextBlocknumber += OnNextBlockNumber;
 
-            Network.Client.ExtrinsicManager.ExtrinsicUpdated += OnExtrinsicUpdated; 
+            Network.Client.ExtrinsicManager.ExtrinsicUpdated += OnExtrinsicUpdated;
             Network.ExtrinsicCheck += OnExtrinsicCheck;
         }
 
@@ -221,7 +219,7 @@ namespace Assets.Scripts.ScreenStates
                 _subscriptionOrder.Clear();
                 _subscriptionDict.Clear();
             }
-            else if(!Network.Client.ExtrinsicManager.Running.Any())
+            else if (!Network.Client.ExtrinsicManager.Running.Any())
             {
                 _velExtrinsicFrame.style.backgroundColor = GameConstant.PastelGray;
                 _lblExtriniscInfo.text = "No extrinsics";
@@ -273,7 +271,7 @@ namespace Assets.Scripts.ScreenStates
                     {
                         _lblExtriniscInfo.text = $"[APIError] Unable system event";
                     }
-                } 
+                }
                 else
                 {
                     _velExtrinsicFrame.style.backgroundColor = color;
