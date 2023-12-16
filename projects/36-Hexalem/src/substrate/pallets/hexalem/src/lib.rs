@@ -41,13 +41,13 @@ pub mod pallet {
 
 	pub type GameId = [u8; 32];
 
+	pub type TargetGoalHash = [u8; 16];
+
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone)]
 	pub enum GameState {
 		Matchmaking,
 		Playing,
-		Finished {
-			winner: Option<u8>
-		}, // Ready to reward players
+		Finished { winner: Option<u8> }, // Ready to reward players
 	}
 
 	// Index used for referencing the TileCost
@@ -292,7 +292,8 @@ pub mod pallet {
 
 		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
 			// pattern variations = 8
-			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
+			self.patterns
+				[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -376,6 +377,11 @@ pub mod pallet {
 	// Stores the HexBoard data assigned to a player key.
 	pub type HexBoardStorage<T: Config> =
 		StorageMap<_, Blake2_128Concat, T::AccountId, HexBoard<T>>;
+
+	#[pallet::storage]
+	// Stores the TargetGoalHash assigned to a player key.
+	pub type TargetGoalStorage<T: Config> =
+		StorageMap<_, Blake2_128Concat, T::AccountId, TargetGoalHash>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/main-docs/build/events-errors/
@@ -1204,7 +1210,11 @@ impl<T: Config> Pallet<T> {
 			TileType::Desert,
 			TileType::Cave,
 		] {
-			Self::tile_produce(hex_board, &tile_resource_productions[tile_type as usize], board_stats.get_tiles(tile_type));
+			Self::tile_produce(
+				hex_board,
+				&tile_resource_productions[tile_type as usize],
+				board_stats.get_tiles(tile_type),
+			);
 		}
 
 		hex_board.resources[ResourceType::Human as usize] = new_humans;
@@ -1308,7 +1318,6 @@ impl<T: Config> Pallet<T> {
 
 // Custom trait for Tile definition
 pub trait GetTileInfo {
-
 	fn get_level(&self) -> u8;
 	fn set_level(&mut self, level: u8) -> ();
 
@@ -1354,7 +1363,7 @@ trait GameProperties<T: Config> {
 			self.set_round(round);
 
 			if round > T::MaxRounds::get() {
-				self.set_state(GameState::Finished{ winner: None });
+				self.set_state(GameState::Finished { winner: None });
 			}
 		}
 	}
