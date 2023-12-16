@@ -63,7 +63,8 @@ pub mod pallet {
 		last_played_block: <frame_system::Pallet<T> as crate::sp_runtime::traits::BlockNumberProvider>::BlockNumber,
 		pub players: Players<T>, // Player AccountIds
 		pub selection: TileSelection<T>,
-		pub round_and_selection_size: u8,
+		pub selection_size: u8,
+		pub round: u8,
 	}
 
 	impl<T: Config> GameProperties<T> for Game<T> {
@@ -76,22 +77,19 @@ pub mod pallet {
 		}
 
 		fn get_selection_size(&self) -> u8 {
-			(((self.round_and_selection_size & 0xE0) >> 5) as u8).saturating_mul(2)
+			self.selection_size
 		}
 
 		fn set_selection_size(&mut self, selection_size: u8) -> () {
-			let compressed_selection_size = selection_size / 2;
-
-			self.round_and_selection_size =
-				(self.round_and_selection_size & 0x1F) | (compressed_selection_size << 5);
+			self.selection_size = selection_size;
 		}
 
 		fn get_round(&self) -> u8 {
-			self.round_and_selection_size & 0x1F
+			self.round
 		}
 
 		fn set_round(&mut self, round: u8) -> () {
-			self.round_and_selection_size = (self.round_and_selection_size & 0xE0) | round;
+			self.round = round;
 		}
 
 		fn get_player_turn(&self) -> u8 {
@@ -541,8 +539,8 @@ pub mod pallet {
 			// Default Game Config
 			let mut game = Game {
 				state: GameState::Playing,
-				round_and_selection_size: 32, /* 2 selection_size, 0 round
-											  in bits: 00100000 */
+				selection_size: 2,
+				round: 0,
 				player_turn_and_played: 0,
 				last_played_block: current_block_number,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
