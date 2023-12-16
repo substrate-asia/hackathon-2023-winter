@@ -33,6 +33,19 @@ public class StrategyBean {
      */
     private Map<String,String> comboBox;
 
+    /**
+     * 报告保存路径
+     */
+    private String reportSavePath;
+
+    public String getReportSavePath() {
+        return reportSavePath;
+    }
+
+    public void setReportSavePath(String reportSavePath) {
+        this.reportSavePath = reportSavePath;
+    }
+
     public List<String> getDirectory() {
         return directory;
     }

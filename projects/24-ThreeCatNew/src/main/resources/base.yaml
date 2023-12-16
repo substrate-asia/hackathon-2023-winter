@@ -36,7 +36,9 @@ generateTestCaseFile:
   scanWeight:
     - xxx
     - xxx
-  # 报告模式进行合并scanStages上面的步骤
-  reportMode: xxx
+  # 报告模式(也代表报告后缀)
+  reportMode: html
+  # 报告保存路径位置和名称(如果不填写默认是yyyy-MM-dd HHmmss.报告后缀)
+  reportSavePath: xxx
 
 
