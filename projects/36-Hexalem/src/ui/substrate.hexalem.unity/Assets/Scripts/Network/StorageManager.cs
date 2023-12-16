@@ -49,6 +49,8 @@ public class StorageManager : Singleton<StorageManager>
 
     public bool UpdateHexalem { get; internal set; }
 
+    public uint MockBlockNumber { get; internal set; }
+
     //public int PlayerIndex { get; private set; }
 
     /// <summary>
@@ -60,6 +62,7 @@ public class StorageManager : Singleton<StorageManager>
         //Your code goes here
 
         UpdateHexalem = true;
+        MockBlockNumber = 1;
     }
 
     /// <summary>
@@ -97,6 +100,13 @@ public class StorageManager : Singleton<StorageManager>
 
     private async void UpdatedBaseData()
     {
+        // don't update hexalem on chain informations ...
+        if (!UpdateHexalem)
+        {
+            OnStorageUpdated?.Invoke(MockBlockNumber++);
+            return;
+        }
+
         if (!CanPollStorage())
         {
             return;
@@ -121,13 +131,6 @@ public class StorageManager : Singleton<StorageManager>
         }
 
         AccountInfo = await Network.Client.GetAccountAsync(CancellationToken.None);
-
-        // don't update hexalem on chain informations ...
-        if (!UpdateHexalem)
-        {
-            OnStorageUpdated?.Invoke(blockNumber.Value);
-            return;
-        }
 
         var myBoard = await Network.Client.GetBoardAsync(Network.Client.Account.Value, CancellationToken.None);
         var playerGame = myBoard != null ? await Network.Client.GetGameAsync(myBoard.GameId, CancellationToken.None) : null;

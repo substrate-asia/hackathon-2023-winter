@@ -123,9 +123,7 @@ namespace Assets.Scripts
 
             if (!Storage.UpdateHexalem)
             {
-                PlayScreenState.Blocknumber++;
-
-                var result = Game.ChooseAndPlace(PlayScreenState.Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedCardIndex, PlayScreenState.SelectedGridIndex);
+                var result = Game.ChooseAndPlace(Storage.MockBlockNumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedCardIndex, PlayScreenState.SelectedGridIndex);
 
                 if (result == null)
                 {

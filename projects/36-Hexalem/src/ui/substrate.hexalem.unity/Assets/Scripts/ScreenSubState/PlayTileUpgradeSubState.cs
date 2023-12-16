@@ -110,8 +110,7 @@ namespace Assets.Scripts
 
             if (!Storage.UpdateHexalem)
             {
-                PlayScreenState.Blocknumber++;
-                var result = Game.Upgrade(PlayScreenState.Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedGridIndex);
+                var result = Game.Upgrade(Storage.MockBlockNumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedGridIndex);
 
                 if (result == null)
                 {

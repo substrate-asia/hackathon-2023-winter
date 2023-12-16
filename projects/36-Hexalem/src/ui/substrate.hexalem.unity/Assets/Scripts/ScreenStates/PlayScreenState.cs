@@ -11,8 +11,6 @@ namespace Assets.Scripts.ScreenStates
 {
     public class PlayScreenState : ScreenBaseState
     {
-        public uint Blocknumber { get; set; } = 123124;
-
         public int SelectedGridIndex { get; set; } = -1;
         public int SelectedCardIndex { get; set; } = -1;
 
@@ -169,6 +167,7 @@ namespace Assets.Scripts.ScreenStates
 
         private void OnStorageUpdated(uint blocknumber)
         {
+            Debug.Log($"[{this.GetType().Name}] OnStorageUpdated {blocknumber}");
             if (!Network.Client.ExtrinsicManager.PreInblock.Any())
             {
                 _velEndTurnBox.SetEnabled(PlayerIndex == Storage.HexaGame.PlayerTurn);
@@ -259,10 +258,7 @@ namespace Assets.Scripts.ScreenStates
 
             if (!Storage.UpdateHexalem)
             {
-                // increment block number
-                Blocknumber++;
-
-                var result = Game.FinishTurn(Blocknumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayerIndex);
+                var result = Game.FinishTurn(Storage.MockBlockNumber, (HexaGame)Storage.HexaGame.Clone(), (byte)PlayerIndex);
 
                 if (result == null)
                 {
