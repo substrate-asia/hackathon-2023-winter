@@ -8,8 +8,8 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use pallet_grandpa::AuthorityId as GrandpaId;
 use pallet_hexalem::{
-	GetTileInfo, ResourceAmount, ResourceProduction, ResourceProductions, ResourceType,
-	ResourceUnit, TileCost, TilePattern, TileType,
+	GetTileInfo, ResourceAmount, ResourceProductions, ResourceType,
+	ResourceUnit, TileCost, TilePattern, TileType, NUMBER_OF_TILE_TYPES, NUMBER_OF_RESOURCE_TYPES,
 };
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
@@ -314,81 +314,47 @@ parameter_types! {
 	pub const HexalemMaxHexGridSize: u8 = 25;
 	pub const HexalemMaxTileSelection: u8 = 16;
 
-	pub const HexalemTileResourceProductions: [ResourceProductions; 8] = [
+	pub const HexalemTileResourceProductions: [ResourceProductions; NUMBER_OF_TILE_TYPES] = [
 		// Empty
-		ResourceProductions::None,
+		ResourceProductions{
+			produces: [0, 0, 0, 0, 0, 0, 0],
+			human_requirements: [0, 0, 0, 0, 0, 0, 0],
+		},
 		// Home
-		ResourceProductions::One(ResourceProduction {
-			produces: ResourceAmount {
-				resource_type: ResourceType::Human,
-				amount: 1,
-			},
-			human_requirements: 0,
-		}),
+		ResourceProductions{
+			produces: [0, 1, 0, 0, 0, 0, 0],
+			human_requirements: [0, 0, 0, 0, 0, 0, 0],
+		},
 		// Grass
-		ResourceProductions::One(
-			ResourceProduction {
-			produces: ResourceAmount {
-				resource_type: ResourceType::Food,
-				amount: 2,
-			},
-			human_requirements: 0,
-		}),
+		ResourceProductions{
+			produces: [0, 0, 0, 2, 0, 0, 0],
+			human_requirements: [0, 0, 0, 0, 0, 0, 0],
+		},
 		// Water
-		ResourceProductions::One(
-			ResourceProduction {
-			produces: ResourceAmount {
-				resource_type: ResourceType::Water,
-				amount: 2,
-			},
-			human_requirements: 0,
-		}),
+		ResourceProductions{
+			produces: [0, 0, 2, 0, 0, 0, 0],
+			human_requirements: [0, 0, 0, 0, 0, 0, 0],
+		},
 		// Mountain
-		ResourceProductions::One(
-			ResourceProduction {
-				produces: ResourceAmount {
-					resource_type: ResourceType::Stone,
-					amount: 4,
-				},
-				human_requirements: 4,
-			}
-		),
+		ResourceProductions{
+			produces: [0, 0, 0, 0, 0, 4, 0],
+			human_requirements: [0, 0, 0, 0, 0, 4, 0],
+		},
 		// Tree
-		ResourceProductions::Two(
-			ResourceProduction {
-				produces: ResourceAmount {
-					resource_type: ResourceType::Wood,
-					amount: 3,
-				},
-				human_requirements: 2,
-			},
-			ResourceProduction {
-				produces: ResourceAmount {
-					resource_type: ResourceType::Food,
-					amount: 1,
-				},
-				human_requirements: 0,
-			}
-		),
+		ResourceProductions{
+			produces: [0, 0, 0, 1, 3, 0, 0],
+			human_requirements: [0, 0, 0, 0, 2, 0, 0],
+		},
 		// Desert
-		ResourceProductions::None,
+		ResourceProductions{
+			produces: [0, 0, 0, 0, 0, 0, 0],
+			human_requirements: [0, 0, 0, 0, 0, 0, 0],
+		},
 		// Cave
-		ResourceProductions::Two(
-			ResourceProduction {
-				produces: ResourceAmount {
-					resource_type: ResourceType::Stone,
-					amount: 2,
-				},
-				human_requirements: 2,
-			},
-			ResourceProduction {
-				produces: ResourceAmount {
-					resource_type: ResourceType::Gold,
-					amount: 1,
-				},
-				human_requirements: 3,
-			}
-		)
+		ResourceProductions{
+			produces: [0, 0, 0, 0, 0, 2, 1],
+			human_requirements: [0, 0, 0, 0, 0, 2, 3],
+		},
 	];
 
 	pub const HexalemTileCosts: [TileCost<Runtime>; 15] = [
@@ -396,6 +362,7 @@ parameter_types! {
 		// tile_to_buy: HexalemTile(24), // Water, level 0
 		// tile_to_buy: HexalemTile(32), // Mountain, level 0
 		// tile_to_buy: HexalemTile(40), // Tree, level 0
+		// tile_to_buy: HexalemTile(48), // Desert, level 0
 		// tile_to_buy: HexalemTile(56), // Cave, level 0
 
 		TileCost {
@@ -466,7 +433,7 @@ parameter_types! {
 	pub const HexalemHomePerHumans: u8 = 3u8;
 	pub const HexalemFoodPerTree: u8 = 1u8;
 
-	pub const HexalemDefaultPlayerResources: [ResourceUnit; 7] = [1, 1, 0, 0, 0, 0, 0];
+	pub const HexalemDefaultPlayerResources: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES] = [1, 1, 0, 0, 0, 0, 0];
 
 	pub const HexalemTargetGoalGold: u8 = 10u8;
 	pub const HexalemTargetGoalHuman: u8 = 7u8;

@@ -123,6 +123,8 @@ pub mod pallet {
 		Gold = 6,
 	}
 
+	pub const NUMBER_OF_RESOURCE_TYPES: usize = 7;
+
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
 	pub enum TileType {
 		Empty = 0,
@@ -134,6 +136,9 @@ pub mod pallet {
 		Desert = 6,
 		Cave = 7,
 	}
+
+	pub const NUMBER_OF_TILE_TYPES: usize = 8;
+	pub const NUMBER_OF_LEVELS: usize = 4;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
 	pub struct ResourceAmount {
@@ -164,6 +169,8 @@ pub mod pallet {
 		Ypsilon = 3,
 	}
 
+	pub const NUMBER_OF_PATTERNS: usize = 8;
+
 	impl TilePattern {
 		pub fn from_u8(value: u8) -> Self {
 			match value {
@@ -176,16 +183,9 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, TypeInfo)]
-	pub enum ResourceProductions {
-		None,
-		One(ResourceProduction),
-		Two(ResourceProduction, ResourceProduction),
-	}
-
-	#[derive(Encode, TypeInfo)]
-	pub struct ResourceProduction {
-		pub produces: ResourceAmount,
-		pub human_requirements: ResourceUnit,
+	pub struct ResourceProductions {
+		pub produces: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
+		pub human_requirements: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq)]
@@ -209,7 +209,7 @@ pub mod pallet {
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	pub struct HexBoard<T: Config> {
-		pub resources: [ResourceUnit; 7],
+		pub resources: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
 		pub hex_grid: HexGrid<T>, // Board with all tiles
 		game_id: GameId,          // Game key
 	}
@@ -239,7 +239,7 @@ pub mod pallet {
 				stats.set_levels(
 					tile_type,
 					tile.get_level(),
-					stats.get_levels(tile_type, tile.get_level()).saturating_add(1),
+					stats.get_levels(tile_type, tile.get_level() as usize).saturating_add(1),
 				);
 
 				stats.set_patterns(
@@ -254,14 +254,14 @@ pub mod pallet {
 	}
 
 	pub struct BoardStats {
-		tiles: [u8; 8],
-		levels: [u8; 32],
-		patterns: [u8; 64],
+		tiles: [u8; NUMBER_OF_TILE_TYPES],
+		levels: [u8; NUMBER_OF_TILE_TYPES * NUMBER_OF_LEVELS],
+		patterns: [u8; NUMBER_OF_TILE_TYPES * NUMBER_OF_PATTERNS],
 	}
 
 	impl Default for BoardStats {
 		fn default() -> Self {
-			Self { tiles: [0; 8], levels: [0; 32], patterns: [0; 64] }
+			Self { tiles: [0; NUMBER_OF_TILE_TYPES], levels: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_LEVELS], patterns: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_PATTERNS] }
 		}
 	}
 
@@ -270,30 +270,34 @@ pub mod pallet {
 			self.tiles[tile_type as usize]
 		}
 
+		pub fn get_tiles_by_tile_index(&self, tile_type_index: usize) -> u8 {
+			self.tiles[tile_type_index]
+		}
+
 		pub fn set_tiles(&mut self, tile_type: TileType, value: u8) -> () {
 			self.tiles[tile_type as usize] = value;
 		}
 
-		pub fn get_levels(&self, tile_type: TileType, level: u8) -> u8 {
-			// level variations = 4
-			self.levels[(tile_type as usize).saturating_mul(4).saturating_add(level as usize)]
+		pub fn get_levels(&self, tile_type: TileType, level: usize) -> u8 {
+			
+			self.levels[(tile_type as usize).saturating_mul(NUMBER_OF_LEVELS).saturating_add(level)]
 		}
 
 		pub fn set_levels(&mut self, tile_type: TileType, level: u8, value: u8) -> () {
-			// level variations = 4
-			self.levels[(tile_type as usize).saturating_mul(4).saturating_add(level as usize)] =
+			
+			self.levels[(tile_type as usize).saturating_mul(NUMBER_OF_LEVELS).saturating_add(level as usize)] =
 				value;
 		}
 
 		pub fn get_patterns(&self, tile_type: TileType, pattern: TilePattern) -> u8 {
-			// pattern variations = 8
-			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)]
+			
+			self.patterns[(tile_type as usize).saturating_mul(NUMBER_OF_PATTERNS).saturating_add(pattern as usize)]
 		}
 
 		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
-			// pattern variations = 8
+			
 			self.patterns
-				[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
+				[(tile_type as usize).saturating_mul(NUMBER_OF_PATTERNS).saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -340,7 +344,7 @@ pub mod pallet {
 		type TileCosts: Get<[TileCost<Self>; 15]>;
 
 		#[pallet::constant]
-		type TileResourceProductions: Get<[ResourceProductions; 8]>;
+		type TileResourceProductions: Get<[ResourceProductions; NUMBER_OF_TILE_TYPES]>;
 
 		#[pallet::constant]
 		type WaterPerHuman: Get<u8>;
@@ -1140,33 +1144,23 @@ impl<T: Config> Pallet<T> {
 		hex_board.resources[ResourceType::Human as usize] >= T::TargetGoalHuman::get()
 	}
 
-	fn tile_produce(
+	fn produce(
 		hex_board: &mut HexBoard<T>,
-		tile_resource_productions: &ResourceProductions,
+		resource_productions: &ResourceProductions,
 		multiplier: u8,
 	) -> () {
-		match tile_resource_productions {
-			ResourceProductions::None => (),
-			ResourceProductions::One(production1) => {
-				Self::produce(hex_board, production1, multiplier);
-			},
-			ResourceProductions::Two(production1, production2) => {
-				Self::produce(hex_board, production1, multiplier);
-				Self::produce(hex_board, production2, multiplier);
-			},
-		}
-	}
-
-	fn produce(hex_board: &mut HexBoard<T>, production: &ResourceProduction, multiplier: u8) {
-		if production.human_requirements == 0 {
-			hex_board.resources[production.produces.resource_type as usize] +=
-				production.produces.amount.saturating_mul(multiplier);
-		} else {
-			hex_board.resources[production.produces.resource_type as usize] += cmp::min(
-				production.produces.amount,
-				hex_board.resources[ResourceType::Human as usize] / production.human_requirements,
-			)
-			.saturating_mul(multiplier);
+		for resource_type_index in 0..NUMBER_OF_RESOURCE_TYPES {
+			match (resource_productions.produces[resource_type_index], resource_productions.human_requirements[resource_type_index]){
+				(0, _) => (),
+				(produces, 0) => hex_board.resources[resource_type_index] = hex_board.resources[resource_type_index].saturating_add(
+				produces.saturating_mul(multiplier)),
+				(produces, human_requirement) => hex_board.resources[resource_type_index] = hex_board.resources[resource_type_index].saturating_add(
+					cmp::min(
+					produces.saturating_mul(multiplier),
+					hex_board.resources[ResourceType::Human as usize] / human_requirement,
+				)
+				),
+			}
 		}
 	}
 
@@ -1186,9 +1180,9 @@ impl<T: Config> Pallet<T> {
 
 		let mut home_weighted: u8 = 0;
 
-		for level in 0..4 {
+		for level in 0..NUMBER_OF_LEVELS {
 			home_weighted = home_weighted.saturating_add(
-				(level + 1u8).saturating_mul(board_stats.get_levels(TileType::Home, level)),
+				(level as u8 + 1u8).saturating_mul(board_stats.get_levels(TileType::Home, level)),
 			);
 		}
 
@@ -1202,18 +1196,11 @@ impl<T: Config> Pallet<T> {
 
 		let tile_resource_productions = T::TileResourceProductions::get();
 
-		for tile_type in [
-			TileType::Grass,
-			TileType::Water,
-			TileType::Mountain,
-			TileType::Tree,
-			TileType::Desert,
-			TileType::Cave,
-		] {
-			Self::tile_produce(
+		for tile_type_index in 0..NUMBER_OF_TILE_TYPES {
+			Self::produce(
 				hex_board,
-				&tile_resource_productions[tile_type as usize],
-				board_stats.get_tiles(tile_type),
+				&tile_resource_productions[tile_type_index],
+				board_stats.get_tiles_by_tile_index(tile_type_index),
 			);
 		}
 
