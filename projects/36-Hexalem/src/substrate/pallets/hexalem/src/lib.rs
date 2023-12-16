@@ -8,11 +8,11 @@ use crate::vec::Vec;
 /// <https://docs.substrate.io/reference/frame-pallets/>
 pub use pallet::*;
 
-//#[cfg(test)]
-//mod mock;
+#[cfg(test)]
+mod mock;
 
-//#[cfg(test)]
-//mod tests;
+#[cfg(test)]
+mod tests;
 
 //#[cfg(feature = "runtime-benchmarks")]
 //mod benchmarking;
@@ -43,7 +43,7 @@ pub mod pallet {
 
 	pub type TargetGoalHash = [u8; 16];
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone)]
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone, Debug)]
 	pub enum GameState {
 		Matchmaking,
 		Playing,
@@ -211,7 +211,7 @@ pub mod pallet {
 	pub struct HexBoard<T: Config> {
 		pub resources: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
 		pub hex_grid: HexGrid<T>, // Board with all tiles
-		game_id: GameId,          // Game key
+		pub game_id: GameId,          // Game key
 	}
 
 	impl<T: Config> HexBoard<T> {
