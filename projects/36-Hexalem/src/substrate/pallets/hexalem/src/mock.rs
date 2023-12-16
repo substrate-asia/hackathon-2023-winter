@@ -189,7 +189,6 @@ parameter_types! {
 
 	pub const HexalemTargetGoalGold: u8 = 10u8;
 	pub const HexalemTargetGoalHuman: u8 = 7u8;
-
 }
 
 // Configure a mock runtime to test the pallet.

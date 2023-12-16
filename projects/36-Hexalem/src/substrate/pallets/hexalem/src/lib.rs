@@ -1162,15 +1162,17 @@ impl<T: Config> Pallet<T> {
 			) {
 				(0, _) => (),
 				(produces, 0) =>
-					hex_board.resources[resource_type_index] = hex_board.resources
-						[resource_type_index]
-						.saturating_add(produces.saturating_mul(multiplier)),
+					hex_board.resources[resource_type_index] = Self::saturate_at_99(
+						hex_board.resources[resource_type_index]
+							.saturating_add(produces.saturating_mul(multiplier)),
+					),
 				(produces, human_requirement) =>
-					hex_board.resources[resource_type_index] =
+					hex_board.resources[resource_type_index] = Self::saturate_at_99(
 						hex_board.resources[resource_type_index].saturating_add(cmp::min(
 							produces.saturating_mul(multiplier),
 							hex_board.resources[ResourceType::Human as usize] / human_requirement,
 						)),
+					),
 			}
 		}
 	}
@@ -1178,10 +1180,11 @@ impl<T: Config> Pallet<T> {
 	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
 		let board_stats: BoardStats = hex_board.get_stats();
 
-		hex_board.resources[ResourceType::Mana as usize] = hex_board.resources
-			[ResourceType::Mana as usize]
-			.saturating_add(hex_board.resources[ResourceType::Human as usize] / 3)
-			.saturating_add(board_stats.get_tiles(TileType::Home));
+		hex_board.resources[ResourceType::Mana as usize] = Self::saturate_at_99(
+			hex_board.resources[ResourceType::Mana as usize]
+				.saturating_add(hex_board.resources[ResourceType::Human as usize] / 3)
+				.saturating_add(board_stats.get_tiles(TileType::Home)),
+		);
 
 		let food_and_water_eaten = cmp::min(
 			hex_board.resources[ResourceType::Food as usize].saturating_mul(T::FoodPerHuman::get()),
@@ -1197,13 +1200,13 @@ impl<T: Config> Pallet<T> {
 			);
 		}
 
-		let new_humans = cmp::max(
+		let new_humans = Self::saturate_at_99(cmp::max(
 			cmp::min(
 				board_stats.get_tiles(TileType::Home).saturating_add(food_and_water_eaten),
 				home_weighted.saturating_mul(T::HomePerHumans::get()),
 			),
 			1,
-		);
+		));
 
 		let tile_resource_productions = T::TileResourceProductions::get();
 
@@ -1311,6 +1314,17 @@ impl<T: Config> Pallet<T> {
 			9 | 25 | 49 => true,
 			_ => false,
 		}
+	}
+
+	fn saturate_at_99(x: u8) -> u8 {
+		cmp::min(x, 99)
+	}
+
+	/// Set the block number to something in particular. Can be used as an alternative to
+	/// `initialize` for tests that don't need to bother with the other environment entries.
+	#[cfg(any(feature = "std", feature = "runtime-benchmarks", test))]
+	pub fn set_hex_board(player: AccountId<T>, hex_board: HexBoard<T>) {
+		<HexBoardStorage<T>>::set(player, Some(hex_board));
 	}
 }
 
