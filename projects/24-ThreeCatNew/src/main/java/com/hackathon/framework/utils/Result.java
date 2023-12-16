@@ -2,8 +2,19 @@ package com.hackathon.framework.utils;
 
 public class Result {
 
+    /**
+     * 执行时间
+     */
     public long executionTime;
+
+    /**
+     * 错误的信息(可以是业务和程序出错，必须包含业务自己定义的)
+     */
     public String hasError;
+
+    /**
+     * 回传(作为验证是否往下执行)和记录到最终报告的结果
+     */
     public Object result;
 
     public long getExecutionTime() {

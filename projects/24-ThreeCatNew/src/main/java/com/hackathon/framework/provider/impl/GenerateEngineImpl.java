@@ -33,6 +33,8 @@ public class GenerateEngineImpl implements GenerateEngine {
 
     @Override
     public Result initDirectory(String generateDstDirectory,List<String>strategyList) {
+        // TODO 包含ssh在服务器上面创建目录
+
         long startTime = System.nanoTime();
         String errText = "";
         String successText = "";
