@@ -193,6 +193,7 @@ namespace Substrate.Hexalem.Engine
             }
         }
 
+        #region Choose and place
         /// <summary>
         ///
         /// </summary>
@@ -202,7 +203,7 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         public bool CanChooseAndPlace(byte playerIndex, int selectionIndex, int gridIndex)
         {
-            var (player, board) = HexaTuples[PlayerTurn];
+            var (_, board) = HexaTuples[PlayerTurn];
 
             var coords = board.ToCoords(gridIndex);
 
@@ -253,10 +254,11 @@ namespace Substrate.Hexalem.Engine
         {
             if (!CanChooseAndPlace(playerIndex, selectionIndex, gridIndex))
             {
+                Log.Error($"{nameof(HexaGame)}.{nameof(CanChooseAndPlace)}.({playerIndex}, {selectionIndex}, {gridIndex}) return false. Debug state = {Export()}");
                 return false;
             }
 
-            var (player, board) = HexaTuples[PlayerTurn];
+            var (_, board) = HexaTuples[PlayerTurn];
 
             var coords = board.ToCoords(gridIndex);
 
@@ -274,6 +276,7 @@ namespace Substrate.Hexalem.Engine
         {
             if (!CanChooseAndPlace(playerIndex, selectionIndex, coords))
             {
+                Log.Error($"{nameof(HexaGame)}.{nameof(CanChooseAndPlace)}.({playerIndex}, {selectionIndex}, {coords}) return false. Debug state = {Export()}");
                 return false;
             }
 
@@ -301,21 +304,9 @@ namespace Substrate.Hexalem.Engine
 
             return true;
         }
+        #endregion
 
-        /// <summary>
-        /// Can upgrade a tile
-        /// </summary>
-        /// <param name="playerIndex"></param>
-        /// <param name="gridIndex"></param>
-        /// <returns></returns>
-        public bool CanUpgrade(byte playerIndex, int gridIndex)
-        {
-            var (_, board) = HexaTuples[playerIndex];
-
-            var coords = board.ToCoords(gridIndex);
-
-            return CanUpgrade(playerIndex, coords);
-        }
+        #region Upgrade
 
         /// <summary>
         /// Can upgrade a tile
@@ -366,6 +357,7 @@ namespace Substrate.Hexalem.Engine
         {
             if (!CanUpgrade(playerIndex, coords))
             {
+                Log.Error($"{nameof(HexaGame)}.{nameof(Upgrade)}({playerIndex}, {coords}) return false. Debug state = {Export()}");
                 return false;
             }
 
@@ -387,6 +379,7 @@ namespace Substrate.Hexalem.Engine
 
             return true;
         }
+        #endregion
 
         /// <summary>
         /// Update game turn information
