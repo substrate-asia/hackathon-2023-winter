@@ -1,6 +1,8 @@
 ﻿using Substrate.Hexalem.Engine;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
+using Substrate.Hexalem.NET.NetApiExt.Generated.Storage;
 
 namespace Assets.Scripts
 {
@@ -36,48 +38,68 @@ namespace Assets.Scripts
             }
         }
 
-        public static string TileDescription(TileType tileType)
+        public static string TileDescription(Substrate.Hexalem.Engine.TileType tileType)
         {
-            switch (tileType)
+            var cost = $"<color={ResourceTypeColor(ResourceType.Mana)}>1 Mana</color>";
+
+            var hexalemConstants = new HexalemModuleConstants();
+
+            var produce = "";
+    
+            var rawResourceProductions = hexalemConstants.TileResourceProductions().Value[(int)tileType];
+            var rawProduces = rawResourceProductions.Produces.Value;
+            var rawHumanRequirements = rawResourceProductions.HumanRequirements.Value;
+
+
+            for (int i = 0; i < rawProduces.Length; i++)
             {
-                case TileType.Home:
-                    return "The Cave tile, will cost <color=blue>1 Mana</color>.\r\n\r\n" +
-                           "Cave tiles produce <color=grey>1 Stone</color> per round when deployed alone, patterns can create mines and other things.";
+                if (rawProduces[i].Value == 0)
+                {
+                    continue;
+                }
 
-                case TileType.Grass:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
+                ResourceType resourceType = (ResourceType)i;
 
-                case TileType.Water:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
+                if (produce != "")
+                {
+                    produce += ", ";
+                }
 
-                case TileType.Mountain:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
-
-                case TileType.Tree:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
-
-                case TileType.Desert:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
-
-                case TileType.Cave:
-                    return "The Cave tile, will cost 1 Mana.\r\n\r\n" +
-                           "Cave tiles produce 1 Stone per round when deployed alone, patterns can create mines and other things.\r\n" +
-                           "blah blah blah blah blah blah blah blah\r\nblah blah blah blah blah blah blah blah";
-
-                case TileType.Empty:
-                default:
-                    return "The Empty tile, is a sureal solution fo be placed and the mana cost is infinit. cost 1 Mana.";
+                if (rawHumanRequirements[i].Value == 0)
+                {
+                    produce += $"<color={ResourceTypeColor(resourceType)}>{rawProduces[i].Value} {resourceType}</color>";
+                }
+                else
+                {
+                    produce += $"<color={ResourceTypeColor(resourceType)}>{rawProduces[i].Value} {resourceType}" +
+                        $"</color> but needs <color={ResourceTypeColor(ResourceType.Human)}>{rawHumanRequirements[i].Value} {ResourceType.Human}</color>";
+                }
             }
+            
+            string produceString = produce != "" ? $"{tileType} tiles produce {produce}" : "";
+
+            return $"The {tileType} tile costs {cost}.\r\n\r\n{produceString}";
+        }
+        public static string ResourceTypeColor(ResourceType resourceType)
+        {
+            switch (resourceType)
+            {
+                case ResourceType.Mana:
+                    return "blue";
+                case ResourceType.Human:
+                    return "#CFB997";
+                case ResourceType.Food:
+                    return "#7CFC00";
+                case ResourceType.Water:
+                    return "#ADD8E6";
+                case ResourceType.Wood:
+                    return "#964B00";
+                case ResourceType.Stone:
+                    return "#888888";
+                case ResourceType.Gold:
+                    return "#DBAC34";
+            }
+            return "";
         }
     }
 }
