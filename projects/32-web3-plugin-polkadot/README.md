@@ -39,14 +39,24 @@ async function main() {
   const web3 = new Web3("ws://127.0.0.1:9944/");
   web3.registerPlugin(new PolkadotPlugin());
 
-  const hash = "0x7d4ef171d483d37aa2339877524f0731af98e367c38f8fa27f133193ed2b5615";
-  const response = await web3.polkadot.chain.getBlock(hash);
+  // to get the last block from Polkadot network
+  const polkadotBlockData = await web3.polka.polkadot.chain.getBlock();
 
-  console.log('stateRoot:', response.block.header.stateRoot);
-  // stateRoot: 0xa18402bc3a2249d6af8e2ad6241e5b1b60360abd1b4e2c7c733c8c980331d278
+  // to get the last block from Polkadot network
+  const kusamaBlockData = await web3.polka.kusama.chain.getBlock();
+
+  // to get the last block from Polkadot network
+  const substrateBlockData = await web3.polka.substrate.chain.getBlock();
+
+  console.log('polkadot block header stateRoot:', polkadotBlockData.block.header.stateRoot);
+  console.log('kusama block header stateRoot:', kusamaBlockData.block.header.stateRoot);
+  console.log('substrate block header stateRoot:', substrateBlockData.block.header.stateRoot);
+
+  // stateRoot is something like: 0xa18402bc3a2249d6af8e2ad6241e5b1b60360abd1b4e2c7c733c8c980331d278
 
   
-  console.log(JSON.stringify(response, null, 2));
+  // if you want to log the full response
+  console.log(JSON.stringify(substrateBlockData, null, 2));
   // {
   //   "jsonrpc": "2.0",
   //   "result": {
