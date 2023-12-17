@@ -70,7 +70,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> sudo
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method Sudo(Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call)
+        public static Method Sudo(Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(call.Encode());
@@ -81,7 +81,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> sudo_unchecked_weight
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method SudoUncheckedWeight(Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight weight)
+        public static Method SudoUncheckedWeight(Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight weight)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(call.Encode());
@@ -104,7 +104,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> sudo_as
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method SudoAs(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.multiaddress.EnumMultiAddress who, Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call)
+        public static Method SudoAs(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.multiaddress.EnumMultiAddress who, Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(who.Encode());

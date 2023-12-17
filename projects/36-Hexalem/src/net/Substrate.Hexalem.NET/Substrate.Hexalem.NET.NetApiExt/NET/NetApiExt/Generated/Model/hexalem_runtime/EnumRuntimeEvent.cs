@@ -20,23 +20,23 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
         
         System = 0,
         
-        Grandpa = 3,
+        Sudo = 4,
         
-        Balances = 4,
+        Utility = 5,
         
-        TransactionPayment = 5,
+        Balances = 10,
         
-        Sudo = 6,
+        TransactionPayment = 11,
         
-        Utility = 7,
+        HexalemModule = 21,
         
-        HexalemModule = 8,
+        Grandpa = 101,
     }
     
     /// <summary>
     /// >> 20 - Variant[hexalem_runtime.RuntimeEvent]
     /// </summary>
-    public sealed class EnumRuntimeEvent : BaseEnumExt<RuntimeEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.EnumEvent, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_transaction_payment.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_utility.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumEvent>
+    public sealed class EnumRuntimeEvent : BaseEnumExt<RuntimeEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.EnumEvent, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_utility.pallet.EnumEvent, BaseVoid, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.pallet.EnumEvent, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_transaction_payment.pallet.EnumEvent, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumEvent, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa.pallet.EnumEvent>
     {
     }
 }

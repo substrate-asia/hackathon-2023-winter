@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa
     
     
     /// <summary>
-    /// >> 82 - Composite[pallet_grandpa.StoredPendingChange]
+    /// >> 139 - Composite[pallet_grandpa.StoredPendingChange]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class StoredPendingChange : BaseType
@@ -37,7 +37,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa
         /// <summary>
         /// >> next_authorities
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT1 _nextAuthorities;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT2 _nextAuthorities;
         
         /// <summary>
         /// >> forced
@@ -68,7 +68,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT1 NextAuthorities
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT2 NextAuthorities
         {
             get
             {
@@ -114,7 +114,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa
             ScheduledAt.Decode(byteArray, ref p);
             Delay = new Substrate.NetApi.Model.Types.Primitive.U32();
             Delay.Decode(byteArray, ref p);
-            NextAuthorities = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT1();
+            NextAuthorities = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT2();
             NextAuthorities.Decode(byteArray, ref p);
             Forced = new Substrate.NetApi.Model.Types.Base.BaseOpt<Substrate.NetApi.Model.Types.Primitive.U32>();
             Forced.Decode(byteArray, ref p);

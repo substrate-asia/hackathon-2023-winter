@@ -248,7 +248,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(equivocation_proof.Encode());
             byteArray.AddRange(key_owner_proof.Encode());
-            return new Method(3, "Grandpa", 0, "report_equivocation", byteArray.ToArray());
+            return new Method(101, "Grandpa", 0, "report_equivocation", byteArray.ToArray());
         }
         
         /// <summary>
@@ -260,7 +260,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(equivocation_proof.Encode());
             byteArray.AddRange(key_owner_proof.Encode());
-            return new Method(3, "Grandpa", 1, "report_equivocation_unsigned", byteArray.ToArray());
+            return new Method(101, "Grandpa", 1, "report_equivocation_unsigned", byteArray.ToArray());
         }
         
         /// <summary>
@@ -272,7 +272,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(delay.Encode());
             byteArray.AddRange(best_finalized_block_number.Encode());
-            return new Method(3, "Grandpa", 2, "note_stalled", byteArray.ToArray());
+            return new Method(101, "Grandpa", 2, "note_stalled", byteArray.ToArray());
         }
     }
     

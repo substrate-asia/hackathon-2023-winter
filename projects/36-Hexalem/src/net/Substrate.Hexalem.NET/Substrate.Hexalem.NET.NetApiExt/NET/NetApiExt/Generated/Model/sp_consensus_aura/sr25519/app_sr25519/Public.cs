@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_consensus_aura.sr25
     
     
     /// <summary>
-    /// >> 77 - Composite[sp_consensus_aura.sr25519.app_sr25519.Public]
+    /// >> 134 - Composite[sp_consensus_aura.sr25519.app_sr25519.Public]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Public : BaseType

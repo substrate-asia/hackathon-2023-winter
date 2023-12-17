@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 354 - Composite[pallet_hexalem.pallet.TileCost]
+    /// >> 127 - Composite[pallet_hexalem.pallet.TileCost]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class TileCost : BaseType
@@ -27,14 +27,14 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// <summary>
         /// >> tile_to_buy
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.HexalemTile _tileToBuy;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile _tileToBuy;
         
         /// <summary>
         /// >> cost
         /// </summary>
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount _cost;
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.HexalemTile TileToBuy
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile TileToBuy
         {
             get
             {
@@ -74,7 +74,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         public override void Decode(byte[] byteArray, ref int p)
         {
             var start = p;
-            TileToBuy = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.HexalemTile();
+            TileToBuy = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.HexalemTile();
             TileToBuy.Decode(byteArray, ref p);
             Cost = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.ResourceAmount();
             Cost.Decode(byteArray, ref p);

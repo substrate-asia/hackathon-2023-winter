@@ -28,7 +28,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa
     }
     
     /// <summary>
-    /// >> 81 - Variant[pallet_grandpa.StoredState]
+    /// >> 138 - Variant[pallet_grandpa.StoredState]
     /// </summary>
     public sealed class EnumStoredState : BaseEnumExt<StoredState, BaseVoid, BaseTuple<Substrate.NetApi.Model.Types.Primitive.U32, Substrate.NetApi.Model.Types.Primitive.U32>, BaseVoid, BaseTuple<Substrate.NetApi.Model.Types.Primitive.U32, Substrate.NetApi.Model.Types.Primitive.U32>>
     {

@@ -40,7 +40,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> batch
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method Batch(Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall> calls)
+        public static Method Batch(Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall> calls)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(calls.Encode());
@@ -51,7 +51,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> as_derivative
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method AsDerivative(Substrate.NetApi.Model.Types.Primitive.U16 index, Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call)
+        public static Method AsDerivative(Substrate.NetApi.Model.Types.Primitive.U16 index, Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(index.Encode());
@@ -63,7 +63,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> batch_all
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method BatchAll(Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall> calls)
+        public static Method BatchAll(Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall> calls)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(calls.Encode());
@@ -74,7 +74,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> dispatch_as
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method DispatchAs(Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumOriginCaller as_origin, Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call)
+        public static Method DispatchAs(Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumOriginCaller as_origin, Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(as_origin.Encode());
@@ -86,7 +86,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> force_batch
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method ForceBatch(Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall> calls)
+        public static Method ForceBatch(Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall> calls)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(calls.Encode());
@@ -97,7 +97,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> with_weight
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method WithWeight(Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight weight)
+        public static Method WithWeight(Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight weight)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(call.Encode());

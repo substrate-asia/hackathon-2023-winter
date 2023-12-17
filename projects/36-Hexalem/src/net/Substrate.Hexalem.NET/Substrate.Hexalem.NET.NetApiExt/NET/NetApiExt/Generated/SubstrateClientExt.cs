@@ -32,19 +32,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated
         public SystemStorage SystemStorage;
         
         /// <summary>
-        /// ParachainSystemStorage storage calls.
-        /// </summary>
-        public ParachainSystemStorage ParachainSystemStorage;
-        
-        /// <summary>
         /// TimestampStorage storage calls.
         /// </summary>
         public TimestampStorage TimestampStorage;
-        
-        /// <summary>
-        /// ParachainInfoStorage storage calls.
-        /// </summary>
-        public ParachainInfoStorage ParachainInfoStorage;
         
         /// <summary>
         /// SudoStorage storage calls.
@@ -57,26 +47,6 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated
         public UtilityStorage UtilityStorage;
         
         /// <summary>
-        /// ProxyStorage storage calls.
-        /// </summary>
-        public ProxyStorage ProxyStorage;
-        
-        /// <summary>
-        /// MigrationsStorage storage calls.
-        /// </summary>
-        public MigrationsStorage MigrationsStorage;
-        
-        /// <summary>
-        /// MaintenanceModeStorage storage calls.
-        /// </summary>
-        public MaintenanceModeStorage MaintenanceModeStorage;
-        
-        /// <summary>
-        /// TxPauseStorage storage calls.
-        /// </summary>
-        public TxPauseStorage TxPauseStorage;
-        
-        /// <summary>
         /// BalancesStorage storage calls.
         /// </summary>
         public BalancesStorage BalancesStorage;
@@ -87,93 +57,33 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated
         public TransactionPaymentStorage TransactionPaymentStorage;
         
         /// <summary>
-        /// AwesomeAvatarsStorage storage calls.
-        /// </summary>
-        public AwesomeAvatarsStorage AwesomeAvatarsStorage;
-        
-        /// <summary>
         /// HexalemModuleStorage storage calls.
         /// </summary>
         public HexalemModuleStorage HexalemModuleStorage;
         
         /// <summary>
-        /// RandomnessStorage storage calls.
+        /// AuraStorage storage calls.
         /// </summary>
-        public RandomnessStorage RandomnessStorage;
+        public AuraStorage AuraStorage;
         
         /// <summary>
-        /// NftStorage storage calls.
+        /// GrandpaStorage storage calls.
         /// </summary>
-        public NftStorage NftStorage;
-        
-        /// <summary>
-        /// NftTransferStorage storage calls.
-        /// </summary>
-        public NftTransferStorage NftTransferStorage;
-        
-        /// <summary>
-        /// AuthoritiesNotingStorage storage calls.
-        /// </summary>
-        public AuthoritiesNotingStorage AuthoritiesNotingStorage;
-        
-        /// <summary>
-        /// AuthorInherentStorage storage calls.
-        /// </summary>
-        public AuthorInherentStorage AuthorInherentStorage;
-        
-        /// <summary>
-        /// XcmpQueueStorage storage calls.
-        /// </summary>
-        public XcmpQueueStorage XcmpQueueStorage;
-        
-        /// <summary>
-        /// CumulusXcmStorage storage calls.
-        /// </summary>
-        public CumulusXcmStorage CumulusXcmStorage;
-        
-        /// <summary>
-        /// DmpQueueStorage storage calls.
-        /// </summary>
-        public DmpQueueStorage DmpQueueStorage;
-        
-        /// <summary>
-        /// PolkadotXcmStorage storage calls.
-        /// </summary>
-        public PolkadotXcmStorage PolkadotXcmStorage;
-        
-        /// <summary>
-        /// RootTestingStorage storage calls.
-        /// </summary>
-        public RootTestingStorage RootTestingStorage;
+        public GrandpaStorage GrandpaStorage;
         
         public SubstrateClientExt(System.Uri uri, Substrate.NetApi.Model.Extrinsics.ChargeType chargeType) : 
                 base(uri, chargeType)
         {
             StorageKeyDict = new System.Collections.Generic.Dictionary<System.Tuple<string, string>, System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>>();
             this.SystemStorage = new SystemStorage(this);
-            this.ParachainSystemStorage = new ParachainSystemStorage(this);
             this.TimestampStorage = new TimestampStorage(this);
-            this.ParachainInfoStorage = new ParachainInfoStorage(this);
             this.SudoStorage = new SudoStorage(this);
             this.UtilityStorage = new UtilityStorage(this);
-            this.ProxyStorage = new ProxyStorage(this);
-            this.MigrationsStorage = new MigrationsStorage(this);
-            this.MaintenanceModeStorage = new MaintenanceModeStorage(this);
-            this.TxPauseStorage = new TxPauseStorage(this);
             this.BalancesStorage = new BalancesStorage(this);
             this.TransactionPaymentStorage = new TransactionPaymentStorage(this);
-            this.AwesomeAvatarsStorage = new AwesomeAvatarsStorage(this);
             this.HexalemModuleStorage = new HexalemModuleStorage(this);
-            this.RandomnessStorage = new RandomnessStorage(this);
-            this.NftStorage = new NftStorage(this);
-            this.NftTransferStorage = new NftTransferStorage(this);
-            this.AuthoritiesNotingStorage = new AuthoritiesNotingStorage(this);
-            this.AuthorInherentStorage = new AuthorInherentStorage(this);
-            this.XcmpQueueStorage = new XcmpQueueStorage(this);
-            this.CumulusXcmStorage = new CumulusXcmStorage(this);
-            this.DmpQueueStorage = new DmpQueueStorage(this);
-            this.PolkadotXcmStorage = new PolkadotXcmStorage(this);
-            this.RootTestingStorage = new RootTestingStorage(this);
+            this.AuraStorage = new AuraStorage(this);
+            this.GrandpaStorage = new GrandpaStorage(this);
         }
     }
 }

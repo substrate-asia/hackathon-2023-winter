@@ -481,14 +481,14 @@ impl pallet_hexalem::Config for Runtime {
 construct_runtime!(
 	pub struct Runtime {
 		System: frame_system = 0,
-		Timestamp: pallet_timestamp = 1,
-		Aura: pallet_aura = 2,
-		Grandpa: pallet_grandpa = 3,
-		Balances: pallet_balances = 4,
-		TransactionPayment: pallet_transaction_payment = 5,
-		Sudo: pallet_sudo = 6,
-		Utility: pallet_utility = 7,
+		Timestamp: pallet_timestamp = 2,
+		Sudo: pallet_sudo = 4,
+		Utility: pallet_utility = 5,
+		Balances: pallet_balances = 10,
+		TransactionPayment: pallet_transaction_payment = 11,
 		HexalemModule: pallet_hexalem = 21,
+		Aura: pallet_aura = 100,
+		Grandpa: pallet_grandpa = 101,
 	}
 );
 
