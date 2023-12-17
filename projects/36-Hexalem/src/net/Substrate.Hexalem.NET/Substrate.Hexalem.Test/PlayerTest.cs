@@ -7,7 +7,7 @@ namespace Substrate.Hexalem.Test
         [Test]
         public void CreatePlayer_WithWinningConditionSet_ShouldSucceed()
         {
-            var playerRessourceBytes = new byte[GameConfig.PLAYER_STORAGE_SIZE];
+            var playerRessourceBytes = new byte[HexaPlayer.STORAGE_SIZE];
             playerRessourceBytes[7] = (byte)TargetGoal.GoldThreshold;
             playerRessourceBytes[8] = 10;
 

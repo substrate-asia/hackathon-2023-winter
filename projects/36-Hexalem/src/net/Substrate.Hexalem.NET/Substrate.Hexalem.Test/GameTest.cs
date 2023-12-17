@@ -25,7 +25,7 @@ namespace Substrate.Hexalem.Test
             _hexGridMedium_Player2 = new HexaBoard(new byte[(int)GridSize.Medium]);
             _hexPlayer_Player2 = new HexaPlayer(new byte[32]);
 
-            _selectionGenerator = new byte[GameConfig.NB_MAX_UNBOUNDED_TILES];
+            _selectionGenerator = new byte[32];
 
             _defaultBlockStart = 1;
         }
@@ -93,13 +93,13 @@ namespace Substrate.Hexalem.Test
 
             Assert.That(hexaGame.HexaTuples.Count, Is.EqualTo(2));
 
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Mana], Is.EqualTo(GameConfig.DEFAULT_MANA));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Humans], Is.EqualTo(GameConfig.DEFAULT_HUMANS));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Water], Is.EqualTo(GameConfig.DEFAULT_WATER));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Food], Is.EqualTo(GameConfig.DEFAULT_FOOD));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Wood], Is.EqualTo(GameConfig.DEFAULT_WOOD));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Stone], Is.EqualTo(GameConfig.DEFAULT_STONE));
-            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Gold], Is.EqualTo(GameConfig.DEFAULT_GOLD));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Mana], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Mana]));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Humans], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Humans]));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Water], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Water]));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Food], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Food]));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Wood], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Wood]));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Stone], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Stone]));
+            Assert.That(hexaGame.HexaTuples[0].player[RessourceType.Gold], Is.EqualTo(HexalemConfig.GetInstance().StartPlayerResources[(int)RessourceType.Gold]));
         }
 
         [Test]

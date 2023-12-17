@@ -4,6 +4,8 @@ namespace Substrate.Hexalem.Engine
 {
     public partial class HexaPlayer : IHexaBase, ICloneable
     {
+        public const int STORAGE_SIZE = 32;
+
         public static implicit operator byte[](HexaPlayer p) => p.Value;
 
         public static implicit operator HexaPlayer(byte[] p) => new HexaPlayer(p);
@@ -12,11 +14,16 @@ namespace Substrate.Hexalem.Engine
 
         public byte[] Value { get; set; }
 
-        public HexaPlayer(byte[] id) : this(id, new byte[GameConfig.PLAYER_STORAGE_SIZE])
+        public HexaPlayer(byte[] id) : this(id, new byte[STORAGE_SIZE])
         {
-            Value = new byte[GameConfig.PLAYER_STORAGE_SIZE];
+            Value = new byte[STORAGE_SIZE];
             TargetGoal = TargetGoal.HumanThreshold;
-            TargetValue = GameConfig.DEFAULT_WINNING_CONDITION_HUMAN;
+            TargetValue = TargetGoal switch
+            {
+                TargetGoal.HumanThreshold => HexalemConfig.GetInstance().TargetGoalHuman,
+                TargetGoal.GoldThreshold => HexalemConfig.GetInstance().TargetGoalGold,
+                _ => throw new NotSupportedException("Invalid target goal"),
+            };
         }
 
         public HexaPlayer(byte[] id, byte[] value)
@@ -33,13 +40,10 @@ namespace Substrate.Hexalem.Engine
 
         public void Init(uint blockNumber)
         {
-            this[RessourceType.Mana] = GameConfig.DEFAULT_MANA;
-            this[RessourceType.Humans] = GameConfig.DEFAULT_HUMANS;
-            this[RessourceType.Water] = GameConfig.DEFAULT_WATER;
-            this[RessourceType.Food] = GameConfig.DEFAULT_FOOD;
-            this[RessourceType.Wood] = GameConfig.DEFAULT_WOOD;
-            this[RessourceType.Stone] = GameConfig.DEFAULT_STONE;
-            this[RessourceType.Gold] = GameConfig.DEFAULT_GOLD;
+            foreach(RessourceType resource in Enum.GetValues(typeof(RessourceType))) 
+            {
+                this[resource] = HexalemConfig.GetInstance().StartPlayerResources[(int)resource];
+            }
         }
 
         /// <summary>
