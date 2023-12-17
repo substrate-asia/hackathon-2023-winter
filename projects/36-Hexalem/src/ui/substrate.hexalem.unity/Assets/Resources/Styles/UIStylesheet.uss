@@ -46,13 +46,13 @@
 }
 
 .font-comic {
-    -unity-font-definition: url('project://database/Assets/Fonts/Hey%20Comic%20SDF.asset?fileID=11400000&guid=140ac92711f6f5a49a1e49c11df70dfa&type=2#Hey Comic SDF');
+    -unity-font-definition: resource('Fonts & Materials/Hey Comic SDF');
     flex-shrink: 0;
     -unity-font: url('project://database/Assets/Fonts/Hey%20Comic.ttf?fileID=12800000&guid=76b251ed5027e7347b294a930d467c67&type=3#Hey Comic');
 }
 
 .font-chicken {
-    -unity-font-definition: url('project://database/Assets/Fonts/Happy%20Chicken%20SDF.asset?fileID=11400000&guid=bdfb382889bf9a04a869a5c7d8d0eb28&type=2#Happy Chicken SDF');
+    -unity-font-definition: url('project://database/Assets/Resources/Fonts%20&%20Materials/Happy%20Chicken%20SDF.asset?fileID=11400000&guid=bdfb382889bf9a04a869a5c7d8d0eb28&type=2#Happy Chicken SDF');
     flex-shrink: 0;
     -unity-font: url('project://database/Assets/Fonts/Happy%20Chicken.ttf?fileID=12800000&guid=22f474d54f5886446be641bb7450ba36&type=3#Happy Chicken');
 }

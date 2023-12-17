@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
+  m_IndirectSpecularColor: {r: 0.4465775, g: 0.49641246, b: 0.57481915, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -239,8 +239,8 @@ MonoBehaviour:
   PlayerGrid: {fileID: 185871275}
   _emptyTile: {fileID: 4291607650337064099, guid: 315ee07e0671d6046a7e5a96554b33a4, type: 3}
   _homeTile: {fileID: 7535761464842861189, guid: 7ac4d9f2c3355e74e9b1dd336046365f, type: 3}
-  _rareHomeTile: {fileID: 3134855009338202455, guid: b0c9e81aafb6cd746bc0b081f0ce3018, type: 3}
-  _epicHomeTile: {fileID: 3008207677481591746, guid: 97ec6226e26c2424189b0ed5d49fcbf6, type: 3}
+  _rareHomeTile: {fileID: 7535761464842861189, guid: c8b31314346709e4db6827a310babc3b, type: 3}
+  _epicHomeTile: {fileID: 7535761464842861189, guid: b50980af26190674badf8a06633353aa, type: 3}
   _grassTile: {fileID: 3604290564195660183, guid: 2aa1827cca7eefd4fab04654ce228a9b, type: 3}
   _waterTile: {fileID: 5716525105324350660, guid: 6eee664e07d115345ba3afbf14b24e53, type: 3}
   _mountainTile: {fileID: 3054226215825228916, guid: 4ca22e86fc765dc41b8f5332f9a93299, type: 3}
@@ -745,7 +745,7 @@ Light:
     serializedVersion: 2
     m_Bits: 4294967295
   m_RenderingLayerMask: 1
-  m_Lightmapping: 1
+  m_Lightmapping: 2
   m_LightShadowCasterMode: 0
   m_AreaSize: {x: 1, y: 1}
   m_BounceIntensity: 1
@@ -764,13 +764,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 705507993}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.40821788, y: -0.23456968, z: 0.10938163, w: 0.8754261}
+  m_LocalRotation: {x: 0.42261827, y: 0, z: 0, w: 0.9063079}
   m_LocalPosition: {x: 0, y: 3, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+  m_LocalEulerAnglesHint: {x: 50, y: 0, z: 0}
 --- !u!1 &928448418
 GameObject:
   m_ObjectHideFlags: 0

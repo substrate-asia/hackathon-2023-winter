@@ -11,7 +11,7 @@
                 </ui:VisualElement>
             </ui:VisualElement>
             <ui:VisualElement name="VelCancelBox" style="flex-grow: 0; width: 10%; height: 100%; padding-top: 60px; padding-bottom: 60px; flex-shrink: 0;">
-                <ui:VisualElement name="VelImgCancel" style="flex-grow: 0; background-image: resource(&apos;Images/icon_cancel&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; height: 100%; width: 100%;" />
+                <ui:VisualElement name="VelImgCancel" style="flex-grow: 0; background-image: url(&apos;project://database/Assets/Images/icon_cancel.png?fileID=2800000&amp;guid=9b7509219a59ec2409c7e5bdc923ee0c&amp;type=3#icon_cancel&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; height: 100%; width: 100%;" />
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:ScrollView name="ScVPlayerScores" />
