@@ -239,6 +239,8 @@ MonoBehaviour:
   PlayerGrid: {fileID: 185871275}
   _emptyTile: {fileID: 4291607650337064099, guid: 315ee07e0671d6046a7e5a96554b33a4, type: 3}
   _homeTile: {fileID: 7535761464842861189, guid: 7ac4d9f2c3355e74e9b1dd336046365f, type: 3}
+  _rareHomeTile: {fileID: 3134855009338202455, guid: b0c9e81aafb6cd746bc0b081f0ce3018, type: 3}
+  _epicHomeTile: {fileID: 3008207677481591746, guid: 97ec6226e26c2424189b0ed5d49fcbf6, type: 3}
   _grassTile: {fileID: 3604290564195660183, guid: 2aa1827cca7eefd4fab04654ce228a9b, type: 3}
   _waterTile: {fileID: 5716525105324350660, guid: 6eee664e07d115345ba3afbf14b24e53, type: 3}
   _mountainTile: {fileID: 3054226215825228916, guid: 4ca22e86fc765dc41b8f5332f9a93299, type: 3}
@@ -703,9 +705,9 @@ Light:
   serializedVersion: 10
   m_Type: 1
   m_Shape: 0
-  m_Color: {r: 0.990566, g: 0.9792837, b: 0.9485137, a: 1}
-  m_Intensity: 1.2
-  m_Range: 20
+  m_Color: {r: 1, g: 0.95686275, b: 0.8392157, a: 1}
+  m_Intensity: 1
+  m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -713,9 +715,9 @@ Light:
     m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
-    m_Strength: 0.25
-    m_Bias: 1
-    m_NormalBias: 0.6
+    m_Strength: 1
+    m_Bias: 0.05
+    m_NormalBias: 0.4
     m_NearPlane: 0.2
     m_CullingMatrixOverride:
       e00: 1
