@@ -33,6 +33,19 @@
             <artifactId>groovy-all</artifactId>
             <version>2.4.15</version>
         </dependency>
+        <!--字符串模板 用于生成测试类-->
+        <dependency>
+            <groupId>org.FreeMarker</groupId>
+            <artifactId>FreeMarker</artifactId>
+            <version>2.3.31</version>
+        </dependency>
+        <!-- Fastjson 用于处理json串-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.37</version>
+        </dependency>
+
     </dependencies>
 
     <build>

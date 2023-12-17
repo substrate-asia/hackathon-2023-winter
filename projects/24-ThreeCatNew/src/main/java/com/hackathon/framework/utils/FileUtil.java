@@ -2,6 +2,7 @@ package com.hackathon.framework.utils;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -133,6 +134,16 @@ public class FileUtil {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 读取文件，返回文件中的内容
+     * @param file 文件
+     * @return 文件内容
+     */
+    public static String readFileToString(File file) throws IOException {
+        byte[] bytes = Files.readAllBytes(file.toPath());
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
 
