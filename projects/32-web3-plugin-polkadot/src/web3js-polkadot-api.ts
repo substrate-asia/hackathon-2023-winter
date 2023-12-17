@@ -26,9 +26,13 @@ type Flatten<T> = T extends any ? UnionToIntersection<FlattenUnion<ObjectValuesO
 
 
 // Transformation from `{ namespace.method }` to `{ namespace.namespace_method }`:
-type Prefixed = PrefixSubByNameSpace<RpcInterface>;
+type PolkadotPrefixed = PrefixSubByNameSpace<PolkadotRpcInterface>;
+type KusamaPrefixed = PrefixSubByNameSpace<KusamaRpcInterface>;
+type SubstratePrefixed = PrefixSubByNameSpace<SubstrateRpcInterface>;
 // Transformation from `{ namespace.namespace_method }` to `{ namespace_method }`:
-export type RpcApiFlattened = Flatten<Prefixed>;
+export type PolkadotRpcApiFlattened = Flatten<PolkadotPrefixed>;
+export type KusamaRpcApiFlattened = Flatten<KusamaPrefixed>;
+export type SubstrateRpcApiFlattened = Flatten<SubstratePrefixed>;
 
 
 

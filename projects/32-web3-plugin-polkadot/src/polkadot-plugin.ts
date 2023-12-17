@@ -1,12 +1,28 @@
 import { Web3PluginBase } from 'web3';
 
-import { KusamaRpcApiSimplified, PolkadotRpcApiSimplified, RpcApiFlattened, SubstrateRpcApiSimplified } from './web3js-polkadot-api';
+import {
+  KusamaRpcApiSimplified,
+  PolkadotRpcApiSimplified,
+  PolkadotRpcApiFlattened,
+  KusamaRpcApiFlattened,
+  SubstrateRpcApiFlattened,
+  SubstrateRpcApiSimplified,
+} from './web3js-polkadot-api';
 import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
 import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
 import { PolkadotRpcList } from './interfaces/polkadot/augment-api-rpc';
 
-
-export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
+// The generic types: PolkadotRpcApiFlattened | KusamaRpcApiFlattened | SubstrateRpcApiFlattened,
+// enables having strongly typed variables returned when calling `this.requestManager.send`.
+// For example:
+// const res = // res will automatically  be of type `Promise<SignedBlock>
+//   this.requestManager.send({
+//     method: `chain_getBlock`,
+//     params: [],
+//   });
+export class PolkadotPlugin extends Web3PluginBase<
+  PolkadotRpcApiFlattened | KusamaRpcApiFlattened | SubstrateRpcApiFlattened
+> {
   public pluginNamespace = 'polka';
 
   /**
@@ -34,7 +50,7 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
     * ```
    */
   private createRpcMethods(rpcList: Record<string, any>) {
-    const returnedRpcMethods: Record<string, any> = {}
+    const returnedRpcMethods: Record<string, any> = {};
     const objectKeys = Object.keys(rpcList) as Array<keyof typeof rpcList>;
     for (let rpcNamespace of objectKeys) {
       const endpointNames = rpcList[rpcNamespace];
@@ -80,8 +96,8 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
   //   }
   // };
 
-  public polkadot: SubstrateRpcApiSimplified;
-  public kusama: SubstrateRpcApiSimplified;
+  public polkadot: PolkadotRpcApiSimplified;
+  public kusama: KusamaRpcApiSimplified;
   public substrate: SubstrateRpcApiSimplified;
 
   constructor() {
