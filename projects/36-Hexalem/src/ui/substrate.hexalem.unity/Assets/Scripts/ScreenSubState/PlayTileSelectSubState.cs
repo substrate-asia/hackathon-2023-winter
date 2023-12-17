@@ -16,6 +16,7 @@ namespace Assets.Scripts
         private Material _selectedMat;
 
         private VisualElement _velTileCardBox;
+        private Label _lblTileDescription;
 
         private Button _btnActionTitle;
         private Button _btnActionCancel;
@@ -37,6 +38,7 @@ namespace Assets.Scripts
             TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomTileSelectElement");
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
+            _lblTileDescription = elementInstance.Q<Label>("LblTileDescription");
 
             _btnActionTitle = elementInstance.Q<Button>("BtnActionTitle");
             _btnActionTitle.SetEnabled(false);
@@ -215,6 +217,8 @@ namespace Assets.Scripts
             }
 
             _velTileCardBox.Add(tileCard);
+
+            _lblTileDescription.text = HelperUI.TileDescription(selectTile.TileToBuy.TileType);
         }
     }
 }

@@ -34,6 +34,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
                             Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Game)));
             _client.StorageKeyDict.Add(new System.Tuple<string, string>("HexalemModule", "HexBoardStorage"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
                             Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.HexBoard)));
+            _client.StorageKeyDict.Add(new System.Tuple<string, string>("HexalemModule", "TargetGoalStorage"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
+                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr16U8)));
         }
         
         /// <summary>
@@ -91,6 +93,35 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             string parameters = HexalemModuleStorage.HexBoardStorageParams(key);
             var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.HexBoard>(parameters, token);
+            return result;
+        }
+        
+        /// <summary>
+        /// >> TargetGoalStorageParams
+        /// </summary>
+        public static string TargetGoalStorageParams(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key)
+        {
+            return RequestGenerator.GetStorage("HexalemModule", "TargetGoalStorage", Substrate.NetApi.Model.Meta.Storage.Type.Map, new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
+                        Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, new Substrate.NetApi.Model.Types.IType[] {
+                        key});
+        }
+        
+        /// <summary>
+        /// >> TargetGoalStorageDefault
+        /// Default value as hex string
+        /// </summary>
+        public static string TargetGoalStorageDefault()
+        {
+            return "0x00";
+        }
+        
+        /// <summary>
+        /// >> TargetGoalStorage
+        /// </summary>
+        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr16U8> TargetGoalStorage(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
+        {
+            string parameters = HexalemModuleStorage.TargetGoalStorageParams(key);
+            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr16U8>(parameters, token);
             return result;
         }
     }
@@ -244,7 +275,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr15TileCost TileCosts()
         {
             var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr15TileCost();
-            result.Create("0x2800012800012800012000012000012000011000011000011000011800011800011800013800013" +
+            result.Create("0x1000011000011000011800011800011800012000012000012000012800012800012800013000013" +
                     "80001380001");
             return result;
         }
@@ -252,10 +283,12 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// <summary>
         /// >> TileResourceProductions
         /// </summary>
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr8EnumResourceProductions TileResourceProductions()
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr8ResourceProductions TileResourceProductions()
         {
-            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr8EnumResourceProductions();
-            result.Create("0x0001010100010302000102020001050404020403020301000002050202060103");
+            var result = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Arr8ResourceProductions();
+            result.Create("0x0000000000000000000000000000000100000000000000000000000000000002000000000000000" +
+                    "00000000002000000000000000000000000000000000400000000000004000000000103000000000" +
+                    "00002000000000000000000000000000000000000000000020100000000000203");
             return result;
         }
         

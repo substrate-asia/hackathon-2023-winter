@@ -8,11 +8,11 @@ use crate::vec::Vec;
 /// <https://docs.substrate.io/reference/frame-pallets/>
 pub use pallet::*;
 
-//#[cfg(test)]
-//mod mock;
+#[cfg(test)]
+mod mock;
 
-//#[cfg(test)]
-//mod tests;
+#[cfg(test)]
+mod tests;
 
 //#[cfg(feature = "runtime-benchmarks")]
 //mod benchmarking;
@@ -41,13 +41,13 @@ pub mod pallet {
 
 	pub type GameId = [u8; 32];
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone)]
+	pub type TargetGoalHash = [u8; 16];
+
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, PartialEq, Copy, Clone, Debug)]
 	pub enum GameState {
 		Matchmaking,
 		Playing,
-		Finished {
-			winner: Option<u8>
-		}, // Ready to reward players
+		Finished { winner: Option<u8> }, // Ready to reward players
 	}
 
 	// Index used for referencing the TileCost
@@ -59,26 +59,29 @@ pub mod pallet {
 	#[scale_info(skip_type_params(T))]
 	pub struct Game<T: Config> {
 		pub state: GameState,
-
-		// These can be compressed to take only u8
-		pub round: u8,       // current round number
-		pub player_turn: u8, // Who is playing?
-		pub played: bool,
+		pub player_turn_and_played: u8,
 		last_played_block: <frame_system::Pallet<T> as crate::sp_runtime::traits::BlockNumberProvider>::BlockNumber,
-
-		// pub number_of_players: u8,
-		pub players: Players<T>, // Player ids
+		pub players: Players<T>, // Player AccountIds
 		pub selection: TileSelection<T>,
 		pub selection_size: u8,
+		pub round: u8,
 	}
 
 	impl<T: Config> GameProperties<T> for Game<T> {
 		fn get_played(&self) -> bool {
-			self.played
+			((self.player_turn_and_played & 0x80) >> 7) == 1
 		}
 
 		fn set_played(&mut self, played: bool) -> () {
-			self.played = played;
+			self.player_turn_and_played = (self.player_turn_and_played & 0x7F) | (played as u8) << 7
+		}
+
+		fn get_selection_size(&self) -> u8 {
+			self.selection_size
+		}
+
+		fn set_selection_size(&mut self, selection_size: u8) -> () {
+			self.selection_size = selection_size;
 		}
 
 		fn get_round(&self) -> u8 {
@@ -90,11 +93,11 @@ pub mod pallet {
 		}
 
 		fn get_player_turn(&self) -> u8 {
-			self.player_turn
+			self.player_turn_and_played & 0x7F
 		}
 
 		fn set_player_turn(&mut self, turn: u8) -> () {
-			self.player_turn = turn;
+			self.player_turn_and_played = (self.player_turn_and_played & 0x80) | turn;
 		}
 
 		fn borrow_players(&self) -> &Players<T> {
@@ -123,6 +126,8 @@ pub mod pallet {
 		Gold = 6,
 	}
 
+	pub const NUMBER_OF_RESOURCE_TYPES: usize = 7;
+
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Clone, Copy, PartialEq, Eq, Debug)]
 	pub enum TileType {
 		Empty = 0,
@@ -134,6 +139,9 @@ pub mod pallet {
 		Desert = 6,
 		Cave = 7,
 	}
+
+	pub const NUMBER_OF_TILE_TYPES: usize = 8;
+	pub const NUMBER_OF_LEVELS: usize = 4;
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq, Debug)]
 	pub struct ResourceAmount {
@@ -164,6 +172,8 @@ pub mod pallet {
 		Ypsilon = 3,
 	}
 
+	pub const NUMBER_OF_PATTERNS: usize = 8;
+
 	impl TilePattern {
 		pub fn from_u8(value: u8) -> Self {
 			match value {
@@ -176,16 +186,9 @@ pub mod pallet {
 	}
 
 	#[derive(Encode, TypeInfo)]
-	pub enum ResourceProductions {
-		None,
-		One(ResourceProduction),
-		Two(ResourceProduction, ResourceProduction),
-	}
-
-	#[derive(Encode, TypeInfo)]
-	pub struct ResourceProduction {
-		pub produces: ResourceAmount,
-		pub human_requirements: ResourceUnit,
+	pub struct ResourceProductions {
+		pub produces: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
+		pub human_requirements: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
 	}
 
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, Copy, Clone, PartialEq)]
@@ -195,11 +198,10 @@ pub mod pallet {
 		pub cost: ResourceAmount,
 	}
 
-	// This type will get changed to be more generic, but I did not have time now.
 	#[derive(Encode, Decode, TypeInfo, PartialEq, Clone, Debug)]
 	pub struct Move {
-		place_index: u8,
-		buy_index: u8, // We can fit buy_index and pay_type together
+		pub place_index: u8,
+		pub buy_index: u8,
 	}
 
 	// The board hex grid
@@ -209,9 +211,9 @@ pub mod pallet {
 	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
 	#[scale_info(skip_type_params(T))]
 	pub struct HexBoard<T: Config> {
-		pub resources: [ResourceUnit; 7],
+		pub resources: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
 		pub hex_grid: HexGrid<T>, // Board with all tiles
-		game_id: GameId,          // Game key
+		pub game_id: GameId,      // Game key
 	}
 
 	impl<T: Config> HexBoard<T> {
@@ -239,7 +241,7 @@ pub mod pallet {
 				stats.set_levels(
 					tile_type,
 					tile.get_level(),
-					stats.get_levels(tile_type, tile.get_level()).saturating_add(1),
+					stats.get_levels(tile_type, tile.get_level() as usize).saturating_add(1),
 				);
 
 				stats.set_patterns(
@@ -254,14 +256,18 @@ pub mod pallet {
 	}
 
 	pub struct BoardStats {
-		tiles: [u8; 8],
-		levels: [u8; 32],
-		patterns: [u8; 64],
+		tiles: [u8; NUMBER_OF_TILE_TYPES],
+		levels: [u8; NUMBER_OF_TILE_TYPES * NUMBER_OF_LEVELS],
+		patterns: [u8; NUMBER_OF_TILE_TYPES * NUMBER_OF_PATTERNS],
 	}
 
 	impl Default for BoardStats {
 		fn default() -> Self {
-			Self { tiles: [0; 8], levels: [0; 32], patterns: [0; 64] }
+			Self {
+				tiles: [0; NUMBER_OF_TILE_TYPES],
+				levels: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_LEVELS],
+				patterns: [0; NUMBER_OF_TILE_TYPES * NUMBER_OF_PATTERNS],
+			}
 		}
 	}
 
@@ -270,29 +276,34 @@ pub mod pallet {
 			self.tiles[tile_type as usize]
 		}
 
+		pub fn get_tiles_by_tile_index(&self, tile_type_index: usize) -> u8 {
+			self.tiles[tile_type_index]
+		}
+
 		pub fn set_tiles(&mut self, tile_type: TileType, value: u8) -> () {
 			self.tiles[tile_type as usize] = value;
 		}
 
-		pub fn get_levels(&self, tile_type: TileType, level: u8) -> u8 {
-			// level variations = 4
-			self.levels[(tile_type as usize).saturating_mul(4).saturating_add(level as usize)]
+		pub fn get_levels(&self, tile_type: TileType, level: usize) -> u8 {
+			self.levels[(tile_type as usize).saturating_mul(NUMBER_OF_LEVELS).saturating_add(level)]
 		}
 
 		pub fn set_levels(&mut self, tile_type: TileType, level: u8, value: u8) -> () {
-			// level variations = 4
-			self.levels[(tile_type as usize).saturating_mul(4).saturating_add(level as usize)] =
-				value;
+			self.levels[(tile_type as usize)
+				.saturating_mul(NUMBER_OF_LEVELS)
+				.saturating_add(level as usize)] = value;
 		}
 
 		pub fn get_patterns(&self, tile_type: TileType, pattern: TilePattern) -> u8 {
-			// pattern variations = 8
-			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)]
+			self.patterns[(tile_type as usize)
+				.saturating_mul(NUMBER_OF_PATTERNS)
+				.saturating_add(pattern as usize)]
 		}
 
 		pub fn set_patterns(&mut self, tile_type: TileType, pattern: TilePattern, value: u8) -> () {
-			// pattern variations = 8
-			self.patterns[(tile_type as usize).saturating_mul(8).saturating_add(pattern as usize)] = value;
+			self.patterns[(tile_type as usize)
+				.saturating_mul(NUMBER_OF_PATTERNS)
+				.saturating_add(pattern as usize)] = value;
 		}
 	}
 
@@ -339,7 +350,7 @@ pub mod pallet {
 		type TileCosts: Get<[TileCost<Self>; 15]>;
 
 		#[pallet::constant]
-		type TileResourceProductions: Get<[ResourceProductions; 8]>;
+		type TileResourceProductions: Get<[ResourceProductions; NUMBER_OF_TILE_TYPES]>;
 
 		#[pallet::constant]
 		type WaterPerHuman: Get<u8>;
@@ -376,6 +387,11 @@ pub mod pallet {
 	// Stores the HexBoard data assigned to a player key.
 	pub type HexBoardStorage<T: Config> =
 		StorageMap<_, Blake2_128Concat, T::AccountId, HexBoard<T>>;
+
+	#[pallet::storage]
+	// Stores the TargetGoalHash assigned to a player key.
+	pub type TargetGoalStorage<T: Config> =
+		StorageMap<_, Blake2_128Concat, T::AccountId, TargetGoalHash>;
 
 	// Pallets use events to inform users when important changes are made.
 	// https://docs.substrate.io/main-docs/build/events-errors/
@@ -522,12 +538,11 @@ pub mod pallet {
 			// Default Game Config
 			let mut game = Game {
 				state: GameState::Playing,
+				selection_size: 2,
 				round: 0,
-				played: false,
+				player_turn_and_played: 0,
 				last_played_block: current_block_number,
 				players: players.clone().try_into().map_err(|_| Error::<T>::InternalError)?,
-				player_turn: 0,
-				selection_size: 2,
 				selection: Default::default(),
 			};
 
@@ -825,7 +840,7 @@ impl<T: Config> Pallet<T> {
 
 		let offset = (current_block_number.saturated_into::<u128>() % 32).saturated_into::<u8>();
 
-		for i in 0..game.selection_size {
+		for i in 0..game.get_selection_size() {
 			new_selection.push(
 				selection_base[((i + offset) % 32) as usize].clone() %
 					T::TileCosts::get().len().saturated_into::<u8>(),
@@ -850,9 +865,9 @@ impl<T: Config> Pallet<T> {
 	) -> Result<(), sp_runtime::DispatchError> {
 		let selection_len = game.selection.len();
 
-		if selection_len <= (game.selection_size / 2) as usize {
-			if game.selection_size as u32 != T::MaxTileSelection::get() {
-				game.selection_size = game.selection_size.saturating_add(2);
+		if selection_len <= (game.get_selection_size() / 2) as usize {
+			if game.get_selection_size() as u32 != T::MaxTileSelection::get() {
+				game.set_selection_size(game.get_selection_size().saturating_add(2));
 			}
 
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
@@ -862,7 +877,7 @@ impl<T: Config> Pallet<T> {
 
 			let mut new_selection = game.selection.to_vec();
 
-			for i in selection_len..game.selection_size as usize {
+			for i in selection_len..game.get_selection_size() as usize {
 				new_selection.push(
 					selection_base[(i + offset) % 32].clone() %
 						T::TileCosts::get().len().saturated_into::<u8>(),
@@ -1134,43 +1149,41 @@ impl<T: Config> Pallet<T> {
 		hex_board.resources[ResourceType::Human as usize] >= T::TargetGoalHuman::get()
 	}
 
-	fn tile_produce(
+	fn produce(
 		hex_board: &mut HexBoard<T>,
-		tile_resource_productions: &ResourceProductions,
+		resource_productions: &ResourceProductions,
 		multiplier: u8,
 	) -> () {
-		match tile_resource_productions {
-			ResourceProductions::None => (),
-			ResourceProductions::One(production1) => {
-				Self::produce(hex_board, production1, multiplier);
-			},
-			ResourceProductions::Two(production1, production2) => {
-				Self::produce(hex_board, production1, multiplier);
-				Self::produce(hex_board, production2, multiplier);
-			},
-		}
-	}
-
-	fn produce(hex_board: &mut HexBoard<T>, production: &ResourceProduction, multiplier: u8) {
-		if production.human_requirements == 0 {
-			hex_board.resources[production.produces.resource_type as usize] +=
-				production.produces.amount.saturating_mul(multiplier);
-		} else {
-			hex_board.resources[production.produces.resource_type as usize] += cmp::min(
-				production.produces.amount,
-				hex_board.resources[ResourceType::Human as usize] / production.human_requirements,
-			)
-			.saturating_mul(multiplier);
+		for resource_type_index in 0..NUMBER_OF_RESOURCE_TYPES {
+			match (
+				resource_productions.produces[resource_type_index],
+				resource_productions.human_requirements[resource_type_index],
+			) {
+				(0, _) => (),
+				(produces, 0) =>
+					hex_board.resources[resource_type_index] = Self::saturate_at_99(
+						hex_board.resources[resource_type_index]
+							.saturating_add(produces.saturating_mul(multiplier)),
+					),
+				(produces, human_requirement) =>
+					hex_board.resources[resource_type_index] = Self::saturate_at_99(
+						hex_board.resources[resource_type_index].saturating_add(cmp::min(
+							produces.saturating_mul(multiplier),
+							hex_board.resources[ResourceType::Human as usize] / human_requirement,
+						)),
+					),
+			}
 		}
 	}
 
 	fn evaluate_board(hex_board: &mut HexBoard<T>) -> () {
 		let board_stats: BoardStats = hex_board.get_stats();
 
-		hex_board.resources[ResourceType::Mana as usize] = hex_board.resources
-			[ResourceType::Mana as usize]
-			.saturating_add(hex_board.resources[ResourceType::Human as usize] / 3)
-			.saturating_add(board_stats.get_tiles(TileType::Home));
+		hex_board.resources[ResourceType::Mana as usize] = Self::saturate_at_99(
+			hex_board.resources[ResourceType::Mana as usize]
+				.saturating_add(hex_board.resources[ResourceType::Human as usize] / 3)
+				.saturating_add(board_stats.get_tiles(TileType::Home)),
+		);
 
 		let food_and_water_eaten = cmp::min(
 			hex_board.resources[ResourceType::Food as usize].saturating_mul(T::FoodPerHuman::get()),
@@ -1180,31 +1193,28 @@ impl<T: Config> Pallet<T> {
 
 		let mut home_weighted: u8 = 0;
 
-		for level in 0..4 {
+		for level in 0..NUMBER_OF_LEVELS {
 			home_weighted = home_weighted.saturating_add(
-				(level + 1u8).saturating_mul(board_stats.get_levels(TileType::Home, level)),
+				(level as u8 + 1u8).saturating_mul(board_stats.get_levels(TileType::Home, level)),
 			);
 		}
 
-		let new_humans = cmp::max(
+		let new_humans = Self::saturate_at_99(cmp::max(
 			cmp::min(
 				board_stats.get_tiles(TileType::Home).saturating_add(food_and_water_eaten),
 				home_weighted.saturating_mul(T::HomePerHumans::get()),
 			),
 			1,
-		);
+		));
 
 		let tile_resource_productions = T::TileResourceProductions::get();
 
-		for tile_type in [
-			TileType::Grass,
-			TileType::Water,
-			TileType::Mountain,
-			TileType::Tree,
-			TileType::Desert,
-			TileType::Cave,
-		] {
-			Self::tile_produce(hex_board, &tile_resource_productions[tile_type as usize], board_stats.get_tiles(tile_type));
+		for tile_type_index in 0..NUMBER_OF_TILE_TYPES {
+			Self::produce(
+				hex_board,
+				&tile_resource_productions[tile_type_index],
+				board_stats.get_tiles_by_tile_index(tile_type_index),
+			);
 		}
 
 		hex_board.resources[ResourceType::Human as usize] = new_humans;
@@ -1304,11 +1314,21 @@ impl<T: Config> Pallet<T> {
 			_ => false,
 		}
 	}
+
+	fn saturate_at_99(x: u8) -> u8 {
+		cmp::min(x, 99)
+	}
+
+	/// Set the block number to something in particular. Can be used as an alternative to
+	/// `initialize` for tests that don't need to bother with the other environment entries.
+	#[cfg(any(feature = "std", feature = "runtime-benchmarks", test))]
+	pub fn set_hex_board(player: AccountId<T>, hex_board: HexBoard<T>) {
+		<HexBoardStorage<T>>::set(player, Some(hex_board));
+	}
 }
 
 // Custom trait for Tile definition
 pub trait GetTileInfo {
-
 	fn get_level(&self) -> u8;
 	fn set_level(&mut self, level: u8) -> ();
 
@@ -1341,6 +1361,9 @@ trait GameProperties<T: Config> {
 
 	fn borrow_players(&self) -> &Players<T>;
 
+	fn get_selection_size(&self) -> u8;
+	fn set_selection_size(&mut self, selection_size: u8) -> ();
+
 	fn next_turn(&mut self) -> () {
 		let player_turn = self.get_player_turn();
 
@@ -1354,7 +1377,7 @@ trait GameProperties<T: Config> {
 			self.set_round(round);
 
 			if round > T::MaxRounds::get() {
-				self.set_state(GameState::Finished{ winner: None });
+				self.set_state(GameState::Finished { winner: None });
 			}
 		}
 	}

@@ -30,19 +30,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         private Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumGameState _state;
         
         /// <summary>
-        /// >> round
+        /// >> player_turn_and_played
         /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _round;
-        
-        /// <summary>
-        /// >> player_turn
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.U8 _playerTurn;
-        
-        /// <summary>
-        /// >> played
-        /// </summary>
-        private Substrate.NetApi.Model.Types.Primitive.Bool _played;
+        private Substrate.NetApi.Model.Types.Primitive.U8 _playerTurnAndPlayed;
         
         /// <summary>
         /// >> last_played_block
@@ -64,6 +54,11 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// </summary>
         private Substrate.NetApi.Model.Types.Primitive.U8 _selectionSize;
         
+        /// <summary>
+        /// >> round
+        /// </summary>
+        private Substrate.NetApi.Model.Types.Primitive.U8 _round;
+        
         public Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumGameState State
         {
             get
@@ -76,39 +71,15 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.NetApi.Model.Types.Primitive.U8 Round
+        public Substrate.NetApi.Model.Types.Primitive.U8 PlayerTurnAndPlayed
         {
             get
             {
-                return this._round;
+                return this._playerTurnAndPlayed;
             }
             set
             {
-                this._round = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.U8 PlayerTurn
-        {
-            get
-            {
-                return this._playerTurn;
-            }
-            set
-            {
-                this._playerTurn = value;
-            }
-        }
-        
-        public Substrate.NetApi.Model.Types.Primitive.Bool Played
-        {
-            get
-            {
-                return this._played;
-            }
-            set
-            {
-                this._played = value;
+                this._playerTurnAndPlayed = value;
             }
         }
         
@@ -160,6 +131,18 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
+        public Substrate.NetApi.Model.Types.Primitive.U8 Round
+        {
+            get
+            {
+                return this._round;
+            }
+            set
+            {
+                this._round = value;
+            }
+        }
+        
         public override string TypeName()
         {
             return "Game";
@@ -169,13 +152,12 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         {
             var result = new List<byte>();
             result.AddRange(State.Encode());
-            result.AddRange(Round.Encode());
-            result.AddRange(PlayerTurn.Encode());
-            result.AddRange(Played.Encode());
+            result.AddRange(PlayerTurnAndPlayed.Encode());
             result.AddRange(LastPlayedBlock.Encode());
             result.AddRange(Players.Encode());
             result.AddRange(Selection.Encode());
             result.AddRange(SelectionSize.Encode());
+            result.AddRange(Round.Encode());
             return result.ToArray();
         }
         
@@ -184,12 +166,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             State = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumGameState();
             State.Decode(byteArray, ref p);
-            Round = new Substrate.NetApi.Model.Types.Primitive.U8();
-            Round.Decode(byteArray, ref p);
-            PlayerTurn = new Substrate.NetApi.Model.Types.Primitive.U8();
-            PlayerTurn.Decode(byteArray, ref p);
-            Played = new Substrate.NetApi.Model.Types.Primitive.Bool();
-            Played.Decode(byteArray, ref p);
+            PlayerTurnAndPlayed = new Substrate.NetApi.Model.Types.Primitive.U8();
+            PlayerTurnAndPlayed.Decode(byteArray, ref p);
             LastPlayedBlock = new Substrate.NetApi.Model.Types.Primitive.U32();
             LastPlayedBlock.Decode(byteArray, ref p);
             Players = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5();
@@ -198,6 +176,8 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             Selection.Decode(byteArray, ref p);
             SelectionSize = new Substrate.NetApi.Model.Types.Primitive.U8();
             SelectionSize.Decode(byteArray, ref p);
+            Round = new Substrate.NetApi.Model.Types.Primitive.U8();
+            Round.Decode(byteArray, ref p);
             var bytesLength = p - start;
             TypeSize = bytesLength;
             Bytes = new byte[bytesLength];
