@@ -1,7 +1,6 @@
 ﻿using Substrate.Hexalem.Engine;
 using UnityEngine;
 using UnityEngine.UIElements;
-using Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet;
 using Substrate.Hexalem.NET.NetApiExt.Generated.Storage;
 
 namespace Assets.Scripts
@@ -40,7 +39,7 @@ namespace Assets.Scripts
 
         public static string TileDescription(Substrate.Hexalem.Engine.TileType tileType)
         {
-            var cost = $"<color={ResourceTypeColor(ResourceType.Mana)}>1 Mana</color>";
+            var cost = $"1{ResourceTypIcon(RessourceType.Mana)}";
 
             var hexalemConstants = new HexalemModuleConstants();
 
@@ -58,7 +57,7 @@ namespace Assets.Scripts
                     continue;
                 }
 
-                ResourceType resourceType = (ResourceType)i;
+                RessourceType resourceType = (RessourceType)i;
 
                 if (produce != "")
                 {
@@ -67,12 +66,12 @@ namespace Assets.Scripts
 
                 if (rawHumanRequirements[i].Value == 0)
                 {
-                    produce += $"<color={ResourceTypeColor(resourceType)}>{rawProduces[i].Value} {resourceType}</color>";
+                    produce += $"{rawProduces[i].Value} {ResourceTypIcon(resourceType)}";
                 }
                 else
                 {
-                    produce += $"<color={ResourceTypeColor(resourceType)}>{rawProduces[i].Value} {resourceType}" +
-                        $"</color> but needs <color={ResourceTypeColor(ResourceType.Human)}>{rawHumanRequirements[i].Value} {ResourceType.Human}</color>";
+                    produce += $"{rawProduces[i].Value}{ResourceTypIcon(resourceType)}" +
+                        $" but needs {rawHumanRequirements[i].Value}{ResourceTypIcon(RessourceType.Humans)}";
                 }
             }
             
@@ -80,24 +79,24 @@ namespace Assets.Scripts
 
             return $"The {tileType} tile costs {cost}.\r\n\r\n{produceString}";
         }
-        public static string ResourceTypeColor(ResourceType resourceType)
+        public static string ResourceTypIcon(RessourceType resourceType)
         {
             switch (resourceType)
             {
-                case ResourceType.Mana:
-                    return "blue";
-                case ResourceType.Human:
-                    return "#CFB997";
-                case ResourceType.Food:
-                    return "#7CFC00";
-                case ResourceType.Water:
-                    return "#ADD8E6";
-                case ResourceType.Wood:
-                    return "#964B00";
-                case ResourceType.Stone:
-                    return "#888888";
-                case ResourceType.Gold:
-                    return "#DBAC34";
+                case RessourceType.Mana:
+                    return "<sprite=\"icon_res_mana\" index=0>";
+                case RessourceType.Humans:
+                    return "<sprite=\"icon_res_human\" index=0>";
+                case RessourceType.Water:
+                    return "<sprite=\"icon_res_food\" index=0>";
+                case RessourceType.Food:
+                    return "<sprite=\"icon_res_water\" index=0>";
+                case RessourceType.Wood:
+                    return "<sprite=\"icon_res_wood\" index=0>";
+                case RessourceType.Stone:
+                    return "<sprite=\"icon_res_stone\" index=0>";
+                case RessourceType.Gold:
+                    return "<sprite=\"icon_res_gold\" index=0>";
             }
             return "";
         }
