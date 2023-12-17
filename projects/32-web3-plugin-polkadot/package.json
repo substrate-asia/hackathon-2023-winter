@@ -1,6 +1,6 @@
 {
   "name": "@conx3/web3-plugin-polkadot",
-  "version": "0.0.1-alpha.3",
+  "version": "0.0.1-alpha.4",
   "description": "web3.js plugin for polkadot, kusama and substrate nodes' custom RPC methods. This is an ethereum-like rpc api for polkadot. It is meant to be an alternative to @polkadot/api package.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
