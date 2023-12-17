@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.sr25519
     
     
     /// <summary>
-    /// >> 78 - Composite[sp_core.sr25519.Public]
+    /// >> 93 - Composite[sp_core.sr25519.Public]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Public : BaseType

@@ -138,7 +138,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(players.Encode());
             byteArray.AddRange(grid_size.Encode());
-            return new Method(8, "HexalemModule", 0, "create_game", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 0, "create_game", byteArray.ToArray());
         }
         
         /// <summary>
@@ -149,7 +149,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(move_played.Encode());
-            return new Method(8, "HexalemModule", 1, "play", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 1, "play", byteArray.ToArray());
         }
         
         /// <summary>
@@ -160,7 +160,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(place_index.Encode());
-            return new Method(8, "HexalemModule", 2, "upgrade", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 2, "upgrade", byteArray.ToArray());
         }
         
         /// <summary>
@@ -170,7 +170,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public static Method FinishTurn()
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
-            return new Method(8, "HexalemModule", 3, "finish_turn", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 3, "finish_turn", byteArray.ToArray());
         }
         
         /// <summary>
@@ -181,7 +181,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(game_id.Encode());
-            return new Method(8, "HexalemModule", 4, "force_finish_turn", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 4, "force_finish_turn", byteArray.ToArray());
         }
         
         /// <summary>
@@ -191,7 +191,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public static Method ReceiveReward()
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
-            return new Method(8, "HexalemModule", 5, "receive_reward", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 5, "receive_reward", byteArray.ToArray());
         }
         
         /// <summary>
@@ -202,7 +202,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(game_id.Encode());
-            return new Method(8, "HexalemModule", 6, "root_delete_game", byteArray.ToArray());
+            return new Method(21, "HexalemModule", 6, "root_delete_game", byteArray.ToArray());
         }
     }
     

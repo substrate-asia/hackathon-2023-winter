@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.extension
     
     
     /// <summary>
-    /// >> 153 - Composite[frame_system.extensions.check_mortality.CheckMortality]
+    /// >> 439 - Composite[frame_system.extensions.check_mortality.CheckMortality]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class CheckMortality : BaseType

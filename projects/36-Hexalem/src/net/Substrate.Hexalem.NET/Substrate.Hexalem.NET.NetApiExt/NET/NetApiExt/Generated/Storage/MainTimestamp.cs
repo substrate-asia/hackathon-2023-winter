@@ -36,7 +36,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         
         /// <summary>
         /// >> NowParams
-        ///  Current time for the current block.
+        ///  The current time for the current block.
         /// </summary>
         public static string NowParams()
         {
@@ -54,7 +54,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         
         /// <summary>
         /// >> Now
-        ///  Current time for the current block.
+        ///  The current time for the current block.
         /// </summary>
         public async Task<Substrate.NetApi.Model.Types.Primitive.U64> Now(CancellationToken token)
         {
@@ -65,7 +65,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         
         /// <summary>
         /// >> DidUpdateParams
-        ///  Did the timestamp get updated in this block?
+        ///  Whether the timestamp has been updated in this block.
+        /// 
+        ///  This value is updated to `true` upon successful submission of a timestamp by a node.
+        ///  It is then checked at the end of each block execution in the `on_finalize` hook.
         /// </summary>
         public static string DidUpdateParams()
         {
@@ -83,7 +86,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         
         /// <summary>
         /// >> DidUpdate
-        ///  Did the timestamp get updated in this block?
+        ///  Whether the timestamp has been updated in this block.
+        /// 
+        ///  This value is updated to `true` upon successful submission of a timestamp by a node.
+        ///  It is then checked at the end of each block execution in the `on_finalize` hook.
         /// </summary>
         public async Task<Substrate.NetApi.Model.Types.Primitive.Bool> DidUpdate(CancellationToken token)
         {
@@ -104,7 +110,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(now.Encode());
-            return new Method(1, "Timestamp", 0, "set", byteArray.ToArray());
+            return new Method(2, "Timestamp", 0, "set", byteArray.ToArray());
         }
     }
     
@@ -113,15 +119,17 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         
         /// <summary>
         /// >> MinimumPeriod
-        ///  The minimum period between blocks. Beware that this is different to the *expected*
-        ///  period that the block production apparatus provides. Your chosen consensus system will
-        ///  generally work with this to determine a sensible block time. e.g. For Aura, it will be
-        ///  double this period on default settings.
+        ///  The minimum period between blocks.
+        /// 
+        ///  Be aware that this is different to the *expected* period that the block production
+        ///  apparatus provides. Your chosen consensus system will generally work with this to
+        ///  determine a sensible block time. For example, in the Aura pallet it will be double this
+        ///  period on default settings.
         /// </summary>
         public Substrate.NetApi.Model.Types.Primitive.U64 MinimumPeriod()
         {
             var result = new Substrate.NetApi.Model.Types.Primitive.U64();
-            result.Create("0xB80B000000000000");
+            result.Create("0x7017000000000000");
             return result;
         }
     }

@@ -8,8 +8,8 @@ include!(concat!(env!("OUT_DIR"), "/wasm_binary.rs"));
 
 use pallet_grandpa::AuthorityId as GrandpaId;
 use pallet_hexalem::{
-	GetTileInfo, ResourceAmount, ResourceProductions, ResourceType,
-	ResourceUnit, TileCost, TilePattern, TileType, NUMBER_OF_TILE_TYPES, NUMBER_OF_RESOURCE_TYPES,
+	GetTileInfo, ResourceAmount, ResourceProductions, ResourceType, ResourceUnit, TileCost,
+	TilePattern, TileType, NUMBER_OF_RESOURCE_TYPES, NUMBER_OF_TILE_TYPES,
 };
 use parity_scale_codec::{Decode, Encode, MaxEncodedLen};
 use scale_info::TypeInfo;
@@ -77,17 +77,17 @@ impl GetTileInfo for HexalemTile {
 		(self.0 >> 6) & 0x3
 	}
 
-    fn set_level(&mut self, level: u8) {
-        self.0 = (self.0 & 0x3F) | (level << 6);
-    }
+	fn set_level(&mut self, level: u8) {
+		self.0 = (self.0 & 0x3F) | (level << 6);
+	}
 
 	fn get_pattern(&self) -> TilePattern {
 		TilePattern::from_u8(self.0 & 0x7)
 	}
 
-    fn set_pattern(&mut self, pattern: TilePattern) {
-        self.0 = (self.0 & 0xF8) | (pattern as u8);
-    }
+	fn set_pattern(&mut self, pattern: TilePattern) {
+		self.0 = (self.0 & 0xF8) | (pattern as u8);
+	}
 
 	fn get_home() -> Self {
 		Self(8) // Home level 0
@@ -95,10 +95,10 @@ impl GetTileInfo for HexalemTile {
 }
 
 impl HexalemTile {
-    pub fn new(tile_type: TileType, level: u8, pattern: TilePattern) -> Self {
-        let encoded = ((tile_type as u8) << 3) | ((level & 0x3) << 6) | (pattern as u8 & 0x7);
-        Self(encoded)
-    }
+	pub fn new(tile_type: TileType, level: u8, pattern: TilePattern) -> Self {
+		let encoded = ((tile_type as u8) << 3) | ((level & 0x3) << 6) | (pattern as u8 & 0x7);
+		Self(encoded)
+	}
 }
 
 impl Default for HexalemTile {
@@ -488,7 +488,7 @@ construct_runtime!(
 		TransactionPayment: pallet_transaction_payment = 5,
 		Sudo: pallet_sudo = 6,
 		Utility: pallet_utility = 7,
-		HexalemModule: pallet_hexalem = 8,
+		HexalemModule: pallet_hexalem = 21,
 	}
 );
 

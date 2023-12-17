@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.extension
     
     
     /// <summary>
-    /// >> 150 - Composite[frame_system.extensions.check_spec_version.CheckSpecVersion]
+    /// >> 436 - Composite[frame_system.extensions.check_spec_version.CheckSpecVersion]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class CheckSpecVersion : BaseType

@@ -32,7 +32,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system
         /// <summary>
         /// >> event
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeEvent _event;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeEvent _event;
         
         /// <summary>
         /// >> topics
@@ -51,7 +51,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeEvent Event
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeEvent Event
         {
             get
             {
@@ -94,7 +94,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system
             var start = p;
             Phase = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.EnumPhase();
             Phase.Decode(byteArray, ref p);
-            Event = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeEvent();
+            Event = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeEvent();
             Event.Decode(byteArray, ref p);
             Topics = new Substrate.NetApi.Model.Types.Base.BaseVec<Substrate.Hexalem.NET.NetApiExt.Generated.Model.primitive_types.H256>();
             Topics.Decode(byteArray, ref p);

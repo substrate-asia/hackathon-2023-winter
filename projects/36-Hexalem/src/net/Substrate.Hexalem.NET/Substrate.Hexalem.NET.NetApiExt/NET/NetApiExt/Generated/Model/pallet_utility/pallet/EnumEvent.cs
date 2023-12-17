@@ -32,7 +32,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_utility.pallet
     }
     
     /// <summary>
-    /// >> 42 - Variant[pallet_utility.pallet.Event]
+    /// >> 36 - Variant[pallet_utility.pallet.Event]
     /// The `Event` enum of this pallet
     /// </summary>
     public sealed class EnumEvent : BaseEnumExt<Event, BaseTuple<Substrate.NetApi.Model.Types.Primitive.U32, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.EnumDispatchError>, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.EnumDispatchError, Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.EnumResult>

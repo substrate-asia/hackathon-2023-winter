@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_version
     
     
     /// <summary>
-    /// >> 68 - Composite[sp_version.RuntimeVersion]
+    /// >> 170 - Composite[sp_version.RuntimeVersion]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class RuntimeVersion : BaseType

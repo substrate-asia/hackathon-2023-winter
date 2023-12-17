@@ -70,23 +70,23 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> sudo
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method Sudo(Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call)
+        public static Method Sudo(Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(call.Encode());
-            return new Method(6, "Sudo", 0, "sudo", byteArray.ToArray());
+            return new Method(4, "Sudo", 0, "sudo", byteArray.ToArray());
         }
         
         /// <summary>
         /// >> sudo_unchecked_weight
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method SudoUncheckedWeight(Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight weight)
+        public static Method SudoUncheckedWeight(Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call, Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_weights.weight_v2.Weight weight)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(call.Encode());
             byteArray.AddRange(weight.Encode());
-            return new Method(6, "Sudo", 1, "sudo_unchecked_weight", byteArray.ToArray());
+            return new Method(4, "Sudo", 1, "sudo_unchecked_weight", byteArray.ToArray());
         }
         
         /// <summary>
@@ -97,19 +97,19 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(@new.Encode());
-            return new Method(6, "Sudo", 2, "set_key", byteArray.ToArray());
+            return new Method(4, "Sudo", 2, "set_key", byteArray.ToArray());
         }
         
         /// <summary>
         /// >> sudo_as
         /// Contains a variant per dispatchable extrinsic that this pallet has.
         /// </summary>
-        public static Method SudoAs(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.multiaddress.EnumMultiAddress who, Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime.EnumRuntimeCall call)
+        public static Method SudoAs(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_runtime.multiaddress.EnumMultiAddress who, Substrate.Hexalem.NET.NetApiExt.Generated.Model.container_chain_template_simple_runtime.EnumRuntimeCall call)
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(who.Encode());
             byteArray.AddRange(call.Encode());
-            return new Method(6, "Sudo", 3, "sudo_as", byteArray.ToArray());
+            return new Method(4, "Sudo", 3, "sudo_as", byteArray.ToArray());
         }
     }
     
