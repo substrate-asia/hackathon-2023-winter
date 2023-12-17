@@ -7,16 +7,16 @@ describe('PolkadotPlugin Tests', () => {
 
     beforeAll(async () => {
       web3 = new Web3('http://127.0.0.1:9944/');
-      expect(web3.polkadot).toBeUndefined();
+      expect(web3.polka).toBeUndefined();
       web3.registerPlugin(new PolkadotPlugin());
-      expect(web3.polkadot).toBeDefined();
+      expect(web3.polka).toBeDefined();
     });
 
     afterAll(() => {});
 
     it('should call chain.getBlock method', async () => {
       // const hash = "0x6277848db56df4936213f3c82d4b7181291674a9376deb22339dc504d33b8851";
-      const response = await web3.polkadot.chain.getBlock(/*hash*/);
+      const response = await web3.polka.substrate.chain.getBlock(/*hash*/);
       expect(response).toBeDefined();
       expect(response.block).toBeDefined();
       expect(typeof response.block.header.stateRoot).toBe('string');
@@ -45,9 +45,9 @@ describe('PolkadotPlugin Tests', () => {
     });
 
     it('should chain.getBlock() equals chain.getBlock(chain.getBlockHash(latestBlocHash))', async () => {
-      const latestBlock = await web3.polkadot.chain.getBlock();
-      const latestBlocHash = await web3.polkadot.chain.getBlockHash(latestBlock.block.header.number.toString());
-      const blockByLatestBlocHash = await web3.polkadot.chain.getBlock(latestBlocHash);
+      const latestBlock = await web3.polka.substrate.chain.getBlock();
+      const latestBlocHash = await web3.polka.substrate.chain.getBlockHash(latestBlock.block.header.number.toString());
+      const blockByLatestBlocHash = await web3.polka.substrate.chain.getBlock(latestBlocHash);
 
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);

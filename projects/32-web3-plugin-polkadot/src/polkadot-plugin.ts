@@ -1,14 +1,16 @@
 import { Web3PluginBase } from 'web3';
 
-import { RpcApiFlattened, RpcApiSimplified } from './web3js-polkadot-api';
-import { RpcList } from './interfaces/substrate/augment-api-rpc';
+import { KusamaRpcApiSimplified, PolkadotRpcApiSimplified, RpcApiFlattened, SubstrateRpcApiSimplified } from './web3js-polkadot-api';
+import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
+import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
+import { PolkadotRpcList } from './interfaces/polkadot/augment-api-rpc';
+
 
 export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
-  // implements RpcApiSimplified
-  public pluginNamespace = 'polkadot';
+  public pluginNamespace = 'polka';
 
   /**
-   * Dynamically create Rpc callers organized inside namespaces and assign them to the class
+   * Dynamically create Rpc callers organized inside namespaces and return them
    * This is equivalent to having a code like this for every endpoint:
    * ```  
       public get chain(): RpcApiSimplified["chain"] {
@@ -31,7 +33,8 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
       ...
     * ```
    */
-  private createRpcMethods(rpcList: typeof RpcList) {
+  private createRpcMethods(rpcList: Record<string, any>) {
+    const returnedRpcMethods: Record<string, any> = {}
     const objectKeys = Object.keys(rpcList) as Array<keyof typeof rpcList>;
     for (let rpcNamespace of objectKeys) {
       const endpointNames = rpcList[rpcNamespace];
@@ -43,8 +46,9 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
             params: [args],
           });
       }
-      (this as unknown as RpcApiSimplified)[rpcNamespace] = endPoints;
+      returnedRpcMethods[rpcNamespace] = endPoints;
     }
+    return returnedRpcMethods;
   }
 
   // The following commented code contains experiments with using index signature instead of using the method `createRpcMethods`.
@@ -76,10 +80,16 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
   //   }
   // };
 
+  public polkadot: SubstrateRpcApiSimplified;
+  public kusama: SubstrateRpcApiSimplified;
+  public substrate: SubstrateRpcApiSimplified;
+
   constructor() {
     super();
 
-    this.createRpcMethods(RpcList);
+    this.polkadot = this.createRpcMethods(PolkadotRpcList) as PolkadotRpcApiSimplified;
+    this.kusama = this.createRpcMethods(KusamaRpcList) as KusamaRpcApiSimplified;
+    this.substrate = this.createRpcMethods(SubstrateRpcList) as SubstrateRpcApiSimplified;
   }
 }
 
@@ -87,6 +97,6 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
 declare module 'web3' {
   interface Web3Context {
     // This seems a bit hacky. Revisit this in the future and possibly use generics instead.
-    polkadot: PolkadotPlugin & RpcApiSimplified;
+    polka : PolkadotPlugin
   }
 }
