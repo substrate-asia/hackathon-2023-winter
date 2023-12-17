@@ -230,15 +230,19 @@ namespace Assets.Scripts
             var imgManaEnough = tileCard.Q<VisualElement>("ImgManaEnough");
             var imgManaNotEnough = tileCard.Q<VisualElement>("ImgManaNotEnough");
 
+            var lblManaCost = tileCard.Q<VisualElement>("LblManaCost");
+
             if (player[RessourceType.Mana] > 0) // Change with HaveEnoughRessource or smth similar
             {
                 imgManaEnough.style.display = DisplayStyle.Flex;
                 imgManaNotEnough.style.display = DisplayStyle.None;
+                lblManaCost.style.color = GameConstant.ColorDark;
             }
             else
             {
                 imgManaEnough.style.display = DisplayStyle.None;
                 imgManaNotEnough.style.display = DisplayStyle.Flex;
+                lblManaCost.style.color = GameConstant.PastelRed;
             }
         }
     }
