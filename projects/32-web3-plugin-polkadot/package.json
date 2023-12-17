@@ -17,17 +17,25 @@
     "web3.js",
     "blockchain"
   ],
-  "homepage": "https://github.com/web3/web3.js-plugin-template#readme",
+  "homepage": "https://github.com/conx3/web3-plugin-polkadot#readme",
   "bugs": {
-    "url": "https://github.com/web3/web3.js-plugin-template/issues"
+    "url": "https://github.com/conx3/web3-plugin-polkadot/issues"
   },
   "scripts": {
     "lint": "eslint '{src,test}/**/*.ts'",
+    "lint-fix": "eslint '{src,test}/**/*.ts' --fix",
     "build": "tsc --project tsconfig.build.json",
     "test": "jest --config=./test/jest.config.js",
-    "generate-types": "yarn generate:defs && yarn generate:meta",
-    "generate:defs": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package sample-polkadotjs-typegen/interfaces --input ./src/interfaces --endpoint ./edgeware.json",
-    "generate:meta": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package sample-polkadotjs-typegen/interfaces --endpoint ./edgeware.json --output ./src/interfaces"
+    "generate:types": "yarn generate:types:polkadot && yarn generate:types:kusama && yarn generate:types:substrate",
+    "generate:types:polkadot": "yarn generate:defs:polkadot && yarn generate:meta:polkadot",
+    "generate:defs:polkadot": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @conx3/web3-plugin-polkadot/polkadot/interfaces --input ./src/interfaces/polkadot --endpoint ./static/type-generation/edgeware-polkadot.json",
+    "generate:meta:polkadot": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @conx3/web3-plugin-polkadot/polkadot/interfaces --endpoint ./static/type-generation/edgeware-polkadot.json --output ./src/interfaces/polkadot",
+    "generate:types:kusama": "yarn generate:defs:kusama && yarn generate:meta:kusama",
+    "generate:defs:kusama": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @conx3/web3-plugin-polkadot/kusama/interfaces --input ./src/interfaces/kusama --endpoint ./static/type-generation/edgeware-kusama.json",
+    "generate:meta:kusama": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @conx3/web3-plugin-polkadot/kusama/interfaces --endpoint ./static/type-generation/edgeware-kusama.json --output ./src/interfaces/kusama",
+    "generate:types:substrate": "yarn generate:defs:substrate && yarn generate:meta:substrate",
+    "generate:defs:substrate": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @conx3/web3-plugin-polkadot/substrate/interfaces --input ./src/interfaces/substrate --endpoint ./static/type-generation/edgeware-substrate.json",
+    "generate:meta:substrate": "ts-node --skip-project node_modules/.bin/polkadot-types-from-chain --package @conx3/web3-plugin-polkadot/substrate/interfaces --endpoint ./static/type-generation/edgeware-substrate.json --output ./src/interfaces/substrate"
   },
   "license": "MIT",
   "repository": {

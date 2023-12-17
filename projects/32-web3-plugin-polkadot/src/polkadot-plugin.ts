@@ -1,7 +1,7 @@
 import { Web3PluginBase } from 'web3';
 
 import { RpcApiFlattened, RpcApiSimplified } from './web3js-polkadot-api';
-import { RpcList } from './interfaces/augment-api-rpc';
+import { RpcList } from './interfaces/substrate/augment-api-rpc';
 
 export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
   // implements RpcApiSimplified
@@ -86,7 +86,7 @@ export class PolkadotPlugin extends Web3PluginBase<RpcApiFlattened> {
 // Module Augmentation
 declare module 'web3' {
   interface Web3Context {
-    // it seems a bit hacky. Revisit this in the future and possibly use generics instead.
+    // This seems a bit hacky. Revisit this in the future and possibly use generics instead.
     polkadot: PolkadotPlugin & RpcApiSimplified;
   }
 }
