@@ -4,6 +4,7 @@ const router = new Router();
 const routes = [
   require("./features/round/routes"),
   require("./features/address/routes"),
+  require("./features/tags/routes"),
 ];
 
 module.exports = (app) => {

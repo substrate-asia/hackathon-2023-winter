@@ -1,3 +1,4 @@
+const { tags } = require("./tags");
 const chains = {
   collectives: "collectives",
   polkadot: "polkadot",
@@ -5,4 +6,5 @@ const chains = {
 
 module.exports = {
   chains,
+  tags,
 }
