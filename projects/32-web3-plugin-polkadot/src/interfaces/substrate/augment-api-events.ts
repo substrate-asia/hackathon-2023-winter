@@ -14,7 +14,7 @@ import { FrameSupportTokensMiscBalanceStatus, SpConsensusGrandpaAppPublic, SpRun
 export type __AugmentedEvent<ApiType extends ApiTypes> = AugmentedEvent<ApiType>;
 
 declare module '@polkadot/api-base/types/events' {
-  interface AugmentedEvents<ApiType extends ApiTypes> {
+  interface SubstrateAugmentedEvents<ApiType extends ApiTypes> {
     balances: {
       /**
        * A balance was set by root.

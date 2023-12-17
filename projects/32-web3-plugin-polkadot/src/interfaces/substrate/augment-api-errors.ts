@@ -10,7 +10,7 @@ import type { ApiTypes, AugmentedError } from '@polkadot/api-base/types';
 export type __AugmentedError<ApiType extends ApiTypes> = AugmentedError<ApiType>;
 
 declare module '@polkadot/api-base/types/errors' {
-  interface AugmentedErrors<ApiType extends ApiTypes> {
+  interface SubstrateAugmentedErrors<ApiType extends ApiTypes> {
     balances: {
       /**
        * Beneficiary account must pre-exist.

@@ -13,7 +13,7 @@ import { FrameSystemLimitsBlockLength, FrameSystemLimitsBlockWeights, SpWeightsR
 export type __AugmentedConst<ApiType extends ApiTypes> = AugmentedConst<ApiType>;
 
 declare module '@polkadot/api-base/types/consts' {
-  interface AugmentedConsts<ApiType extends ApiTypes> {
+  interface SubstrateAugmentedConsts<ApiType extends ApiTypes> {
     balances: {
       /**
        * The minimum amount required to keep an account open. MUST BE GREATER THAN ZERO!

@@ -1040,8 +1040,8 @@ declare module '@polkadot/types/lookup' {
   /** @name SpConsensusBeefyPayload (104) */
   interface SpConsensusBeefyPayload extends Vec<ITuple<[U8aFixed, Bytes]>> {}
 
-  /** @name PalletSessionCall (108) */
-  interface PalletSessionCall extends Enum {
+  /** @name KusamaPalletSessionCall (108) */
+  interface KusamaPalletSessionCall extends Enum {
     readonly isSetKeys: boolean;
     readonly asSetKeys: {
       readonly keys_: StagingKusamaRuntimeSessionKeys;
@@ -1071,8 +1071,8 @@ declare module '@polkadot/types/lookup' {
   /** @name SpAuthorityDiscoveryAppPublic (112) */
   interface SpAuthorityDiscoveryAppPublic extends SpCoreSr25519Public {}
 
-  /** @name PalletGrandpaCall (113) */
-  interface PalletGrandpaCall extends Enum {
+  /** @name KusamaPalletGrandpaCall (113) */
+  interface KusamaPalletGrandpaCall extends Enum {
     readonly isReportEquivocation: boolean;
     readonly asReportEquivocation: {
       readonly equivocationProof: SpConsensusGrandpaEquivocationProof;
@@ -1261,8 +1261,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'None' | 'Locked1x' | 'Locked2x' | 'Locked3x' | 'Locked4x' | 'Locked5x' | 'Locked6x';
   }
 
-  /** @name PalletReferendaCall (135) */
-  interface PalletReferendaCall extends Enum {
+  /** @name KusamaPalletReferendaCall (135) */
+  interface KusamaPalletReferendaCall extends Enum {
     readonly isSubmit: boolean;
     readonly asSubmit: {
       readonly proposalOrigin: StagingKusamaRuntimeOriginCaller;
@@ -1508,8 +1508,12 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Voice' | 'Members' | 'Fraction' | 'AtLeastProportion' | 'MoreThanProportion';
   }
 
-  /** @name SpCoreVoid (149) */
-  type SpCoreVoid = Null;
+
+  // @TODO: This has been manually commented because they conflict with types generated for other polkadot node types
+  // Check how to optimally generate the types without causing conflicts
+
+  // /** @name SpCoreVoid (149) */
+  // type SpCoreVoid = Null;
 
   /** @name FrameSupportScheduleDispatchTime (150) */
   interface FrameSupportScheduleDispatchTime extends Enum {
@@ -1618,8 +1622,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Regular' | 'Saft';
   }
 
-  /** @name PalletUtilityCall (163) */
-  interface PalletUtilityCall extends Enum {
+  /** @name KusamaPalletUtilityCall (163) */
+  interface KusamaPalletUtilityCall extends Enum {
     readonly isBatch: boolean;
     readonly asBatch: {
       readonly calls: Vec<Call>;
@@ -1967,8 +1971,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Schedule' | 'Cancel' | 'ScheduleNamed' | 'CancelNamed' | 'ScheduleAfter' | 'ScheduleNamedAfter';
   }
 
-  /** @name PalletProxyCall (212) */
-  interface PalletProxyCall extends Enum {
+  /** @name KusamaPalletProxyCall (212) */
+  interface KusamaPalletProxyCall extends Enum {
     readonly isProxy: boolean;
     readonly asProxy: {
       readonly real: MultiAddress;
@@ -2191,11 +2195,11 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'AddChildBounty' | 'ProposeCurator' | 'AcceptCurator' | 'UnassignCurator' | 'AwardChildBounty' | 'ClaimChildBounty' | 'CloseChildBounty';
   }
 
-  /** @name PalletElectionProviderMultiPhaseCall (221) */
-  interface PalletElectionProviderMultiPhaseCall extends Enum {
+  /** @name KusamaPalletElectionProviderMultiPhaseCall (221) */
+  interface KusamaPalletElectionProviderMultiPhaseCall extends Enum {
     readonly isSubmitUnsigned: boolean;
     readonly asSubmitUnsigned: {
-      readonly rawSolution: PalletElectionProviderMultiPhaseRawSolution;
+      readonly rawSolution: KusamaPalletElectionProviderMultiPhaseRawSolution;
       readonly witness: PalletElectionProviderMultiPhaseSolutionOrSnapshotSize;
     } & Struct;
     readonly isSetMinimumUntrustedScore: boolean;
@@ -2208,7 +2212,7 @@ declare module '@polkadot/types/lookup' {
     } & Struct;
     readonly isSubmit: boolean;
     readonly asSubmit: {
-      readonly rawSolution: PalletElectionProviderMultiPhaseRawSolution;
+      readonly rawSolution: KusamaPalletElectionProviderMultiPhaseRawSolution;
     } & Struct;
     readonly isGovernanceFallback: boolean;
     readonly asGovernanceFallback: {
@@ -2218,8 +2222,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'SubmitUnsigned' | 'SetMinimumUntrustedScore' | 'SetEmergencyElectionResult' | 'Submit' | 'GovernanceFallback';
   }
 
-  /** @name PalletElectionProviderMultiPhaseRawSolution (222) */
-  interface PalletElectionProviderMultiPhaseRawSolution extends Struct {
+  /** @name KusamaPalletElectionProviderMultiPhaseRawSolution (222) */
+  interface KusamaPalletElectionProviderMultiPhaseRawSolution extends Struct {
     readonly solution: StagingKusamaRuntimeNposCompactSolution24;
     readonly score: SpNposElectionsElectionScore;
     readonly round: u32;
@@ -2739,11 +2743,11 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Backing' | 'Approval';
   }
 
-  /** @name PolkadotRuntimeParachainsSharedPalletCall (331) */
-  type PolkadotRuntimeParachainsSharedPalletCall = Null;
+  // /** @name PolkadotRuntimeParachainsSharedPalletCall (331) */
+  // type PolkadotRuntimeParachainsSharedPalletCall = Null;
 
-  /** @name PolkadotRuntimeParachainsInclusionPalletCall (332) */
-  type PolkadotRuntimeParachainsInclusionPalletCall = Null;
+  // /** @name PolkadotRuntimeParachainsInclusionPalletCall (332) */
+  // type PolkadotRuntimeParachainsInclusionPalletCall = Null;
 
   /** @name PolkadotRuntimeParachainsParasInherentPalletCall (333) */
   interface PolkadotRuntimeParachainsParasInherentPalletCall extends Enum {
@@ -2769,8 +2773,8 @@ declare module '@polkadot/types/lookup' {
     readonly signature: PolkadotPrimitivesV5ValidatorAppSignature;
   }
 
-  /** @name BitvecOrderLsb0 (339) */
-  type BitvecOrderLsb0 = Null;
+  // /** @name BitvecOrderLsb0 (339) */
+  // type BitvecOrderLsb0 = Null;
 
   /** @name PolkadotPrimitivesV5ValidatorAppSignature (341) */
   interface PolkadotPrimitivesV5ValidatorAppSignature extends SpCoreSr25519Signature {}
@@ -4444,8 +4448,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Scheduled' | 'Canceled' | 'Dispatched' | 'CallUnavailable' | 'PeriodicFailed' | 'PermanentlyOverweight';
   }
 
-  /** @name PalletProxyEvent (479) */
-  interface PalletProxyEvent extends Enum {
+  /** @name KusamaPalletProxyEvent (479) */
+  interface KusamaPalletProxyEvent extends Enum {
     readonly isProxyExecuted: boolean;
     readonly asProxyExecuted: {
       readonly result: Result<Null, SpRuntimeDispatchError>;
@@ -6084,8 +6088,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'NotVesting' | 'AtMaxVestingSchedules' | 'AmountLow' | 'ScheduleIndexOutOfBounds' | 'InvalidScheduleParams';
   }
 
-  /** @name PalletSchedulerScheduled (692) */
-  interface PalletSchedulerScheduled extends Struct {
+  /** @name KusamaPalletSchedulerScheduled (692) */
+  interface KusamaPalletSchedulerScheduled extends Struct {
     readonly maybeId: Option<U8aFixed>;
     readonly priority: u8;
     readonly call: FrameSupportPreimagesBounded;
@@ -6103,8 +6107,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'FailedToSchedule' | 'NotFound' | 'TargetBlockNumberInPast' | 'RescheduleNoChange' | 'Named';
   }
 
-  /** @name PalletProxyProxyDefinition (697) */
-  interface PalletProxyProxyDefinition extends Struct {
+  /** @name KusamaPalletProxyProxyDefinition (697) */
+  interface KusamaPalletProxyProxyDefinition extends Struct {
     readonly delegate: AccountId32;
     readonly proxyType: StagingKusamaRuntimeProxyType;
     readonly delay: u32;
@@ -6283,11 +6287,11 @@ declare module '@polkadot/types/lookup' {
     readonly targets: Vec<AccountId32>;
   }
 
-  /** @name PalletElectionProviderMultiPhaseSignedSignedSubmission (728) */
-  interface PalletElectionProviderMultiPhaseSignedSignedSubmission extends Struct {
+  /** @name KusamaPalletElectionProviderMultiPhaseSignedSignedSubmission (728) */
+  interface KusamaPalletElectionProviderMultiPhaseSignedSignedSubmission extends Struct {
     readonly who: AccountId32;
     readonly deposit: u128;
-    readonly rawSolution: PalletElectionProviderMultiPhaseRawSolution;
+    readonly rawSolution: KusamaPalletElectionProviderMultiPhaseRawSolution;
     readonly callFee: u128;
   }
 
@@ -7076,23 +7080,23 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'NotReapable' | 'NoPage' | 'NoMessage' | 'AlreadyProcessed' | 'Queued' | 'InsufficientWeight' | 'TemporarilyUnprocessable' | 'QueuePaused';
   }
 
-  /** @name FrameSystemExtensionsCheckNonZeroSender (883) */
-  type FrameSystemExtensionsCheckNonZeroSender = Null;
+  // /** @name FrameSystemExtensionsCheckNonZeroSender (883) */
+  // type FrameSystemExtensionsCheckNonZeroSender = Null;
 
-  /** @name FrameSystemExtensionsCheckSpecVersion (884) */
-  type FrameSystemExtensionsCheckSpecVersion = Null;
+  // /** @name FrameSystemExtensionsCheckSpecVersion (884) */
+  // type FrameSystemExtensionsCheckSpecVersion = Null;
 
-  /** @name FrameSystemExtensionsCheckTxVersion (885) */
-  type FrameSystemExtensionsCheckTxVersion = Null;
+  // /** @name FrameSystemExtensionsCheckTxVersion (885) */
+  // type FrameSystemExtensionsCheckTxVersion = Null;
 
-  /** @name FrameSystemExtensionsCheckGenesis (886) */
-  type FrameSystemExtensionsCheckGenesis = Null;
+  // /** @name FrameSystemExtensionsCheckGenesis (886) */
+  // type FrameSystemExtensionsCheckGenesis = Null;
 
-  /** @name FrameSystemExtensionsCheckNonce (889) */
-  interface FrameSystemExtensionsCheckNonce extends Compact<u32> {}
+  // /** @name FrameSystemExtensionsCheckNonce (889) */
+  // interface FrameSystemExtensionsCheckNonce extends Compact<u32> {}
 
-  /** @name FrameSystemExtensionsCheckWeight (890) */
-  type FrameSystemExtensionsCheckWeight = Null;
+  // /** @name FrameSystemExtensionsCheckWeight (890) */
+  // type FrameSystemExtensionsCheckWeight = Null;
 
   /** @name PalletTransactionPaymentChargeTransactionPayment (891) */
   interface PalletTransactionPaymentChargeTransactionPayment extends Compact<u128> {}

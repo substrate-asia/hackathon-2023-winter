@@ -14,7 +14,7 @@ import { FrameSupportPalletId, SpWeightsWeightV2Weight, PalletReferendaTrackInfo
 export type __AugmentedConst<ApiType extends ApiTypes> = AugmentedConst<ApiType>;
 
 declare module '@polkadot/api-base/types/consts' {
-  interface AugmentedConsts<ApiType extends ApiTypes> {
+  interface KusamaAugmentedConsts<ApiType extends ApiTypes> {
     auctions: {
       /**
        * The number of blocks over which an auction may be retroactively ended.

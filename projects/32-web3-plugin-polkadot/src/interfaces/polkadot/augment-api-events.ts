@@ -15,7 +15,7 @@ import { FrameSupportTokensMiscBalanceStatus, SpRuntimeDispatchError, PalletElec
 export type __AugmentedEvent<ApiType extends ApiTypes> = AugmentedEvent<ApiType>;
 
 declare module '@polkadot/api-base/types/events' {
-  interface AugmentedEvents<ApiType extends ApiTypes> {
+  interface PolkadotAugmentedEvents<ApiType extends ApiTypes> {
     auctions: {
       /**
        * An auction ended. All funds become unreserved.

@@ -36,7 +36,7 @@ import type { IExtrinsic, Observable } from '@polkadot/types/types';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
 
-export const RpcList = {
+export const SubstrateRpcList = {
   author : [
     'hasKey',
     'hasSessionKeys',
@@ -211,7 +211,7 @@ export const RpcList = {
 } as const;
 
 declare module '@polkadot/rpc-core/types/jsonrpc' {
-  interface RpcInterface {
+  interface SubstrateRpcInterface {
     author: {
       /**
        * Returns true if the keystore has private keys for the given public key and key type.

@@ -1108,8 +1108,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Noop' | 'Set' | 'Remove';
   }
 
-  /** @name PalletSessionCall (102) */
-  interface PalletSessionCall extends Enum {
+  /** @name PolkadotPalletSessionCall (102) */
+  interface PolkadotPalletSessionCall extends Enum {
     readonly isSetKeys: boolean;
     readonly asSetKeys: {
       readonly keys_: PolkadotRuntimeSessionKeys;
@@ -1138,8 +1138,8 @@ declare module '@polkadot/types/lookup' {
   /** @name SpAuthorityDiscoveryAppPublic (106) */
   interface SpAuthorityDiscoveryAppPublic extends SpCoreSr25519Public {}
 
-  /** @name PalletGrandpaCall (107) */
-  interface PalletGrandpaCall extends Enum {
+  /** @name PolkadotPalletGrandpaCall (107) */
+  interface PolkadotPalletGrandpaCall extends Enum {
     readonly isReportEquivocation: boolean;
     readonly asReportEquivocation: {
       readonly equivocationProof: SpConsensusGrandpaEquivocationProof;
@@ -1328,8 +1328,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'None' | 'Locked1x' | 'Locked2x' | 'Locked3x' | 'Locked4x' | 'Locked5x' | 'Locked6x';
   }
 
-  /** @name PalletReferendaCall (129) */
-  interface PalletReferendaCall extends Enum {
+  /** @name PolkadotPalletReferendaCall (129) */
+  interface PolkadotPalletReferendaCall extends Enum {
     readonly isSubmit: boolean;
     readonly asSubmit: {
       readonly proposalOrigin: PolkadotRuntimeOriginCaller;
@@ -1562,8 +1562,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Voice' | 'Members' | 'Fraction' | 'AtLeastProportion' | 'MoreThanProportion';
   }
 
-  /** @name SpCoreVoid (143) */
-  type SpCoreVoid = Null;
+  // /** @name SpCoreVoid (143) */
+  // type SpCoreVoid = Null;
 
   /** @name FrameSupportScheduleDispatchTime (144) */
   interface FrameSupportScheduleDispatchTime extends Enum {
@@ -1673,8 +1673,8 @@ declare module '@polkadot/types/lookup' {
     readonly startingBlock: u32;
   }
 
-  /** @name PalletUtilityCall (158) */
-  interface PalletUtilityCall extends Enum {
+  /** @name PolkadotPalletUtilityCall (158) */
+  interface PolkadotPalletUtilityCall extends Enum {
     readonly isBatch: boolean;
     readonly asBatch: {
       readonly calls: Vec<Call>;
@@ -1824,8 +1824,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'Unknown' | 'FeePaid' | 'Reasonable' | 'KnownGood' | 'OutOfDate' | 'LowQuality' | 'Erroneous';
   }
 
-  /** @name PalletProxyCall (201) */
-  interface PalletProxyCall extends Enum {
+  /** @name PolkadotPalletProxyCall (201) */
+  interface PolkadotPalletProxyCall extends Enum {
     readonly isProxy: boolean;
     readonly asProxy: {
       readonly real: MultiAddress;
@@ -2026,8 +2026,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'AddChildBounty' | 'ProposeCurator' | 'AcceptCurator' | 'UnassignCurator' | 'AwardChildBounty' | 'ClaimChildBounty' | 'CloseChildBounty';
   }
 
-  /** @name PalletElectionProviderMultiPhaseCall (209) */
-  interface PalletElectionProviderMultiPhaseCall extends Enum {
+  /** @name PolkadotPalletElectionProviderMultiPhaseCall (209) */
+  interface PolkadotPalletElectionProviderMultiPhaseCall extends Enum {
     readonly isSubmitUnsigned: boolean;
     readonly asSubmitUnsigned: {
       readonly rawSolution: PalletElectionProviderMultiPhaseRawSolution;
@@ -3983,8 +3983,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'IdentitySet' | 'IdentityCleared' | 'IdentityKilled' | 'JudgementRequested' | 'JudgementUnrequested' | 'JudgementGiven' | 'RegistrarAdded' | 'SubIdentityAdded' | 'SubIdentityRemoved' | 'SubIdentityRevoked';
   }
 
-  /** @name PalletProxyEvent (426) */
-  interface PalletProxyEvent extends Enum {
+  /** @name PolkadotPalletProxyEvent (426) */
+  interface PolkadotPalletProxyEvent extends Enum {
     readonly isProxyExecuted: boolean;
     readonly asProxyExecuted: {
       readonly result: Result<Null, SpRuntimeDispatchError>;
@@ -4788,8 +4788,8 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'InvalidSpecName' | 'SpecVersionNeedsToIncrease' | 'FailedToExtractRuntimeVersion' | 'NonDefaultComposite' | 'NonZeroRefCount' | 'CallFiltered';
   }
 
-  /** @name PalletSchedulerScheduled (472) */
-  interface PalletSchedulerScheduled extends Struct {
+  /** @name PolkadotPalletSchedulerScheduled (472) */
+  interface PolkadotPalletSchedulerScheduled extends Struct {
     readonly maybeId: Option<U8aFixed>;
     readonly priority: u8;
     readonly call: FrameSupportPreimagesBounded;
@@ -5503,8 +5503,8 @@ declare module '@polkadot/types/lookup' {
     readonly targets: Vec<AccountId32>;
   }
 
-  /** @name PalletElectionProviderMultiPhaseSignedSignedSubmission (634) */
-  interface PalletElectionProviderMultiPhaseSignedSignedSubmission extends Struct {
+  /** @name PolkadotPalletElectionProviderMultiPhaseSignedSignedSubmission (634) */
+  interface PolkadotPalletElectionProviderMultiPhaseSignedSignedSubmission extends Struct {
     readonly who: AccountId32;
     readonly deposit: u128;
     readonly rawSolution: PalletElectionProviderMultiPhaseRawSolution;
@@ -6254,23 +6254,27 @@ declare module '@polkadot/types/lookup' {
     readonly type: 'NotReapable' | 'NoPage' | 'NoMessage' | 'AlreadyProcessed' | 'Queued' | 'InsufficientWeight' | 'TemporarilyUnprocessable' | 'QueuePaused';
   }
 
-  /** @name FrameSystemExtensionsCheckNonZeroSender (776) */
-  type FrameSystemExtensionsCheckNonZeroSender = Null;
 
-  /** @name FrameSystemExtensionsCheckSpecVersion (777) */
-  type FrameSystemExtensionsCheckSpecVersion = Null;
+  // @TODO: This has been manually commented because they conflict with types generated for other polkadot node types
+  // Check how to optimally generate the types without causing conflicts
 
-  /** @name FrameSystemExtensionsCheckTxVersion (778) */
-  type FrameSystemExtensionsCheckTxVersion = Null;
+  // /** @name FrameSystemExtensionsCheckNonZeroSender (776) */
+  // type FrameSystemExtensionsCheckNonZeroSender = Null;
 
-  /** @name FrameSystemExtensionsCheckGenesis (779) */
-  type FrameSystemExtensionsCheckGenesis = Null;
+  // /** @name FrameSystemExtensionsCheckSpecVersion (777) */
+  // type FrameSystemExtensionsCheckSpecVersion = Null;
+
+  // /** @name FrameSystemExtensionsCheckTxVersion (778) */
+  // type FrameSystemExtensionsCheckTxVersion = Null;
+
+  // /** @name FrameSystemExtensionsCheckGenesis (779) */
+  // type FrameSystemExtensionsCheckGenesis = Null;
 
   /** @name FrameSystemExtensionsCheckNonce (782) */
   interface FrameSystemExtensionsCheckNonce extends Compact<u32> {}
 
-  /** @name FrameSystemExtensionsCheckWeight (783) */
-  type FrameSystemExtensionsCheckWeight = Null;
+  // /** @name FrameSystemExtensionsCheckWeight (783) */
+  // type FrameSystemExtensionsCheckWeight = Null;
 
   /** @name PalletTransactionPaymentChargeTransactionPayment (784) */
   interface PalletTransactionPaymentChargeTransactionPayment extends Compact<u128> {}
