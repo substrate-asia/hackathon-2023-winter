@@ -114,7 +114,7 @@ namespace Substrate.Hexalem.Engine
         public static HexaGame? FinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
         {
             // Update game turn information
-            if (!hexaGame.UpdateTurnState(blockNumber, playerIndex))
+            if (!hexaGame.FinsihTurn(blockNumber, playerIndex))
             {
                 return null;
             }
@@ -139,5 +139,48 @@ namespace Substrate.Hexalem.Engine
 
             return hexaGame;
         }
+    
+        /// <summary>
+        /// Force an opponents turn to finish
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        public static HexaGame? ForceFinishTurn(uint blockNumber, HexaGame hexaGame, byte playerIndex)
+        {
+            // Update game turn information
+            if (!hexaGame.FinsihTurn(blockNumber, playerIndex))
+            {
+                return null;
+            }
+
+            // Does the current player win ?
+            if (hexaGame.IsFinished())
+            {
+                return hexaGame;
+            }
+
+            if (hexaGame.PlayerTurn != 0)
+            {
+                Log.Debug("Players does not have already played this turn");
+                return hexaGame;
+            }
+
+            hexaGame.NextRound(blockNumber);
+
+            return hexaGame;
+        }
+    
+        /// <summary>
+        /// Receive rewards from the game
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="hexaGame"></param>
+        /// <returns></returns>
+        public static HexaGame? ReceiveRewards(uint blockNumber, HexaGame hexaGame)
+        {
+            throw new NotImplementedException();
+        }   
     }
 }

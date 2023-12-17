@@ -397,25 +397,87 @@ namespace Substrate.Hexalem.Engine
         #endregion
 
         /// <summary>
-        /// Update game turn information
+        /// Can finish turn
         /// </summary>
         /// <param name="blockNumber"></param>
         /// <param name="playerIndex"></param>
         /// <returns></returns>
-        public bool UpdateTurnState(uint blockNumber, byte playerIndex)
+        public bool CanFinishTurn(uint blockNumber, byte playerIndex)
         {
-            // check if correct player
             if (!EnsureCurrentPlayer(playerIndex))
             {
-                // do check for time here ...
+                return false;
+            }
 
-                //var nbBlockSpentSinceLastMove = blockNumber - BitConverter.ToUInt16(LastMove);
-                //if (nbBlockSpentSinceLastMove > GameConfig.MAX_TURN_BLOCKS)
-                //{
-                //    Log.Error(LogMessages.TooMuchTimeToPlay(nbBlockSpentSinceLastMove));
-                //    return false;
-                //}
+            return true;
+        }   
 
+        /// <summary>
+        /// Finish turn
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        internal bool FinsihTurn(uint blockNumber, byte playerIndex)
+        {
+            // check if can finish turn
+            if (!CanFinishTurn(blockNumber, playerIndex))
+            {
+                return false;
+            }
+
+            // do storage changes
+            LastMove = BitConverter.GetBytes(blockNumber);
+            Log.Debug("Saved LastMove {lm}", LastMove.ToLog());
+
+            PlayerTurn = (byte)((PlayerTurn + 1) % PlayersCount);
+            Log.Debug("Switch to player {p}", PlayerTurn);
+
+            // If the player has not played, generate a new selection
+            if (Played)
+            {
+                Played = false;
+            }
+            else
+            {
+                RefillSelection(blockNumber, SelectBase);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Can force finish turn
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        public bool CanForceFinishTurn(uint blockNumber, byte playerIndex)
+        {
+            if (EnsureCurrentPlayer(playerIndex))
+            {
+                return false;
+            }
+
+            if (!EnsureTimePassed(blockNumber))
+            {
+                return false;
+            }
+
+            return true;
+        }   
+
+        /// <summary>
+        /// Force finish turn
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <param name="playerIndex"></param>
+        /// <returns></returns>
+        internal bool ForceFinsihTurn(uint blockNumber, byte playerIndex)
+        {
+            // check if can force finish turn
+            if (!CanForceFinishTurn(blockNumber, playerIndex))
+            {
                 return false;
             }
 
@@ -564,7 +626,23 @@ namespace Substrate.Hexalem.Engine
         }
 
         /// <summary>
-        ///
+        /// Ensure that the allowed time to play passed
+        /// </summary>
+        /// <param name="blockNumber"></param>
+        /// <returns></returns>
+        public bool EnsureTimePassed(uint blockNumber)
+        {
+            var lastMove = BitConverter.ToUInt32(LastMove);
+            if (blockNumber < lastMove + GameConfig.MAX_TURN_BLOCKS)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Ensure that the player has enough ressources to play the tile
         /// </summary>
         /// <param name="player"></param>
         /// <param name="tile"></param>
