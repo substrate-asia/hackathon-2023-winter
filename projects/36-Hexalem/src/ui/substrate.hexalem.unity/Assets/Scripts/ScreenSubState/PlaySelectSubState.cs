@@ -38,6 +38,7 @@ namespace Assets.Scripts
 
             Grid.OnGridTileClicked += OnGridTileClicked;
             Storage.OnChangedHexaSelection += OnChangedHexaSelection;
+            Storage.OnNextPlayerTurn += OnNextPlayerTurn;
         }
 
         public override void ExitState()
@@ -45,6 +46,7 @@ namespace Assets.Scripts
             Debug.Log($"[{this.GetType().Name}][SUB] ExitState");
 
             Grid.OnGridTileClicked -= OnGridTileClicked;
+            Storage.OnNextPlayerTurn -= OnNextPlayerTurn;
             Storage.OnChangedHexaSelection -= OnChangedHexaSelection;
         }
 
@@ -64,6 +66,12 @@ namespace Assets.Scripts
             PlayScreenState.SelectedGridIndex = index;
 
             FlowController.ChangeScreenSubState(ScreenState.PlayScreen, ScreenSubState.PlayTileUpgrade);
+        }
+
+        private void OnNextPlayerTurn(byte playerTurn)
+        {
+            Debug.Log("PlaySelectSubState > OnNextPlayerTurn");
+            OnChangedHexaSelection(Storage.HexaGame.UnboundTileOffers);
         }
 
         private void OnChangedHexaSelection(List<byte> hexaSelection)
@@ -113,6 +121,8 @@ namespace Assets.Scripts
                         velTileImage.style.backgroundImage = new StyleBackground(PlayScreenState.TileDesert);
                         break;
                 }
+
+                PlayTileSelectSubState.DisplayManaBottle(tileCard, Storage.HexaGame.CurrentPlayer);
 
                 var number = new byte();
                 number = (byte)i;

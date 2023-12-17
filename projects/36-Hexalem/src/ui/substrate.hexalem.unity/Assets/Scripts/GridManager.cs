@@ -20,6 +20,12 @@ namespace Assets.Scripts
         private GameObject _homeTile;
 
         [SerializeField]
+        private GameObject _rareHomeTile;
+
+        [SerializeField]
+        private GameObject _epicHomeTile;
+
+        [SerializeField]
         private GameObject _grassTile;
 
         [SerializeField]
@@ -145,7 +151,17 @@ namespace Assets.Scripts
                         break;
 
                     case TileType.Home:
-                        newTile = Instantiate(_homeTile, gridParent);
+                        if(tile.TileLevel == 1)
+                        {
+                            newTile = Instantiate(_rareHomeTile, gridParent);
+                        } else if(tile.TileLevel == 2)
+                        {
+                            newTile = Instantiate(_epicHomeTile, gridParent);
+                        } else
+                        {
+                            newTile = Instantiate(_homeTile, gridParent);
+                        }
+                        
                         break;
 
                     case TileType.Grass:
