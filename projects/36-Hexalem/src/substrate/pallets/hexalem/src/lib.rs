@@ -198,11 +198,10 @@ pub mod pallet {
 		pub cost: ResourceAmount,
 	}
 
-	// This type will get changed to be more generic, but I did not have time now.
 	#[derive(Encode, Decode, TypeInfo, PartialEq, Clone, Debug)]
 	pub struct Move {
 		pub place_index: u8,
-		pub buy_index: u8, // We can fit buy_index and pay_type together
+		pub buy_index: u8,
 	}
 
 	// The board hex grid
