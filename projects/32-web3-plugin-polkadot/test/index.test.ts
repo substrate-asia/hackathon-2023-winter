@@ -1,21 +1,15 @@
-import { Web3, core } from 'web3';
+import { Web3 } from 'web3';
 import { PolkadotPlugin } from '../src';
-// import { BlockHash } from '@polkadot/types/interfaces';
 
 describe('PolkadotPlugin Tests', () => {
-  it('should register PolkadotPlugin plugin on Web3Context instance', () => {
-    const web3Context = new core.Web3Context('ws://127.0.0.1:9944/');
-    web3Context.registerPlugin(new PolkadotPlugin());
-    expect(web3Context.polkadot).toBeDefined();
-  });
-
   describe('PolkadotPlugin method tests', () => {
     let web3: Web3;
-    // let blockHash: BlockHash;
 
     beforeAll(async () => {
       web3 = new Web3('http://127.0.0.1:9944/');
+      expect(web3.polkadot).toBeUndefined();
       web3.registerPlugin(new PolkadotPlugin());
+      expect(web3.polkadot).toBeDefined();
     });
 
     afterAll(() => {});
