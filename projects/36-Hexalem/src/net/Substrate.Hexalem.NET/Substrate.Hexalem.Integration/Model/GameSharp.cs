@@ -18,6 +18,7 @@ namespace Substrate.Hexalem.Integration.Model
             Players = ((AccountId32[])game.Players.Value).Select(p => p.ToAddress()).ToArray();
             Selection = ((U8[])game.Selection.Value).Select(p => p.Value).ToArray();
             SelectionSize = game.SelectionSize.Value;
+            LastBlock = game.LastPlayedBlock.Value;
         }
 
         public byte[] GameId { get; private set; }
@@ -29,5 +30,6 @@ namespace Substrate.Hexalem.Integration.Model
         public string[] Players { get; private set; }
         public byte[] Selection { get; private set; }
         public byte SelectionSize { get; private set; }
+        public uint LastBlock { get; private set; }
     }
 }
