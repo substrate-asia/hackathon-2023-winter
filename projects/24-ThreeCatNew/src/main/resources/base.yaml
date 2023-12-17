@@ -5,8 +5,13 @@ guiCommand:
 
 # 第一阶段 生成测试工程
 generateEngine:
-  # 编译命令行方式 检查编译方式对应的合约目录
+  # 合约地址
+  contractAddress: xxxx
+  # 合约类型
+  contractType: sol
+  # 开发框架 检查编译方式对应的合约目录
   compile: truffle
+
   # 服务器上面配置对应目录
   directory:
     - contracts
@@ -14,7 +19,6 @@ generateEngine:
     - test
   # 编译后文件命名 compiledKey隐藏在代码工程
   compiledNames: abi
-
   # Sdk名称
   sdkName: xxx
   # 选择断言模板l路径-匹配模板
