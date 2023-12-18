@@ -16,8 +16,8 @@ async function getComments(ctx) {
   const col = await getProjectCommentCol();
   const total = await col.countDocuments(q);
   const items = await col
-    .find(q, { projection: { _id: 0 } })
-    .sort({ id: -1 })
+    .find(q)
+    .sort({ _id: 1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();

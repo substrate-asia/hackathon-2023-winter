@@ -1,4 +1,3 @@
-import { noop } from "lodash-es";
 import BorderRow from "../borderRow";
 import DiscussionItem from "./comment";
 import Pagination from "@osn/common-ui/es/styled/Pagination";
@@ -10,6 +9,7 @@ import { useEditorContext } from "./editor/context";
 import { resolveMentionFormat } from "./editor/utils";
 import { useEffect } from "react";
 import NetworkUser from "@/components/user/networkUser";
+import { useProjectCommentsContext } from "./context";
 
 async function getCommentAuthorIdentities(comments) {
   const userIdentities = await Promise.all(
@@ -67,15 +67,15 @@ function EmptyContent() {
 }
 
 export default function DiscussionList() {
-  const { comments } = useServerSideProps();
+  const { comments, setPage, page } = useProjectCommentsContext();
 
   useSetEditorSuggestions();
 
   let listContent = <EmptyContent />;
 
   if (comments?.items?.length) {
-    listContent = (comments?.items || []).map((comment, index) => (
-      <BorderRow key={index}>
+    listContent = (comments?.items || []).map((comment) => (
+      <BorderRow key={comment._id}>
         <DiscussionItem comment={comment} />
       </BorderRow>
     ));
@@ -85,10 +85,10 @@ export default function DiscussionList() {
     <div className="flex flex-col gap-[16px]">
       {listContent}
       <Pagination
-        page={comments?.page}
+        page={page}
         pageSize={comments?.pageSize}
         total={comments?.total}
-        setPage={noop}
+        setPage={setPage}
       />
     </div>
   );

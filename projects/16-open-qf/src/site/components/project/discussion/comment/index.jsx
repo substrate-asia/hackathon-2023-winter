@@ -3,10 +3,7 @@ import NetworkUser from "@/components/user/networkUser";
 import { MarkdownPreviewer } from "@osn/previewer";
 import Actions from "./actions";
 import { CommentProvider, useComment } from "./context";
-import dayjs from "dayjs";
-import relativeTime from "dayjs/plugin/relativeTime";
-
-dayjs.extend(relativeTime);
+import Duration from "@/components/duration";
 
 function Content() {
   const comment = useComment();
@@ -22,7 +19,7 @@ function Meta() {
         <NetworkUser address={comment?.author} network="polkadot" />
         <span className="text-text-tertiary">·</span>
         <span className="text-text-tertiary">
-          {dayjs(comment?.timestamp).fromNow()}
+          <Duration time={comment?.timestamp} />
         </span>
       </div>
       <IpfsButton cid={comment.cid} />
