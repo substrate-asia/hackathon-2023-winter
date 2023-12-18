@@ -11,7 +11,7 @@ export default function ProjectDetail() {
   return (
     <div className="flex flex-col w-full shadow-shadow-card-default">
       <Cover />
-      <div className="flex flex-col px-[24px] py-[48px] gap-[20px]">
+      <div className="flex flex-col p-[32px] pt-[56px] gap-[20px]">
         <DetailHeader />
         <Divider />
         <DetailContent />

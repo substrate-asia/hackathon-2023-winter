@@ -13,7 +13,7 @@ const Info = ({ title, value }) => {
   return (
     <div className="flex flex-col gap-[4px] items-center">
       <span className="text14medium text-text-tertiary">{title}</span>
-      <span className="text24bold text-text-primary">{value}</span>
+      <span className="text20semibold text-text-primary">{value}</span>
     </div>
   );
 };

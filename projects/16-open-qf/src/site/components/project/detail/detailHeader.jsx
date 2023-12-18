@@ -16,9 +16,12 @@ function MetaItem({ title, children }) {
 function Meta() {
   const { detail } = useServerSideProps();
   return (
-    <div className="grid grid-cols-3 w-full">
+    <div className="grid grid-cols-2 max-sm:grid-cols-1 w-full gap-[20px]">
       <MetaItem title="Create by">
         <NetworkUser address={detail.creator} network="polkadot" />
+      </MetaItem>
+      <MetaItem title="Donation address">
+        <NetworkUser address={detail.donationAddress} network="polkadot" />
       </MetaItem>
       <MetaItem title="Category">
         <span
