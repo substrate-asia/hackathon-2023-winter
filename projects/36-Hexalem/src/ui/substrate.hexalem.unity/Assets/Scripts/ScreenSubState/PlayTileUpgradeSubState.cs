@@ -16,6 +16,8 @@ namespace Assets.Scripts
         private Button _btnActionTitle;
         private Button _btnActionCancel;
 
+        private Label _lblTileDescription;
+
         public PlayTileUpgradeSubState(FlowController flowController, ScreenBaseState parent)
             : base(flowController, parent) { }
 
@@ -29,6 +31,8 @@ namespace Assets.Scripts
             TemplateContainer elementInstance = ElementInstance("UI/Elements/BottomTileUpgradeElement");
 
             _velTileCardBox = elementInstance.Q<VisualElement>("VelTileCardBox");
+
+            _lblTileDescription = elementInstance.Q<Label>("LblTileDescription");
 
             _btnActionTitle = elementInstance.Q<Button>("BtnActionTitle");
             var canUpgrade = Storage.HexaGame.CanUpgrade((byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedGridIndex);
@@ -102,6 +106,8 @@ namespace Assets.Scripts
             }
 
             _velTileCardBox.Add(tileCard);
+
+            _lblTileDescription.text = HelperUI.TileUpgradeDescription(Storage.HexaGame.CurrentPlayer, selectTile);
         }
 
         private async void OnActionClicked(ClickEvent evt)
