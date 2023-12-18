@@ -1,4 +1,5 @@
 import { cn } from "@/utils";
+import { useEffect, useState } from "react";
 import { PieChart } from "react-minimal-pie-chart";
 
 export default function QFpowerPie({
@@ -8,18 +9,21 @@ export default function QFpowerPie({
 }) {
   const percentage = (userScore / allScore) * 100;
 
-  const data = [
-    // all
-    {
-      value: 100 - percentage,
-      color: "var(--fill-bg-quaternary)",
-    },
-    // user
-    {
-      value: percentage,
-      color: "var(--fill-bg-brand-secondary)",
-    },
-  ];
+  const [data, setData] = useState([]);
+  useEffect(() => {
+    setData([
+      // all
+      {
+        value: 100 - percentage,
+        color: "var(--fill-bg-quaternary)",
+      },
+      // user
+      {
+        value: percentage,
+        color: "var(--fill-bg-brand-secondary)",
+      },
+    ]);
+  }, [percentage]);
 
   return (
     <div className={cn("relative", className)}>
