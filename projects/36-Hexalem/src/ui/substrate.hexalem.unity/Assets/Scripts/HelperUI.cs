@@ -37,22 +37,22 @@ namespace Assets.Scripts
             }
         }
 
-        public static string TileDescription(Substrate.Hexalem.Engine.TileType tileType)
+        public static string TileDescription(TileOffer selectTile)
         {
-            var cost = $"1{ResourceTypIcon(RessourceType.Mana)}";
+            var cost = $"{selectTile.SelectCost.Cost}{ResourceTypIcon(selectTile.SelectCost.MaterialType)}";
 
             var hexalemConstants = new HexalemModuleConstants();
 
             var produce = "";
     
-            var rawResourceProductions = hexalemConstants.TileResourceProductions().Value[(int)tileType];
-            var rawProduces = rawResourceProductions.Produces.Value;
-            var rawHumanRequirements = rawResourceProductions.HumanRequirements.Value;
+            var tileProduction = HexalemConfig.GetInstance().MapTileProduction[selectTile.TileToBuy.TileType][selectTile.TileToBuy.TilePattern];
+            var rawProduces = tileProduction[selectTile.TileToBuy.TileLevel];
+            var rawHumanRequirements = tileProduction[tileProduction.Count - 1]; ;
 
 
             for (int i = 0; i < rawProduces.Length; i++)
             {
-                if (rawProduces[i].Value == 0)
+                if (rawProduces[i] == 0)
                 {
                     continue;
                 }
@@ -64,20 +64,20 @@ namespace Assets.Scripts
                     produce += ", ";
                 }
 
-                if (rawHumanRequirements[i].Value == 0)
+                if (rawHumanRequirements[i] == 0)
                 {
-                    produce += $"{rawProduces[i].Value} {ResourceTypIcon(resourceType)}";
+                    produce += $"{rawProduces[i]} {ResourceTypIcon(resourceType)}";
                 }
                 else
                 {
-                    produce += $"{rawProduces[i].Value}{ResourceTypIcon(resourceType)}" +
-                        $" but needs {rawHumanRequirements[i].Value}{ResourceTypIcon(RessourceType.Humans)}";
+                    produce += $"{rawProduces[i]}{ResourceTypIcon(resourceType)}" +
+                        $" but needs {rawHumanRequirements[i]}{ResourceTypIcon(RessourceType.Humans)}";
                 }
             }
             
-            string produceString = produce != "" ? $"{tileType} tiles produce {produce}" : "";
+            string produceString = produce != "" ? $"{selectTile.TileToBuy.TileType} tiles produce {produce}" : "";
 
-            return $"The {tileType} tile costs {cost}.\r\n\r\n{produceString}";
+            return $"The {selectTile.TileToBuy.TileType} tile costs {cost}.\r\n\r\n{produceString}";
         }
         public static string ResourceTypIcon(RessourceType resourceType)
         {
@@ -88,9 +88,9 @@ namespace Assets.Scripts
                 case RessourceType.Humans:
                     return "<sprite=\"icon_res_human\" index=0>";
                 case RessourceType.Water:
-                    return "<sprite=\"icon_res_food\" index=0>";
-                case RessourceType.Food:
                     return "<sprite=\"icon_res_water\" index=0>";
+                case RessourceType.Food:
+                    return "<sprite=\"icon_res_food\" index=0>";
                 case RessourceType.Wood:
                     return "<sprite=\"icon_res_wood\" index=0>";
                 case RessourceType.Stone:

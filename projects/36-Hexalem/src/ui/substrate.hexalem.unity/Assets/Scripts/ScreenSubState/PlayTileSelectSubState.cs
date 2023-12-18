@@ -222,7 +222,7 @@ namespace Assets.Scripts
 
             _velTileCardBox.Add(tileCard);
 
-            _lblTileDescription.text = HelperUI.TileDescription(selectTile.TileToBuy.TileType);
+            _lblTileDescription.text = HelperUI.TileDescription(selectTile);
         }
 
         public static void DisplayManaBottle(TemplateContainer tileCard, HexaPlayer player)

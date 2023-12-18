@@ -169,7 +169,7 @@ namespace Assets.Scripts.ScreenStates
                 { (new HexaPlayer(Network.Client.Account.Bytes), new HexaBoard(new byte[(int)GridSize.Medium])) }
             };
 
-            var gameId = new byte[GameConfig.GAME_STORAGE_ID];
+            var gameId = new byte[HexalemConfig.GAME_STORAGE_ID];
             _random.NextBytes(gameId);
             var hexaGame = new HexaGame(gameId, hexaTuple);
             hexaGame.Init(1234567);

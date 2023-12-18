@@ -65,6 +65,8 @@ namespace Substrate.Hexalem.Engine
         private const byte DefaultTargetGoalGold = 10;
         private const byte DefaultTargetGoalHuman = 7;
 
+        public const int GAME_STORAGE_ID = 32;
+
         private readonly Dictionary<TileType, List<byte[]>> DefaultMapTileCost = new Dictionary<TileType, List<byte[]>>
         {
             { TileType.Grass, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
