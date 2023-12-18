@@ -8,9 +8,6 @@
         public static string InvalidTileSelection(int selectionIndex)
             => $"Invalid tiles selection : choose ${selectionIndex} which is out of bounds";
 
-        public static string TooMuchTimeToPlay(uint nbBlockToPlay)
-            => $"Player decision was too long, {nbBlockToPlay} block passed since last move (max allowed : {GameConfig.MAX_TURN_BLOCKS} blocks)";
-
         public static string InvalidTileToUpgrade(HexaTile tile)
             => $"Cannot upgrade tile of {tile.TileType}, {tile.TileLevel} because it not a valid tile";
 
