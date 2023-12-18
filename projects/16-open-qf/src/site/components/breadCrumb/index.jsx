@@ -21,7 +21,7 @@ export default function BreadCrumb({ items }) {
             {!!index && <span className="text-text-tertiary">/</span>}
             {item.url ? (
               <Link
-                className="cursor-pointer text-text-primary"
+                className="cursor-pointer text-text-primary hover:text-text-primary hover:underline"
                 href={item.url}
               >
                 {item.name}

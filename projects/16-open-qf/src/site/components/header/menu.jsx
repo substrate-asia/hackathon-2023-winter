@@ -15,6 +15,7 @@ import { useFloating } from "@floating-ui/react";
 import { useAccount, useLogout } from "@/context/account";
 import { useRouter } from "next/router";
 import Connect from "../connect";
+import Link from "next/link";
 
 export default function HeaderMobileMenu({ className = "" }) {
   const account = useAccount();
@@ -42,6 +43,7 @@ export default function HeaderMobileMenu({ className = "" }) {
       <div
         className={cn(
           "fixed inset-0 top-[71px] bg-black/20",
+          "z-50",
           !visible && "hidden",
         )}
         onClick={(e) => {
@@ -52,6 +54,12 @@ export default function HeaderMobileMenu({ className = "" }) {
       >
         <Card className={cn("border-0 border-b shadow-none")}>
           <div className="space-y-5">
+            <div className=" py-3 text-center text14semibold text-text-secondary">
+              <Link href={"/"} className="hover:text-inherit">
+                Home
+              </Link>
+            </div>
+
             {account ? (
               <Account />
             ) : (

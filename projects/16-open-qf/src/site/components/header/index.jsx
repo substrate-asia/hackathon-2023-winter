@@ -2,6 +2,7 @@ import { Header as CommonHeader } from "@osn/common-ui";
 import Connect from "../connect";
 import Link from "next/link";
 import HeaderMobileMenu from "./menu";
+import { cn } from "@/utils";
 
 export default function Header() {
   return (
@@ -12,7 +13,16 @@ export default function Header() {
           <span className="ml-3 text18semibold">OpenQF</span>
         </div>
 
-        <div className="max-sm:hidden">
+        <div className="max-sm:hidden flex items-center gap-x-8">
+          <Link
+            href={"/"}
+            className={cn(
+              "text-text-secondary text14semibold",
+              "hover:underline hover:text-text-secondary",
+            )}
+          >
+            Home
+          </Link>
           <Connect />
         </div>
 
