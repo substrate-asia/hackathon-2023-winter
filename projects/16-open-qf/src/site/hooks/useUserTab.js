@@ -16,12 +16,12 @@ export function useUserTab() {
       content: "Contributions",
       activeCount: contributions?.length,
     },
-    false && {
+    {
       value: "projects",
       content: "Projects",
       activeCount: projects?.length,
     },
-  ].filter(Boolean);
+  ];
 
   const router = useRouter();
   const address = router.query.address;

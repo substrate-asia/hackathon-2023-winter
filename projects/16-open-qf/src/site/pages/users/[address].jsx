@@ -4,14 +4,12 @@ import UserLayout from "@/components/layouts/userLayout";
 import UserInfo from "@/components/user/info";
 import UserTabs from "@/components/user/tabs";
 import UserTabsContent from "@/components/user/tabs/content";
-import {
-  getRoundCategoriesList,
-  getRoundProjectsList,
-} from "@/services/rounds";
+import { getRoundCategoriesList } from "@/services/rounds";
 import {
   getActivityTags,
   getAddressActivityTags,
   getAddressContributions,
+  getAddressProjects,
 } from "@/services/user";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 
@@ -38,18 +36,15 @@ export default UserPage;
 export async function getServerSideProps(context) {
   const { address } = context.params;
 
-  const [{ result: projectsResult }, { result: categories }] =
-    await Promise.all([
-      getRoundProjectsList(1, { page_size: 25 }),
-      getRoundCategoriesList(1),
-    ]);
+  const { result: categories } = await getRoundCategoriesList(1);
 
   const [{ result: activityTags }, { result: userActivityTags }] =
     await Promise.all([getActivityTags(), getAddressActivityTags(address)]);
 
   const { result: contributions } = await getAddressContributions(address);
 
-  const projects = projectsResult?.items ?? [];
+  const { result: projects } = await getAddressProjects(address);
+
   return {
     props: {
       ...loadCommonServerSideProps(context),

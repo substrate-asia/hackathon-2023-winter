@@ -1,4 +1,3 @@
-import { USER_INFO } from "@/fixtures/user";
 import Avatar from "../../accountSelector/avatar";
 import Copy from "../../copy";
 import IdentityOrAddr from "../identityOrAddr";
@@ -44,24 +43,7 @@ export default function UserInfo() {
         },
       ],
     },
-    false && {
-      title: "Project",
-      items: [
-        {
-          label: "Proposed",
-          value: USER_INFO.project.proposed,
-        },
-        {
-          label: "Contributors",
-          value: USER_INFO.project.contributors,
-        },
-        {
-          label: "Received",
-          value: <LocaleSymbol value={USER_INFO.project.received} />,
-        },
-      ],
-    },
-  ].filter(Boolean);
+  ];
 
   return (
     <div className="space-y-5">
