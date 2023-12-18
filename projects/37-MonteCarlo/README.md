@@ -1,43 +1,50 @@
 ## 基本资料
 
-项目名称：蒙特卡洛
+项目名称：蒙特卡洛 Monte Carlo
 
 项目立项日期 (哪年哪月)：2023 年 9 月
 
 ## 项目整体简介
 
-项目简介，英文提交。包括但不限于：
+### Introduction
+Monte Carlo is a decentralized AIGC computing power protocol. 
+We build an open platform based on the Monte Carlo protocol and blockchain, where anyone can pay in cryptocurrency to generate their own AIGC content.
+The content provided by AIGC can be utilized to mint NFTs and allowing the selection of high-quality items.
+The worker providers will get royalties from the generation fee.
 
-- 项目背景/原由/要解决的问题 (如有其他附件，可放到 `docs` 目录内。英文提交)。
-- 项目介绍
-- 项目Demo
-- 技术架构
-- 项目 logo (如有)，这 logo 会印制在文宣，会场海报或贴子上。
-- 项目的启始的commit，对于全新的项目可以是一个开源框架的clone，比如区块链clone自substrate-node-template, react
-框架等，请给出说明。对于成熟项目可以是一个branch，要求在2023年11月1号之后生成，说明有哪些功能是已经有了的
+### Background
+Many builders are trying adopting on-chain-analytics + LLM,  NFT + AIGC or blockchain-based games + AI agent. 
+But no practical Web3-native AI infra to support them yet
+
+### Insights
+Web3-native AI infrastructure holds significant potential in revolutionizing the way artificial intelligence operates and interacts. The primary benefits are centered around composability - with Web3, different AI tools can be seamlessly combined for better functionality, creating a more cohesive and multi-dimensional system. Also, it offers better verifiability, ensuring the transparency and reliability of AI operations. Importantly, Web3-native AI respects authentic rights of invention, providing the option to share benefits from any derivable concepts, leading to a fairer and more inclusive creation landscape. It also promises cost-efficiency and could be pivotal in aiding AI startups, particularly by providing easy access to GPU computing powers. Harnessing the power of Web3 tokenomics, such infrastructure could incentivize global GPU resource contributions, building a vibrant, worldwide community. Additionally, by making high-end AI technology more accessible and understandable for the broader public, it could help in popularizing these advanced concepts, thereby fostering an environment of innovation and inclusivity.
+
+
+### Architecture
+TBD
+
+### Links
+- Demo: https://dot.monte-carlo.ai/
+- Logo: https://monte-carlo.ai/logo.png
+TODO: slides/demo video
+
+### Initial commit
+TODO
 
 ## 黑客松期间计划完成的事项
 
-- 请团队在报名那一周 git clone 这个代码库并创建团队目录，在 readme 里列出黑客松期间内打算完成的代码功能点。并提交 PR 到本代码库。例子如下 (这只是一个 nft 项目的例子，请根据团队项目自身定义具体工作)：
+**Blockchain**
+TBD
 
-**区块链端**
-
-- `pallet-nft`
-  - [ ] NFT 创建及数据结构定义 (`fn create_nft()`)
-  - [ ] NFT 转帐函数 (`fn transfer()`)
-  - [ ] NFT 销毁函数 (`fn burn_token()`)
-
-**客户端**
-
-- web 端
-  - [ ] 用户注册页面
-  - [ ] NFT 产品创建流程
-  - [ ] NFT 产品购买流程
-
-- hybrid (react-native)
-  - [ ] 用户注册页面
-  - [ ] NFT 产品创建流程
-  - [ ] NFT 产品购买流程
+**Client**
+- web
+  - [ ] Polkadot.js wallet integration
+  - [ ] Explorer for worker list
+  - [ ] Explorer for template list
+  - [ ] Explorer for task list
+  - [ ] Explorer for gallery
+  - [ ] Submit task to blockchain
+  - [ ] Result page for task
 
 
 ## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
@@ -48,7 +55,5 @@
 
 ## 队员信息
 
-包含参赛者名称及介绍
-在团队中担任的角色
-GitHub 帐号
-微信账号（如有请留下，方便及时联系）
+- Haiyang: Web engineer. Microsoft Senior Engineer, and excels in web development. GitHub: @callmewhy
+- Jun: Blockchain engineer. Co-founder of Phala Network. He possesses thorough knowledge in blockchain and backend skills. GitHub: @jasl
