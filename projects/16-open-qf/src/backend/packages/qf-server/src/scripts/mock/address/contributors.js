@@ -5,6 +5,14 @@ const { qf: { getContributorCol } } = require("@open-qf/mongo");
 
 const decimals = 10;
 
+const indexer = {
+  blockHeight: 1,
+  blockHash: "0xc0096358534ec8d21d01d34b836eed476a1c343f8724fa2153dc0725ad797a90",
+  blockTime: 1590507378000,
+  extrinsicIndex: 0,
+  eventIndex: 0,
+}
+
 async function saveMockContributors() {
   const col = await getContributorCol();
   const bulk = col.initializeUnorderedBulkOp();
@@ -19,6 +27,7 @@ async function saveMockContributors() {
       roundId: 1,
       projectId,
       balance,
+      indexer,
       isMock: true,
     };
     bulk.insert(obj);
