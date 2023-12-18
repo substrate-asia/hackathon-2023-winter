@@ -15,7 +15,7 @@ export default function BreadCrumb({ items }) {
       >
         <ArrowCaretLeft className="w-[24px] h-[24px]" />
       </div>
-      <div className="flex gap-[8px] text16semibold">
+      <div className="flex flex-wrap gap-[8px] text16semibold">
         {items?.map((item, index) => (
           <Fragment key={index}>
             {!!index && <span className="text-text-tertiary">/</span>}
@@ -31,7 +31,6 @@ export default function BreadCrumb({ items }) {
             )}
           </Fragment>
         ))}
-
       </div>
     </div>
   );

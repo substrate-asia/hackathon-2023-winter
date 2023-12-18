@@ -15,6 +15,7 @@ const ProjectPage = withCommonPageWrapper(() => {
     <DetailLayout breadcrumb={<BreadCrumb />} sidebar={<Sidebar />}>
       <div className="flex flex-col gap-[20px]">
         <ProjectDetail />
+        <Sidebar className="hidden max-md:flex" />
         <Contributions />
         <Discussion />
       </div>

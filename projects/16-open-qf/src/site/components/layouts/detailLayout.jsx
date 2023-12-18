@@ -13,7 +13,7 @@ export default function DetailLayout({
         <div className="mb-[20px]">{breadcrumb}</div>
         <div className="flex gap-[20px]">
           <div className="flex grow">{children}</div>
-          <div className="min-w-[392px]">{sidebar}</div>
+          <div className="max-md:hidden min-w-[392px]">{sidebar}</div>
         </div>
       </MainContainer>
     </AppLayout>
