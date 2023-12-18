@@ -16,7 +16,7 @@ export type __AugmentedQuery<ApiType extends ApiTypes> = AugmentedQuery<ApiType,
 export type __QueryableStorageEntry<ApiType extends ApiTypes> = QueryableStorageEntry<ApiType>;
 
 declare module '@polkadot/api-base/types/storage' {
-  interface AugmentedQueries<ApiType extends ApiTypes> {
+  interface SubstrateAugmentedQueries<ApiType extends ApiTypes> {
     aura: {
       /**
        * The current authority set.

@@ -1,6 +1,8 @@
 import { AugmentedRpc } from '@polkadot/rpc-core/types';
 import { RpcInterface } from '@polkadot/rpc-core/types/jsonrpc';
 import { Observable } from '@polkadot/types/types';
+import { PolkadotRpcInterface, KusamaRpcInterface, SubstrateRpcInterface } from '@polkadot/rpc-core/types/jsonrpc'
+
 
 // types to prefix the rpc interface for methods (methods are located inside the namespaces. here just the namespaces are prefixed to every method)
 type AppendNameSpace<Namespace, NamespaceName> = {
@@ -24,9 +26,13 @@ type Flatten<T> = T extends any ? UnionToIntersection<FlattenUnion<ObjectValuesO
 
 
 // Transformation from `{ namespace.method }` to `{ namespace.namespace_method }`:
-type Prefixed = PrefixSubByNameSpace<RpcInterface>;
+type PolkadotPrefixed = PrefixSubByNameSpace<PolkadotRpcInterface>;
+type KusamaPrefixed = PrefixSubByNameSpace<KusamaRpcInterface>;
+type SubstratePrefixed = PrefixSubByNameSpace<SubstrateRpcInterface>;
 // Transformation from `{ namespace.namespace_method }` to `{ namespace_method }`:
-export type RpcApiFlattened = Flatten<Prefixed>;
+export type PolkadotRpcApiFlattened = Flatten<PolkadotPrefixed>;
+export type KusamaRpcApiFlattened = Flatten<KusamaPrefixed>;
+export type SubstrateRpcApiFlattened = Flatten<SubstratePrefixed>;
 
 
 
@@ -85,13 +91,18 @@ type ReplaceObservableByPromise<T> = T extends (...args: infer A) => Observable<
 type RemoveAugmentAtFunctions<Namespace> = {
   [Func in keyof Namespace]: Namespace[Func] extends AugmentedRpc<infer F> ? ReplaceObservableByPromise<F> : never;
 };
-type RemoveAugment<T> = {
+export type RemoveAugment<T> = {
   [Namespace in keyof T]: RemoveAugmentAtFunctions<T[Namespace]>;
 };
 // This type is used to remove the `AugmentedRpc` type from the rpc interface.
 // And, also, replace Observables with Promises.
 // However, it keeps the types nested inside the namespaces.
 export type RpcApiSimplified = RemoveAugment<RpcInterface>;
+
+export type PolkadotRpcApiSimplified = RemoveAugment<PolkadotRpcInterface>;
+export type KusamaRpcApiSimplified = RemoveAugment<KusamaRpcInterface>;
+export type SubstrateRpcApiSimplified = RemoveAugment<SubstrateRpcInterface>;
+
 
 // ----------------------------------------------------------------------------------------------------------
 // the next types may not be used yet, they are left as they are related to exploring the best way for dynamic typings...

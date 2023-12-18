@@ -504,8 +504,8 @@ declare module '@polkadot/types/lookup' {
     readonly forced: Option<u32>;
   }
 
-  /** @name PalletGrandpaCall (79) */
-  interface PalletGrandpaCall extends Enum {
+  /** @name SubstratePalletGrandpaCall (79) */
+  interface SubstratePalletGrandpaCall extends Enum {
     readonly isReportEquivocation: boolean;
     readonly asReportEquivocation: {
       readonly equivocationProof: SpConsensusGrandpaEquivocationProof;
