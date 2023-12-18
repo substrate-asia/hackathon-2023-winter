@@ -11,7 +11,7 @@ import NoData from "@/components/noData";
 export default function UserTabContributionsContent() {
   const { contributions } = useServerSideProps();
 
-  if (!contributions.length) {
+  if (!contributions?.length) {
     return <NoData />;
   }
 
