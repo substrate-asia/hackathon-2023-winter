@@ -5,6 +5,7 @@ import com.hackathon.framework.provider.impl.GenerateEngineImpl;
 import com.hackathon.framework.utils.ReportUtil;
 import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.StrategyConfigUtil;
+import com.jcraft.jsch.JSchException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -14,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,7 +104,13 @@ public class ThreeCat extends JFrame {
                         throw new RuntimeException(ex);
                     }
                     // command里面就代表了详细情况。
-                    Result initDirResult = generateEngine.initDirectory(parameter,strategy.getDirectory());
+                    Result initDirResult;
+                    try {
+                        initDirResult = generateEngine.initDirectoryForServer();
+                    } catch (IOException | InvocationTargetException | IllegalAccessException | JSchException |
+                             InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     if(initDirResult.getHasError().isEmpty()){
                         successCount +=1;
                     }

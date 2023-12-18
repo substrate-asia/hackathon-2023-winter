@@ -1,8 +1,10 @@
 package com.hackathon.framework.provider;
 
 import com.hackathon.framework.utils.Result;
+import com.jcraft.jsch.JSchException;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -31,10 +33,21 @@ public interface GenerateEngine {
     Result preCheckGenerationEnv(String compile);
 
     /**
+     * 在服务器上面进行链接
+     * @return
+     * @throws IOException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws JSchException
+     * @throws InterruptedException
+     */
+    Result initDirectoryForServer() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException;
+
+    /**
      * 初始化生成目录
      * @param generateDstDirectory 最终生成的目录位置
      */
-    Result initDirectory(String generateDstDirectory, List<String> strategyList);
+    Result initDirectoryForLocal(String generateDstDirectory, List<String> strategyList);
 
     /**
      * 载入合约

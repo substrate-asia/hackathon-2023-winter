@@ -5,6 +5,8 @@ guiCommand:
 
 # 第一阶段 生成测试工程
 generateEngine:
+  # 服务器上面的工程地址
+  enginePath: xxx
   # 合约地址
   contractAddress: xxxx
   # 合约类型
@@ -22,7 +24,7 @@ generateEngine:
   # Sdk名称
   sdkName: xxx
   # 选择断言模板l路径-匹配模板
-  assertionPath: xxx
+  assertionPath: jest.config.js
 
 # 第二阶段 生成测试用例文件
 generateTestCaseFile:

@@ -2,7 +2,6 @@ package com.hackathon.framework.utils;
 
 import com.hackathon.framework.bean.StrategyBean;
 import org.yaml.snakeyaml.Yaml;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
@@ -25,9 +24,7 @@ public class StrategyConfigUtil {
      * @throws FileNotFoundException
      */
     public static StrategyBean getStrategy(String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
-        URL resource = ClassLoader.getSystemResource("base.yaml");
-        String path = resource == null ? "" : resource.getPath();
-        FileInputStream fileInputStream = new FileInputStream(path);
+        FileInputStream fileInputStream = new FileInputStream(loadResource("base.yaml"));
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(fileInputStream);
         Map<String, Object> ret = (Map<String, Object>) data.get(generateType);
@@ -36,9 +33,20 @@ public class StrategyConfigUtil {
         return envBean;
     }
 
+
+    /**
+     * 加载资源
+     * @param fileName 文件名称
+     * @return
+     */
+    public static String loadResource(String fileName){
+        URL resource = ClassLoader.getSystemResource(fileName);
+        return resource == null ? "" : resource.getPath();
+    }
+
     public static void main(String[] args) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
-        URL resource = ClassLoader.getSystemResource("base.yaml");
-        String path = resource == null ? "" : resource.getPath();
+        String path = StrategyConfigUtil.loadResource("jest.config.js");
+        System.out.println(path);
         // 读取指定节点
         StrategyBean strategy = StrategyConfigUtil.getStrategy("generateEngine");
         System.out.println(strategy);

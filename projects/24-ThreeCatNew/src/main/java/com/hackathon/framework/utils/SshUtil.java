@@ -1,59 +1,40 @@
 package com.hackathon.framework.utils;
 
+import com.hackathon.framework.config.ProductionConfig;
 import com.jcraft.jsch.ChannelExec;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
-public class SShUtil {
-    private String username;
-    private String password;
+public class SshUtil {
+    private final String username;
+    private final String password;
     // ssh有一个session实例
-    private Session session = null;
+    public Session session = null;
 
-    private String host;
+    private final String host;
 
-    private String cmd;
-
-    public SShUtil(String username, String password, String host, String cmd) {
-        this.username = username;
-        this.password = password;
-        this.host = host;
-    }
-
-    public SShUtil() throws IOException{
-        Properties props = new Properties();
-        // 读取resources下的config.properties文件
-        URL resource = ClassLoader.getSystemResource("config.properties");
-        String path = resource == null ? "" : resource.getPath();
-        InputStream is = new FileInputStream(path);
-        props.load(is);
-        this.username = props.getProperty("ssh.username");
-        this.password = props.getProperty("ssh.password");
-        this.host = props.getProperty("ssh.host");
-        this.cmd = props.getProperty("ssh.cmd");
+    public SshUtil(){
+        this.username = ProductionConfig.getUserName();
+        this.password = ProductionConfig.getPassWord();
+        this.host = ProductionConfig.networkAddress();
+        connectServer();
     }
 
     /**
      * 链接服务器
      * @return
      */
-    public Result connectServer() {
-        long startTime = System.nanoTime();
+    public void connectServer() {
         int port = 22;
         // 创建JSch对象
         JSch jSch = new JSch();
         boolean reulst = false;
         String errorMessage = "";
-        ChannelExec channelExec = null;
-        InputStream inputStream = null;
-        List<String> resultLines = new ArrayList<>();
-        String resultAbi = null;
 
         try {
             // 根据主机账号、ip、端口获取一个Session对象
@@ -68,18 +49,6 @@ public class SShUtil {
             session.setTimeout(5000);
             // 进行连接
             session.connect();
-
-            // session建立连接后，执行shell命令
-            channelExec = (ChannelExec) session.openChannel("exec");
-            channelExec.setCommand(cmd);
-            channelExec.connect();
-            // 获取执行结果的输入流
-            inputStream = channelExec.getInputStream();
-            BufferedReader in = new BufferedReader(new InputStreamReader(inputStream));
-            while((resultAbi = in.readLine()) != null) {
-                resultLines.add(resultAbi);
-            }
-
             // 获取连接结果
             reulst = session.isConnected();
             if (!reulst) {
@@ -90,9 +59,35 @@ public class SShUtil {
             errorMessage = e.getMessage();
             System.out.println(errorMessage);
         }
-//        String resultMessage = reulst ? "链接服务器成功" : "链接服务器失败";
-        return new Result(startTime, errorMessage, resultLines);
     }
+
+    /**
+     * 执行命令行
+     * @param cmd
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     * @throws InterruptedException
+     */
+    public String executeCmd(String cmd) throws JSchException, IOException, InterruptedException {
+        // session建立连接后，执行shell命令
+        ChannelExec channelExec = (ChannelExec) session.openChannel("exec");
+        channelExec.setCommand(cmd);
+        channelExec.connect();
+        // 获取执行结果的输入流
+        StringBuilder output = new StringBuilder();
+        byte[] buffer = new byte[1024];
+        while (channelExec.getExitStatus() == -1) {
+            while (channelExec.getInputStream().available() > 0) {
+                int bytesRead = channelExec.getInputStream().read(buffer);
+                output.append(new String(buffer, 0, bytesRead));
+            }
+            Thread.sleep(100);
+        }
+        channelExec.disconnect();
+        return output.toString();
+    }
+
 
     /**
      * 全部用完后关闭服务器，提供给其他人调用

@@ -24,6 +24,19 @@ public class StrategyBean {
         this.contractType = contractType;
     }
 
+    public String getEnginePath() {
+        return enginePath;
+    }
+
+    public void setEnginePath(String enginePath) {
+        this.enginePath = enginePath;
+    }
+
+    /**
+     * 工程名称
+     */
+    private String enginePath;
+
     private String contractAddress;
 
     /**
