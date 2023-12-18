@@ -1,6 +1,6 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
-    <ui:VisualElement name="Screen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0);">
+    <ui:VisualElement name="Screen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Images/background.png?fileID=2800000&amp;guid=7205e18bc5be0dc498b154981540627e&amp;type=3#background&apos;);">
         <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 250px; width: 100%; justify-content: center;">
             <ui:VisualElement name="TopPadding" style="flex-grow: 0; padding-right: 50px; padding-left: 50px; padding-top: 100px; padding-bottom: 0; flex-direction: row; flex-shrink: 0; width: 100%; height: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
                 <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 30%; height: 100%;">

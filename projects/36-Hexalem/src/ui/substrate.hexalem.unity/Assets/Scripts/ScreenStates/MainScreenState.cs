@@ -51,6 +51,8 @@ namespace Assets.Scripts.ScreenStates
             // load initial sub state
             FlowController.ChangeScreenSubState(ScreenState.MainScreen, ScreenSubState.MainChoose);
 
+
+
             // subscribe to connection changes
             Network.ConnectionStateChanged += OnConnectionStateChanged;
             Storage.OnNextBlocknumber += UpdateBlocknumber;
