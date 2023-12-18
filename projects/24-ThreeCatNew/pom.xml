@@ -41,13 +41,13 @@
             <artifactId>groovy-all</artifactId>
             <version>${groovy-all.core.version}</version>
         </dependency>
-        <!--字符串模板 用于生成测试类-->
-        <dependency>
-            <groupId>org.FreeMarker</groupId>
-            <artifactId>FreeMarker</artifactId>
-            <version>${FreeMarker.core.version}</version>
-        </dependency>
-        <!-- Fastjson 用于处理json串-->
+<!--        字符串模板 用于生成测试类-->
+<!--        <dependency>-->
+<!--            <groupId>org.FreeMarker</groupId>-->
+<!--            <artifactId>FreeMarker</artifactId>-->
+<!--            <version>${FreeMarker.core.version}-incubating</version>-->
+<!--        </dependency>-->
+<!--         Fastjson 用于处理json串-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -61,6 +61,12 @@
             <version>${web3j.core.version}</version>
         </dependency>
 
+        <!--ssh链接服务器-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
     </dependencies>
 
     <build>
