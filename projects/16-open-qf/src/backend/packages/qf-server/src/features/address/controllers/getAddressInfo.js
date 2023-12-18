@@ -4,7 +4,7 @@ const { queryAddressInfo } = require("./address");
 async function getAddressInfo(ctx) {
   const { address } = ctx.params;
   if (!isValidAddress(address)) {
-    return {
+    ctx.body = {
       fellowshipRank: null,
       hasVerifiedIdentity: false,
       isTipFinder: false,
@@ -15,6 +15,7 @@ async function getAddressInfo(ctx) {
       isValidator: false,
       isActiveVoter: false,
     };
+    return;
   }
 
   ctx.body = await queryAddressInfo(address);
