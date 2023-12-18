@@ -80,6 +80,39 @@ namespace Assets.Scripts
             return $"The {selectTile.TileToBuy.TileType} tile costs {cost}.\r\n\r\n{produceString}";
         }
 
+        public static string TileRoundDescription(HexaTile tile)
+        {
+            var produce = "";
+
+            var tileProduction = HexalemConfig.GetInstance().MapTileProduction[tile.TileType][tile.TilePattern];
+            var rawProduces = tileProduction[tile.TileLevel];
+
+            for (int i = 0; i < rawProduces.Length; i++)
+            {
+                if (rawProduces[i] == 0)
+                {
+                    continue;
+                }
+
+                RessourceType resourceType = (RessourceType)i;
+
+                if (produce != "")
+                {
+                    produce += ", ";
+                }
+
+                produce += $"+{rawProduces[i]} {ResourceTypeIcon(resourceType)}";
+            }
+
+            if (produce == "")
+            {
+                produce = "+Nothing";
+            }
+
+            return $"Round ({produce})";
+        }
+
+
         public static string TileUpgradeDescription(HexaPlayer player, HexaTile tileToUpgrade)
         {
             var upgradeCosts = HexalemConfig.GetInstance().MapTileUpgradeCost;

@@ -70,7 +70,7 @@ namespace Assets.Scripts
 
             tileCard.Q<Label>("LblTileName").text = selectTile.TileType.ToString() + "(" + HelperUI.TileLevelName(selectTile.TileLevel) + ")";
 
-            tileCard.Q<Label>("LblRoundPre").text = "(+1";
+            tileCard.Q<Label>("LblRound").text = HelperUI.TileRoundDescription(selectTile);
             tileCard.Q<Label>("LblManaCost").text = "1";
 
             var velTileImage = tileCard.Q<VisualElement>("VelTileImage");

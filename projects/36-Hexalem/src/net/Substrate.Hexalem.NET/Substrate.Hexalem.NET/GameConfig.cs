@@ -92,6 +92,19 @@ namespace Substrate.Hexalem.Engine
 
         private readonly Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>> DefaultMapTileProduction = new Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>>
         {
+            {
+                TileType.Home,
+                new Dictionary<TilePattern, List<byte[]>>
+                {
+                    { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 0
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 1
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 2
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }  // Req. Humans (all level same)
+                     } },
+                }
+            },
             { TileType.Grass, new Dictionary<TilePattern, List<byte[]>>
                 {
                     { TilePattern.Normal, new List<byte[]> {
