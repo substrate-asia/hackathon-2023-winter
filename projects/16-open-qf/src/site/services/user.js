@@ -7,3 +7,7 @@ export function getActivityTags() {
 export function getAddressActivityTags(address) {
   return ssrNextApi.fetch(`addresses/${address}/tags`);
 }
+
+export function getAddressContributions(address) {
+  return ssrNextApi.fetch(`addresses/${address}/contributions`);
+}

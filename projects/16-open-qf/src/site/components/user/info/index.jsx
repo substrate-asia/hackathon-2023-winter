@@ -1,4 +1,4 @@
-import { USER_INFO, USER_POWER } from "@/fixtures/user";
+import { USER_INFO } from "@/fixtures/user";
 import Avatar from "../../accountSelector/avatar";
 import Copy from "../../copy";
 import IdentityOrAddr from "../identityOrAddr";
@@ -12,7 +12,11 @@ import LocaleSymbol from "@/components/common/localeSymbol";
 export default function UserInfo() {
   const router = useRouter();
   const address = router.query.address;
-  const { activityTags, userActivityTags } = useServerSideProps();
+  const { activityTags, userActivityTags, contributions } =
+    useServerSideProps();
+
+  const contributionsValue = sumBy(contributions, "balance");
+
   const allPowerScore = sumBy(activityTags, "power");
   const userPowerScore = sumBy(userActivityTags, "power");
 
@@ -32,11 +36,11 @@ export default function UserInfo() {
       items: [
         {
           label: "Contributions",
-          value: USER_INFO.contributions.contributions,
+          value: contributions?.length || 0,
         },
         {
           label: "Value",
-          value: <LocaleSymbol value={USER_INFO.contributions.value} />,
+          value: <LocaleSymbol value={contributionsValue} />,
         },
       ],
     },

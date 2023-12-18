@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import qs from "querystring";
 
 export function useUserTab() {
-  const { projects } = useServerSideProps();
+  const { projects, contributions } = useServerSideProps();
 
   const items = [
     {
@@ -14,7 +14,7 @@ export function useUserTab() {
     {
       value: "contributions",
       content: "Contributions",
-      activeCount: 2,
+      activeCount: contributions?.length,
     },
     false && {
       value: "projects",
