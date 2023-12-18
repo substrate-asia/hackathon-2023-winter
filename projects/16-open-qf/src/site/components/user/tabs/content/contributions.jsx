@@ -56,7 +56,7 @@ export default function UserTabContributionsContent() {
                   <LocaleSymbol value={item.balance} />
                 </div>
                 <div className="text14medium text-text-tertiary">
-                  {dayjs().format("YYYY-MM-DD HH:mm:ss")}
+                  {dayjs(item.indexer?.blockTime).format("YYYY-MM-DD HH:mm:ss")}
                 </div>
               </div>
             </div>
