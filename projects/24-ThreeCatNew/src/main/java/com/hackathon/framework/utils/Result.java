@@ -48,9 +48,9 @@ public class Result {
     public void setResult(Object result) {
         this.result = result;
     }
-    public Result(long startTime, String hasError, Object result) {
+    public Result(long startTime, String hasError, Object resultAbi) {
         this.executionTime = (System.nanoTime()- startTime) / 1_000_000;
         this.hasError = hasError;
-        this.result = result;
+        this.result = resultAbi;
     }
 }
