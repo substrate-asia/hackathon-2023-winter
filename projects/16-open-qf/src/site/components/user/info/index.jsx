@@ -39,7 +39,7 @@ export default function UserInfo() {
         },
       ],
     },
-    {
+    false && {
       title: "Project",
       items: [
         {
@@ -56,7 +56,7 @@ export default function UserInfo() {
         },
       ],
     },
-  ];
+  ].filter(Boolean);
 
   return (
     <div className="space-y-5">
