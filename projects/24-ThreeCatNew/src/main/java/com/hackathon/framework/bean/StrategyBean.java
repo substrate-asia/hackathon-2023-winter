@@ -8,6 +8,24 @@ import java.util.Map;
  */
 public class StrategyBean {
 
+    public String getContractAddress() {
+        return contractAddress;
+    }
+
+    public void setContractAddress(String contractAddress) {
+        this.contractAddress = contractAddress;
+    }
+
+    public String getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(String contractType) {
+        this.contractType = contractType;
+    }
+
+    private String contractAddress;
+
     /**
      * 编译方式 会关联一个映射
      */
@@ -16,7 +34,7 @@ public class StrategyBean {
     /**
      * 编译名称
      */
-    private String compiledNames;
+    private String contractType;
 
     /**
      * 生成目录的目录
@@ -60,14 +78,6 @@ public class StrategyBean {
 
     public void setCompile(String compile) {
         this.compile = compile;
-    }
-
-    public String getCompiledNames() {
-        return compiledNames;
-    }
-
-    public void setCompiledNames(String compiled) {
-        this.compiledNames = compiled;
     }
 
     public String getSdkName() {
