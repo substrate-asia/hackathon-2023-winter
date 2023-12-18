@@ -4,12 +4,12 @@ export const USER_INFO = {
   address: ADDRESS,
   contributions: {
     contributions: 5,
-    value: "102099",
+    value: "102099000000",
   },
   project: {
     proposed: 3,
     contributors: 24,
-    received: "102099",
+    received: "102099000000",
   },
 };
 

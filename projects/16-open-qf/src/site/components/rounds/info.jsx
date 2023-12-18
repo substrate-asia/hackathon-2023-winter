@@ -1,10 +1,9 @@
 import Card from "@/components/card";
 import { Button } from "@/components/button";
 import { RoundCardMetadata } from "@/components/card/round";
-import { abbreviateBigNumber, toPrecision } from "@osn/common";
-import { DECIMALS } from "@/utils/constants";
 import { cn } from "@/utils";
 import Link from "next/link";
+import LocaleSymbol from "../common/localeSymbol";
 
 export default function RoundProjectInfo({ data }) {
   return (
@@ -48,8 +47,7 @@ export default function RoundProjectInfo({ data }) {
                 Matching Pool
               </div>
               <div className="text24bold text-text-primary">
-                {abbreviateBigNumber(toPrecision(data.asset.amount, DECIMALS))}{" "}
-                {data.asset.id}
+                <LocaleSymbol value={data.asset.amount} />
               </div>
             </div>
             <div>

@@ -7,6 +7,7 @@ import { cn } from "@/utils";
 import { useRouter } from "next/router";
 import { useServerSideProps } from "@/context/serverSideProps";
 import { sumBy } from "lodash-es";
+import LocaleSymbol from "@/components/common/localeSymbol";
 
 export default function UserInfo() {
   const router = useRouter();
@@ -35,7 +36,7 @@ export default function UserInfo() {
         },
         {
           label: "Value",
-          value: `${USER_INFO.contributions.value} DOT`,
+          value: <LocaleSymbol value={USER_INFO.contributions.value} />,
         },
       ],
     },
@@ -52,7 +53,7 @@ export default function UserInfo() {
         },
         {
           label: "Received",
-          value: `${USER_INFO.project.received} DOT`,
+          value: <LocaleSymbol value={USER_INFO.project.received} />,
         },
       ],
     },

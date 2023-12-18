@@ -4,6 +4,7 @@ import NetworkUser from "../../networkUser";
 import dayjs from "dayjs";
 import { cn } from "@/utils";
 import IpfsImage from "@/components/image/ipfs";
+import LocaleSymbol from "@/components/common/localeSymbol";
 
 export default function UserTabContributionsContent() {
   return (
@@ -33,7 +34,9 @@ export default function UserTabContributionsContent() {
               </div>
 
               <div className={cn("space-y-1 text-right", "max-sm:text-left")}>
-                <div className="text16semibold">1000 DOT</div>
+                <div className="text16semibold">
+                  <LocaleSymbol value={10010980000000} />
+                </div>
                 <div className="text14medium text-text-tertiary">
                   {dayjs().format("YYYY-MM-DD HH:mm:ss")}
                 </div>

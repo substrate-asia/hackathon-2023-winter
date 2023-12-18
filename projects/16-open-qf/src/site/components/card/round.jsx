@@ -4,9 +4,8 @@ import Tag from "../tag";
 import Card from ".";
 import { Button } from "../button";
 import Link from "next/link";
-import { abbreviateBigNumber, toPrecision } from "@osn/common";
-import { DECIMALS } from "@/utils/constants";
 import IpfsImage from "../image/ipfs";
+import LocaleSymbol from "../common/localeSymbol";
 
 export function RoundCardMetadata({ data, linkTitle = true }) {
   let title = data.title;
@@ -69,9 +68,7 @@ export default function RoundCard({
       >
         <FooterItem
           label="Matching Pool"
-          content={`${abbreviateBigNumber(
-            toPrecision(data.asset.amount, DECIMALS),
-          )} ${data.asset.id}`}
+          content={<LocaleSymbol value={data.asset.amount} />}
         />
         <FooterItem
           label="Contributors"

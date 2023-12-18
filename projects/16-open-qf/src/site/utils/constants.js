@@ -50,11 +50,6 @@ export const TOAST_TYPES = {
   PENDING: "Pending",
 };
 
-/**
- * @description Polkadot decimals
- */
-export const DECIMALS = 10;
-
 export const EmptyList = {
   items: [],
   page: 1,
