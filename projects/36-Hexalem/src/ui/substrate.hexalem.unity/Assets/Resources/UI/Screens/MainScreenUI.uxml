@@ -1,34 +1,37 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
-    <ui:VisualElement name="Screen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0);">
+    <ui:VisualElement name="Screen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Images/background.png?fileID=2800000&amp;guid=7205e18bc5be0dc498b154981540627e&amp;type=3#background&apos;);">
         <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 250px; width: 100%; justify-content: center;">
-            <ui:VisualElement name="TopPadding" style="flex-grow: 0; padding-right: 50px; padding-left: 50px; padding-top: 100px; padding-bottom: 0; flex-direction: row; flex-shrink: 0; width: 100%; height: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
+            <ui:VisualElement name="TopPadding" style="flex-grow: 0; padding-right: 50px; padding-left: 50px; padding-top: 50px; padding-bottom: 0; flex-direction: row; flex-shrink: 0; width: 100%; height: 100%; -unity-background-image-tint-color: rgba(255, 255, 255, 0);">
                 <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 30%; height: 100%;">
                     <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblAccount" class="font-color font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: bold; flex-wrap: nowrap; white-space: normal;" />
-                    </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 50%;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblAddress" class="font-color font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: normal; flex-wrap: nowrap; white-space: normal;" />
-                    </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblToken" class="font-color font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: bold;" />
-                    </ui:VisualElement>
-                </ui:VisualElement>
-                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 40%; height: 100%;">
-                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblNodeVersion" class="font-comic font-color" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: bold;" />
-                    </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblNodeUrl" class="font-comic font-color" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: normal;" />
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblAddress" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-left; font-size: 24px; -unity-font-style: normal; flex-wrap: nowrap; white-space: normal; color: rgb(255, 255, 255);" />
                     </ui:VisualElement>
                     <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%; flex-direction: row;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblConnection" class="font-comic font-color" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: bold; color: rgb(51, 51, 51);" />
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblAccount" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: auto; height: 100%; -unity-text-align: middle-left; font-size: 24px; -unity-font-style: bold; flex-wrap: nowrap; white-space: normal; color: rgb(255, 255, 255);" />
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblToken" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: auto; height: 100%; -unity-text-align: middle-right; font-size: 24px; -unity-font-style: bold; color: rgb(255, 255, 255); flex-grow: 1;" />
                     </ui:VisualElement>
-                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
-                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblBlockNumber" class="font-color font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 24px; -unity-font-style: bold;" />
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;" />
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 40%; height: 100%;">
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 50%;">
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblConnection" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 50px; -unity-font-style: bold; color: rgb(255, 255, 255); -unity-text-outline-width: 5px; -unity-text-outline-color: rgb(51, 51, 51);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 50%;">
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblBlockNumber" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 50px; -unity-font-style: bold;" />
                     </ui:VisualElement>
                 </ui:VisualElement>
-                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 30%; height: 100%;" />
+                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 30%; height: 100%;">
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblNodeUrl" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-right; font-size: 24px; -unity-font-style: normal; color: rgb(255, 255, 255);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;">
+                        <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblNodeVersion" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-right; font-size: 24px; -unity-font-style: bold; color: rgb(255, 255, 255);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%; flex-direction: row;" />
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%;" />
+                </ui:VisualElement>
             </ui:VisualElement>
         </ui:VisualElement>
         <ui:VisualElement name="FloatBody" style="flex-grow: 1; height: 100%; width: 100%; flex-shrink: 1;" />

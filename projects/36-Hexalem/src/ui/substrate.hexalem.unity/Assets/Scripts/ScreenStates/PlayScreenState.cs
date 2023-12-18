@@ -2,6 +2,7 @@
 using Substrate.Integration.Client;
 using Substrate.NetApi.Model.Types.Primitive;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -152,6 +153,8 @@ namespace Assets.Scripts.ScreenStates
             OnChangedHexaPlayer(Storage.HexaGame.HexaTuples[PlayerIndex].player);
             OnChangedHexaBoard(Storage.HexaGame.HexaTuples[PlayerIndex].board);
 
+            Grid.OnSwipeEvent += OnSwipeEvent;
+
             Storage.OnChangedHexaBoard += OnChangedHexaBoard;
             Storage.OnChangedHexaPlayer += OnChangedHexaPlayer;
             Storage.OnNextPlayerTurn += OnNextPlayerTurn;
@@ -170,6 +173,8 @@ namespace Assets.Scripts.ScreenStates
             // remove container
             FlowController.VelContainer.RemoveAt(1);
 
+            Grid.OnSwipeEvent -= OnSwipeEvent;
+
             Storage.OnChangedHexaBoard -= OnChangedHexaBoard;
             Storage.OnChangedHexaPlayer -= OnChangedHexaPlayer;
             Storage.OnNextPlayerTurn -= OnNextPlayerTurn;
@@ -179,6 +184,11 @@ namespace Assets.Scripts.ScreenStates
             Network.ExtrinsicCheck -= OnExtrinsicCheck;
             Storage.OnStorageUpdated -= OnStorageUpdated;
             Storage.OnNextBlocknumber -= OnNextBlockNumber;
+        }
+
+        private void OnSwipeEvent(Vector3 direction)
+        {
+            Grid.MoveCamera(direction);
         }
 
         private void OnNextBlockNumber(uint blocknumber)

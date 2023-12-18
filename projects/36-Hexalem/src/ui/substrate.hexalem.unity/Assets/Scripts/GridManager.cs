@@ -10,6 +10,10 @@ namespace Assets.Scripts
 
         public event TileClickHandler OnGridTileClicked;
 
+        public delegate void SwipeHandler(Vector3 direction);
+
+        public event SwipeHandler OnSwipeEvent;
+
         [SerializeField]
         public GameObject PlayerGrid;
 
@@ -107,15 +111,29 @@ namespace Assets.Scripts
         {
             if (Mathf.Abs(xDist) > Mathf.Abs(yDist))
             {
-                MoveCamera(xDist > 0 ? Vector3.left : Vector3.right);
+                if (xDist > 0)
+                {
+                    OnSwipeEvent?.Invoke(Vector3.left);
+                }
+                else
+                {
+                    OnSwipeEvent?.Invoke(Vector3.right);
+                }
             }
             else
             {
-                MoveCamera(yDist > 0 ? Vector3.down : Vector3.up);
+                if (yDist > 0)
+                {
+                    OnSwipeEvent?.Invoke(Vector3.down);
+                }
+                else
+                {
+                    OnSwipeEvent?.Invoke(Vector3.up);
+                }
             }
         }
 
-        private void MoveCamera(Vector3 direction)
+        public void MoveCamera(Vector3 direction)
         {
             Camera.main.transform.Translate(direction * 1);
         }
