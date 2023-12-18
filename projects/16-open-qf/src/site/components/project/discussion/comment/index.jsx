@@ -22,7 +22,7 @@ function Meta() {
           <Duration time={comment?.timestamp} />
         </span>
       </div>
-      <IpfsButton cid={comment.cid} />
+      {/* <IpfsButton cid={comment.cid} /> */}
     </div>
   );
 }
