@@ -43,6 +43,9 @@ namespace Assets.Scripts
         [SerializeField]
         private GameObject _caveTile;
 
+        [SerializeField]
+        private Material _delta;
+
         private Vector2 touchStart;
 
         private Vector2 touchEnd;
@@ -143,51 +146,7 @@ namespace Assets.Scripts
                     Destroy(child.gameObject);
                 }
 
-                GameObject newTile;
-                switch (tile.TileType)
-                {
-                    case TileType.Empty:
-                        newTile = Instantiate(_emptyTile, gridParent);
-                        break;
-
-                    case TileType.Home:
-                        if(tile.TileLevel == 1)
-                        {
-                            newTile = Instantiate(_rareHomeTile, gridParent);
-                        } else if(tile.TileLevel == 2)
-                        {
-                            newTile = Instantiate(_epicHomeTile, gridParent);
-                        } else
-                        {
-                            newTile = Instantiate(_homeTile, gridParent);
-                        }
-                        
-                        break;
-
-                    case TileType.Grass:
-                        newTile = Instantiate(_grassTile, gridParent);
-                        break;
-
-                    case TileType.Water:
-                        newTile = Instantiate(_waterTile, gridParent);
-                        break;
-
-                    case TileType.Mountain:
-                        newTile = Instantiate(_mountainTile, gridParent);
-                        break;
-
-                    case TileType.Tree:
-                        newTile = Instantiate(_treesTile, gridParent);
-                        break;
-
-                    case TileType.Desert:
-                        newTile = Instantiate(_desertTile, gridParent);
-                        break;
-
-                    case TileType.Cave:
-                        newTile = Instantiate(_caveTile, gridParent);
-                        break;
-                }
+                TileCreator.GetInstance().CreateTile(tile.TileType, tile.TileLevel, tile.TilePattern, gridParent);
             }
         }
     }

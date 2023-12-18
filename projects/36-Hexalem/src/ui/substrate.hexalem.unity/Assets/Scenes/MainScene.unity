@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.4465775, g: 0.49641246, b: 0.57481915, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657695, g: 0.49641138, b: 0.5748176, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -138,6 +138,7 @@ GameObject:
   - component: {fileID: 55225689}
   - component: {fileID: 55225688}
   - component: {fileID: 55225692}
+  - component: {fileID: 55225693}
   m_Layer: 5
   m_Name: UIDocument
   m_TagString: Untagged
@@ -247,8 +248,32 @@ MonoBehaviour:
   _treesTile: {fileID: 3202582487521064602, guid: d50c9ed70326c9a47939cf1539623b9e, type: 3}
   _desertTile: {fileID: 8706329026578284017, guid: fc9eb7854517e1d449a63b950712b60e, type: 3}
   _caveTile: {fileID: 2758082140818558022, guid: 03c4ad2224bbae44e835b1be8327c163, type: 3}
+  _delta: {fileID: 2100000, guid: cf96460760ec5eb468136871abfc1df3, type: 2}
   swipeThreshold: 50
   cameraMoveSpeed: 1
+--- !u!114 &55225693
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 55225685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a7c2104e66a35234f87fe2957fd96c8a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _emptyTile: {fileID: 4291607650337064099, guid: 315ee07e0671d6046a7e5a96554b33a4, type: 3}
+  _homeTile: {fileID: 7535761464842861189, guid: 7ac4d9f2c3355e74e9b1dd336046365f, type: 3}
+  _rareHomeTile: {fileID: 7535761464842861189, guid: c8b31314346709e4db6827a310babc3b, type: 3}
+  _epicHomeTile: {fileID: 7535761464842861189, guid: b50980af26190674badf8a06633353aa, type: 3}
+  _grassTile: {fileID: 3604290564195660183, guid: 2aa1827cca7eefd4fab04654ce228a9b, type: 3}
+  _waterTile: {fileID: 5716525105324350660, guid: 6eee664e07d115345ba3afbf14b24e53, type: 3}
+  _mountainTile: {fileID: 3054226215825228916, guid: 4ca22e86fc765dc41b8f5332f9a93299, type: 3}
+  _treesTile: {fileID: 3202582487521064602, guid: d50c9ed70326c9a47939cf1539623b9e, type: 3}
+  _desertTile: {fileID: 8706329026578284017, guid: fc9eb7854517e1d449a63b950712b60e, type: 3}
+  _caveTile: {fileID: 2758082140818558022, guid: 03c4ad2224bbae44e835b1be8327c163, type: 3}
+  _delta: {fileID: 2100000, guid: cf96460760ec5eb468136871abfc1df3, type: 2}
 --- !u!1 &185871275
 GameObject:
   m_ObjectHideFlags: 0
