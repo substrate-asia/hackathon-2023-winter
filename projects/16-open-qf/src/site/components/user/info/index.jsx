@@ -5,10 +5,15 @@ import IdentityOrAddr from "../identityOrAddr";
 import QFpowerPie from "./qfpowerPie";
 import { cn } from "@/utils";
 import { useRouter } from "next/router";
+import { useServerSideProps } from "@/context/serverSideProps";
+import { sumBy } from "lodash-es";
 
 export default function UserInfo() {
   const router = useRouter();
   const address = router.query.address;
+  const { activityTags, userActivityTags } = useServerSideProps();
+  const allPowerScore = sumBy(activityTags, "power");
+  const userPowerScore = sumBy(userActivityTags, "power");
 
   const footerItems = [
     {
@@ -17,7 +22,7 @@ export default function UserInfo() {
       items: [
         {
           label: "Score",
-          value: USER_POWER.score?.toFixed(2),
+          value: userPowerScore?.toFixed(2),
         },
       ],
     },
@@ -81,7 +86,8 @@ export default function UserInfo() {
         </div>
         <QFpowerPie
           className="w-52 h-36 py-2.5 max-sm:hidden"
-          percentage={USER_POWER.score}
+          allScore={allPowerScore}
+          userScore={userPowerScore}
         />
       </div>
       <div

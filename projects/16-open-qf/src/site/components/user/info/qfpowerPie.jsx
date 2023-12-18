@@ -1,12 +1,20 @@
 import { cn } from "@/utils";
 import { PieChart } from "react-minimal-pie-chart";
 
-export default function QFpowerPie({ className = "", percentage = 0 }) {
+export default function QFpowerPie({
+  className = "",
+  allScore = 0,
+  userScore = 0,
+}) {
+  const percentage = (userScore / allScore) * 100;
+
   const data = [
+    // all
     {
       value: 100 - percentage,
       color: "var(--fill-bg-quaternary)",
     },
+    // user
     {
       value: percentage,
       color: "var(--fill-bg-brand-secondary)",
@@ -30,7 +38,7 @@ export default function QFpowerPie({ className = "", percentage = 0 }) {
 
       <div className="text-center space-y-1 absolute bottom-4 w-full">
         <div className="text-text-primary text24bold">
-          {percentage?.toFixed(2)}
+          {userScore?.toFixed(2)}
         </div>
         <div className="text14medium text-text-tertiary">QFpower</div>
       </div>

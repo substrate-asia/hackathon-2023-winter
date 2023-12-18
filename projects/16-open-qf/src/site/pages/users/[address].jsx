@@ -8,6 +8,7 @@ import {
   getRoundCategoriesList,
   getRoundProjectsList,
 } from "@/services/rounds";
+import { getActivityTags, getAddressActivityTags } from "@/services/user";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 
 const UserPage = withCommonPageWrapper(() => {
@@ -31,11 +32,16 @@ const UserPage = withCommonPageWrapper(() => {
 export default UserPage;
 
 export async function getServerSideProps(context) {
+  const { address } = context.params;
+
   const [{ result: projectsResult }, { result: categories }] =
     await Promise.all([
       getRoundProjectsList(1, { page_size: 25 }),
       getRoundCategoriesList(1),
     ]);
+
+  const [{ result: activityTags }, { result: userActivityTags }] =
+    await Promise.all([getActivityTags(), getAddressActivityTags(address)]);
 
   const projects = projectsResult?.items ?? [];
   return {
@@ -43,6 +49,8 @@ export async function getServerSideProps(context) {
       ...loadCommonServerSideProps(context),
       projects,
       categories,
+      activityTags,
+      userActivityTags,
     },
   };
 }
