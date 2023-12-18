@@ -104,7 +104,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(now.Encode());
-            return new Method(1, "Timestamp", 0, "set", byteArray.ToArray());
+            return new Method(2, "Timestamp", 0, "set", byteArray.ToArray());
         }
     }
     

@@ -20,23 +20,23 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.hexalem_runtime
         
         System = 0,
         
-        Timestamp = 1,
+        Timestamp = 2,
         
-        Grandpa = 3,
+        Sudo = 4,
         
-        Balances = 4,
+        Utility = 5,
         
-        Sudo = 6,
+        Balances = 10,
         
-        Utility = 7,
+        HexalemModule = 21,
         
-        HexalemModule = 8,
+        Grandpa = 101,
     }
     
     /// <summary>
-    /// >> 118 - Variant[hexalem_runtime.RuntimeCall]
+    /// >> 77 - Variant[hexalem_runtime.RuntimeCall]
     /// </summary>
-    public sealed class EnumRuntimeCall : BaseEnumExt<RuntimeCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_timestamp.pallet.EnumCall, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.pallet.EnumCall, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_utility.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumCall>
+    public sealed class EnumRuntimeCall : BaseEnumExt<RuntimeCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.frame_system.pallet.EnumCall, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_timestamp.pallet.EnumCall, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_sudo.pallet.EnumCall, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_utility.pallet.EnumCall, BaseVoid, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.pallet.EnumCall, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.EnumCall, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, BaseVoid, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa.pallet.EnumCall>
     {
     }
 }

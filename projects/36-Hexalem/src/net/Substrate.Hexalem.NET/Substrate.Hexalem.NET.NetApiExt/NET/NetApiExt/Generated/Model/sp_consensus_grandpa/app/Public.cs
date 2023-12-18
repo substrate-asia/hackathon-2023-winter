@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_consensus_grandpa.a
     
     
     /// <summary>
-    /// >> 33 - Composite[sp_consensus_grandpa.app.Public]
+    /// >> 47 - Composite[sp_consensus_grandpa.app.Public]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Public : BaseType

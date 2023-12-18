@@ -37,14 +37,14 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated
         public TimestampStorage TimestampStorage;
         
         /// <summary>
-        /// AuraStorage storage calls.
+        /// SudoStorage storage calls.
         /// </summary>
-        public AuraStorage AuraStorage;
+        public SudoStorage SudoStorage;
         
         /// <summary>
-        /// GrandpaStorage storage calls.
+        /// UtilityStorage storage calls.
         /// </summary>
-        public GrandpaStorage GrandpaStorage;
+        public UtilityStorage UtilityStorage;
         
         /// <summary>
         /// BalancesStorage storage calls.
@@ -57,19 +57,19 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated
         public TransactionPaymentStorage TransactionPaymentStorage;
         
         /// <summary>
-        /// SudoStorage storage calls.
-        /// </summary>
-        public SudoStorage SudoStorage;
-        
-        /// <summary>
-        /// UtilityStorage storage calls.
-        /// </summary>
-        public UtilityStorage UtilityStorage;
-        
-        /// <summary>
         /// HexalemModuleStorage storage calls.
         /// </summary>
         public HexalemModuleStorage HexalemModuleStorage;
+        
+        /// <summary>
+        /// AuraStorage storage calls.
+        /// </summary>
+        public AuraStorage AuraStorage;
+        
+        /// <summary>
+        /// GrandpaStorage storage calls.
+        /// </summary>
+        public GrandpaStorage GrandpaStorage;
         
         public SubstrateClientExt(System.Uri uri, Substrate.NetApi.Model.Extrinsics.ChargeType chargeType) : 
                 base(uri, chargeType)
@@ -77,13 +77,13 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated
             StorageKeyDict = new System.Collections.Generic.Dictionary<System.Tuple<string, string>, System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>>();
             this.SystemStorage = new SystemStorage(this);
             this.TimestampStorage = new TimestampStorage(this);
-            this.AuraStorage = new AuraStorage(this);
-            this.GrandpaStorage = new GrandpaStorage(this);
-            this.BalancesStorage = new BalancesStorage(this);
-            this.TransactionPaymentStorage = new TransactionPaymentStorage(this);
             this.SudoStorage = new SudoStorage(this);
             this.UtilityStorage = new UtilityStorage(this);
+            this.BalancesStorage = new BalancesStorage(this);
+            this.TransactionPaymentStorage = new TransactionPaymentStorage(this);
             this.HexalemModuleStorage = new HexalemModuleStorage(this);
+            this.AuraStorage = new AuraStorage(this);
+            this.GrandpaStorage = new GrandpaStorage(this);
         }
     }
 }

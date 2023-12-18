@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 137 - Composite[pallet_hexalem.pallet.TileCost]
+    /// >> 127 - Composite[pallet_hexalem.pallet.TileCost]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class TileCost : BaseType

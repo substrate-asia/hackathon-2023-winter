@@ -28,7 +28,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     }
     
     /// <summary>
-    /// >> 48 - Variant[pallet_hexalem.pallet.TilePattern]
+    /// >> 43 - Variant[pallet_hexalem.pallet.TilePattern]
     /// </summary>
     public sealed class EnumTilePattern : BaseEnum<TilePattern>
     {

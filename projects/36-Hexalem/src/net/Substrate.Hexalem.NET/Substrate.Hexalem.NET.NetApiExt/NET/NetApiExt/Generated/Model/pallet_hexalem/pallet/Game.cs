@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 126 - Composite[pallet_hexalem.pallet.Game]
+    /// >> 116 - Composite[pallet_hexalem.pallet.Game]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Game : BaseType
@@ -42,7 +42,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// <summary>
         /// >> players
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 _players;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4 _players;
         
         /// <summary>
         /// >> selection
@@ -95,7 +95,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 Players
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4 Players
         {
             get
             {
@@ -170,7 +170,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             PlayerTurnAndPlayed.Decode(byteArray, ref p);
             LastPlayedBlock = new Substrate.NetApi.Model.Types.Primitive.U32();
             LastPlayedBlock.Decode(byteArray, ref p);
-            Players = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5();
+            Players = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4();
             Players.Decode(byteArray, ref p);
             Selection = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT1();
             Selection.Decode(byteArray, ref p);

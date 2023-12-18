@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 138 - Composite[pallet_hexalem.pallet.ResourceAmount]
+    /// >> 128 - Composite[pallet_hexalem.pallet.ResourceAmount]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class ResourceAmount : BaseType

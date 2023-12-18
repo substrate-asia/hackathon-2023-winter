@@ -35,13 +35,13 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             _client.StorageKeyDict.Add(new System.Tuple<string, string>("Balances", "Account"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
                             Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.types.AccountData)));
             _client.StorageKeyDict.Add(new System.Tuple<string, string>("Balances", "Locks"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
-                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT2)));
+                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT1)));
             _client.StorageKeyDict.Add(new System.Tuple<string, string>("Balances", "Reserves"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
-                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3)));
+                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT2)));
             _client.StorageKeyDict.Add(new System.Tuple<string, string>("Balances", "Holds"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
-                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4)));
+                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3)));
             _client.StorageKeyDict.Add(new System.Tuple<string, string>("Balances", "Freezes"), new System.Tuple<Substrate.NetApi.Model.Meta.Storage.Hasher[], System.Type, System.Type>(new Substrate.NetApi.Model.Meta.Storage.Hasher[] {
-                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4)));
+                            Substrate.NetApi.Model.Meta.Storage.Hasher.BlakeTwo128Concat}, typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32), typeof(Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3)));
         }
         
         /// <summary>
@@ -206,10 +206,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         ///  Any liquidity locks on some account balances.
         ///  NOTE: Should only be accessed when setting, changing and freeing a lock.
         /// </summary>
-        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT2> Locks(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
+        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT1> Locks(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
         {
             string parameters = BalancesStorage.LocksParams(key);
-            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT2>(parameters, token);
+            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.weak_bounded_vec.WeakBoundedVecT1>(parameters, token);
             return result;
         }
         
@@ -237,10 +237,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> Reserves
         ///  Named reserves on some account balances.
         /// </summary>
-        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3> Reserves(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
+        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT2> Reserves(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
         {
             string parameters = BalancesStorage.ReservesParams(key);
-            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3>(parameters, token);
+            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT2>(parameters, token);
             return result;
         }
         
@@ -268,10 +268,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> Holds
         ///  Holds on account balances.
         /// </summary>
-        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4> Holds(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
+        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3> Holds(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
         {
             string parameters = BalancesStorage.HoldsParams(key);
-            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4>(parameters, token);
+            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3>(parameters, token);
             return result;
         }
         
@@ -299,10 +299,10 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         /// >> Freezes
         ///  Freeze locks on account balances.
         /// </summary>
-        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4> Freezes(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
+        public async Task<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3> Freezes(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 key, CancellationToken token)
         {
             string parameters = BalancesStorage.FreezesParams(key);
-            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT4>(parameters, token);
+            var result = await _client.GetStorageAsync<Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3>(parameters, token);
             return result;
         }
     }
@@ -319,7 +319,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(dest.Encode());
             byteArray.AddRange(value.Encode());
-            return new Method(4, "Balances", 0, "transfer_allow_death", byteArray.ToArray());
+            return new Method(10, "Balances", 0, "transfer_allow_death", byteArray.ToArray());
         }
         
         /// <summary>
@@ -332,7 +332,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             byteArray.AddRange(who.Encode());
             byteArray.AddRange(new_free.Encode());
             byteArray.AddRange(old_reserved.Encode());
-            return new Method(4, "Balances", 1, "set_balance_deprecated", byteArray.ToArray());
+            return new Method(10, "Balances", 1, "set_balance_deprecated", byteArray.ToArray());
         }
         
         /// <summary>
@@ -345,7 +345,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             byteArray.AddRange(source.Encode());
             byteArray.AddRange(dest.Encode());
             byteArray.AddRange(value.Encode());
-            return new Method(4, "Balances", 2, "force_transfer", byteArray.ToArray());
+            return new Method(10, "Balances", 2, "force_transfer", byteArray.ToArray());
         }
         
         /// <summary>
@@ -357,7 +357,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(dest.Encode());
             byteArray.AddRange(value.Encode());
-            return new Method(4, "Balances", 3, "transfer_keep_alive", byteArray.ToArray());
+            return new Method(10, "Balances", 3, "transfer_keep_alive", byteArray.ToArray());
         }
         
         /// <summary>
@@ -369,7 +369,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(dest.Encode());
             byteArray.AddRange(keep_alive.Encode());
-            return new Method(4, "Balances", 4, "transfer_all", byteArray.ToArray());
+            return new Method(10, "Balances", 4, "transfer_all", byteArray.ToArray());
         }
         
         /// <summary>
@@ -381,7 +381,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(who.Encode());
             byteArray.AddRange(amount.Encode());
-            return new Method(4, "Balances", 5, "force_unreserve", byteArray.ToArray());
+            return new Method(10, "Balances", 5, "force_unreserve", byteArray.ToArray());
         }
         
         /// <summary>
@@ -392,7 +392,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         {
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(who.Encode());
-            return new Method(4, "Balances", 6, "upgrade_accounts", byteArray.ToArray());
+            return new Method(10, "Balances", 6, "upgrade_accounts", byteArray.ToArray());
         }
         
         /// <summary>
@@ -404,7 +404,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(dest.Encode());
             byteArray.AddRange(value.Encode());
-            return new Method(4, "Balances", 7, "transfer", byteArray.ToArray());
+            return new Method(10, "Balances", 7, "transfer", byteArray.ToArray());
         }
         
         /// <summary>
@@ -416,7 +416,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             System.Collections.Generic.List<byte> byteArray = new List<byte>();
             byteArray.AddRange(who.Encode());
             byteArray.AddRange(new_free.Encode());
-            return new Method(4, "Balances", 8, "force_set_balance", byteArray.ToArray());
+            return new Method(10, "Balances", 8, "force_set_balance", byteArray.ToArray());
         }
     }
     
