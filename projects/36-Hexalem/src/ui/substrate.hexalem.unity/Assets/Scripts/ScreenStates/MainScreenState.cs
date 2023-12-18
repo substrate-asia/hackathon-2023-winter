@@ -39,9 +39,9 @@ namespace Assets.Scripts.ScreenStates
             _lblAddress = topBound.Query<Label>("LblAddress");
             _lblToken = topBound.Query<Label>("LblToken");
 
-            _lblNodeVersion = topBound.Query<Label>("LblNodeVersion");
             _lblNodeUrl = topBound.Query<Label>("LblNodeUrl");
             _lblNodeUrl.text = Network.NodeUrl;
+            _lblNodeVersion = topBound.Query<Label>("LblNodeVersion");
             _lblConnection = topBound.Query<Label>("LblConnection");
             _lblBlockNumber = topBound.Query<Label>("LblBlockNumber");
 
@@ -78,12 +78,12 @@ namespace Assets.Scripts.ScreenStates
             if (IsConnected)
             {
                 _lblConnection.text = "Online";
-                _lblConnection.style.color = GameConstant.PastelGreen;
+                //_lblConnection.style.unityTextOutlineColor = GameConstant.PastelGreen;
             }
             else
             {
                 _lblConnection.text = "Offline";
-                _lblConnection.style.color = GameConstant.PastelRed;
+                //_lblConnection.style.unityTextOutlineColor = GameConstant.PastelRed;
             }
         }
 
@@ -100,16 +100,17 @@ namespace Assets.Scripts.ScreenStates
             }
             else
             {
-                _lblAccount.text = "...";
+                //_lblAccount.text = "...";
             }
 
             if (Storage.AccountInfo != null && Storage.AccountInfo.Data != null)
             {
                 _lblToken.text = GameConstant.BalanceFormatter(BigInteger.Divide(Storage.AccountInfo.Data.Free, new BigInteger(SubstrateNetwork.DECIMALS))) + " HEXA";
+                _lblNodeVersion.text = Network.Client.SubstrateClient.RuntimeVersion.SpecName;
             }
             else
             {
-                _lblToken.text = ".";
+                //_lblToken.text = ".";
             }
         }
     }
