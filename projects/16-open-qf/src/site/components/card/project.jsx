@@ -4,6 +4,7 @@ import { cn } from "@/utils";
 import IpfsImage from "../image/ipfs";
 import Link from "next/link";
 import NetworkUser from "../user/networkUser";
+import LocaleSymbol from "@/components/common/localeSymbol";
 
 function Logo({ project }) {
   return (
@@ -44,7 +45,9 @@ function TotalRaised({ project }) {
   return (
     <div className="mt-5 space-y-1">
       <div className="text14medium text-text-tertiary">Total Raised</div>
-      <div className="text16semibold text-text-primary">123 DOT</div>
+      <div className="text16semibold text-text-primary">
+        <LocaleSymbol value={project.raised || 0}/>
+      </div>
       <div className="text12medium text-text-tertiary">
         from{" "}
         <span className="text-text-primary">
