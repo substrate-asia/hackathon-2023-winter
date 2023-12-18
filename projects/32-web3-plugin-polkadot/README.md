@@ -2,6 +2,10 @@ web3-plugin-polkadot
 ===========
 This is a web3.js plugin for communicating with Polkadot, Kusama, and Substrate nodes.
 
+Project name: web3-plugin-polkadot
+Project creation date: 8 Dec 2023
+
+
 ## Introduction
 As web3.js v4.x supports plugins, this library will utilize that to build a plugin for Polkadot RPC providers. This plugin would allow users to execute calls like web3.substrate.namespace.RPC and similar commands for Polkadot RPCs. And later it would offer the additional functionalities related to accounts & contracts that differ from Ethereum.
 

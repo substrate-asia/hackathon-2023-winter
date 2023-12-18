@@ -1,13 +1,11 @@
 import { Web3PluginBase } from 'web3';
 
+import { PolkadotRpcApiFlattened, KusamaRpcApiFlattened, SubstrateRpcApiFlattened } from './web3js-polkadot-api';
 import {
-  KusamaRpcApiSimplified,
-  PolkadotRpcApiSimplified,
-  PolkadotRpcApiFlattened,
-  KusamaRpcApiFlattened,
-  SubstrateRpcApiFlattened,
-  SubstrateRpcApiSimplified,
-} from './web3js-polkadot-api';
+  PolkadotSimpleRpcInterface,
+  KusamaSimpleRpcInterface,
+  SubstrateSimpleRpcInterface,
+} from '@polkadot/rpc-core/types/jsonrpc';
 import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
 import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
 import { PolkadotRpcList } from './interfaces/polkadot/augment-api-rpc';
@@ -49,7 +47,7 @@ export class PolkadotPlugin extends Web3PluginBase<
       ...
     * ```
    */
-  private createRpcMethods(rpcList: Record<string, any>) {
+  private createRpcMethods(rpcList: Record<string, readonly string[]>) {
     const returnedRpcMethods: Record<string, any> = {};
     const objectKeys = Object.keys(rpcList) as Array<keyof typeof rpcList>;
     for (let rpcNamespace of objectKeys) {
@@ -96,16 +94,16 @@ export class PolkadotPlugin extends Web3PluginBase<
   //   }
   // };
 
-  public polkadot: PolkadotRpcApiSimplified;
-  public kusama: KusamaRpcApiSimplified;
-  public substrate: SubstrateRpcApiSimplified;
+  public polkadot: PolkadotSimpleRpcInterface;
+  public kusama: KusamaSimpleRpcInterface;
+  public substrate: SubstrateSimpleRpcInterface;
 
   constructor() {
     super();
 
-    this.polkadot = this.createRpcMethods(PolkadotRpcList) as PolkadotRpcApiSimplified;
-    this.kusama = this.createRpcMethods(KusamaRpcList) as KusamaRpcApiSimplified;
-    this.substrate = this.createRpcMethods(SubstrateRpcList) as SubstrateRpcApiSimplified;
+    this.polkadot = this.createRpcMethods(PolkadotRpcList) as PolkadotSimpleRpcInterface;
+    this.kusama = this.createRpcMethods(KusamaRpcList) as KusamaSimpleRpcInterface;
+    this.substrate = this.createRpcMethods(SubstrateRpcList) as SubstrateSimpleRpcInterface;
   }
 }
 

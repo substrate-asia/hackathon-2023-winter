@@ -116,13 +116,21 @@ describe('PolkadotPlugin Tests', () => {
     let web3: Web3;
 
     beforeAll(async () => {
-      web3 = new Web3('http://127.0.0.1:9944/');
+      web3 = new Web3('ws://127.0.0.1:9944/');
       expect(web3.polka).toBeUndefined();
       web3.registerPlugin(new PolkadotPlugin());
       expect(web3.polka.substrate).toBeDefined();
     });
 
-    afterAll(() => {});
+    afterAll(() => {
+      try {
+        // only needed with ws and wss.
+        // if the provider was http, an error will be thrown, ignore it
+        web3.provider?.disconnect();
+      } catch {
+        // do nothing
+      }
+    });
 
     it('should call chain.getBlock method', async () => {
       // const hash = "0x6277848db56df4936213f3c82d4b7181291674a9376deb22339dc504d33b8851";
