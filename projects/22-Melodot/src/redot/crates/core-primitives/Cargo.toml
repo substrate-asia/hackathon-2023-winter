@@ -1,0 +1,30 @@
+[package]
+name = "redot-core-primitives"
+description = ""
+version = "0.1.0"
+authors = ["DKLee <xiuerdwy@gmail.com>"]
+edition = "2021"
+repository = "https://github.com/ZeroDAO/redot"
+keywords = ["substrate", "pallet", "macro", "configuration"]
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
+# scale-info = { version = "2.2.0", default-features = false, features = ["derive"] }
+
+# Substrate
+sp-api = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v1.0.0" }
+
+# [dev-dependencies]
+# serde = { version = "1.0.163" }
+
+[features]
+default = ["std"]
+std = [
+	"codec/std",
+	# "scale-info/std",
+	# "serde/std",
+	"sp-api/std",
+]
