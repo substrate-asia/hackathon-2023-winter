@@ -4,6 +4,11 @@
 
 whale.finance basically implements Decentralized Asset Management with ERC 6551. We want to give the opportunity to investors sees their money been managed with full security and auditability.
 
+## Github
+
+[App](https://github.com/luiz-lvj/whale-finance)
+[Static Website](https://github.com/BryanBorck/whale-website)
+
 ## The Idea
 
 > "The idea came from our own experience with the fund industry, both of us on the team have already/still interned at investment funds, in the normal asset analysis part. Crypto is not yet so widespread in Brazil, despite the growing expansion, and we saw the potential to decentralize the entire investment process in funds using smart contract technologies, like the ERC 6551. Thus arose whale.finance."
