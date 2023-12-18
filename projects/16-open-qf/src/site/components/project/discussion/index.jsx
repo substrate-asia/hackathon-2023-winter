@@ -4,7 +4,6 @@ import DiscussionList from "./list";
 import { EditorProvider } from "./editor/context";
 import { useCallback } from "react";
 import { nextApi } from "@/services";
-import { useRouter } from "next/router";
 import { useDispatch } from "react-redux";
 import { newErrorToast } from "@/store/reducers/toastSlice";
 import { useAccount } from "@/context/account";
@@ -13,7 +12,6 @@ import { ProjectCommentsProvider, useProjectCommentsContext } from "./context";
 
 function DiscussionImpl() {
   const dispatch = useDispatch();
-  const router = useRouter();
   const account = useAccount();
   const { roundId, projectId } = useServerSideProps();
   const { comments, refresh } = useProjectCommentsContext();
@@ -58,7 +56,7 @@ function DiscussionImpl() {
         dispatch(newErrorToast(error.message));
       }
     },
-    [dispatch, router, roundId, projectId, account?.address, refresh],
+    [dispatch, roundId, projectId, account?.address, refresh],
   );
 
   return (
