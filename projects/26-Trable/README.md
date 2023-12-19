@@ -45,16 +45,6 @@ Users simply need to select the desired cryptocurrency for payment and complete 
 
 ### Basic technical architecture
 
-#### Uniswap V4
-
-在Uniswap V3中，给每个流动性资金池部署单独的合约，这样创建资金池和执行多池兑换的成本更高。
-
-Uniswap V4将所有资金池都存储在一个合约中，从而节省了大量的燃料成本，因为兑换将不再需要在不同的合约中的资金池之间转移代币。
-
-In Uniswap V3, each liquidity pool is deployed with its own individual contract, resulting in higher costs for creating pools and executing multi-pool exchanges.
-
-Uniswap V4 consolidates all liquidity pools into a single contract, thereby saving significant gas costs. This is because exchanges will no longer require the transfer of tokens between pools in different contracts.
-
 #### Solidity
 
 #### Acala
@@ -78,23 +68,23 @@ Uniswap V4 consolidates all liquidity pools into a single contract, thereby savi
 
 ### Project logo
 
-If we have
+
 
 ### Key Dapp Features
 
-#### Support for fiat currency payments（支持法币支付）
+- Support for fiat currency payments（支持法币支付）
 
 确保旅游产品跨境crypto直接支付的便利性
 
-#### Fast transactions anytime, anywhere（随时随地、快速交易）
+- Fast transactions anytime, anywhere（随时随地、快速交易）
 
 简化虚拟货币转移过程（多链资产转换）
 
-#### Save time and effort, lower loss（省时省力、更低损耗）
+- Save time and effort, lower loss（省时省力、更低损耗）
 
 结合Uniswap V4 降低多种token的swap成本，减少不必要的原始资产的转换和支付磨损
 
-#### No need to consider personal foreign exchange restrictions（无需考虑个人外汇限制）
+- No need to consider personal foreign exchange restrictions（无需考虑个人外汇限制）
 
 不受传统银行外汇限额的影响，更流畅的旅行体验
 
@@ -114,6 +104,8 @@ Front-End
 
 ## 黑客松期间所完成的事项
 
+
+
 ### 最终完成的功能点
 
 ### 完成的开发工作及代码结构
@@ -130,11 +122,12 @@ Front-End
 
 ## 队员信息
 
-（以下为GitHub）
+（GitHub）
 @yanboishere
 @lbr77 
 @s7iter
+@nuttt
 
-（以下为WeChat）
+（WeChat）
 @ZZJZZJ9248
 
