@@ -1,7 +1,7 @@
 use crate::{
 	mock::{self, *},
-	pallet, Error, Event, GameProperties, GameState, GameStorage, GetTileInfo, HexBoardStorage,
-	HexGrid, Move, ResourceType, HexBoard,
+	pallet, Error, Event, GameProperties, GameState, GameStorage, GetTileInfo, HexBoard,
+	HexBoardStorage, HexGrid, Move, ResourceType, NUMBER_OF_RESOURCE_TYPES,
 };
 use frame_support::{assert_noop, assert_ok};
 
@@ -238,7 +238,8 @@ fn test_resource_generation() {
 			HexalemTile(0),
 			HexalemTile(0),
 			HexalemTile(0),
-		].try_into()
+		]
+		.try_into()
 		.unwrap();
 
 		let hex_board_option: Option<HexBoard<TestRuntime>> =
@@ -248,14 +249,13 @@ fn test_resource_generation() {
 
 		let game_id = hex_board.game_id;
 
-		HexalemModule::set_hex_board(1, HexBoard {
-			game_id,
-			hex_grid: new_hex_grid,
-			resources: [0, 1, 0, 0, 0, 0, 0],
-		});
+		HexalemModule::set_hex_board(
+			1,
+			HexBoard { game_id, hex_grid: new_hex_grid, resources: [0, 1, 0, 0, 0, 0, 0] },
+		);
 
 		assert_ok!(HexalemModule::finish_turn(RuntimeOrigin::signed(1)));
-		
+
 		let hex_board_option: Option<HexBoard<TestRuntime>> =
 			HexBoardStorage::<TestRuntime>::get(1);
 
@@ -296,7 +296,8 @@ fn test_saturate_99() {
 			HexalemTile(0),
 			HexalemTile(0),
 			HexalemTile(0),
-		].try_into()
+		]
+		.try_into()
 		.unwrap();
 
 		let hex_board_option: Option<HexBoard<TestRuntime>> =
@@ -306,14 +307,14 @@ fn test_saturate_99() {
 
 		let game_id = hex_board.game_id;
 
-		HexalemModule::set_hex_board(1, HexBoard {
-			game_id,
-			hex_grid: new_hex_grid,
-			resources: [99, 99, 99, 99, 99, 99, 99],
-		});
+		// Set player resources to 99 and set a new hex_grid
+		HexalemModule::set_hex_board(
+			1,
+			HexBoard { game_id, hex_grid: new_hex_grid, resources: [99; NUMBER_OF_RESOURCE_TYPES] },
+		);
 
 		assert_ok!(HexalemModule::finish_turn(RuntimeOrigin::signed(1)));
-		
+
 		let hex_board_option: Option<HexBoard<TestRuntime>> =
 			HexBoardStorage::<TestRuntime>::get(1);
 
@@ -324,9 +325,8 @@ fn test_saturate_99() {
 }
 
 #[test]
-fn test_force_finish_turn(){
+fn test_force_finish_turn() {
 	new_test_ext().execute_with(|| {
-
 		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1, 2], 25));
 
 		let hex_board_option: Option<HexBoard<TestRuntime>> =
@@ -342,7 +342,9 @@ fn test_force_finish_turn(){
 			Error::<TestRuntime>::BlocksToPlayLimitNotPassed
 		);
 
-		System::set_block_number(<mock::TestRuntime as pallet::Config>::BlocksToPlayLimit::get() as u64 + 1);
+		System::set_block_number(
+			<mock::TestRuntime as pallet::Config>::BlocksToPlayLimit::get() as u64 + 1,
+		);
 
 		// force_finish_turn can not be called by the player that is currently on turn
 		assert_noop!(
@@ -358,5 +360,68 @@ fn test_force_finish_turn(){
 
 		// Now that enough blocks have passed, force_finish_turn can be called
 		assert_ok!(HexalemModule::force_finish_turn(RuntimeOrigin::signed(2), game_id));
+	})
+}
+
+#[test]
+fn play() {
+	new_test_ext().execute_with(|| {
+		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1, 2], 25));
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		let game_id = hex_board.game_id;
+
+		
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 12, buy_index: 0}),
+			Error::<TestRuntime>::TileIsNotEmpty
+		);
+
+		// newly placed tile needs to connect to already placed tiles
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 0, buy_index: 0}),
+			Error::<TestRuntime>::TileSurroundedByEmptyTiles
+		);
+
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 26, buy_index: 0}),
+			Error::<TestRuntime>::PlaceIndexOutOfBounds
+		);
+
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 11, buy_index: 2}),
+			Error::<TestRuntime>::BuyIndexOutOfBounds
+		);
+
+		// Set player resources to 0
+		HexalemModule::set_hex_board(
+			1,
+			HexBoard {
+				game_id,
+				hex_grid: hex_board.hex_grid,
+				resources: [0; NUMBER_OF_RESOURCE_TYPES],
+			},
+		);
+
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 11, buy_index: 0}),
+			Error::<TestRuntime>::NotEnoughResources
+		);
+
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(2), Move {place_index: 11, buy_index: 0}),
+			Error::<TestRuntime>::PlayerNotOnTurn
+		);
+
+		assert_noop!(
+			HexalemModule::play(RuntimeOrigin::signed(3), Move {place_index: 11, buy_index: 0}),
+			Error::<TestRuntime>::HexBoardNotInitialized
+		);
+
+		
 	})
 }
