@@ -30,7 +30,7 @@ public interface GenerateEngine {
      * @param compile Yaml generateEngine.compile节点决定
      * @return
      */
-    Result preCheckGenerationEnv(String compile);
+    Result preCheckGenerationEnv(String compile) throws JSchException, IOException, InterruptedException;
 
     /**
      * 在服务器上面进行链接

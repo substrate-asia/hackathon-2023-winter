@@ -30,10 +30,26 @@ public class GenerateEngineImpl implements GenerateEngine {
     }
 
     @Override
-    public Result preCheckGenerationEnv(String compile) {
+    public Result preCheckGenerationEnv(String compile) throws JSchException, IOException, InterruptedException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
-        return new Result(startTime,"","");
+
+        // 检测环境命令
+        String solcVersion = "solcjs --version";
+        String truffleVersion = "truffle --version";
+
+        String soclcVersionResult = sshUtil.executeCmd(solcVersion);
+
+        if(!soclcVersionResult.contains("not found")) {
+            String  errText = "solcjs is not installed";
+            System.err.println(errText);
+        }
+        if(!truffleVersion.contains("not found")) {
+            String  errText = "truffle is not installed";
+            System.err.println(errText);
+        }
+
+        return new Result(startTime,"","successfully");
     }
 
     /**
