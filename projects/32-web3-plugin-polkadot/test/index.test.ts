@@ -55,6 +55,17 @@ describe('PolkadotPlugin Tests', () => {
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);
     });
+
+    it('should get the rpc methods', async () => {
+      const response = await web3.polka.polkadot.rpc.methods();
+
+      expect(response).toBeDefined();
+
+      expect(Array.isArray(response.methods)).toBe(true);
+      expect(response.methods.length).toBeGreaterThan(0);
+
+      // console.log(JSON.stringify(response.methods, null, 2));
+    });
   });
 
   describe('Some Kusama RPC methods', () => {
@@ -109,6 +120,17 @@ describe('PolkadotPlugin Tests', () => {
 
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);
+    });
+
+    it('should get the rpc methods', async () => {
+      const response = await web3.polka.kusama.rpc.methods();
+
+      expect(response).toBeDefined();
+
+      expect(Array.isArray(response.methods)).toBe(true);
+      expect(response.methods.length).toBeGreaterThan(0);
+
+      // console.log(JSON.stringify(response.methods, null, 2));
     });
   });
 
@@ -170,6 +192,24 @@ describe('PolkadotPlugin Tests', () => {
 
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);
+    });
+
+    it('should get the rpc methods', async () => {
+      const response = await web3.polka.substrate.rpc.methods();
+
+      expect(response).toBeDefined();
+
+      expect(Array.isArray(response.methods)).toBe(true);
+      expect(response.methods.length).toBeGreaterThan(0);
+
+      // console.log(JSON.stringify(response.methods, null, 2));
+    });
+
+    it('should not have the rpc methods that is not available at substrate (for example beefy.[method])', async () => {
+      expect((web3.polka.substrate.beefy as any).getFinalizedHead).toBeUndefined();
+      expect((web3.polka.substrate.beefy as any).subscribeJustifications).toBeUndefined();
+      expect((web3.polka.substrate.beefy as any).unsubscribeJustifications).toBeUndefined();
+      web3.polka.polkadot.beefy
     });
   });
 });

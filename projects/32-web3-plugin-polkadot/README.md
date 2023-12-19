@@ -28,18 +28,28 @@ On the other hand, having the execution inside web3.js allows for having the ben
 
 ## TypeScript Intellisense
 
-Trying to provide the developer with the best experience. The TypeScript Intellisense works in vscode. And the RPCs are accessible with the convention: `web3.polka.<network>.<namespace>.<method>`.
+Trying to provide the developer with the best experience. The TypeScript Intellisense works in vscode. And the RPCs are accessible with the convention: `web3.polka.<network>.<namespace>.<method>`. And the supported network nodes are currently: `polkadot`, `kusama` and `substrate`.
 
 For example, here is how the namespaces that categorize the RPC endpoints are listed inside `polkadot` network namespace:
 ![rpcs organized in namespaces](https://github.com/conx3/hackathon-2023-winter/blob/web3-plugin-polkadot/projects/32-web3-plugin-polkadot/docs/images/intellisense-polkadot-dot.png)
 
-However, there are also `kusama` and `substrate` network namespace in addition to `polkadot`.
 
 And here is how the RPC methods that is inside a specific namespace, would be listed:
 ![reps methods](https://github.com/conx3/hackathon-2023-winter/blob/web3-plugin-polkadot/projects/32-web3-plugin-polkadot/docs/images/intellisense-web3.polka.polkadot.chain-dot.png)
   
 Picking or hovering over a specific method like `getBlock` would show its parameters and return type:
 ![method parameters and return type](https://github.com/conx3/hackathon-2023-winter/blob/web3-plugin-polkadot/projects/32-web3-plugin-polkadot/docs/images/intellisense-getblock.png)
+
+### Showing only the supported methods
+
+Some of the RPC methods are not supported on all networks. The plugin takes this into consideration when showing the list of available endpoints.
+
+For example, here is how `web3.polka.substrate.beefy` would like like:
+![intellisense non-supported methods](https://github.com/conx3/hackathon-2023-winter/blob/web3-plugin-polkadot/projects/32-web3-plugin-polkadot/docs/images/intellisense-non-supported-methods.png)
+
+And, in contrast, here is how `web3.polka.polkadot.beefy` would look like:
+![intellisense supported methods](https://github.com/conx3/hackathon-2023-winter/blob/web3-plugin-polkadot/projects/32-web3-plugin-polkadot/docs/images/intellisense-supported-methods.png)
+
 
 ## Sample plugin usage by the users
 
