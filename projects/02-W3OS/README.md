@@ -14,7 +14,7 @@ W3OS: Web3.0 Operating System Based on Anchor Network
 
 Acala: LDOT Token Dashboard https://github.com/doutv/lst-dashboard
 Bifrost & Moonbeam: https://github.com/doutv/lst-dashboard
-CESS: 
+CESS: https://github.com/ff13dfly/cessphoto
 Gear Foundation: https://github.com/doutv/Gear-Five-in-a-Row
 Moonbeam: https://github.com/doutv/zk-sudoku
 Tanssi: https://github.com/ff13dfly/Anchor
