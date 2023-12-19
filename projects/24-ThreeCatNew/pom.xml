@@ -12,19 +12,80 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <FreeMarker.core.version>2.3.31</FreeMarker.core.version>
+        <snakeyaml.core.version>1.27</snakeyaml.core.version>
+        <web3j.core.version>4.10.3</web3j.core.version>
+        <fastjson.core.version>1.2.37</fastjson.core.version>
+        <commons-beanutils.core.version>1.9.2</commons-beanutils.core.version>
+        <groovy-all.core.version>2.4.15</groovy-all.core.version>
     </properties>
 
     <dependencies>
+        <!--读取yaml文件-->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.27</version>
+            <version>${snakeyaml.core.version}</version>
         </dependency>
+
+        <!--处理数据转换常用的-->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
-            <version>1.9.2</version>
+            <version>${commons-beanutils.core.version}</version>
         </dependency>
+
+        <!--groovy Shell使用-->
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy-all.core.version}</version>
+        </dependency>
+        <!--字符串模板 用于生成测试类-->
+        <dependency>
+            <groupId>org.FreeMarker</groupId>
+            <artifactId>FreeMarker</artifactId>
+            <version>${FreeMarker.core.version}</version>
+        </dependency>
+        <!-- Fastjson 用于处理json串-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>${fastjson.core.version}</version>
+        </dependency>
+
+        <!-- Web3j JDK-->
+        <dependency>
+            <groupId>org.web3j</groupId>
+            <artifactId>core</artifactId>
+            <version>${web3j.core.version}</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <!-- 外部依赖jar包的最终位置 -->
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <!-- 此处为主入口-->
+                            <mainClass>com.hackathon.framework.ThreeCat</mainClass>
+                        </manifest>
+                        <manifestEntries>
+                            <Class-Path>.</Class-Path>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

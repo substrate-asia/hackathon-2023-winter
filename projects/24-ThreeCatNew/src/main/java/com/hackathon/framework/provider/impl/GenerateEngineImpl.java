@@ -18,11 +18,9 @@ public class GenerateEngineImpl implements GenerateEngine {
     private StrategyBean strategyBean;
 
     @Override
-    public Result getStrategy(String yamlPath, String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
+    public Result getStrategy(String generateType) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {
         long startTime = System.nanoTime();
-        URL resource = ClassLoader.getSystemResource("base.yaml");
-        String path = resource == null ? "" : resource.getPath();
-        strategyBean = StrategyConfigUtil.getStrategy(path, "generateEngine");
+        strategyBean = StrategyConfigUtil.getStrategy(generateType);
         return new Result(startTime,"",strategyBean);
     }
 
@@ -34,17 +32,18 @@ public class GenerateEngineImpl implements GenerateEngine {
     }
 
     @Override
-    public Result initDirectory(String generateDstDirectory) {
+    public Result initDirectory(String generateDstDirectory,List<String>strategyList) {
+        // TODO 包含ssh在服务器上面创建目录
+
         long startTime = System.nanoTime();
         String errText = "";
         String successText = "";
-        List<String> directory = strategyBean.getDirectory();
         try {
             Path rootPath = Paths.get(generateDstDirectory);
             if (!Files.exists(rootPath)) {
                 Files.createDirectories(rootPath);
             }
-            for(String dir:directory){
+            for(String dir:strategyList){
                 Path path = rootPath.resolve(dir);
                 Files.createDirectories(path);
             }

@@ -8,13 +8,61 @@ import java.util.Map;
  */
 public class StrategyBean {
 
+    public String getContractAddress() {
+        return contractAddress;
+    }
+
+    public void setContractAddress(String contractAddress) {
+        this.contractAddress = contractAddress;
+    }
+
+    public String getContractType() {
+        return contractType;
+    }
+
+    public void setContractType(String contractType) {
+        this.contractType = contractType;
+    }
+
+    private String contractAddress;
+
+    /**
+     * 编译方式 会关联一个映射
+     */
     private String compile;
 
-    private String compiledNames;
+    /**
+     * 编译名称
+     */
+    private String contractType;
 
+    /**
+     * 生成目录的目录
+     */
     private List<String> directory;
 
+    /**
+     * SDK名称用于关联接口请求方式
+     */
     private String sdkName;
+
+    /**
+     * 客户端界面的选择框
+     */
+    private Map<String,String> comboBox;
+
+    /**
+     * 报告保存路径
+     */
+    private String reportSavePath;
+
+    public String getReportSavePath() {
+        return reportSavePath;
+    }
+
+    public void setReportSavePath(String reportSavePath) {
+        this.reportSavePath = reportSavePath;
+    }
 
     public List<String> getDirectory() {
         return directory;
@@ -30,14 +78,6 @@ public class StrategyBean {
 
     public void setCompile(String compile) {
         this.compile = compile;
-    }
-
-    public String getCompiledNames() {
-        return compiledNames;
-    }
-
-    public void setCompiledNames(String compiled) {
-        this.compiledNames = compiled;
     }
 
     public String getSdkName() {
@@ -130,5 +170,13 @@ public class StrategyBean {
 
     public StrategyBean(){
 
+    }
+
+    public Map<String, String> getComboBox() {
+        return comboBox;
+    }
+
+    public void setComboBox(Map<String, String> comboBox) {
+        this.comboBox = comboBox;
     }
 }

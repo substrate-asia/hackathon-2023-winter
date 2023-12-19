@@ -1,12 +1,23 @@
+# 界面参数默认提供的
+guiCommand:
+  # 组合输入框
+  comboBox: {"生成工程":init <替换生成目标绝对路径>,"生成测试文件":genTest <替换生成的位置>,"收集覆盖":compile --coverage <替换覆盖率文件位置>}
+
 # 第一阶段 生成测试工程
 generateEngine:
-  # 编译命令行方式 检查编译方式对应的合约目录
+  # 合约地址
+  contractAddress: xxxx
+  # 合约类型
+  contractType: sol
+  # 开发框架 检查编译方式对应的合约目录
   compile: truffle
+
+  # 服务器上面配置对应目录
   directory:
     - contracts
     - migrations
     - test
-  # 编译后文件命名
+  # 编译后文件命名 compiledKey隐藏在代码工程
   compiledNames: abi
   # Sdk名称
   sdkName: xxx
@@ -30,7 +41,9 @@ generateTestCaseFile:
   scanWeight:
     - xxx
     - xxx
-  # 报告模式进行合并scanStages上面的步骤
-  reportMode: xxx
+  # 报告模式(也代表报告后缀)
+  reportMode: html
+  # 报告保存路径位置和名称(如果不填写默认是yyyy-MM-dd HHmmss.报告后缀)
+  reportSavePath:
 
 
