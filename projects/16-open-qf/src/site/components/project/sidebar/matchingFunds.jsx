@@ -65,11 +65,11 @@ export default function MatchingFunds() {
       <div className="flex flex-col gap-[16px]">
         <Chart percentage={percentage} />
         <div className="flex gap-[16px] justify-between">
-          <Item title="Matching Pool" value={<LocaleSymbol value={poll} />} />
           <Item
             title="Matching Funds"
             value={<LocaleSymbol value={matched} />}
           />
+          <Item title="Matching Pool" value={<LocaleSymbol value={poll} />} />
         </div>
       </div>
     </div>
