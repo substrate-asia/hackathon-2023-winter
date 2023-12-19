@@ -239,6 +239,18 @@ fn create_game() {
 			HexalemModule::create_game(RuntimeOrigin::signed(103), vec![104, 103], 9),
 			Error::<TestRuntime>::CreatorNotInPlayersAtIndexZero,
 		);
+
+		// Error when the same player is included twice
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(105), vec![105, 105], 25),
+			Error::<TestRuntime>::AlreadyPlaying
+		);
+
+		// Error when the same player is included twice
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(105), vec![105, 106, 106, 107], 25),
+			Error::<TestRuntime>::AlreadyPlaying
+		);
 	});
 }
 
