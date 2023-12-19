@@ -58,5 +58,10 @@ function getQfServerDb() {
 }
 
 module.exports = {
-  getQfServerDb, getRoundCol, getProjectCol, getProjectCommentCol, getContributorCol,
+  initQfServerDb,
+  getQfServerDb,
+  getRoundCol,
+  getProjectCol,
+  getProjectCommentCol,
+  getContributorCol,
 };
