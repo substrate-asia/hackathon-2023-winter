@@ -1,5 +1,5 @@
 import { useServerSideProps } from "@/context/serverSideProps";
-import { getProjectContributors } from "@/services/project";
+import { nextApi } from "@/services";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useUpdateEffect } from "react-use";
@@ -14,10 +14,11 @@ export function useProjectContributorsData(page, page_size) {
   useUpdateEffect(() => {
     setLoading(true);
 
-    getProjectContributors(roundId, projectId, {
-      page: page - 1,
-      page_size,
-    })
+    nextApi
+      .fetch(`rounds/${roundId}/projects/${projectId}/contributors`, {
+        page: page - 1,
+        page_size,
+      })
       .then((resp) => {
         if (resp?.result) {
           setData(resp.result);
