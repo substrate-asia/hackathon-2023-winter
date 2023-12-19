@@ -1,0 +1,23 @@
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node.js
+/node_modules/
+package-lock.json
+yarn.lock
+yarn-error.log
+
+# package file to check result
+hello.js
+
+/package/w3os
+/package/vara
+/package/homepage
+/package/gear
+/package/circle
+/package/five
+/package/moonbeam
+/package/acala
