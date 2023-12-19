@@ -2,6 +2,10 @@
   "name": "@open-qf/account-scan",
   "version": "1.0.0",
   "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
   "dependencies": {
     "@osn/scan-common": "0.6.4",
     "dotenv": "^16.3.1",

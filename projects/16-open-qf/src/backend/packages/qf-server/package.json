@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
+  "scripts": {
+    "test": "jest --passWithNoTests",
+    "start": "node src/index.js"
+  },
   "dependencies": {
     "@koa/cors": "^4.0.0",
     "@open-qf/common": "1.0.0",

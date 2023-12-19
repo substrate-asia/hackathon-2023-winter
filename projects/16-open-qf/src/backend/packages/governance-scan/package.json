@@ -2,6 +2,10 @@
   "name": "@open-qf/governance-scan",
   "version": "1.0.0",
   "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
   "dependencies": {
     "@open-qf/common": "1.0.0",
     "@open-qf/mongo": "1.0.0",
