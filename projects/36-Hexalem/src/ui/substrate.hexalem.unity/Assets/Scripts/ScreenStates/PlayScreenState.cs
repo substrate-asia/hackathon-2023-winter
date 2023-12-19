@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Assets.Scripts.GridManager;
 
 namespace Assets.Scripts.ScreenStates
 {
@@ -15,6 +16,9 @@ namespace Assets.Scripts.ScreenStates
     {
         public int SelectedGridIndex { get; set; } = -1;
         public int SelectedCardIndex { get; set; } = -1;
+
+        public delegate void ZoomClickHandler();
+        public static event ZoomClickHandler ZoomClicked;
 
         public VisualTreeAsset TileCardElement { get; }
 
@@ -116,6 +120,9 @@ namespace Assets.Scripts.ScreenStates
                     velPortrait.style.backgroundImage = new StyleBackground(PortraitDave);
                     break;
             }
+
+            // Portrait is also use to zoom in / zoom out
+            velPortrait.RegisterCallback<ClickEvent>(OnPortraitClicked);
 
             _lblManaValue = topBound.Q<Label>("LblManaValue");
             _lblHumansValue = topBound.Q<Label>("LblHumansValue");
@@ -308,6 +315,11 @@ namespace Assets.Scripts.ScreenStates
                 _subscriptionOrder.Remove(subscriptionId);
                 _subscriptionDict.Remove(subscriptionId);
             }
+        }
+
+        private void OnPortraitClicked(ClickEvent evt)
+        {
+            ZoomClicked?.Invoke();
         }
 
         private void OnRankingClicked(ClickEvent evt)
