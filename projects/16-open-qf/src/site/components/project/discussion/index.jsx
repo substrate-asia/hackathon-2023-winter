@@ -34,7 +34,7 @@ function DiscussionImpl() {
       const signature = await signApiData(data, author);
 
       const { result, error } = await nextApi.fetch(
-        `rounds/${roundId}/projects/${projectId}/comments`,
+        `/rounds/${roundId}/projects/${projectId}/comments`,
         {},
         {
           method: "POST",

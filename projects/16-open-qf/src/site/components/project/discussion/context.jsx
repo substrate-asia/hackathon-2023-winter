@@ -27,7 +27,7 @@ export function ProjectCommentsProvider({ children }) {
     setIsLoading(true);
 
     nextApi
-      .fetch(`rounds/${roundId}/projects/${projectId}/comments`, {
+      .fetch(`/rounds/${roundId}/projects/${projectId}/comments`, {
         page: page - 1,
         pageSize: data?.pageSize,
       })

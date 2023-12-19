@@ -1,8 +1,8 @@
-import { ssrNextApi } from ".";
+import { nextApi } from ".";
 
 export function getProjectContributors(roundId, projectId, params = {}) {
-  return ssrNextApi.fetch(
-    `rounds/${roundId}/projects/${projectId}/contributors`,
+  return nextApi.fetch(
+    `/rounds/${roundId}/projects/${projectId}/contributors`,
     params,
   );
 }

@@ -4,7 +4,7 @@ import Contributions from "@/components/project/contributors";
 import ProjectDetail from "@/components/project/detail";
 import Discussion from "@/components/project/discussion";
 import Sidebar from "@/components/project/sidebar";
-import { ssrNextApi } from "@/services";
+import { nextApi } from "@/services";
 import { EmptyList } from "@/utils/constants";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
@@ -30,14 +30,14 @@ export default ProjectPage;
 export const getServerSideProps = async (context) => {
   const roundId = Number(context.query.id);
   const projectId = Number(context.query.pid);
-  const { result: detail } = await ssrNextApi.fetch(
+  const { result: detail } = await nextApi.fetch(
     `/rounds/${roundId}/projects/${projectId}`,
   );
   if (!detail) {
     return to404();
   }
 
-  const { result: comments } = await ssrNextApi.fetch(
+  const { result: comments } = await nextApi.fetch(
     `/rounds/${roundId}/projects/${projectId}/comments`,
   );
 

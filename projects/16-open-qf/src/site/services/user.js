@@ -1,17 +1,17 @@
-import { ssrNextApi } from ".";
+import { nextApi } from ".";
 
 export function getActivityTags() {
-  return ssrNextApi.fetch("tags");
+  return nextApi.fetch("/tags");
 }
 
 export function getAddressActivityTags(address) {
-  return ssrNextApi.fetch(`addresses/${address}/tags`);
+  return nextApi.fetch(`/addresses/${address}/tags`);
 }
 
 export function getAddressContributions(address) {
-  return ssrNextApi.fetch(`addresses/${address}/contributions`);
+  return nextApi.fetch(`/addresses/${address}/contributions`);
 }
 
 export function getAddressProjects(address) {
-  return ssrNextApi.fetch(`addresses/${address}/projects`);
+  return nextApi.fetch(`/addresses/${address}/projects`);
 }
