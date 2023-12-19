@@ -48,7 +48,7 @@ async function createSuggestions(comments) {
 }
 
 function useSetEditorSuggestions() {
-  const { comments } = useServerSideProps();
+  const { comments } = useProjectCommentsContext();
   const { setSuggestions } = useEditorContext();
 
   useEffect(() => {
