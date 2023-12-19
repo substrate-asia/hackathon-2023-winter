@@ -64,9 +64,10 @@ Users simply need to select the desired cryptocurrency for payment and complete 
 
 我们由此希望去在本次黑客松 
 
-主要使用 Asset Router 的 LST 集成协议 允许用户通过类似于 一笔交易将 DOT等多链token 从 Polkadot 发送到 Acala 并交换到，将 XCM 交换到另一个平行链的方式 来尝试对比我们的uniswap trable方案 来完成构建在polkadot生态上的trable的跨链及swap交互实验。
+主要使用 Asset Router的 LST 集成协议，允许用户通过类似于 一笔交易将 DOT等多链token 从 Polkadot 发送到 Acala 并交换到LST 跨链桥与其他链上的加密货币进行互操作，使用 XCM 交换到另一个平行链的方式，来尝试对比我们的uniswap trable方案 来完成构建在polkadot生态上的trable的跨链及swap交互实验。
 
 ### Project logo
+
 
 
 
