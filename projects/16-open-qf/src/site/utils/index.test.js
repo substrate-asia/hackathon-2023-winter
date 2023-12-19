@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
 import { cn } from ".";
 
-test("decimals", () => {
-  const clx = cn("clx1 clx2", "clx3");
-  expect(clx).toEqual("clx1 clx2 clx3");
+test("tailwind merge", () => {
+  const classnames = cn("m-0 p-0", "m-2");
+  expect(classnames).toEqual("p-0 m-2");
 });
