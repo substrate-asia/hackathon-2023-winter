@@ -1,7 +1,8 @@
 use crate::{
 	mock::{self, *},
 	pallet, Error, Event, GameProperties, GameState, GameStorage, GetTileInfo, HexBoard,
-	HexBoardStorage, HexGrid, Move, ResourceType, NUMBER_OF_RESOURCE_TYPES,
+	HexBoardStorage, HexGrid, Move, ResourceType, ResourceUnit, NUMBER_OF_LEVELS,
+	NUMBER_OF_RESOURCE_TYPES,
 };
 use frame_support::{assert_noop, assert_ok};
 
@@ -218,13 +219,13 @@ fn test_resource_generation() {
 			HexalemTile(0),
 			HexalemTile(0),
 			HexalemTile(0),
+			HexalemTile(0),
 			HexalemTile(56),
 			HexalemTile(48),
 			HexalemTile(40),
 			HexalemTile(32),
 			HexalemTile(24),
 			HexalemTile(16),
-			HexalemTile(8),
 			HexalemTile::get_home(),
 			HexalemTile(0),
 			HexalemTile(0),
@@ -261,7 +262,7 @@ fn test_resource_generation() {
 
 		let hex_board = hex_board_option.unwrap();
 
-		assert_eq!(hex_board.resources, [2, 2, 2, 3, 1, 1, 1]);
+		assert_eq!(hex_board.resources, [1, 1, 2, 3, 1, 1, 0]);
 	});
 }
 
@@ -276,13 +277,13 @@ fn test_saturate_99() {
 			HexalemTile(0),
 			HexalemTile(0),
 			HexalemTile(0),
+			HexalemTile(0),
 			HexalemTile(56),
 			HexalemTile(48),
 			HexalemTile(40),
 			HexalemTile(32),
 			HexalemTile(24),
 			HexalemTile(16),
-			HexalemTile(8),
 			HexalemTile::get_home(),
 			HexalemTile(0),
 			HexalemTile(0),
@@ -320,7 +321,7 @@ fn test_saturate_99() {
 
 		let hex_board = hex_board_option.unwrap();
 
-		assert_eq!(hex_board.resources, [99, 6, 99, 99, 99, 99, 99]);
+		assert_eq!(hex_board.resources, [99, 3, 99, 99, 99, 99, 99]);
 	});
 }
 
@@ -375,25 +376,24 @@ fn play() {
 
 		let game_id = hex_board.game_id;
 
-		
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 12, buy_index: 0}),
+			HexalemModule::play(RuntimeOrigin::signed(1), Move { place_index: 12, buy_index: 0 }),
 			Error::<TestRuntime>::TileIsNotEmpty
 		);
 
 		// newly placed tile needs to connect to already placed tiles
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 0, buy_index: 0}),
+			HexalemModule::play(RuntimeOrigin::signed(1), Move { place_index: 0, buy_index: 0 }),
 			Error::<TestRuntime>::TileSurroundedByEmptyTiles
 		);
 
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 26, buy_index: 0}),
+			HexalemModule::play(RuntimeOrigin::signed(1), Move { place_index: 26, buy_index: 0 }),
 			Error::<TestRuntime>::PlaceIndexOutOfBounds
 		);
 
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 11, buy_index: 2}),
+			HexalemModule::play(RuntimeOrigin::signed(1), Move { place_index: 11, buy_index: 2 }),
 			Error::<TestRuntime>::BuyIndexOutOfBounds
 		);
 
@@ -408,20 +408,146 @@ fn play() {
 		);
 
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(1), Move {place_index: 11, buy_index: 0}),
+			HexalemModule::play(RuntimeOrigin::signed(1), Move { place_index: 11, buy_index: 0 }),
 			Error::<TestRuntime>::NotEnoughResources
 		);
 
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(2), Move {place_index: 11, buy_index: 0}),
+			HexalemModule::play(RuntimeOrigin::signed(2), Move { place_index: 11, buy_index: 0 }),
 			Error::<TestRuntime>::PlayerNotOnTurn
 		);
 
 		assert_noop!(
-			HexalemModule::play(RuntimeOrigin::signed(3), Move {place_index: 11, buy_index: 0}),
+			HexalemModule::play(RuntimeOrigin::signed(3), Move { place_index: 11, buy_index: 0 }),
+			Error::<TestRuntime>::HexBoardNotInitialized
+		);
+	})
+}
+
+#[test]
+fn upgrade() {
+	new_test_ext().execute_with(|| {
+		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1, 2], 25));
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 12),
+			Error::<TestRuntime>::NotEnoughResources
+		);
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		let game_id = hex_board.game_id;
+
+		let new_hex_grid: HexGrid<TestRuntime> = vec![
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(56),
+			HexalemTile(48),
+			HexalemTile(40),
+			HexalemTile(32),
+			HexalemTile(24),
+			HexalemTile(16),
+			HexalemTile::get_home(),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+		]
+		.try_into()
+		.unwrap();
+
+		HexalemModule::set_hex_board(
+			1,
+			HexBoard { game_id, hex_grid: new_hex_grid, resources: [10; NUMBER_OF_RESOURCE_TYPES] },
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 0),
+			Error::<TestRuntime>::CannotLevelUpEmptyTile
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 11),
+			Error::<TestRuntime>::CannotLevelUp
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 10),
+			Error::<TestRuntime>::CannotLevelUp
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 9),
+			Error::<TestRuntime>::CannotLevelUp
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 100),
+			Error::<TestRuntime>::PlaceIndexOutOfBounds
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(2), 12),
+			Error::<TestRuntime>::PlayerNotOnTurn
+		);
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(3), 12),
 			Error::<TestRuntime>::HexBoardNotInitialized
 		);
 
-		
+		let upgrade_costs: [[ResourceUnit; NUMBER_OF_RESOURCE_TYPES]; NUMBER_OF_LEVELS - 1] =
+			[[0, 0, 0, 0, 2, 2, 0], [0, 0, 0, 0, 4, 4, 2], [0, 0, 0, 0, 6, 6, 4]];
+
+		for level in 0..(NUMBER_OF_LEVELS - 1) {
+			assert_ok!(HexalemModule::upgrade(RuntimeOrigin::signed(1), 12));
+
+			let hex_board_option: Option<HexBoard<TestRuntime>> =
+				HexBoardStorage::<TestRuntime>::get(1);
+
+			let hex_board = hex_board_option.unwrap();
+
+			let mut resources_expected = [10; NUMBER_OF_RESOURCE_TYPES];
+			for resource_type in 0..NUMBER_OF_RESOURCE_TYPES {
+				resources_expected[resource_type] -= upgrade_costs[level][resource_type];
+			}
+
+			assert_eq!(
+				hex_board.resources,
+				resources_expected, // Once the constant is set, change the values
+			);
+
+			assert_eq!(hex_board.hex_grid[12].get_level(), (level as u8) + 1);
+
+			// Refresh resources, so that the player has got enough of them to pay for the upgrade
+			HexalemModule::set_hex_board(
+				1,
+				HexBoard {
+					game_id,
+					hex_grid: hex_board.hex_grid,
+					resources: [10; NUMBER_OF_RESOURCE_TYPES],
+				},
+			);
+		}
+
+		assert_noop!(
+			HexalemModule::upgrade(RuntimeOrigin::signed(1), 12),
+			Error::<TestRuntime>::TileOnMaxLevel
+		);
 	})
 }
