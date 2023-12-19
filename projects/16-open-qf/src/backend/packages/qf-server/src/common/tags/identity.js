@@ -1,5 +1,6 @@
-const { checkAndGetApis, queryFromApis } = require("../../../../common");
-const { chains } = require("../../../../consts");
+const { queryFromApis } = require("../queryFromApis");
+const { checkAndGetApis } = require("../checkAndGetApis");
+const { chains } = require("../../consts");
 
 async function queryIdentityVerificationFromOneApi(api, address) {
   if (!api.query.identity?.identityOf) {

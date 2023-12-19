@@ -3,8 +3,6 @@ const {
 } = require("@open-qf/mongo");
 const BigNumber = require("bignumber.js");
 
-const decimals = 10;
-
 async function getContributors(projectIds = []) {
   const contributorCol = await getContributorCol();
   return await contributorCol.find({ projectId: { $in: projectIds } }, {
@@ -14,13 +12,22 @@ async function getContributors(projectIds = []) {
   }).toArray();
 }
 
+function getMultiplierFromPower(power = '0') {
+  const normalizedPower = parseInt(power);
+  if (!normalizedPower) {
+    return 1;
+  }
+
+  return (100 + normalizedPower) / normalizedPower;
+}
+
 function calcSumByContributors(contributors = []) {
   let sqrtSum = new BigNumber(0);
   for (const contributor of contributors) {
-    const { balance } = contributor;
+    const { balance, power } = contributor;
     const sqrt = new BigNumber(balance).div(Math.pow(10, 10)).sqrt();
-    // todo: add contributor power into calculation
-    sqrtSum = sqrtSum.plus(sqrt)
+    const multiplier = getMultiplierFromPower(power);
+    sqrtSum = sqrtSum.plus(sqrt * multiplier);
   }
 
   return sqrtSum.pow(2).toNumber();

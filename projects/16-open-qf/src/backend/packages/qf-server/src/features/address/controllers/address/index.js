@@ -1,5 +1,4 @@
 const { getFellowshipRank } = require("./fellowship");
-const { checkIsIdentityVerified } = require("./identity");
 const { isInDb } = require("../utils");
 const { queryIsActiveVoter } = require("./voter");
 const {
@@ -14,6 +13,7 @@ const {
     getValidatorCol,
   }
 } = require("@open-qf/mongo");
+const { checkIsIdentityVerified } = require("../../../../common");
 
 async function queryAddressInfo(address) {
   const fellowshipRank = await getFellowshipRank(address);

@@ -1,5 +1,6 @@
 const { chains } = require("../../../../consts");
-const { checkAndGetApis, queryFromApis } = require("../../../../common");
+const { checkAndGetApis } = require("../../../../common/checkAndGetApis");
+const { queryFromApis } = require("../../../../common/queryFromApis");
 
 async function getFellowshipRankFromOneApi(api, address) {
   if (!api.query.fellowshipCollective?.members) {
