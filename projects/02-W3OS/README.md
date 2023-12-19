@@ -12,12 +12,12 @@ W3OS: Web3.0 Operating System Based on Anchor Network
 ## Bounties
 **We develop all bounties**, since W3OS allows loading arbitary frontend apps.
 
-Acala: LDOT Token Dashboard https://github.com/doutv/lst-dashboard
-Bifrost & Moonbeam: https://github.com/doutv/lst-dashboard
-CESS: https://github.com/ff13dfly/cessphoto
-Gear Foundation: https://github.com/doutv/Gear-Five-in-a-Row
-Moonbeam: https://github.com/doutv/zk-sudoku
-Tanssi: https://github.com/ff13dfly/Anchor
+- Acala: LDOT Token Dashboard https://github.com/doutv/lst-dashboard
+- Bifrost & Moonbeam: https://github.com/doutv/lst-dashboard
+- CESS: https://github.com/ff13dfly/cessphoto
+- Gear Foundation: https://github.com/doutv/Gear-Five-in-a-Row
+- Moonbeam: https://github.com/doutv/zk-sudoku
+- Tanssi: https://github.com/ff13dfly/Anchor
 
 ### Background
 **What Problems Does W3OS Solve?**
