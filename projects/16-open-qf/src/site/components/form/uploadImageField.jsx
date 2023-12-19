@@ -44,7 +44,7 @@ export default function UploadImageField({
       formData.append("banner", image, image.name);
       nextApi
         // FIXME: upload api
-        .postFormData("/ipfs/files", formData)
+        .postFormData("ipfs/files", formData)
         .then(({ result }) => {
           if (result) {
             setCurrentImage(result.url);

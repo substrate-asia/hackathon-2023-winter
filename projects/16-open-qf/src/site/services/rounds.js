@@ -1,13 +1,13 @@
-import { nextApi } from ".";
+import { ssrNextApi } from ".";
 
 export function getRoundsList(params = {}) {
-  return nextApi.fetch("/rounds", params);
+  return ssrNextApi.fetch("rounds", params);
 }
 
 export function getRoundProjectsList(id, params = {}) {
-  return nextApi.fetch(`/rounds/${id}/projects`, params);
+  return ssrNextApi.fetch(`rounds/${id}/projects`, params);
 }
 
 export function getRoundCategoriesList(id) {
-  return nextApi.fetch(`/rounds/${id}/categories`);
+  return ssrNextApi.fetch(`rounds/${id}/categories`);
 }
