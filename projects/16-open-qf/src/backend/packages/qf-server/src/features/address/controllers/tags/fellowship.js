@@ -20,6 +20,8 @@ async function getFellowshipRankTag(address) {
     return tags.find(tag => tag.id === "fellowshipRank2");
   } else if (1 === fellowshipRank) {
     return tags.find(tag => tag.id === "fellowshipRank1");
+  } else if (0 === fellowshipRank) {
+    return null;
   }
 
   throw new Error(`Unknown fellowship rank ${ fellowshipRank }`);
