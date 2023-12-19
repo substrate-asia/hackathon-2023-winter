@@ -101,6 +101,12 @@ const tags = [
     description: "Vote latest 100 OpenGov proposals",
     power: 10,
   },
+  {
+    id: "isCouncilor",
+    name: "Councilor",
+    description: "Once to be a councilor",
+    power: 15,
+  },
 ];
 
 module.exports = {

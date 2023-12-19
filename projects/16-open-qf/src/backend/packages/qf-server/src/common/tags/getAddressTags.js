@@ -13,6 +13,7 @@ const {
   },
   role: {
     getValidatorCol,
+    getCouncilorCol,
   }
 } = require("@open-qf/mongo");
 const { isInDb } = require("./isInDb");
@@ -46,6 +47,9 @@ async function getTagsByAddress(address) {
   }
   if (await queryIsActiveVoter(address)) {
     candidateTags.push(tags.find(tag => tag.id === "isActiveVoter"));
+  }
+  if (await isInDb(await getCouncilorCol(), address)) {
+    candidateTags.push(tags.find(tag => tag.id === "isCouncilor"));
   }
 
   return candidateTags.filter(Boolean);
