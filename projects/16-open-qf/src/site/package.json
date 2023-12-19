@@ -6,7 +6,8 @@
     "dev": "node server.mjs",
     "build": "next build",
     "start": "NODE_ENV=production node server.mjs",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest --run"
   },
   "dependencies": {
     "@floating-ui/react": "^0.26.4",
@@ -79,7 +80,8 @@
     "prettier": "^3.1.0",
     "react-test-renderer": "^17.0.2",
     "tailwind-scrollbar": "^3.0.5",
-    "tailwindcss": "^3.3.6"
+    "tailwindcss": "^3.3.6",
+    "vitest": "^1.0.4"
   },
   "packageManager": "yarn@3.6.4"
 }
