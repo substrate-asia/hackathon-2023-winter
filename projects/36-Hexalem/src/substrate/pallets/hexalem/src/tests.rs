@@ -322,3 +322,41 @@ fn test_saturate_99() {
 		assert_eq!(hex_board.resources, [99, 6, 99, 99, 99, 99, 99]);
 	});
 }
+
+#[test]
+fn test_force_finish_turn(){
+	new_test_ext().execute_with(|| {
+
+		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1, 2], 25));
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		let game_id = hex_board.game_id;
+
+		// force_finish_turn can not be called before the BlocksToPlayLimit has been passed
+		assert_noop!(
+			HexalemModule::force_finish_turn(RuntimeOrigin::signed(2), game_id),
+			Error::<TestRuntime>::BlocksToPlayLimitNotPassed
+		);
+
+		System::set_block_number(<mock::TestRuntime as pallet::Config>::BlocksToPlayLimit::get() as u64 + 1);
+
+		// force_finish_turn can not be called by the player that is currently on turn
+		assert_noop!(
+			HexalemModule::force_finish_turn(RuntimeOrigin::signed(1), game_id),
+			Error::<TestRuntime>::CurrentPlayerCannotForceFinishTurn
+		);
+
+		// force_finish_turn can not be called by the player that is not in the game
+		assert_noop!(
+			HexalemModule::force_finish_turn(RuntimeOrigin::signed(3), game_id),
+			Error::<TestRuntime>::PlayerNotInGame
+		);
+
+		// Now that enough blocks have passed, force_finish_turn can be called
+		assert_ok!(HexalemModule::force_finish_turn(RuntimeOrigin::signed(2), game_id));
+	})
+}
