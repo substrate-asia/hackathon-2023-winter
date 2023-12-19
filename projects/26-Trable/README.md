@@ -72,7 +72,7 @@ Users simply need to select the desired cryptocurrency for payment and complete 
 
 ### Key Dapp Features
 
-- Support for fiat currency payments（支持法币支付）
+- Support for fiat currency payments（法币支付支持）
 
 确保旅游产品跨境crypto直接支付的便利性
 
@@ -88,19 +88,25 @@ Users simply need to select the desired cryptocurrency for payment and complete 
 
 不受传统银行外汇限额的影响，更流畅的旅行体验
 
-### Project demo
+### Project demo 
 
 
 
 ## 黑客松期间计划完成的事项
 
+
 ### 区块链端
 
-smart contract
+
 
 ### 客户端
 
-Front-End
+front-end
+
+
+
+### 后端
+
 
 ## 黑客松期间所完成的事项
 
@@ -111,6 +117,8 @@ Front-End
 ### 完成的开发工作及代码结构
 
 ### PPT等大文件链接地址
+
+https://docs.google.com/presentation/d/1YajFYiBXxBr2Q0o1F3PbKhmQ7hMsGFVRvAOra6DJ3pg/edit?usp=sharing
 
 ## 使用方法
 
