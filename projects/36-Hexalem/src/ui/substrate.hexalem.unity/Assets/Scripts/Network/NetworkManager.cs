@@ -51,8 +51,11 @@ namespace Assets.Scripts
         public MiniSecret MiniSecretDave => new MiniSecret(Utils.HexToByteArray("0x868020ae0687dda7d57565093a69090211449845a7e11453612800b663307246"), ExpandMode.Ed25519);
         public Account Dave => Account.Build(KeyType.Sr25519, MiniSecretDave.ExpandToSecret().ToBytes(), MiniSecretDave.GetPair().Public.Key);
 
+        public MiniSecret MiniSecretSudo => new MiniSecret(Utils.HexToByteArray(""), ExpandMode.Ed25519);
+        public Account SudoHexalem => Account.Build(KeyType.Sr25519, MiniSecretSudo.ExpandToSecret().ToBytes(), MiniSecretSudo.GetPair().Public.Key);
+
         // Sudo account if needed
-        public Account Sudo => Alice;
+        public Account Sudo { get; private set; }
 
         private string _nodeUrl;
         public string NodeUrl => _nodeUrl;
@@ -74,6 +77,7 @@ namespace Assets.Scripts
             //Your code goes here
             CurrentAccountType = AccountType.Alice;
             CurrentNodeType = NodeType.Local;
+            Sudo = Alice;
             _nodeUrl = "ws://127.0.0.1:9944";
             InitializeClient();
         }
@@ -147,10 +151,12 @@ namespace Assets.Scripts
                 case NodeType.Tanssi:
                     CurrentNodeType = NodeType.Local;
                     _nodeUrl = "ws://127.0.0.1:9944";
+                    Sudo = Alice;
                     break;
                 default:
                     CurrentNodeType = NodeType.Tanssi;
                     _nodeUrl = "wss://fraa-dancebox-3023-rpc.a.dancebox.tanssi.network";
+                    Sudo = SudoHexalem;
                     break;
             }
 
