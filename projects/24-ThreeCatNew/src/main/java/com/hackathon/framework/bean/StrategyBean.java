@@ -39,6 +39,17 @@ public class StrategyBean {
 
     private String contractAddress;
 
+    public String getAssertionName() {
+        return assertionName;
+    }
+
+    public void setAssertionName(String assertionName) {
+        this.assertionName = assertionName;
+    }
+
+    private String assertionName;
+
+
     /**
      * 编译方式 会关联一个映射
      */

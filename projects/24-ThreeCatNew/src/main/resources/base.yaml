@@ -23,8 +23,11 @@ generateEngine:
   compiledNames: abi
   # Sdk名称
   sdkName: xxx
+  # 断言名称
+  assertionName: jest
   # 选择断言模板l路径-匹配模板
   assertionPath: jest.config.js
+  assertion
 
 # 第二阶段 生成测试用例文件
 generateTestCaseFile:
