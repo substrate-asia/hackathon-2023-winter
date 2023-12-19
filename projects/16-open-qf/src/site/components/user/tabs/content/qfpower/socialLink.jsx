@@ -5,13 +5,13 @@ import { cn } from "@/utils";
 
 const SOCIAL_LINK_ITEMS = [
   {
-    icon: "",
+    image: "/brand/x.svg",
     power: 10,
     title: "X/Twitter",
     description: "Verify your social media presence",
   },
   {
-    icon: "",
+    image: "/brand/github.svg",
     power: 10,
     title: "GitHub",
     description: "Verify your code contributions",
@@ -28,7 +28,9 @@ export default function UserTabQFpowerSocialLink() {
           <Card key={item.title} size="small">
             <div className="space-y-5">
               <div className="flex justify-between">
-                <div className="w-12 h-12 bg-fill-bg-quaternary"></div>
+                <div className="w-12 h-12 bg-fill-bg-quaternary">
+                  <img src={item.image} alt="" />
+                </div>
                 <div className="text16semibold text-text-brand-secondary">
                   +{item.power}
                 </div>
