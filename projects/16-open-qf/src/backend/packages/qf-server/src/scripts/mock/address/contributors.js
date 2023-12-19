@@ -17,12 +17,14 @@ async function saveMockContributors() {
   const col = await getContributorCol();
   const bulk = col.initializeUnorderedBulkOp();
 
+  let id = 0;
   const addresses = await getAddresses();
   for (const address of addresses) {
     const dot = randomIntFromInterval(1, 100);
     const balance = new BigNumber(dot).multipliedBy(Math.pow(10, decimals)).toNumber();
     const projectId = randomIntFromInterval(1, 12);
     const obj = {
+      id: id++,
       address,
       roundId: 1,
       projectId,
