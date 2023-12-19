@@ -14,7 +14,7 @@ async function getRoundProjects(ctx) {
   const col = await getProjectCol();
   const items = await col
     .find({ roundId: parseInt(id) }, { projection: { _id: 0 } })
-    .sort({ id: -1 })
+    .sort({ id: 1 })
     .skip(page * pageSize)
     .limit(pageSize)
     .toArray();
