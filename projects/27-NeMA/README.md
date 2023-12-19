@@ -1,8 +1,8 @@
-<img src="https://badgen.net/static/license/MIT/green" style="zoom:150%;" />
-
-<img src="https://img.shields.io/badge/truffle-v5.11.5-blue" style="zoom:150%;" />
-
-<img src="https://img.shields.io/badge/solidity-v0.5.16-red" style="zoom:150%;" />
+<div style="display: flex; flex-direction: row;">
+    <img src="https://badgen.net/static/license/MIT/green" style="zoom:150%;" />
+    <img src="https://img.shields.io/badge/truffle-v5.11.5-blue" style="zoom:150%;" />
+    <img src="https://img.shields.io/badge/solidity-v0.5.16-red" style="zoom:150%;" />
+</div>
 
 ## 基本资料	
 
@@ -244,47 +244,6 @@ OTC交易合约需要满足双方的交易需求，确保安全、透明和可�
 OTC交易支持的合约编写。
 
 hashlock开源技术复现。
-
-### 代码结构
-
-├─docs
-├─src
-│  ├─hashlock
-│  │  ├─.deps
-│  │  │  └─npm
-│  │  │      └─@openzeppelin
-│  │  │          └─contracts
-│  │  │              ├─interfaces
-│  │  │              ├─token
-│  │  │              │  └─ERC20
-│  │  │              │      └─extensions
-│  │  │              └─utils
-│  │  ├─contracts
-│  │  │  └─artifacts
-│  │  │      └─build-info
-│  │  ├─scripts
-│  │  └─tests
-│  └─otc
-│      ├─.deps
-│      │  └─npm
-│      │      └─@openzeppelin
-│      │          └─contracts
-│      │              ├─interfaces
-│      │              ├─token
-│      │              │  └─ERC20
-│      │              │      └─extensions
-│      │              └─utils
-│      ├─.vscode
-│      ├─build
-│      │  └─contracts
-│      ├─contracts
-│      │  └─artifacts
-│      │      └─build-info
-│      ├─migrations
-│      ├─scripts
-│      ├─test
-│      └─UI
-└─static
 
 ### PPT等大文件链接地址
 
