@@ -1,0 +1,16 @@
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Node.js
+/node_modules/
+package-lock.json
+yarn.lock
+yarn-error.log
+
+/build/
+/service/chat/chat_server.min.js
+/service/chat2/chat_server.min.js
+/service/chat2/backup
