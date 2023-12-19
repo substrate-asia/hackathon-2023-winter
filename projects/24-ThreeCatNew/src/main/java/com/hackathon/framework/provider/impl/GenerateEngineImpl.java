@@ -29,27 +29,33 @@ public class GenerateEngineImpl implements GenerateEngine {
         return new Result(startTime,"",strategyBean);
     }
 
+    /**
+     * 前置检查环境
+     * fix:2023-12-20 参数错误和逻辑错误已经修改
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     * @throws InterruptedException
+     */
     @Override
-    public Result preCheckGenerationEnv(String compile) throws JSchException, IOException, InterruptedException {
+    public Result preCheckGenerationEnv() throws JSchException, IOException, InterruptedException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
 
         // 检测环境命令
         String solcVersion = "solcjs --version";
         String truffleVersion = "truffle --version";
-
+        String errText = "";
         String soclcVersionResult = sshUtil.executeCmd(solcVersion);
-
         if(!soclcVersionResult.contains("not found")) {
-            String  errText = "solcjs is not installed";
-            System.err.println(errText);
+            errText += "solcjs is not installed";
         }
-        if(!truffleVersion.contains("not found")) {
-            String  errText = "truffle is not installed";
-            System.err.println(errText);
+        // 这里判断的是truffleVersion读取，这里错误已经修改
+        String truffleVersionResult = sshUtil.executeCmd(truffleVersion);
+        if(!truffleVersionResult.contains("not found")) {
+            errText +=  "truffle is not installed";
         }
-
-        return new Result(startTime,"","successfully");
+        return new Result(startTime,errText,"successfully");
     }
 
     /**
@@ -69,13 +75,19 @@ public class GenerateEngineImpl implements GenerateEngine {
         sshUtil.executeCmd(mkdirCommand);
         // 进入目录执行init
         sshUtil.executeCmd("cd "+strategyBean.getEnginePath());
-        String compileName = strategyBean.getCompile();
-        sshUtil.executeCmd(compileName+" init");
-        // TODO sshUtil.executeCmd这个处理命令行，用这个验证下init生成的文件是否包含truffle init的文件
-        List<String>compileList = strategyBean.getDirectory();
+        Result envResult = this.preCheckGenerationEnv();
         String errorMessage = "";
+        // 判断是否错误可以往下走这么写，hasError要返回参数啊!
+        if(envResult.getHasError().isEmpty()){
+            String compileName = strategyBean.getCompile();
+            sshUtil.executeCmd(compileName+" init");
+            // TODO sshUtil.executeCmd这个处理命令行，用这个验证下init生成的文件是否包含truffle init的文件
+            List<String>compileList = strategyBean.getDirectory();
+            //这里result应该传输null也行，只要验证truffle init的文件
+            return new Result(startTime,errorMessage,null);
+        }
         // 这里如果hasError是空字符串代表成功
-        return new Result(startTime,"",null);
+        return new Result(startTime,envResult.getHasError(),null);
     }
 
 
