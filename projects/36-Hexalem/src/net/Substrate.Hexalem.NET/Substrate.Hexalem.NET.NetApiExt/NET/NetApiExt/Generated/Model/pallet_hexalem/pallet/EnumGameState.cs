@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     }
     
     /// <summary>
-    /// >> 117 - Variant[pallet_hexalem.pallet.GameState]
+    /// >> 90 - Variant[pallet_hexalem.pallet.GameState]
     /// </summary>
     public sealed class EnumGameState : BaseEnumExt<GameState, BaseVoid, BaseVoid, Substrate.NetApi.Model.Types.Base.BaseOpt<Substrate.NetApi.Model.Types.Primitive.U8>>
     {

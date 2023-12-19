@@ -24,7 +24,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         
         HexBoardNotInitialized = 2,
         
-        GameAlreadyStarted = 3,
+        CreatorNotInPlayersAtIndexZero = 3,
         
         GameAlreadyCreated = 4,
         

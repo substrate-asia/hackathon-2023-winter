@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.finality_grandpa
     
     
     /// <summary>
-    /// >> 93 - Composite[finality_grandpa.Prevote]
+    /// >> 102 - Composite[finality_grandpa.Prevote]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Prevote : BaseType

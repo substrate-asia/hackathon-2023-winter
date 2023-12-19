@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.finality_grandpa
     
     
     /// <summary>
-    /// >> 98 - Composite[finality_grandpa.EquivocationT2]
+    /// >> 107 - Composite[finality_grandpa.EquivocationT2]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class EquivocationT2 : BaseType

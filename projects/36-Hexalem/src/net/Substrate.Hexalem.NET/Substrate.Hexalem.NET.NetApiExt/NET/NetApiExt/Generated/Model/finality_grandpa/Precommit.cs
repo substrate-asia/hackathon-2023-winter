@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.finality_grandpa
     
     
     /// <summary>
-    /// >> 99 - Composite[finality_grandpa.Precommit]
+    /// >> 108 - Composite[finality_grandpa.Precommit]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Precommit : BaseType

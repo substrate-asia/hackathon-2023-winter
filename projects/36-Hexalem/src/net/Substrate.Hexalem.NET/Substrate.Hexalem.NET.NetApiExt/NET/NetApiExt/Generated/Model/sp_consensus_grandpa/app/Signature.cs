@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_consensus_grandpa.a
     
     
     /// <summary>
-    /// >> 94 - Composite[sp_consensus_grandpa.app.Signature]
+    /// >> 103 - Composite[sp_consensus_grandpa.app.Signature]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class Signature : BaseType

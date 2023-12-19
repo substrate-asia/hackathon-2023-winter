@@ -21,6 +21,12 @@ namespace Assets.Scripts
         Dave
     }
 
+    public enum NodeType
+    {
+        Local,
+        Tanssi
+    }
+
     public delegate void ExtrinsicStateUpdate(string subscriptionId, ExtrinsicStatus extrinsicUpdate);
 
     public class NetworkManager : Singleton<NetworkManager>
@@ -48,12 +54,14 @@ namespace Assets.Scripts
         // Sudo account if needed
         public Account Sudo => Alice;
 
-        private readonly string _nodeUrl = "ws://127.0.0.1:9944";
+        private string _nodeUrl;
         public string NodeUrl => _nodeUrl;
 
         private readonly NetworkType _networkType = NetworkType.Live;
 
-        public AccountType? CurrentAccountType { get; private set; }
+        public AccountType CurrentAccountType { get; private set; }
+
+        public NodeType CurrentNodeType { get; private set; }
 
         private SubstrateNetwork _client;
         public SubstrateNetwork Client => _client;
@@ -64,6 +72,10 @@ namespace Assets.Scripts
         {
             base.Awake();
             //Your code goes here
+            CurrentAccountType = AccountType.Alice;
+            CurrentNodeType = NodeType.Local;
+            _nodeUrl = "ws://127.0.0.1:9944";
+            InitializeClient();
         }
 
         public void Start()
@@ -98,7 +110,7 @@ namespace Assets.Scripts
             ExtrinsicCheck?.Invoke();
         }
 
-        public bool ChangeAccount(AccountType accountType)
+        public bool SetAccount(AccountType accountType)
         {
             CurrentAccountType = accountType;
 
@@ -128,6 +140,24 @@ namespace Assets.Scripts
             return true;
         }
 
+        public bool ToggleNodeType()
+        {
+            switch (CurrentNodeType)
+            {
+                case NodeType.Tanssi:
+                    CurrentNodeType = NodeType.Local;
+                    _nodeUrl = "ws://127.0.0.1:9944";
+                    break;
+                default:
+                    CurrentNodeType = NodeType.Tanssi;
+                    _nodeUrl = "wss://fraa-dancebox-3023-rpc.a.dancebox.tanssi.network";
+                    break;
+            }
+
+            InitializeClient();
+            return true;
+        }
+
         public List<Wallet> StoredWallets()
         {
             var result = new List<Wallet>();
@@ -152,12 +182,8 @@ namespace Assets.Scripts
         // Start is called before the first frame update
         public void InitializeClient()
         {
-            if (_client != null)
-            {
-                return;
-            }
-
             _client = new SubstrateNetwork(null, _networkType, _nodeUrl);
+            SetAccount(CurrentAccountType);
         }
     }
 }

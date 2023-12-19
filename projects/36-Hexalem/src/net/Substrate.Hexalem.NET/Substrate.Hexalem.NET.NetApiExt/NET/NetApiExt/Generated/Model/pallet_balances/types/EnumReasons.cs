@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_balances.types
     }
     
     /// <summary>
-    /// >> 105 - Variant[pallet_balances.types.Reasons]
+    /// >> 114 - Variant[pallet_balances.types.Reasons]
     /// </summary>
     public sealed class EnumReasons : BaseEnum<Reasons>
     {

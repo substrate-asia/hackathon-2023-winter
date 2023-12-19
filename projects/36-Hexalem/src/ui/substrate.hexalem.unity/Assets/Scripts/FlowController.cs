@@ -102,9 +102,6 @@ namespace Assets.Scripts
                 return;
             }
 
-            // initialize the client in the network manager
-            Network.InitializeClient();
-
             // call insital flow state
             ChangeScreenState(ScreenState.StartScreen);
         }

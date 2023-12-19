@@ -54,9 +54,7 @@ namespace Assets.Scripts
         {
             Debug.Log($"[{this.GetType().Name}][SUB] OnGridTileClicked Change to Upgrade, if possible.");
 
-            var pIndex = 0;
-
-            HexaTile tile = Storage.HexaGame.HexaTuples[pIndex].board[index];
+            HexaTile tile = Storage.HexaGame.HexaTuples[PlayScreenState.PlayerIndex].board[index];
 
             if (tile.IsEmpty())
             {

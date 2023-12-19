@@ -204,6 +204,30 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
             byteArray.AddRange(game_id.Encode());
             return new Method(21, "HexalemModule", 6, "root_delete_game", byteArray.ToArray());
         }
+        
+        /// <summary>
+        /// >> root_set_game
+        /// Contains a variant per dispatchable extrinsic that this pallet has.
+        /// </summary>
+        public static Method RootSetGame(Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8 game_id, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.Game game)
+        {
+            System.Collections.Generic.List<byte> byteArray = new List<byte>();
+            byteArray.AddRange(game_id.Encode());
+            byteArray.AddRange(game.Encode());
+            return new Method(21, "HexalemModule", 7, "root_set_game", byteArray.ToArray());
+        }
+        
+        /// <summary>
+        /// >> root_set_hex_board
+        /// Contains a variant per dispatchable extrinsic that this pallet has.
+        /// </summary>
+        public static Method RootSetHexBoard(Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_core.crypto.AccountId32 player, Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet.HexBoard hex_board)
+        {
+            System.Collections.Generic.List<byte> byteArray = new List<byte>();
+            byteArray.AddRange(player.Encode());
+            byteArray.AddRange(hex_board.Encode());
+            return new Method(21, "HexalemModule", 8, "root_set_hex_board", byteArray.ToArray());
+        }
     }
     
     public sealed class HexalemModuleConstants
@@ -255,7 +279,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         public Substrate.NetApi.Model.Types.Primitive.U32 MaxHexGridSize()
         {
             var result = new Substrate.NetApi.Model.Types.Primitive.U32();
-            result.Create("0x19000000");
+            result.Create("0x31000000");
             return result;
         }
         
@@ -382,9 +406,9 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Storage
         HexBoardNotInitialized,
         
         /// <summary>
-        /// >> GameAlreadyStarted
+        /// >> CreatorNotInPlayersAtIndexZero
         /// </summary>
-        GameAlreadyStarted,
+        CreatorNotInPlayersAtIndexZero,
         
         /// <summary>
         /// >> GameAlreadyCreated

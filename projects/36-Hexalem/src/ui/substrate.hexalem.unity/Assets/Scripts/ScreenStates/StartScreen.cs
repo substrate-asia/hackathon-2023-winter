@@ -11,8 +11,9 @@ namespace Assets.Scripts.ScreenStates
         private Texture2D _portraitDave;
 
         private VisualElement _velPortrait;
-
-         private Label _lblPlayerName;
+        
+        private Label _lblPlayerName;
+        private Label _lblNodeType;
 
         public StartScreen(FlowController _flowController)
             : base(_flowController) 
@@ -38,8 +39,11 @@ namespace Assets.Scripts.ScreenStates
             var btnEnter = instance.Q<Button>("BtnEnter");
             btnEnter.RegisterCallback<ClickEvent>(OnEnterClicked);
 
+            _lblNodeType = instance.Q<Label>("LblNodeType");
+            _lblNodeType.RegisterCallback<ClickEvent>(OnNodeTypeClicked);
+
             // initially select alice
-            Network.ChangeAccount(AccountType.Alice);
+            Network.SetAccount(AccountType.Alice);
             _velPortrait.style.backgroundImage = _portraitAlice;
 
             Grid.OnSwipeEvent += OnSwipeEvent;
@@ -65,17 +69,17 @@ namespace Assets.Scripts.ScreenStates
                 switch (Network.CurrentAccountType)
                 {
                     case AccountType.Alice:
-                        Network.ChangeAccount(AccountType.Bob);
+                        Network.SetAccount(AccountType.Bob);
                         _lblPlayerName.text = AccountType.Bob.ToString();
                         _velPortrait.style.backgroundImage = _portraitBob;
                         break;
                     case AccountType.Bob:
-                        Network.ChangeAccount(AccountType.Charlie);
+                        Network.SetAccount(AccountType.Charlie);
                         _lblPlayerName.text = AccountType.Charlie.ToString();
                         _velPortrait.style.backgroundImage = _portraitCharlie;
                         break;
                     case AccountType.Charlie:
-                        Network.ChangeAccount(AccountType.Dave);
+                        Network.SetAccount(AccountType.Dave);
                         _lblPlayerName.text = AccountType.Dave.ToString();
                         _velPortrait.style.backgroundImage = _portraitDave;
                         break;
@@ -89,17 +93,17 @@ namespace Assets.Scripts.ScreenStates
                 switch (Network.CurrentAccountType)
                 {
                     case AccountType.Bob:
-                        Network.ChangeAccount(AccountType.Alice);
+                        Network.SetAccount(AccountType.Alice);
                         _lblPlayerName.text = AccountType.Alice.ToString();
                         _velPortrait.style.backgroundImage = _portraitAlice;
                         break;
                     case AccountType.Charlie:
-                        Network.ChangeAccount(AccountType.Bob);
+                        Network.SetAccount(AccountType.Bob);
                         _lblPlayerName.text = AccountType.Bob.ToString();
                         _velPortrait.style.backgroundImage = _portraitBob;
                         break;
                     case AccountType.Dave:
-                        Network.ChangeAccount(AccountType.Charlie);
+                        Network.SetAccount(AccountType.Charlie);
                         _lblPlayerName.text = AccountType.Charlie.ToString();
                         _velPortrait.style.backgroundImage = _portraitCharlie;
                         break;
@@ -116,6 +120,12 @@ namespace Assets.Scripts.ScreenStates
             Debug.Log("Clicked enter button!");
 
             FlowController.ChangeScreenState(ScreenState.MainScreen);
+        }
+
+        private void OnNodeTypeClicked(ClickEvent evt)
+        {
+            Network.ToggleNodeType();
+            _lblNodeType.text = Network.CurrentNodeType.ToString();
         }
     }
 }

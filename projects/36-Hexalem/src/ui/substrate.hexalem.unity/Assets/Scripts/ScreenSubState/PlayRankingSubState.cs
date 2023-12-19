@@ -96,23 +96,25 @@ namespace Assets.Scripts
                 playerScoreInstance.Q<Label>("LblPlayerIndex").text = (i + 1).ToString();
                 playerScoreInstance.Q<Label>("LblTurn").text = i == PlayScreenState.PlayerIndex ? "TURN" : "";
                 var velPortrait = playerScoreInstance.Q<VisualElement>("VelPlayerPort");
-                switch (Network.CurrentAccountType)
+                if (player.Id.SequenceEqual(Network.Alice.Bytes))
                 {
-                    case AccountType.Alice:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitAlice);
-                        break;
-
-                    case AccountType.Bob:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitBob);
-                        break;
-
-                    case AccountType.Charlie:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitCharlie);
-                        break;
-
-                    case AccountType.Dave:
-                        velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitDave);
-                        break;
+                    velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitAlice);
+                }
+                else if (player.Id.SequenceEqual(Network.Bob.Bytes))
+                {
+                    velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitBob);
+                }
+                else if (player.Id.SequenceEqual(Network.Charlie.Bytes))
+                {
+                    velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitCharlie);
+                }
+                else if (player.Id.SequenceEqual(Network.Dave.Bytes))
+                {
+                    velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitDave);
+                } 
+                else
+                {
+                    velPortrait.style.backgroundImage = new StyleBackground(PlayScreenState.PortraitAlice);
                 }
 
                 playerScoreInstance.Q<Label>("LblManaValue").text = player[RessourceType.Mana].ToString(); ;

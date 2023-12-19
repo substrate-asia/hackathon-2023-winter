@@ -18,7 +18,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
     
     
     /// <summary>
-    /// >> 120 - Composite[pallet_hexalem.pallet.HexBoard]
+    /// >> 93 - Composite[pallet_hexalem.pallet.HexBoard]
     /// </summary>
     [SubstrateNodeType(TypeDefEnum.Composite)]
     public sealed class HexBoard : BaseType
@@ -32,7 +32,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
         /// <summary>
         /// >> hex_grid
         /// </summary>
-        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 _hexGrid;
+        private Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3 _hexGrid;
         
         /// <summary>
         /// >> game_id
@@ -51,7 +51,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             }
         }
         
-        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5 HexGrid
+        public Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3 HexGrid
         {
             get
             {
@@ -94,7 +94,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_hexalem.pallet
             var start = p;
             Resources = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr7U8();
             Resources.Decode(byteArray, ref p);
-            HexGrid = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT5();
+            HexGrid = new Substrate.Hexalem.NET.NetApiExt.Generated.Model.bounded_collections.bounded_vec.BoundedVecT3();
             HexGrid.Decode(byteArray, ref p);
             GameId = new Substrate.Hexalem.NET.NetApiExt.Generated.Types.Base.Arr32U8();
             GameId.Decode(byteArray, ref p);

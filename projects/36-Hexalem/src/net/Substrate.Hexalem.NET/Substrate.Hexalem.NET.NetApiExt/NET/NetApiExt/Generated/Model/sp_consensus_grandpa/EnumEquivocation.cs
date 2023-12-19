@@ -24,7 +24,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_consensus_grandpa
     }
     
     /// <summary>
-    /// >> 91 - Variant[sp_consensus_grandpa.Equivocation]
+    /// >> 100 - Variant[sp_consensus_grandpa.Equivocation]
     /// </summary>
     public sealed class EnumEquivocation : BaseEnumExt<Equivocation, Substrate.Hexalem.NET.NetApiExt.Generated.Model.finality_grandpa.EquivocationT1, Substrate.Hexalem.NET.NetApiExt.Generated.Model.finality_grandpa.EquivocationT2>
     {

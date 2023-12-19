@@ -72,9 +72,7 @@ namespace Assets.Scripts
 
         private void OnGridTileClicked(GameObject tileObject, int index)
         {
-            var pIndex = 0;
-
-            HexaTile tile = Storage.HexaGame.HexaTuples[pIndex].board[index];
+            HexaTile tile = Storage.HexaGame.HexaTuples[PlayScreenState.PlayerIndex].board[index];
 
             if (!tile.IsEmpty())
             {
@@ -88,9 +86,9 @@ namespace Assets.Scripts
                 return;
             }
 
-            if (!Storage.HexaGame.CanChooseAndPlace((byte)pIndex, PlayScreenState.SelectedCardIndex, index))
+            if (!Storage.HexaGame.CanChooseAndPlace((byte)PlayScreenState.PlayerIndex, PlayScreenState.SelectedCardIndex, index))
             {
-                Debug.Log($"Bad Chose & Place player {pIndex}, selection index {PlayScreenState.SelectedCardIndex} and grid index {index}");
+                Debug.Log($"Bad Chose & Place player {PlayScreenState.PlayerIndex}, selection index {PlayScreenState.SelectedCardIndex} and grid index {index}");
                 return;
             }
 

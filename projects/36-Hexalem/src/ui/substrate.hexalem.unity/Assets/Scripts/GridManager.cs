@@ -141,7 +141,7 @@ namespace Assets.Scripts
         private void ProcessTap(Vector2 screenPosition)
         {
             Ray ray = Camera.main.ScreenPointToRay(screenPosition);
-            if (Physics.Raycast(ray, out RaycastHit hit) && hit.transform.parent != null && hit.transform.parent.name.StartsWith('t'))
+            if (Physics.Raycast(ray, out RaycastHit hit) && !isPointerOverUI && hit.transform.parent != null && hit.transform.parent.name.StartsWith('t'))
             {
                 var tileObject = hit.transform.gameObject;
                 var index = int.Parse(tileObject.transform.parent.name[1..]);

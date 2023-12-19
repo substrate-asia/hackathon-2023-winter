@@ -26,7 +26,7 @@ namespace Substrate.Hexalem.NET.NetApiExt.Generated.Model.pallet_grandpa.pallet
     }
     
     /// <summary>
-    /// >> 89 - Variant[pallet_grandpa.pallet.Call]
+    /// >> 98 - Variant[pallet_grandpa.pallet.Call]
     /// Contains a variant per dispatchable extrinsic that this pallet has.
     /// </summary>
     public sealed class EnumCall : BaseEnumExt<Call, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_consensus_grandpa.EquivocationProof, Substrate.NetApi.Model.Types.Base.BaseVoid>, BaseTuple<Substrate.Hexalem.NET.NetApiExt.Generated.Model.sp_consensus_grandpa.EquivocationProof, Substrate.NetApi.Model.Types.Base.BaseVoid>, BaseTuple<Substrate.NetApi.Model.Types.Primitive.U32, Substrate.NetApi.Model.Types.Primitive.U32>>
