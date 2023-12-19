@@ -122,7 +122,7 @@ public class TemplateUtil {
 
 
     //根据符合格式的json数据，生成对应的测试文件对象
-    public static String getTestObject(String jsonString,SolBean solBean,String solPath)) throws IOException {
+    public static String getTestObject(String jsonString,SolBean solBean,String solPath) throws IOException {
 
         String errText = "";
 
