@@ -1,97 +1,293 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Substrate.Hexalem.Engine
 {
-    public static class GameConfig
+    public class HexalemConfig
     {
-        public const uint MAX_TURN_BLOCKS = 10;
+        private static HexalemConfig _instance;
+        private static readonly object _lock = new object();
 
-        public const double WATER_PER_HUMANS = 2;
-        public const double FOOD_PER_HUMANS = 1;
-        public const double HOME_PER_HUMANS = 3;
+        private static bool _isInitialized = false;
 
-        public const double WATER_PER_WATER = 2;
-        public const double FOOD_PER_GRASS = 2;
-        public const double FOOD_PER_TREE = 1;
+        public static HexalemConfig GetInstance()
+        {
+            lock (_lock)
+            {
+                if (_instance == null)
+                {
+                    _instance = new Builder().Build();
+                }
+                return _instance;
+            }
+        }
+
+        public static void Initialize(Builder builder)
+        {
+            lock (_lock)
+            {
+                if (!_isInitialized)
+                {
+                    _instance = builder.Build();
+                    _isInitialized = true;
+                }
+            }
+        }
+
+        public int MaxPlayers { get; private set; }
+        public int MinPlayers { get; private set; }
+        public int MaxRounds { get; private set; }
+        public int BlocksToPlayLimit { get; private set; }
+        public int MaxHexGridSize { get; private set; }
+        public int MaxTileSelection { get; private set; }
+        public int WaterPerHuman { get; private set; }
+        public int FoodPerHuman { get; private set; }
+        public int HomePerHumans { get; private set; }
+        public byte[] StartPlayerResources { get; private set; }
+        public byte TargetGoalGold { get; private set; }
+        public byte TargetGoalHuman { get; private set; }
+        public Dictionary<TileType, List<byte[]>> MapTileCost { get; private set; }
+        public Dictionary<TileType, List<byte[]>> MapTileUpgradeCost { get; private set; }
+        public Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>> MapTileProduction { get; private set; }
+
+        // Default values
+        private const int DefaultMaxPlayers = 100;
+
+        private const int DefaultMinPlayers = 1;
+        private const int DefaultMaxRounds = 25;
+        private const int DefaultBlocksToPlayLimit = 10;
+        private const int DefaultMaxHexGridSize = 25;
+        private const int DefaultMaxTileSelection = 16;
+        private const int DefaultWaterPerHuman = 2;
+        private const int DefaultFoodPerHuman = 1;
+        private const int DefaultHomePerHumans = 3;
+        private static readonly byte[] DefaultPlayerResources = { 1, 1, 0, 0, 0, 0, 0 };
+        private const byte DefaultTargetGoalGold = 10;
+        private const byte DefaultTargetGoalHuman = 7;
 
         public const int GAME_STORAGE_ID = 32;
-        public const int GAME_STORAGE_SIZE = 16;
-        public const int PLAYER_ADDRESS_STORAGE_SIZE = 32;
-        public const int PLAYER_STORAGE_SIZE = 10;
+        public const int MAX_TILE_LEVEL = 3;
 
-        // Default player ressources
-        public const byte DEFAULT_MANA = 1;
-
-        public const byte DEFAULT_HUMANS = 1;
-        public const byte DEFAULT_WATER = 0;
-        public const byte DEFAULT_FOOD = 0;
-        public const byte DEFAULT_WOOD = 0;
-        public const byte DEFAULT_STONE = 0;
-        public const byte DEFAULT_GOLD = 0;
-
-        public const byte FREE_MANA_PER_ROUND = 1;
-
-        public const int NB_MAX_UNBOUNDED_TILES = 32;
-
-        public const int DEFAULT_WINNING_CONDITION_GOLD = 10;
-        public const int DEFAULT_WINNING_CONDITION_HUMAN = 7;
-
-        /// <summary>
-        /// Map tile upgrade cost
-        /// </summary>
-        /// <param name="tileType"></param>
-        /// <param name="tileLevel"></param>
-        /// <returns></returns>
-        public static byte[]? MapTileUpgradeCost(TileType tileType, byte tileLevel)
+        private readonly Dictionary<TileType, List<byte[]>> DefaultMapTileCost = new Dictionary<TileType, List<byte[]>>
         {
-            var materialCost = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+            { TileType.Grass, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
+            { TileType.Water, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
+            { TileType.Mountain, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
+            { TileType.Tree, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
+            { TileType.Desert, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
+            { TileType.Cave, new List<byte[]> { new byte[] { 1, 0, 0, 0, 0, 0, 0 } } },
+        };
 
-            switch (tileType)
+        private readonly Dictionary<TileType, List<byte[]>> DefaultMapTileUpgradeCost = new Dictionary<TileType, List<byte[]>>
+        {
             {
-                case TileType.Grass:
-                case TileType.Water:
-                case TileType.Mountain:
-                case TileType.Tree:
-                case TileType.Desert:
-                case TileType.Cave:
-                    return null;
+                TileType.Home,
+                new List<byte[]> {
+                    new byte[] { 0, 0, 0, 0, 2, 2, 0 }, // To Level 1
+                    new byte[] { 0, 0, 0, 0, 4, 4, 2 }, // To Level 2
+                    new byte[] { 0, 0, 0, 0, 6, 6, 4 }  // To Level 3
+                }
+            },
+        };
 
-                case TileType.Home:
-                    materialCost[(int)RessourceType.Wood] = (byte)((tileLevel + 1) * 2);
-                    materialCost[(int)RessourceType.Stone] = (byte)((tileLevel + 1) * 2);
-                    materialCost[(int)RessourceType.Gold] = (byte)(tileLevel * 2);
-                    return materialCost;
-            }
-            return null;
+        private readonly Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>> DefaultMapTileProduction = new Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>>
+        {
+            {
+                TileType.Home,
+                new Dictionary<TilePattern, List<byte[]>>
+                {
+                    { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 0
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 1
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 2
+                        new byte[] { 0, 1, 0, 0, 0, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }  // Req. Humans (all level same)
+                     } },
+                }
+            },
+            { TileType.Grass, new Dictionary<TilePattern, List<byte[]>>
+                {
+                    { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 0, 0, 2, 0, 0, 0 }, // Level 0
+                        new byte[] { 0, 0, 0, 3, 0, 0, 0 }, // Level 1
+                        new byte[] { 0, 0, 0, 4, 0, 0, 0 }, // Level 2
+                        new byte[] { 0, 0, 0, 5, 0, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }  // Req. Humans (all level same)
+                     } },
+                    { TilePattern.Delta, new List<byte[]> {
+                        new byte[] { 0, 0, 0, 3, 0, 0, 0 }, // Level 0
+                        new byte[] { 0, 0, 0, 4, 0, 0, 0 }, // Level 1
+                        new byte[] { 0, 0, 0, 5, 0, 0, 0 }, // Level 2
+                        new byte[] { 0, 0, 0, 6, 0, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }  // Req. Humans (all level same)
+                    } } } },
+            { TileType.Water, new Dictionary<TilePattern, List<byte[]>> { 
+                { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 0, 2, 0, 0, 0, 0 }, // Level 0
+                        new byte[] { 0, 0, 2, 0, 0, 0, 0 }, // Level 1
+                        new byte[] { 0, 0, 2, 0, 0, 0, 0 }, // Level 2
+                        new byte[] { 0, 0, 2, 0, 0, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }  // Req. Humans (all level same)
+                     } } } },
+            { TileType.Mountain, new Dictionary<TilePattern, List<byte[]>> { 
+                { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 0, 0, 0, 0, 4, 0 }, // Level 0
+                        new byte[] { 0, 0, 0, 0, 0, 4, 0 }, // Level 1
+                        new byte[] { 0, 0, 0, 0, 0, 4, 0 }, // Level 2
+                        new byte[] { 0, 0, 0, 0, 0, 4, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 4, 0 }  // Req. Humans (all level same)
+                     } } } },
+            { TileType.Tree, new Dictionary<TilePattern, List<byte[]>> { 
+                { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 0, 0, 1, 3, 0, 0 }, // Level 0
+                        new byte[] { 0, 0, 0, 1, 3, 0, 0 }, // Level 1
+                        new byte[] { 0, 0, 0, 1, 3, 0, 0 }, // Level 2
+                        new byte[] { 0, 0, 0, 1, 3, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 2, 0, 0 }  // Req. Humans (all level same)
+                     } } } },
+            { TileType.Desert, new Dictionary<TilePattern, List<byte[]>> { 
+                { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }, // Level 0
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }, // Level 1
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }, // Level 2
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 0, 0 }  // Req. Humans (all level same)
+                     } } } },
+            { TileType.Cave, new Dictionary<TilePattern, List<byte[]>> { 
+                { TilePattern.Normal, new List<byte[]> {
+                        new byte[] { 0, 0, 0, 0, 0, 2, 1 }, // Level 0
+                        new byte[] { 0, 0, 0, 0, 0, 2, 1 }, // Level 1
+                        new byte[] { 0, 0, 0, 0, 0, 2, 1 }, // Level 2
+                        new byte[] { 0, 0, 0, 0, 0, 2, 1 }, // Level 3
+                        new byte[] { 0, 0, 0, 0, 0, 2, 3 }  // Req. Humans (all level same)
+                     } } } },
+            // Add other TileType initializations here if needed
+        };
+
+        // Private constructor to prevent direct instantiation
+        private HexalemConfig()
+        {
+            MaxPlayers = DefaultMaxPlayers;
+            MinPlayers = DefaultMinPlayers;
+            MaxRounds = DefaultMaxRounds;
+            BlocksToPlayLimit = DefaultBlocksToPlayLimit;
+            MaxHexGridSize = DefaultMaxHexGridSize;
+            MaxTileSelection = DefaultMaxTileSelection;
+            WaterPerHuman = DefaultWaterPerHuman;
+            FoodPerHuman = DefaultFoodPerHuman;
+            HomePerHumans = DefaultHomePerHumans;
+            StartPlayerResources = DefaultPlayerResources;
+            TargetGoalGold = DefaultTargetGoalGold;
+            TargetGoalHuman = DefaultTargetGoalHuman;
+            MapTileCost = DefaultMapTileCost;
+            MapTileUpgradeCost = DefaultMapTileUpgradeCost;
+            MapTileProduction = DefaultMapTileProduction;
         }
 
-        /// <summary>
-        /// Map tile cost
-        /// </summary>
-        /// <param name="tileType"></param>
-        /// <param name="tileLevel"></param>
-        /// <returns></returns>
-        public static byte[]? MapTileCost(TileType tileType, byte tileLevel)
+        public class Builder
         {
-            var materialCost = new byte[Enum.GetValues(typeof(RessourceType)).Length];
+            private readonly HexalemConfig _config = new HexalemConfig();
 
-            switch (tileType)
+            public Builder SetMaxPlayers(int maxPlayers)
             {
-                case TileType.Grass:
-                case TileType.Water:
-                case TileType.Mountain:
-                case TileType.Tree:
-                case TileType.Desert:
-                case TileType.Cave:
-                    materialCost[(int)RessourceType.Mana] = (byte)(1 + tileLevel);
-                    return materialCost;
-
-                case TileType.Home:
-                    return null;
+                _config.MaxPlayers = maxPlayers;
+                return this;
             }
-            return null;
-        }
 
+            public Builder SetMinPlayers(int minPlayers)
+            {
+                _config.MinPlayers = minPlayers;
+                return this;
+            }
+
+            public Builder SetMaxRounds(int maxRounds)
+            {
+                _config.MaxRounds = maxRounds;
+                return this;
+            }
+
+            public Builder SetBlocksToPlayLimit(int blocksToPlayLimit)
+            {
+                _config.BlocksToPlayLimit = blocksToPlayLimit;
+                return this;
+            }
+
+            public Builder SetMaxHexGridSize(int maxHexGridSize)
+            {
+                _config.MaxHexGridSize = maxHexGridSize;
+                return this;
+            }
+
+            public Builder SetMaxTileSelection(int maxTileSelection)
+            {
+                _config.MaxTileSelection = maxTileSelection;
+                return this;
+            }
+
+            public Builder SetWaterPerHuman(int waterPerHuman)
+            {
+                _config.WaterPerHuman = waterPerHuman;
+                return this;
+            }
+
+            public Builder SetFoodPerHuman(int foodPerHuman)
+            {
+                _config.FoodPerHuman = foodPerHuman;
+                return this;
+            }
+
+            public Builder SetHomePerHumans(int homePerHumans)
+            {
+                _config.HomePerHumans = homePerHumans;
+                return this;
+            }
+
+            public Builder SetDefaultPlayerResources(byte[] defaultPlayerResources)
+            {
+                _config.StartPlayerResources = defaultPlayerResources;
+                return this;
+            }
+
+            public Builder SetTargetGoalGold(byte targetGoalGold)
+            {
+                _config.TargetGoalGold = targetGoalGold;
+                return this;
+            }
+
+            public Builder SetTargetGoalHuman(byte targetGoalHuman)
+            {
+                _config.TargetGoalHuman = targetGoalHuman;
+                return this;
+            }
+
+            public Builder SetMapTileCost(Dictionary<TileType, List<byte[]>> mapTileCost)
+            {
+                _config.MapTileCost = mapTileCost;
+                return this;
+            }
+
+            public Builder SetMapTileUpgradeCost(Dictionary<TileType, List<byte[]>> mapTileUpgradeCost)
+            {
+                _config.MapTileUpgradeCost = mapTileUpgradeCost;
+                return this;
+            }
+
+            public Builder SetMapTileProduction(Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>> mapTileProduction)
+            {
+                _config.MapTileProduction = mapTileProduction;
+                return this;
+            }
+
+            public HexalemConfig Build()
+            {
+                // Additional validation or adjustments can be added here
+                return _config;
+            }
+        }
+    }
+
+    public static class GameConfig
+    {
         /// <summary>
         /// Tile offer
         /// </summary>

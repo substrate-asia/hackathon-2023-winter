@@ -74,7 +74,7 @@ namespace Substrate.Hexalem.Game
 
                 var currentTile = (HexaTile)playerBoard[i];
 
-                if (GameConfig.MapTileUpgradeCost(currentTile.TileType, currentTile.TileLevel) != null)
+                if (HexalemConfig.GetInstance().MapTileUpgradeCost.TryGetValue(currentTile.TileType, out List<byte[]> costs) && costs.Count > currentTile.TileLevel)
                 {
                     upgradableTile.Add(playerBoard.ToCoords(i));
                 }

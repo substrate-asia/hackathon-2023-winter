@@ -207,7 +207,7 @@ namespace Assets.Scripts.ScreenStates
             lastBlockNumber.Create(Storage.HexaGame.LastMove);
             var blockNumberPassed = blocknumber - lastBlockNumber;
 
-            var percentage = System.Math.Min((float)blockNumberPassed / GameConfig.MAX_TURN_BLOCKS * 100, 100);
+            var percentage = System.Math.Min((float)blockNumberPassed / HexalemConfig.GetInstance().BlocksToPlayLimit * 100, 100);
             Debug.Log($"PlayScreenState LastBlockNumber = {lastBlockNumber} | blockNumberPassed = {blockNumberPassed} | percentage = {percentage}");
             _velTimerProgress.style.height = Length.Percent(percentage);
 

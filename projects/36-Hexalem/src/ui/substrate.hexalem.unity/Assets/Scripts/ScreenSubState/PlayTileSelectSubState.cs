@@ -183,7 +183,7 @@ namespace Assets.Scripts
 
             tileCard.Q<Label>("LblTileName").text = selectTile.TileToBuy.TileType.ToString() + "(Norm)";
 
-            tileCard.Q<Label>("LblRoundPre").text = "(+1";
+            tileCard.Q<Label>("LblRound").text = HelperUI.TileRoundDescription(selectTile.TileToBuy);
             tileCard.Q<Label>("LblManaCost").text = "1";
 
             var velTileImage = tileCard.Q<VisualElement>("VelTileImage");
@@ -222,7 +222,7 @@ namespace Assets.Scripts
 
             _velTileCardBox.Add(tileCard);
 
-            _lblTileDescription.text = HelperUI.TileDescription(selectTile.TileToBuy.TileType);
+            _lblTileDescription.text = HelperUI.TileDescription(selectTile);
         }
 
         public static void DisplayManaBottle(TemplateContainer tileCard, HexaPlayer player)

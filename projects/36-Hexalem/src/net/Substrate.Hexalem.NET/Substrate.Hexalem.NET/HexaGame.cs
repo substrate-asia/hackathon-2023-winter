@@ -5,6 +5,7 @@ using Substrate.NetApi;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("Substrate.Hexalem.Test")]
@@ -13,6 +14,9 @@ namespace Substrate.Hexalem.Engine
 {
     public partial class HexaGame : IHexaBase, ICloneable
     {
+        public const int STORAGE_SIZE = 32;
+        public const int ADDRESS_SIZE = 32;
+
         public byte[] Id { get; set; }
 
         public byte[] Value { get; set; }
@@ -39,17 +43,13 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         public HexaPlayer CurrentPlayer => HexaTuples[PlayerTurn].player;
 
-        protected HexaGame()
-        {
-        }
-
         public HexaGame(byte[] id, List<(HexaPlayer, HexaBoard)> hexaTuples)
         {
-            if (id.Length != GameConfig.GAME_STORAGE_ID)
-                throw new ArgumentException($"id is not {GameConfig.GAME_STORAGE_ID} bytes length (currently = {id.Length})");
+            if (id.Length != STORAGE_SIZE)
+                throw new ArgumentException($"id is not {STORAGE_SIZE} bytes length (currently = {id.Length})");
 
             Id = id;
-            Value = new byte[GameConfig.GAME_STORAGE_SIZE];
+            Value = new byte[STORAGE_SIZE];
 
             HexaTuples = hexaTuples;
             UnboundTileOffers = new List<byte>();
@@ -90,7 +90,7 @@ namespace Substrate.Hexalem.Engine
             if (UnboundTileOffers.Count < (SelectBase / 2 + 1))
             {
                 Log.Debug("UnboundTileOffers is below half");
-                if (SelectBase < GameConfig.NB_MAX_UNBOUNDED_TILES / 2)
+                if (SelectBase < HexalemConfig.GetInstance().MaxTileSelection)
                 {
                     Log.Debug($"Selection is now {SelectBase}");
                     SelectBase += 2;
@@ -126,11 +126,11 @@ namespace Substrate.Hexalem.Engine
         {
             int p = 0;
             var data = Utils.HexToByteArray(hex);
-            var id = data.Take(GameConfig.GAME_STORAGE_ID).ToArray();
-            p += GameConfig.GAME_STORAGE_ID;
+            var id = data.Take(STORAGE_SIZE).ToArray();
+            p += STORAGE_SIZE;
 
-            var value = data.Skip(p).Take(GameConfig.GAME_STORAGE_SIZE).ToArray();
-            p += GameConfig.GAME_STORAGE_SIZE;
+            var value = data.Skip(p).Take(STORAGE_SIZE).ToArray();
+            p += STORAGE_SIZE;
 
             var playerCount = value[3];
             var selectBase = value[5];
@@ -138,7 +138,7 @@ namespace Substrate.Hexalem.Engine
             var unboundTile = data.Skip(p).Take(selectBase).Where(x => x > 0).ToArray();
             p += selectBase;
 
-            var gridSize = (data.Skip(p).ToArray().Length - ((GameConfig.PLAYER_ADDRESS_STORAGE_SIZE + GameConfig.PLAYER_STORAGE_SIZE) * playerCount)) / playerCount;
+            var gridSize = (data.Skip(p).ToArray().Length - ((ADDRESS_SIZE + HexaPlayer.STORAGE_SIZE) * playerCount)) / playerCount;
 
             if(gridSize != (int)GridSize.Small && gridSize != (int)GridSize.Medium && gridSize != (int)GridSize.Large)
             {
@@ -149,11 +149,11 @@ namespace Substrate.Hexalem.Engine
 
             for (int i = 0; i < playerCount; i++)
             {
-                var pId = data.Skip(p).Take(GameConfig.PLAYER_ADDRESS_STORAGE_SIZE).ToArray();
-                p += GameConfig.PLAYER_ADDRESS_STORAGE_SIZE;
+                var pId = data.Skip(p).Take(ADDRESS_SIZE).ToArray();
+                p += ADDRESS_SIZE;
 
-                var pValue = data.Skip(p).Take(GameConfig.PLAYER_STORAGE_SIZE).ToArray();
-                p += GameConfig.PLAYER_STORAGE_SIZE;
+                var pValue = data.Skip(p).Take(HexaPlayer.STORAGE_SIZE).ToArray();
+                p += HexaPlayer.STORAGE_SIZE;
 
                 var board = data.Skip(p).Take(gridSize).ToArray();
                 p += gridSize;
@@ -166,12 +166,10 @@ namespace Substrate.Hexalem.Engine
                 throw new InvalidOperationException("Every bytes has not been set");
             }
 
-            return new HexaGame()
+            return new HexaGame(id, hexaTuple)
             {
-                Id = id,
                 Value = value,
-                UnboundTileOffers = unboundTile.ToList(),
-                HexaTuples = hexaTuple
+                UnboundTileOffers = unboundTile.ToList()
             };
         }
 
@@ -384,8 +382,7 @@ namespace Substrate.Hexalem.Engine
             existingTile.Upgrade();
 
             HexaTuples[PlayerTurn].board[coords.q, coords.r] = existingTile;
-
-            var ressourceCost = GameConfig.MapTileUpgradeCost(existingTile.TileType, existingTile.TileLevel);
+            var ressourceCost = HexalemConfig.GetInstance().MapTileUpgradeCost[existingTile.TileType][existingTile.TileLevel];
 
             for (int i = 0; i < ressourceCost.Length; i++)
             {
@@ -605,7 +602,12 @@ namespace Substrate.Hexalem.Engine
         /// <returns></returns>
         private bool EnsureRessourcesToUpgrade(HexaPlayer player, HexaTile tile)
         {
-            var ressourceCost = GameConfig.MapTileUpgradeCost(tile.TileType, tile.TileLevel);
+            if (!HexalemConfig.GetInstance().MapTileUpgradeCost.TryGetValue(tile.TileType, out List<byte[]> costs) || costs.Count <= tile.TileLevel)
+            {
+                return false;
+            }
+
+            var ressourceCost = costs[tile.TileLevel];
 
             if (ressourceCost == null)
             {
@@ -633,7 +635,7 @@ namespace Substrate.Hexalem.Engine
         public bool EnsureTimePassed(uint blockNumber)
         {
             var lastMove = BitConverter.ToUInt32(LastMove);
-            if (blockNumber < lastMove + GameConfig.MAX_TURN_BLOCKS)
+            if (blockNumber < lastMove + HexalemConfig.GetInstance().BlocksToPlayLimit)
             {
                 return false;
             }
@@ -755,6 +757,8 @@ namespace Substrate.Hexalem.Engine
             // https://www.simplypsychology.org/maslow.html
             byte result = 0;
 
+            Dictionary<TileType, Dictionary<TilePattern, List<byte[]>>> production = HexalemConfig.GetInstance().MapTileProduction;
+
             switch (resourceType)
             {
                 case RessourceType.Mana:
@@ -767,52 +771,50 @@ namespace Substrate.Hexalem.Engine
                 case RessourceType.Humans:
 
                     // Physiological needs: breathing, food, water, shelter, clothing, sleep
-                    result = (byte)Math.Min(player[RessourceType.Food] * GameConfig.FOOD_PER_HUMANS, player[RessourceType.Water] * GameConfig.WATER_PER_HUMANS);
+                    result = (byte)Math.Min(player[RessourceType.Food] * HexalemConfig.GetInstance().FoodPerHuman, player[RessourceType.Water] * HexalemConfig.GetInstance().WaterPerHuman);
 
                     var homeWeighted = 0;
                     for (byte level = 0; level < 4; level++)
                     {
                         homeWeighted += (level + 1) * boardStats[TileType.Home, level];
                     }
-                    result = (byte)Math.Max(Math.Min(result, homeWeighted * GameConfig.HOME_PER_HUMANS), 1);
+                    result = (byte)Math.Max(Math.Min(result, homeWeighted * HexalemConfig.GetInstance().HomePerHumans), 1);
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Water:
-                    result += (byte)(boardStats[TileType.Water] * GameConfig.WATER_PER_WATER);
+                    result += (byte)(boardStats[TileType.Water] * production[TileType.Water][TilePattern.Normal][0][(int)resourceType]);
 
                     // Additional pattern logic
                     break;
 
                 case RessourceType.Food:
-                    result += (byte)(boardStats[TileType.Grass] * GameConfig.FOOD_PER_GRASS);
-                    result += (byte)(boardStats[TileType.Tree] * GameConfig.FOOD_PER_TREE);
 
-                    // Additional pattern logic
+                    result += (byte)(boardStats[TileType.Grass] * production[TileType.Grass][TilePattern.Normal][0][(int)resourceType]);
+                    result += (byte)(boardStats[TileType.Tree] * production[TileType.Tree][TilePattern.Normal][0][(int)resourceType]);
                     break;
 
                 case RessourceType.Wood:
-                    // 1 Tree can create Wood for 6 humans, but need 2 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Tree] * 3, player[RessourceType.Humans] / 2);
-
-                    // Additional pattern logic
+                    result += (byte)Math.Min(
+                        boardStats[TileType.Tree] * production[TileType.Tree][TilePattern.Normal][0][(int)resourceType], 
+                        player[RessourceType.Humans] / production[TileType.Tree][TilePattern.Normal][4][(int)resourceType]);
                     break;
 
                 case RessourceType.Stone:
-                    // 1 Mountain can create stone for 16 humans, but need 4 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Mountain] * 4, player[RessourceType.Humans] / 4);
-                    // 1 Cave can create stone for 4 humans, but need 2 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Cave] * 2, player[RessourceType.Humans] / 2);
+                    result += (byte)Math.Min(
+                        boardStats[TileType.Mountain] * production[TileType.Mountain][TilePattern.Normal][0][(int)resourceType],
+                        player[RessourceType.Humans] / production[TileType.Mountain][TilePattern.Normal][4][(int)resourceType]);
 
-                    // Additional pattern logic
+                    result += (byte)Math.Min(
+                        boardStats[TileType.Cave] * production[TileType.Cave][TilePattern.Normal][0][(int)resourceType],
+                        player[RessourceType.Humans] / production[TileType.Cave][TilePattern.Normal][4][(int)resourceType]);
                     break;
 
                 case RessourceType.Gold:
-
-                    // 1 Rare (delta) Cave can create Gold for 1 humans, but need 3 humans for 1
-                    result += (byte)Math.Min(boardStats[TileType.Cave] * 1, player[RessourceType.Humans] / 3);
-                    // Additional pattern logic
+                    result += (byte)Math.Min(
+                        boardStats[TileType.Cave] * production[TileType.Cave][TilePattern.Normal][0][(int)resourceType],
+                        player[RessourceType.Humans] / production[TileType.Cave][TilePattern.Normal][4][(int)resourceType]);
                     break;
             }
 

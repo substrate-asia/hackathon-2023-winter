@@ -55,7 +55,7 @@ pub mod pallet {
 
 	pub type Players<T> = BoundedVec<AccountId<T>, <T as Config>::MaxPlayers>;
 
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, DebugNoBound, Clone, PartialEq)]
 	#[scale_info(skip_type_params(T))]
 	pub struct Game<T: Config> {
 		pub state: GameState,
@@ -208,7 +208,7 @@ pub mod pallet {
 	pub type HexGrid<T> = BoundedVec<<T as Config>::Tile, <T as Config>::MaxHexGridSize>;
 
 	// The board of the player, with all stats and resources
-	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen)]
+	#[derive(Encode, Decode, TypeInfo, MaxEncodedLen, DebugNoBound, PartialEq, Clone)]
 	#[scale_info(skip_type_params(T))]
 	pub struct HexBoard<T: Config> {
 		pub resources: [ResourceUnit; NUMBER_OF_RESOURCE_TYPES],
@@ -823,6 +823,26 @@ pub mod pallet {
 
 			Ok(())
 		}
+
+		#[pallet::call_index(7)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn root_set_game(origin: OriginFor<T>, game_id: GameId, game: Game<T>) -> DispatchResult  {
+			ensure_root(origin)?;
+
+			<GameStorage<T>>::set(&game_id, Some(game));
+
+			Ok(())
+		}
+
+		#[pallet::call_index(8)]
+		#[pallet::weight(10_000 + T::DbWeight::get().reads_writes(1,1).ref_time())]
+		pub fn root_set_hex_board(origin: OriginFor<T>, player: AccountId<T>, hex_board: HexBoard<T>) -> DispatchResult  {
+			ensure_root(origin)?;
+
+			<HexBoardStorage<T>>::set(&player, Some(hex_board));
+			
+			Ok(())
+		}
 	}
 }
 
@@ -1319,11 +1339,14 @@ impl<T: Config> Pallet<T> {
 		cmp::min(x, 99)
 	}
 
-	/// Set the block number to something in particular. Can be used as an alternative to
-	/// `initialize` for tests that don't need to bother with the other environment entries.
 	#[cfg(any(feature = "std", feature = "runtime-benchmarks", test))]
 	pub fn set_hex_board(player: AccountId<T>, hex_board: HexBoard<T>) {
-		<HexBoardStorage<T>>::set(player, Some(hex_board));
+		<HexBoardStorage<T>>::set(&player, Some(hex_board));
+	}
+
+	#[cfg(any(feature = "std", feature = "runtime-benchmarks", test))]
+	pub fn set_game(game_id: GameId, game: Game<T>) {
+		<GameStorage<T>>::set(&game_id, Some(game));
 	}
 }
 
