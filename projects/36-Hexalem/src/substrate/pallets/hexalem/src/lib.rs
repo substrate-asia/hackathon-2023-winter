@@ -438,7 +438,7 @@ pub mod pallet {
 
 		// Creator needs to be included among players at index 0
 		CreatorNotInPlayersAtIndexZero,
-		
+
 		// The game has already started. Can not create it twice.
 		GameAlreadyCreated,
 
@@ -532,7 +532,7 @@ pub mod pallet {
 			let current_block_number = <frame_system::Pallet<T>>::block_number();
 			let game_id: GameId = Blake2_256::hash(&(&who, &current_block_number).encode());
 
-			// Eensure that the game has not already been created
+			// Ensure that the game has not already been created
 			ensure!(!GameStorage::<T>::contains_key(&game_id), Error::<T>::GameAlreadyCreated);
 
 			// Default Game Config
