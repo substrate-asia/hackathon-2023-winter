@@ -311,7 +311,7 @@ parameter_types! {
 
 	pub const HexalemBlocksToPlayLimit: u8 = 10;
 
-	pub const HexalemMaxHexGridSize: u8 = 25;
+	pub const HexalemMaxHexGridSize: u8 = 49;
 	pub const HexalemMaxTileSelection: u8 = 16;
 
 	pub const HexalemTileResourceProductions: [ResourceProductions; NUMBER_OF_TILE_TYPES] = [

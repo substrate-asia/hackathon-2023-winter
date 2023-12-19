@@ -179,31 +179,65 @@ fn create_new_game_successfully() {
 }
 
 #[test]
-fn create_new_game_fails_number_of_players_is_too_small() {
+fn create_game() {
 	new_test_ext().execute_with(|| {
-		// Ensure the expected error is thrown when no value is present.
 		assert_noop!(
 			HexalemModule::create_game(RuntimeOrigin::signed(1), vec![], 25),
 			Error::<TestRuntime>::NumberOfPlayersIsTooSmall
 		);
-	});
-}
 
-#[test]
-fn create_new_game_fails_bad_grid_size() {
-	new_test_ext().execute_with(|| {
-		// Ensure the expected error is thrown when no value is present.
+		assert_noop!(
+			HexalemModule::create_game(
+				RuntimeOrigin::signed(1),
+				(1..=101).collect::<Vec<u64>>(),
+				25
+			),
+			Error::<TestRuntime>::NumberOfPlayersIsTooLarge
+		);
+
 		assert_noop!(
 			HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1], 1),
 			Error::<TestRuntime>::BadGridSize
 		);
-	});
 
-	new_test_ext().execute_with(|| {
-		// Ensure the expected error is thrown when no value is present.
 		assert_noop!(
 			HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1], 2),
 			Error::<TestRuntime>::BadGridSize
+		);
+
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1], 20),
+			Error::<TestRuntime>::BadGridSize
+		);
+
+		assert_ok!(HexalemModule::create_game(
+			RuntimeOrigin::signed(1),
+			(1..=100).collect::<Vec<u64>>(),
+			25
+		));
+
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1], 25),
+			Error::<TestRuntime>::GameAlreadyCreated
+		);
+
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(2), vec![2, 1], 25),
+			Error::<TestRuntime>::AlreadyPlaying
+		);
+
+		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(101), vec![101], 9));
+
+		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(102), vec![102], 49));
+
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(103), vec![104], 9),
+			Error::<TestRuntime>::CreatorNotInPlayersAtIndexZero,
+		);
+
+		assert_noop!(
+			HexalemModule::create_game(RuntimeOrigin::signed(103), vec![104, 103], 9),
+			Error::<TestRuntime>::CreatorNotInPlayersAtIndexZero,
 		);
 	});
 }

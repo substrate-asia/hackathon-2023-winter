@@ -436,9 +436,9 @@ pub mod pallet {
 		// HexBoard has not been initialized yet. Unable to play.
 		HexBoardNotInitialized,
 
-		// The game has already started. Can not start it twice.
-		GameAlreadyStarted,
-
+		// Creator needs to be included among players at index 0
+		CreatorNotInPlayersAtIndexZero,
+		
 		// The game has already started. Can not create it twice.
 		GameAlreadyCreated,
 
@@ -557,6 +557,8 @@ pub mod pallet {
 					Some(HexBoard::<T>::new(grid_size as usize, game_id.clone())?),
 				);
 			}
+
+			ensure!(players[0] == who, Error::<T>::CreatorNotInPlayersAtIndexZero);
 
 			GameStorage::<T>::set(game_id, Some(game));
 
