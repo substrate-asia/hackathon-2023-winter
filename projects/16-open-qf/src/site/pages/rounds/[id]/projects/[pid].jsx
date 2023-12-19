@@ -9,6 +9,8 @@ import { EmptyList } from "@/utils/constants";
 import { loadCommonServerSideProps, withCommonPageWrapper } from "@/utils/ssr";
 import { to404 } from "@/utils/ssr/404";
 import { getProjectContributors } from "@/services/project";
+import { getRoundsList } from "@/services/rounds";
+import { find } from "lodash-es";
 
 const ProjectPage = withCommonPageWrapper(() => {
   return (
@@ -44,10 +46,14 @@ export const getServerSideProps = async (context) => {
     projectId,
   );
 
+  const { result: rounds } = await getRoundsList();
+  const round = find(rounds?.items, { id: roundId });
+
   return {
     props: {
       roundId,
       projectId,
+      round,
       detail: detail ?? null,
       comments: comments ?? EmptyList,
       contributors: contributorsResult ?? EmptyList,

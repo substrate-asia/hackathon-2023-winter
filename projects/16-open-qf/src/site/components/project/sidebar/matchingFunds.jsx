@@ -1,3 +1,5 @@
+import LocaleSymbol from "@/components/common/localeSymbol";
+import { useServerSideProps } from "@/context/serverSideProps";
 import { cn } from "@/utils";
 import SvgSystemReward from "@osn/icons/opensquare/SystemReward";
 import { PieChart } from "react-minimal-pie-chart";
@@ -48,6 +50,12 @@ function Item({ title, value }) {
 }
 
 export default function MatchingFunds() {
+  const { round, detail } = useServerSideProps();
+  const poll = round?.asset?.amount || 0;
+  const matched = detail?.matched || 0;
+
+  const percentage = (matched / poll) * 100;
+
   return (
     <div className="flex flex-col w-full p-[32px] shadow-shadow-card-default gap-[24px]">
       <div className="flex items-center justify-between pb-[16px] border-b border-stroke-border-default">
@@ -55,10 +63,13 @@ export default function MatchingFunds() {
         <SvgSystemReward className="[&_path]:fill-text-tertiary" />
       </div>
       <div className="flex flex-col gap-[16px]">
-        <Chart percentage={15} />
+        <Chart percentage={percentage} />
         <div className="flex gap-[16px] justify-between">
-          <Item title="Matching Pool" value="10,000 DOT" />
-          <Item title="Matching Funds" value="2,500 DOT" />
+          <Item title="Matching Pool" value={<LocaleSymbol value={poll} />} />
+          <Item
+            title="Matching Funds"
+            value={<LocaleSymbol value={matched} />}
+          />
         </div>
       </div>
     </div>
