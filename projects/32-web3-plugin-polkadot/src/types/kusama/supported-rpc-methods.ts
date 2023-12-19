@@ -4,7 +4,7 @@
  * using a code like the following:
   ```
   const web3 = new Web3('wss://rpc.polkadot.io');
-  web3.registerPlugin(new PolkadotPlugin());
+  web3.registerPlugin(new PolkaPlugin());
   const response = await web3.polka.polkadot.rpc.methods();
   console.log(JSON.stringify(response.methods, null, 2));
   ```
