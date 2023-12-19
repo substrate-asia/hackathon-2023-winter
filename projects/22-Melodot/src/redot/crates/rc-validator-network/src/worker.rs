@@ -11,25 +11,37 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-use crate::{Behavior, BehaviourEvent, Command, ValidatorNetworkConfig};
+use crate::{
+	discovery::SignedValidatorRecord, AddrCache, Behavior, BehaviourEvent, Command,
+	CreatedSubscription, KademliaKey, ValidatorNetworkConfig,
+};
+use bytes::Bytes;
+use codec::{Decode, Encode};
 use futures::{
 	channel::{mpsc, oneshot},
 	stream::StreamExt,
 };
+use ip_network::IpNetwork;
 use libp2p::{
+	gossipsub::{GossipsubEvent, TopicHash},
 	identify::Event as IdentifyEvent,
 	kad::{
-		store::RecordStore, BootstrapOk, GetRecordOk, InboundRequest, KademliaEvent, PutRecordOk,
-		QueryId, QueryResult, Record,
+		BootstrapOk, GetRecordOk, InboundRequest, KademliaEvent, PutRecordOk, QueryId, QueryResult,
+		Quorum, Record,
 	},
 	mdns::Event as MdnsEvent,
-	multiaddr::Protocol,
+	multiaddr::{self, Protocol},
+	multihash::Multihash,
 	swarm::{ConnectionError, Swarm, SwarmEvent},
 	Multiaddr, PeerId,
 };
 use log::{debug, error, info, trace, warn};
+use nohash_hasher::IntMap;
 use prometheus_endpoint::{register, Counter, CounterVec, Gauge, Opts, U64};
+use sp_keystore::KeystorePtr;
+use std::collections::hash_map::Entry;
 use std::{collections::HashMap, fmt::Debug};
+use tracing::field::debug;
 
 /// The maximum number of connection retries.
 const MAX_RETRIES: u8 = 3;
@@ -37,8 +49,6 @@ const MAX_RETRIES: u8 = 3;
 const LOG_TARGET: &str = "validator-network-worker";
 
 enum QueryResultSender {
-	PutRecord(oneshot::Sender<Result<(), anyhow::Error>>),
-	GetRecord(oneshot::Sender<Result<Vec<Record>, anyhow::Error>>),
 	Bootstrap(oneshot::Sender<Result<(), anyhow::Error>>),
 }
 
@@ -62,6 +72,10 @@ pub struct ValidatorNetwork {
 	retry_counts: HashMap<PeerId, u8>,
 	metrics: Option<Metrics>,
 	known_addresses: HashMap<PeerId, Vec<String>>,
+	key_ptr: Option<KeystorePtr>,
+	address_cache: AddrCache,
+	topic_subscription_senders: HashMap<TopicHash, IntMap<usize, mpsc::UnboundedSender<Bytes>>>,
+	next_subscription_id: usize,
 }
 
 impl ValidatorNetwork {
@@ -124,6 +138,10 @@ impl ValidatorNetwork {
 			retry_counts: HashMap::default(),
 			metrics,
 			known_addresses,
+			key_ptr: config.key_ptr.clone(),
+			address_cache: config.address_cache.clone(),
+			topic_subscription_senders: HashMap::new(),
+			next_subscription_id: 0,
 		}
 	}
 
@@ -147,8 +165,11 @@ impl ValidatorNetwork {
 			}
 		}
 
+		// TODO 在每次环境改变时发布地址
+		self.publish_ext_addresses().await;
+
 		loop {
-			tokio::select! {
+			futures::select! {
 				swarm_event = self.swarm.select_next_some() => {
 					self.handle_swarm_event(swarm_event).await;
 				},
@@ -184,14 +205,19 @@ impl ValidatorNetwork {
 			metrics.dht_event_received.with_label_values(&["event_received"]).inc();
 		}
 		match event {
-			SwarmEvent::Behaviour(BehaviourEvent::Kademlia(event)) =>
-				self.handle_kademlia_event(event).await,
-			SwarmEvent::Behaviour(BehaviourEvent::Identify(event)) =>
-				self.handle_identify_event(event).await,
+			SwarmEvent::Behaviour(BehaviourEvent::Kademlia(event)) => {
+				self.handle_kademlia_event(event).await
+			},
+			SwarmEvent::Behaviour(BehaviourEvent::Identify(event)) => {
+				self.handle_identify_event(event).await
+			},
 			SwarmEvent::NewListenAddr { address, .. } => {
 				let peer_id = self.swarm.local_peer_id();
 				let address_with_peer = address.with(Protocol::P2p((*peer_id).into()));
 				debug!("Local node is listening on {:?}", address_with_peer);
+			},
+			SwarmEvent::Behaviour(BehaviourEvent::Gossipsub(event)) => {
+				self.handle_gossipsub_event(event).await
 			},
 			SwarmEvent::Behaviour(BehaviourEvent::Mdns(event)) => {
 				// Obtain a mutable reference to the behaviour to avoid multiple mutable borrowings
@@ -199,16 +225,16 @@ impl ValidatorNetwork {
 				let behaviour = self.swarm.behaviour_mut();
 
 				match event {
-					MdnsEvent::Discovered(peers) =>
+					MdnsEvent::Discovered(peers) => {
 						for (peer_id, address) in peers {
 							debug!(
 								"MDNS discovered peer: ID = {:?}, Address = {:?}",
 								peer_id, address
 							);
 							behaviour.kademlia.add_address(&peer_id, address);
-							// 
-						},
-					MdnsEvent::Expired(peers) =>
+						}
+					},
+					MdnsEvent::Expired(peers) => {
 						for (peer_id, address) in peers {
 							if !behaviour.mdns.has_node(&peer_id) {
 								debug!(
@@ -217,7 +243,8 @@ impl ValidatorNetwork {
 								);
 								behaviour.kademlia.remove_address(&peer_id, &address);
 							}
-						},
+						}
+					},
 				}
 			},
 			SwarmEvent::ConnectionClosed { peer_id, cause, .. } => {
@@ -246,6 +273,21 @@ impl ValidatorNetwork {
 			},
 			SwarmEvent::Dialing(peer_id) => debug!("Dialing {}", peer_id),
 			_ => trace!("Unhandled Swarm event: {:?}", event),
+		}
+	}
+
+	async fn handle_gossipsub_event(&mut self, event: GossipsubEvent) {
+		match event {
+			GossipsubEvent::Message { message, .. } => {
+				if let Some(senders) = self.topic_subscription_senders.get(&message.topic) {
+					let bytes = Bytes::from(message.data);
+
+					for sender in senders.values() {
+						let _ = sender.unbounded_send(bytes.clone());
+					}
+				}
+			},
+			_ => {},
 		}
 	}
 
@@ -283,22 +325,22 @@ impl ValidatorNetwork {
 				}
 			},
 			KademliaEvent::OutboundQueryProgressed { id, result, .. } => match result {
-				QueryResult::GetRecord(result) => {
-					let msg = self.query_id_receivers.remove(&id);
-					match result {
-						Ok(GetRecordOk::FoundRecord(rec)) =>
-							handle_send!(GetRecord, msg, Ok(vec![rec.record])),
-						Ok(GetRecordOk::FinishedWithNoAdditionalRecord { .. }) =>
-							handle_send!(GetRecord, msg, Err(anyhow::anyhow!("No record found."))),
-						Err(err) => handle_send!(GetRecord, msg, Err(err.into())),
-					}
+				QueryResult::GetRecord(result) => match result {
+					Ok(GetRecordOk::FoundRecord(rec)) => self.handle_record(&rec.record),
+					Ok(GetRecordOk::FinishedWithNoAdditionalRecord { .. }) => {
+						log::debug!("Finished get record query with no additional record");
+					},
+					Err(err) => {
+						debug!("GetRecord error event. Error: {err:?}.");
+					},
 				},
-				QueryResult::PutRecord(result) => {
-					let msg = self.query_id_receivers.remove(&id);
-					match result {
-						Ok(PutRecordOk { .. }) => handle_send!(PutRecord, msg, Ok(())),
-						Err(err) => handle_send!(PutRecord, msg, Err(err.into())),
-					}
+				QueryResult::PutRecord(result) => match result {
+					Ok(PutRecordOk { .. }) => {
+						debug("PutRecordOK event.");
+					},
+					Err(err) => {
+						debug!("PutRecord error event. Error: {err:?}.");
+					},
 				},
 				QueryResult::Bootstrap(result) => match result {
 					Ok(BootstrapOk { peer, num_remaining }) => {
@@ -330,6 +372,82 @@ impl ValidatorNetwork {
 				self.swarm.behaviour_mut().kademlia.add_address(&peer_id, addr);
 			}
 		}
+	}
+
+	fn handle_record(&mut self, record: &Record) {
+		let record = record.value.clone();
+		let local_peer_id = *self.swarm.local_peer_id();
+		match SignedValidatorRecord::decode(&mut record.as_ref()) {
+			Ok(signed_record) => {
+				if signed_record.verify_signature() {
+					let addresses: Vec<Multiaddr> =
+						deserialize_addresses(signed_record.record).unwrap();
+
+					let validator_id = signed_record.validator_id;
+
+					let addresses: Vec<Multiaddr> = addresses
+						.into_iter()
+						.filter(|a| get_peer_id(a).filter(|p| *p != local_peer_id).is_some())
+						.collect();
+
+					for address in addresses.clone() {
+						if let Some(peer_id) = get_peer_id(&address) {
+							let behaviour = self.swarm.behaviour_mut();
+							behaviour.gossipsub.add_explicit_peer(&peer_id);
+							behaviour.kademlia.add_address(&peer_id, address);
+						}
+					}
+
+					self.address_cache.add_validator(validator_id, addresses);
+				} else {
+					debug!("Failed to verify validator record");
+				}
+			},
+			Err(_) => {},
+		}
+	}
+
+	async fn publish_ext_addresses(&mut self) {
+		let key_store = self.key_ptr.clone();
+
+		let addresses = serialize_addresses(self.addresses_to_publish());
+
+		if let Some(key_store) = key_store {
+			let kv_pairs = SignedValidatorRecord::sign_record(key_store.as_ref(), addresses);
+
+			match kv_pairs {
+				Ok(kv_pairs) => {
+					for (value, key) in kv_pairs.into_iter() {
+						let record = Record::new(KademliaKey::from(key), value.encode());
+						let _ = self.swarm.behaviour_mut().kademlia.put_record(record, Quorum::One);
+					}
+				},
+				Err(e) => {
+					debug!("Failed to sign record: {:?}", e);
+				},
+			}
+		}
+	}
+
+	fn addresses_to_publish<'a>(&'a self) -> impl Iterator<Item = Multiaddr> + 'a {
+		let peer_id: Multihash = (self.swarm.local_peer_id().clone()).into();
+		self.swarm
+			.external_addresses()
+			.into_iter()
+			.filter(move |a| {
+				a.addr.iter().all(|p| match p {
+					multiaddr::Protocol::Ip4(ip) if !IpNetwork::from(ip).is_global() => false,
+					multiaddr::Protocol::Ip6(ip) if !IpNetwork::from(ip).is_global() => false,
+					_ => true,
+				})
+			})
+			.map(move |a| {
+				if a.addr.iter().any(|p| matches!(p, multiaddr::Protocol::P2p(_))) {
+					a.addr.clone()
+				} else {
+					a.addr.clone().with(multiaddr::Protocol::P2p(peer_id))
+				}
+			})
 	}
 
 	async fn handle_command(&mut self, command: Command) {
@@ -376,35 +494,6 @@ impl ValidatorNetwork {
 					warn!("DHT is empty, unable to bootstrap.");
 				}
 			},
-			Command::GetKadRecord { key, sender } => {
-				let query_id = self.swarm.behaviour_mut().kademlia.get_record(key);
-				self.query_id_receivers.insert(query_id, QueryResultSender::GetRecord(sender));
-			},
-			Command::PutKadRecord { record, quorum, sender } => {
-				if let Some(metrics) = &self.metrics {
-					metrics.publish.inc();
-				}
-
-				if let Some(metrics) = &self.metrics {
-					metrics.publish.inc();
-				}
-				if let Ok(query_id) = self.swarm.behaviour_mut().kademlia.put_record(record, quorum)
-				{
-					self.query_id_receivers.insert(query_id, QueryResultSender::PutRecord(sender));
-				} else {
-					warn!("Failed to execute put_record.");
-				}
-			},
-			Command::RemoveRecords { keys, sender } => {
-				let kademlia_store = self.swarm.behaviour_mut().kademlia.store_mut();
-
-				for key in keys {
-					kademlia_store.remove(&key);
-				}
-				sender.send(Ok(())).unwrap_or_else(|_| {
-					debug!("Failed to send result");
-				});
-			},
 			Command::RemoveExplicitPeer { peer_id, sender } => {
 				self.swarm.behaviour_mut().gossipsub.remove_explicit_peer(&peer_id);
 				self.swarm.behaviour_mut().kademlia.remove_peer(&peer_id);
@@ -412,13 +501,109 @@ impl ValidatorNetwork {
 					debug!("Failed to remove explicit peer");
 				});
 			},
+			Command::NewValidators { validators } => {
+				let keys = validators.iter().map(|validator| SignedValidatorRecord::key(validator));
+
+				for key in keys {
+					self.swarm.behaviour_mut().kademlia.get_record(KademliaKey::from(key));
+				}
+			},
+			Command::RemoveValidators { validators } => {
+				let peer_ids = validators
+					.iter()
+					.filter_map(|validator| self.address_cache.validator_addresses(validator))
+					.flatten()
+					.collect::<Vec<_>>();
+
+				for peer_id in peer_ids.iter() {
+					self.swarm.behaviour_mut().gossipsub.remove_explicit_peer(peer_id);
+					self.swarm.behaviour_mut().kademlia.remove_peer(peer_id);
+				}
+			},
+			Command::Subscribe { topic, result_sender } => {
+				let topic_hash = topic.hash();
+
+				let (sender, receiver) = mpsc::unbounded();
+
+				let subscription_id = self.next_subscription_id;
+				self.next_subscription_id += 1;
+
+				let created_subscription = CreatedSubscription { subscription_id, receiver };
+
+				match self.topic_subscription_senders.entry(topic_hash) {
+					Entry::Occupied(mut entry) => {
+						if result_sender.send(Ok(created_subscription)).is_ok() {
+							entry.get_mut().insert(subscription_id, sender);
+						}
+					},
+					Entry::Vacant(entry) => {
+						match self.swarm.behaviour_mut().gossipsub.subscribe(&topic) {
+							Ok(true) => {
+								if result_sender.send(Ok(created_subscription)).is_ok() {
+									entry.insert(IntMap::from_iter([(subscription_id, sender)]));
+								}
+							},
+							Ok(false) => {
+								panic!(
+									"Failed to subscribe to topic {:?} (already subscribed)",
+									topic
+								);
+							},
+							Err(error) => {
+								let _ = result_sender.send(Err(error));
+							},
+						}
+					},
+				}
+			},
+			Command::Publish { topic, message, sender } => {
+				let _ = self.swarm.behaviour_mut().gossipsub.publish(topic, message);
+				let _ = sender.send(Ok(()));
+			},
+			Command::Unsubscribe { topic, subscription_id } => {
+				if let Entry::Occupied(mut entry) =
+					self.topic_subscription_senders.entry(topic.hash())
+				{
+					entry.get_mut().remove(&subscription_id);
+					if entry.get().is_empty() {
+						entry.remove_entry();
+
+						if let Err(error) = self.swarm.behaviour_mut().gossipsub.unsubscribe(&topic)
+						{
+							warn!("Failed to unsubscribe from topic {topic}: {error}");
+						}
+					}
+				} else {
+					error!(
+						"Can't unsubscribe from topic {topic} because subscription doesn't exist, \
+                        this is a logic error in the library"
+					);
+				}
+			},
 		}
 	}
 }
 
+fn get_peer_id(a: &Multiaddr) -> Option<PeerId> {
+	match a.iter().last() {
+		Some(multiaddr::Protocol::P2p(key)) => PeerId::from_multihash(key).ok(),
+		_ => None,
+	}
+}
+
+fn serialize_addresses(addresses: impl Iterator<Item = Multiaddr>) -> Vec<Vec<u8>> {
+	addresses.map(|a| a.to_vec()).collect()
+}
+
+fn deserialize_addresses(encoded_addresses: Vec<Vec<u8>>) -> Result<Vec<Multiaddr>, String> {
+	encoded_addresses
+		.into_iter()
+		.map(|bytes| Multiaddr::try_from(bytes).map_err(|e| e.to_string()))
+		.collect()
+}
+
 #[derive(Clone)]
 pub(crate) struct Metrics {
-	publish: Counter<U64>,
 	requests: Counter<U64>,
 	requests_total: CounterVec<U64>,
 	requests_pending: Gauge<U64>,
@@ -430,13 +615,6 @@ impl Metrics {
 		registry: &prometheus_endpoint::Registry,
 	) -> Result<Self, Box<dyn std::error::Error>> {
 		Ok(Self {
-			publish: register(
-				Counter::new(
-					"redot_validator_network_publish_total",
-					"Total number of published items in the validator network",
-				)?,
-				registry,
-			)?,
 			requests: register(
 				Counter::new(
 					"redot_validator_network_requests_total",
@@ -474,4 +652,3 @@ impl Metrics {
 		})
 	}
 }
-

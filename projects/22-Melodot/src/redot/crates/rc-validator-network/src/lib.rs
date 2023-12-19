@@ -42,11 +42,15 @@ pub use std::sync::Arc;
 use std::time::Duration;
 
 pub use behaviour::{Behavior, BehaviorConfig, BehaviourEvent};
-pub use service::{ValidatorNetworkConfig, Service};
+pub use service::{Service, ValidatorNetworkConfig};
 pub use shared::Command;
 pub use worker::ValidatorNetwork;
 
+pub(crate) use discovery::AddrCache;
+pub(crate) use shared::CreatedSubscription;
+
 mod behaviour;
+mod discovery;
 mod service;
 mod shared;
 mod worker;
@@ -91,7 +95,7 @@ pub fn create(
 	let (to_worker, from_service) = mpsc::channel(8);
 
 	Ok((
-		service::Service::new(to_worker, config.parallel_limit, config.whitelist.clone()),
+		service::Service::new(to_worker),
 		worker::ValidatorNetwork::new(swarm, from_service, prometheus_registry, &config),
 	))
 }

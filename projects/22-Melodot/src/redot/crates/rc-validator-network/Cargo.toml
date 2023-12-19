@@ -11,6 +11,7 @@ keywords = ["substrate", "pallet", "macro", "configuration"]
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
+bytes = "1.4.0"
 async-trait = "0.1.56"
 futures = "0.3.21"
 tracing = "0.1.37"
@@ -22,9 +23,15 @@ libp2p = { version = "0.50.0", features = ["dns", "metrics", "identify", "kad", 
 tokio-stream = { version = "0.1" }
 tokio = { version = "1.21.2", features = ["macros", "parking_lot", "rt-multi-thread", "sync", "time"] }
 prometheus-client = "0.18.1"
-
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
+ip_network = "0.4.1"
+nohash-hasher = "0.2.0"
 # Substrate
 # sc-network = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v1.0.0" }
 # cumulus-relay-chain-interface = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
 # cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
 prometheus-endpoint = { package = "substrate-prometheus-endpoint", git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v1.0.0" }
+cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
+sp-keystore = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v1.0.0" }
+sp-core = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v1.0.0" }
+sp-authority-discovery = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v1.0.0" }

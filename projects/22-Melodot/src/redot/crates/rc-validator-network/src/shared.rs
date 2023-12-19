@@ -13,22 +13,64 @@
 // limitations under the License.
 
 use crate::behaviour::BehaviourEvent;
-use crate::KademliaKey;
 use anyhow::Result;
+use cumulus_primitives_core::relay_chain::ValidatorId;
 use futures::channel::{mpsc, oneshot};
 use libp2p::{
-	kad::{Quorum, Record},
+	gossipsub::{error::SubscriptionError, Sha256Topic},
 	Multiaddr, PeerId,
 };
+use bytes::Bytes;
+
+#[derive(Debug)]
+pub(crate) struct CreatedSubscription {
+	/// Subscription ID to be used for unsubscribing.
+	#[allow(dead_code)]
+	pub(crate) subscription_id: usize,
+	/// Receiver side of the channel with new messages.
+	#[allow(dead_code)]
+	pub(crate) receiver: mpsc::UnboundedReceiver<Bytes>,
+}
 
 #[derive(Debug)]
 pub enum Command {
-	StartListening { addr: Multiaddr, sender: oneshot::Sender<Result<()>> },
-	AddAddress { peer_id: PeerId, peer_addr: Multiaddr, sender: oneshot::Sender<Result<()>> },
-	Stream { sender: mpsc::Sender<BehaviourEvent> },
-	Bootstrap { sender: oneshot::Sender<Result<()>> },
-	GetKadRecord { key: KademliaKey, sender: oneshot::Sender<Result<Vec<Record>>> },
-	PutKadRecord { record: Record, quorum: Quorum, sender: oneshot::Sender<Result<()>> },
-	RemoveRecords { keys: Vec<KademliaKey>, sender: oneshot::Sender<Result<()>> },
-	RemoveExplicitPeer { peer_id: PeerId, sender: oneshot::Sender<Result<()>> },
+	StartListening {
+		addr: Multiaddr,
+		sender: oneshot::Sender<Result<()>>,
+	},
+	AddAddress {
+		peer_id: PeerId,
+		peer_addr: Multiaddr,
+		sender: oneshot::Sender<Result<()>>,
+	},
+	Stream {
+		sender: mpsc::Sender<BehaviourEvent>,
+	},
+	Bootstrap {
+		sender: oneshot::Sender<Result<()>>,
+	},
+	RemoveExplicitPeer {
+		peer_id: PeerId,
+		sender: oneshot::Sender<Result<()>>,
+	},
+	NewValidators {
+		validators: Vec<ValidatorId>,
+	},
+	RemoveValidators {
+		validators: Vec<ValidatorId>,
+	},
+	Subscribe {
+		topic: Sha256Topic,
+		#[allow(private_interfaces)]
+		result_sender: oneshot::Sender<Result<CreatedSubscription, SubscriptionError>>,
+	},
+	Publish {
+		topic: Sha256Topic,
+		message: Vec<u8>,
+		sender: oneshot::Sender<Result<()>>,
+	},
+	Unsubscribe {
+        topic: Sha256Topic,
+        subscription_id: usize,
+    },
 }
