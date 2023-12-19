@@ -32,46 +32,52 @@ more contributions to the polkadot ecosystem will receive more fund from a publi
 
 ### Demo
 
-TBD
+Following link is a demo environment with mock data, and we disabled some buttons like project submission and donation.
+
+https://qf-demo.opensquare.io
 
 ### Architecture
 
-- Matching power calculation package.
-    - Packages which scan polkadot history blocks and extract address activities and information which are used for
-      ecosystem contribution calculation.
-    - A package for users to bind real world information like github account.
-    - A package to calculate a polkadot address' matching power and serve the final data.
-- Quadratic funding workflow server.
+- On-chain data scan layer. On this layer we have several packages which scan history blocks and extract related
+  business data which will be used for address matching power calculation. These packages include:
+    - Account scan. It scans blocks data and extract address first debut data.
+    - Role scan. It scans blocks data and extract history councilor and validator data.
+    - Governance scan. It scans blocks data and extract active OpenGov voter data.
+    - Treasury scan. It scans blocks data and extract treasury related data.
+- Quadratic funding data processing jobs and data server.
+    - It calculates contributors' matching power.
+    - Projects' matched fund from public matching pool is calculated.
     - Funding round management, project info submission and maintenance.
-    - Scan and track donations from the community, and do donation statistics.
     - Serve various data including round, project, donations and address matching power information, etc.
 - Fronted pages. It interacts with the server and provide whole UIs to facilitate the whole workflow in a quadratic
   funding round.
 
 ### Logo
 
-TBD
+![Logo](./assets/logo-openqf-256.png)
+
+More logs can be found [here](https://drive.google.com/drive/folders/1nA6PTJJYfnpvB8wu9cgQaHopMRM4bqQg?usp=drive_link).
 
 ## Tasks Planned for the Hackathon
 
-- A user can see his/her matching power in a quadratic funding round.
-    - Index polkadot history blocks and calculate an address' matching power based on this with predefined rules.
-    - Bind real world info to a polkadot address.
-- A user can submit his/her project to a round. Currently, projects will only be reviewed by one admin.
-- A user can see all the projects in a funding round, and do donations.
-- Funding pool matching will be calculated
+- Scan polkadot history blocks and extract related business data which will be used for final public pool matching
+  calculation.
+- Build a server to do pool matching calculation and serve business data.
+- Build fronted pages which will show
 
 Fronted pages:
 
 - Quadratic funding round list page.
 - A funding round detail page. We can see the round detail, projects and the final matching result on this page.
-- A project submission page where we can submit project to one round.
+- A project submission page where we can submit project to one round. This will be disabled in demo phase.
 - Project detail page where we can see a project detail and the donations.
 - User page on which we can see an address' matching power, donation history.
 
 ## Things accomplished during the hackathon (submitted before preliminary review at 11:59 am on December 22, 2023)
 
-TBD
+- Scripts to scan polkadot history blocks for extracting pool matching related address business.
+- A server which handles quadratic funding data processing and serves business data.
+- Various fronted pages which support a whole quadratic funding round workflow and show related information.
 
 ## Team information
 
