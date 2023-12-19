@@ -57,7 +57,24 @@ Uniswap V4 consolidates all liquidity pools into a single contract, thereby savi
 
 #### Solidity
 
+#### Acala
+我们团队一直在研究如何简化不同链上虚拟资产的交易流程，发现uniswap v4中讲所有的资金池部署在一个合约的方案具有优势，因此主要的思想还是基于uniswap v4。
 
+但由于uniswap V4 现阶段使用的Bussiness license的4年商用限制问题，现阶段采用unswap v3的改进版进行代币质押兑换。
+
+由于acala multi chain routing的特质很好的满足了团队的这一需求
+
+因此团队技术正在逐步学习研究acala router，并且后续会在acala evm上开展更多的测试，并在本次黑客松期间尝试跑通整套流程
+
+现阶段的痛点可以用acala multichain router解决
+
+由于 uniswap v4现在的技术方案经过测试还有些不成熟，并且商业license也没有到达按期开放的时间节点，
+
+所以团队前期采用自研的uniswap v3 trable，目前正在将合约部分迁移到acala multichain router。
+
+我们由此希望去在本次黑客松 
+
+主要使用 Asset Router 的 LST 集成协议 允许用户通过类似于 一笔交易将 DOT等多链token 从 Polkadot 发送到 Acala 并交换到，将 XCM 交换到另一个平行链的方式 来尝试对比我们的uniswap trable方案 来完成构建在polkadot生态上的trable的跨链及swap交互实验。
 
 ### Project logo
 
