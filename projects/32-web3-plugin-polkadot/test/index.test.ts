@@ -55,6 +55,17 @@ describe('PolkadotPlugin Tests', () => {
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);
     });
+
+    it('should get the rpc methods', async () => {
+      const response = await web3.polka.polkadot.rpc.methods();
+
+      expect(response).toBeDefined();
+
+      expect(Array.isArray(response.methods)).toBe(true);
+      expect(response.methods.length).toBeGreaterThan(0);
+
+      // console.log(JSON.stringify(response.methods, null, 2));
+    });
   });
 
   describe('Some Kusama RPC methods', () => {
@@ -110,19 +121,38 @@ describe('PolkadotPlugin Tests', () => {
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);
     });
+
+    it('should get the rpc methods', async () => {
+      const response = await web3.polka.kusama.rpc.methods();
+
+      expect(response).toBeDefined();
+
+      expect(Array.isArray(response.methods)).toBe(true);
+      expect(response.methods.length).toBeGreaterThan(0);
+
+      // console.log(JSON.stringify(response.methods, null, 2));
+    });
   });
 
   describe('Some Substrate RPC methods', () => {
     let web3: Web3;
 
     beforeAll(async () => {
-      web3 = new Web3('http://127.0.0.1:9944/');
+      web3 = new Web3('ws://127.0.0.1:9944/');
       expect(web3.polka).toBeUndefined();
       web3.registerPlugin(new PolkadotPlugin());
       expect(web3.polka.substrate).toBeDefined();
     });
 
-    afterAll(() => {});
+    afterAll(() => {
+      try {
+        // only needed with ws and wss.
+        // if the provider was http, an error will be thrown, ignore it
+        web3.provider?.disconnect();
+      } catch {
+        // do nothing
+      }
+    });
 
     it('should call chain.getBlock method', async () => {
       // const hash = "0x6277848db56df4936213f3c82d4b7181291674a9376deb22339dc504d33b8851";
@@ -162,6 +192,24 @@ describe('PolkadotPlugin Tests', () => {
 
       expect(blockByLatestBlocHash).toBeDefined();
       expect(blockByLatestBlocHash).toEqual(latestBlock);
+    });
+
+    it('should get the rpc methods', async () => {
+      const response = await web3.polka.substrate.rpc.methods();
+
+      expect(response).toBeDefined();
+
+      expect(Array.isArray(response.methods)).toBe(true);
+      expect(response.methods.length).toBeGreaterThan(0);
+
+      // console.log(JSON.stringify(response.methods, null, 2));
+    });
+
+    it('should not have the rpc methods that is not available at substrate (for example beefy.[method])', async () => {
+      expect((web3.polka.substrate.beefy as any).getFinalizedHead).toBeUndefined();
+      expect((web3.polka.substrate.beefy as any).subscribeJustifications).toBeUndefined();
+      expect((web3.polka.substrate.beefy as any).unsubscribeJustifications).toBeUndefined();
+      web3.polka.polkadot.beefy
     });
   });
 });

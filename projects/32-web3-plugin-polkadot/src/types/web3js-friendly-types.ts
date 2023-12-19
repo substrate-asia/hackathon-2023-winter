@@ -99,9 +99,12 @@ export type RemoveAugment<T> = {
 // However, it keeps the types nested inside the namespaces.
 export type RpcApiSimplified = RemoveAugment<RpcInterface>;
 
-export type PolkadotRpcApiSimplified = RemoveAugment<PolkadotRpcInterface>;
-export type KusamaRpcApiSimplified = RemoveAugment<KusamaRpcInterface>;
-export type SubstrateRpcApiSimplified = RemoveAugment<SubstrateRpcInterface>;
+// The following generic-transomed types was replaced by hard coded types,
+// because the generic types are not very indicative when the developer hover over the type for example!
+// However, they are kept here for reference and to possibly use them again later.
+export type PolkadotTransformedRpcApi = RemoveAugment<PolkadotRpcInterface>; // The same as PolkadotSimpleRpcInterface
+export type KusamaTransformedRpcApi = RemoveAugment<KusamaRpcInterface>; // The same as KusamaSimpleRpcInterface
+export type SubstrateTransformedRpcApi = RemoveAugment<SubstrateRpcInterface>; // The same as SubstrateSimpleRpcInterface
 
 
 // ----------------------------------------------------------------------------------------------------------
