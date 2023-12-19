@@ -4,128 +4,169 @@ import com.alibaba.fastjson.annotation.JSONField;
 
 import java.util.List;
 
+
+/**
+ * abi解析对象配置定义
+ */
 public class FunctionBean {
-    @JSONField(name = "inputs")
-    private List<InputParameter> inputs;
-    @JSONField(name = "name")
-    private String name;
-    @JSONField(name = "outputs")
-    private List<OutputParameter> outputs;
-    @JSONField(name = "stateMutability")
-    private String stateMutability;
-    @JSONField(name = "type")
-    private String type;
 
-    // Getter and Setter methods
+    private String contractName;
+    private List<AbiItem> abi;
 
-
-    public void setInputs(List<InputParameter> inputs) {
-        this.inputs = inputs;
+    public String getContractName() {
+        return contractName;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setContractName(String contractName) {
+        this.contractName = contractName;
     }
 
-    public void setOutputs(List<OutputParameter> outputs) {
-        this.outputs = outputs;
+    public List<AbiItem> getAbi() {
+        return abi;
     }
 
-    public void setStateMutability(String stateMutability) {
-        this.stateMutability = stateMutability;
+    public void setAbi(List<AbiItem> abi) {
+        this.abi = abi;
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public List<InputParameter> getInputs() {
-        return inputs;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<OutputParameter> getOutputs() {
-        return outputs;
-    }
-
-    public String getStateMutability() {
-        return stateMutability;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public static class InputParameter {
-        @JSONField(name = "internalType")
-        private String internalType;
+    /**
+     * abi对象属性
+     */
+    public static class AbiItem {
+        @JSONField(name = "inputs")
+        private List<InputParameter> inputs;
         @JSONField(name = "name")
         private String name;
+        @JSONField(name = "outputs")
+        private List<OutputParameter> outputs;
+        @JSONField(name = "stateMutability")
+        private String stateMutability;
         @JSONField(name = "type")
         private String type;
+        private String meg;
 
-        // Getter and Setter methods
+        public String getMeg() {
+            return meg;
+        }
 
-        public void setInternalType(String internalType) {
-            this.internalType = internalType;
+        public void setMeg(String meg) {
+            this.meg = meg;
+        }
+
+        public void setInputs(List<InputParameter> inputs) {
+            this.inputs = inputs;
         }
 
         public void setName(String name) {
             this.name = name;
         }
 
+        public void setOutputs(List<OutputParameter> outputs) {
+            this.outputs = outputs;
+        }
+
+        public void setStateMutability(String stateMutability) {
+            this.stateMutability = stateMutability;
+        }
+
         public void setType(String type) {
             this.type = type;
         }
 
-        public String getInternalType() {
-            return internalType;
+        public List<InputParameter> getInputs() {
+            return inputs;
         }
 
         public String getName() {
             return name;
         }
 
-        public String getType() {
-            return type;
-        }
-    }
-
-    public static class OutputParameter {
-        @JSONField(name = "internalType")
-        private String internalType;
-        @JSONField(name = "name")
-        private String name;
-        @JSONField(name = "type")
-        private String type;
-
-        // Getter and Setter methods
-
-        public String getInternalType() {
-            return internalType;
+        public List<OutputParameter> getOutputs() {
+            return outputs;
         }
 
-        public String getName() {
-            return name;
+        public String getStateMutability() {
+            return stateMutability;
         }
 
         public String getType() {
             return type;
         }
 
-        public void setInternalType(String internalType) {
-            this.internalType = internalType;
+        /**
+         * 接口入参对象属性
+         */
+        public static class InputParameter {
+            @JSONField(name = "internalType")
+            private String internalType;
+            @JSONField(name = "name")
+            private String name;
+            @JSONField(name = "type")
+            private String type;
+
+            // Getter and Setter methods
+
+            public void setInternalType(String internalType) {
+                this.internalType = internalType;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
+
+            public String getInternalType() {
+                return internalType;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getType() {
+                return type;
+            }
         }
 
-        public void setName(String name) {
-            this.name = name;
-        }
+        /**
+         * 接口返回参数对象属性
+         */
+        public static class OutputParameter {
+            @JSONField(name = "internalType")
+            private String internalType;
+            @JSONField(name = "name")
+            private String name;
+            @JSONField(name = "type")
+            private String type;
 
-        public void setType(String type) {
-            this.type = type;
+            // Getter and Setter methods
+
+            public String getInternalType() {
+                return internalType;
+            }
+
+            public String getName() {
+                return name;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public void setInternalType(String internalType) {
+                this.internalType = internalType;
+            }
+
+            public void setName(String name) {
+                this.name = name;
+            }
+
+            public void setType(String type) {
+                this.type = type;
+            }
         }
     }
 }
