@@ -8,5 +8,5 @@ const SOCIAL_LINK_TWITTER = {
 };
 
 export default function TwitterConnect() {
-  return <SocialLinkItem item={SOCIAL_LINK_TWITTER} />;
+  return <SocialLinkItem item={SOCIAL_LINK_TWITTER} disabled />;
 }

@@ -3,7 +3,7 @@ import SocialLinkItem from "./socialLinkItem";
 import { nextApi } from "@/services";
 import { useAccount } from "@/context/account";
 import { signMessage } from "@/utils/signature";
-import { useServerSideProps } from "@/context/serverSideProps";
+import useHasTag from "./useHasTag";
 
 const SOCIAL_LINK_GITHUB = {
   image: "/brand/github.svg",
@@ -16,10 +16,7 @@ export default function GitHubConnect() {
   const account = useAccount();
   const address = account?.address;
 
-  const { userActivityTags } = useServerSideProps();
-  const isConnected = !!userActivityTags.find(
-    (tag) => tag.id === "isGithubConnected",
-  );
+  const isConnected = useHasTag("isGithubConnected");
 
   const onConnect = useCallback(async () => {
     const { result } = await nextApi.post("github/users/connect", {
