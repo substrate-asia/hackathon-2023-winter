@@ -71,3 +71,12 @@ Function IsValidHex(q, r):
 - The maximum distance from the center is 2 for a 5x5 grid, as the farthest hexes from the center are two steps away in any direction.
 
 This approach ensures you're only adding valid hexagons that exist within your defined grid size. Adjust the `IsValidHex` function as needed based on how you define the limits of your grid.
+
+---
+
+![Axial Coordinates](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/e2431c27-907a-4233-8088-a34d8888bf06)
+
+---
+
+![datamodel](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/994cffa1-3172-46c0-a770-95d1f3d8ee82)
+
