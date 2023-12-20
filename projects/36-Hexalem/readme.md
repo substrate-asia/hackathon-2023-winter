@@ -49,9 +49,9 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 - (not used)[WebAPI](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.WebAPI), to simulate Blockchain
 
 3. Blockchain
-- game engine pallet (Rust/Substrate)
-- runtime integration solo (Rust/Substrate)
-- tanssi integration parachain (Rust/Substrate)
+- [Hexalem Game Engine Pallet (Rust/Substrate)](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/src/substrate/pallets/hexalem/src/lib.rs)
+- [Runtime Integration Solo (Rust/Substrate)](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/src/substrate/runtime/src/lib.rs)
+- [TANSSI Integration Parachain (Rust/Substrate)](https://github.com/ajuna-network/tanssi/tree/ds/add_aaa)
 
 4. Client
 - [Unity Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/ui/substrate.hexalem.unity)
