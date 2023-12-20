@@ -5,7 +5,7 @@
 ## Basic Information
 
 - Project Name: Cyborg Network
-- Project Establishment Data: April 2023
+- Project Establishment: April 2023
 
 ## Description
 
@@ -25,10 +25,14 @@ The problem lies in the potential risks associated with centralized providers in
 
 Cyborg Network is a revolution in edge computing. It introduces a decentralized approach that empowers users by giving them control over their data and computing resources. Through smart edge tracking and cryptographic encryption, the network automates app deployment, placing a strong emphasis on user-centricity and transparency. This disruptive solution aims to challenge the dominance of centralized providers in the field of edge computing.
 
+### Tech Architecture
+
+![Cyborg architecture](https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/838ea4af-7369-4e38-8487-a64c5d3f6467)
+
+
 ### Tools used: Substrate, Rust, Javascript.
 
 - Cyborg PoC [demo video](https://youtu.be/sSNg0Q_DJyk)
-
 
 
 ## How to run
