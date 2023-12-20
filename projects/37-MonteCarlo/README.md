@@ -1,16 +1,14 @@
-## 基本资料
+## Basic Info
 
-项目名称：蒙特卡洛 Monte Carlo
+Project Name: Monte Carlo
 
-项目立项日期 (哪年哪月)：2023 年 9 月
-
-## 项目整体简介
+## Project Details
 
 ### Introduction
-Monte Carlo is a decentralized AIGC computing power protocol. 
-We build an open platform based on the Monte Carlo protocol and blockchain, where anyone can pay in cryptocurrency to generate their own AIGC content.
-The content provided by AIGC can be utilized to mint NFTs and allowing the selection of high-quality items.
-The worker providers will get royalties from the generation fee.
+Monte Carlo is a decentralized AI app platform.
+We provide an open AI application platform, where developers can deploy their own AI applications and generate results through decentralized computing power. 
+Users can pay cryptocurrency to the AI application, such as generating NFT images, consulting agents for investment advice, etc. 
+The payment will be distributed by smart contracts, and the specific profit-sharing ratio is determined by the developers.
 
 ### Background
 Many builders are trying adopting on-chain-analytics + LLM,  NFT + AIGC or blockchain-based games + AI agent. 
@@ -19,41 +17,42 @@ But no practical Web3-native AI infra to support them yet
 ### Insights
 Web3-native AI infrastructure holds significant potential in revolutionizing the way artificial intelligence operates and interacts. The primary benefits are centered around composability - with Web3, different AI tools can be seamlessly combined for better functionality, creating a more cohesive and multi-dimensional system. Also, it offers better verifiability, ensuring the transparency and reliability of AI operations. Importantly, Web3-native AI respects authentic rights of invention, providing the option to share benefits from any derivable concepts, leading to a fairer and more inclusive creation landscape. It also promises cost-efficiency and could be pivotal in aiding AI startups, particularly by providing easy access to GPU computing powers. Harnessing the power of Web3 tokenomics, such infrastructure could incentivize global GPU resource contributions, building a vibrant, worldwide community. Additionally, by making high-end AI technology more accessible and understandable for the broader public, it could help in popularizing these advanced concepts, thereby fostering an environment of innovation and inclusivity.
 
-
 ### Architecture
-TBD
+Monte Carlo is an open AI App platform. 
+Developers can develop apps based on the platform's smart contracts.
+Smart contracts are responsible for independent functional modules, such as LLM/AIGC, which will create tasks and hand them over to the work pool for execution. 
+The work pool is responsible for organizing and scheduling computing resources, which are the workers. 
+Users can register their own devices as workers, and we provide ready-to-use deployment scripts that will automatically install some essential software.
 
 ### Links
-- Demo: https://dot.monte-carlo.ai/
+- Demo Website: https://dot.monte-carlo.ai/
+- Demo Video: https://www.youtube.com/watch?v=pjopplp5L_8
 - Logo: https://monte-carlo.ai/logo.png
-TODO: slides/demo video
+- Slides: https://monte-carlo.ai/dot.pdf
 
-### Initial commit
-TODO
-
-## 黑客松期间计划完成的事项
+## Plan to do during hackathon
 
 **Blockchain**
-TBD
+- [ ] PoC: leverage ipynb and ink to implement custom AI script
+- [ ] Image AIGC worker script for offchain execution
 
-**Client**
-- web
-  - [ ] Polkadot.js wallet integration
-  - [ ] Explorer for worker list
-  - [ ] Explorer for template list
-  - [ ] Explorer for task list
-  - [ ] Explorer for gallery
-  - [ ] Submit task to blockchain
-  - [ ] Result page for task
+**Web Client**
+- [ ] Polkadot.js wallet integration
+- [ ] Explorer for workers, apps and tasks
+- [ ] Submit task to blockchain
 
 
-## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
+## Done during hackathon
 
-- 2023年12月22日上午11:59前，在本栏列出黑客松期间最终完成的功能点。
-- 把相关代码放在 `src` 目录里，并在本栏列出在黑客松期间完成的开发工作及代码结构。我们将对这些目录/档案作重点技术评审。
-- Demo 视频，ppt等大文件不要提交。可以在readme中存放它们的链接地址
+We have shipped an open AI app platform, and deployed several image generation AIGC apps to demonstrate how developers use the platform's functional services to develop applications. 
+In the future, we will deploy and execute custom scripts through ink. Currently, we have just completed the PoC.
 
-## 队员信息
+File structure:
+- web-frontend: integrated with polkadot.js, implementing the functions of task creation, viewing, and worker monitoring.
+- offchain-image-aigc: scripts for workers to execute image generation AGIC tasks off-chain.
+- poc-ai-script: PoC of custom AI script, leverage ipynb to implement the protocol and the script will be deployed in the smart contract(ink!).
+
+## Team members
 
 - Haiyang: Web engineer. Microsoft Senior Engineer, and excels in web development. GitHub: @callmewhy
 - Jun: Blockchain engineer. Co-founder of Phala Network. He possesses thorough knowledge in blockchain and backend skills. GitHub: @jasl
