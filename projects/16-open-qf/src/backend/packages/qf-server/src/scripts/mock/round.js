@@ -12,7 +12,7 @@ const round1 = {
     end: 1703980800000,
   },
   founders: ["Polkadot Treasury"],
-  bannerCid: "bafybeif2tc7sfljjbg5ftkqderjb3dovawfncucjvga2uiqk6xfhhtcmsu",
+  bannerCid: "bafybeifay2jb6jmz6537uxgorlge6q346mqtlqi4vvldd5kjjyhp7kitgu",
   category: "Infrastructure",
 };
 
