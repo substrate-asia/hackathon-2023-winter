@@ -64,7 +64,6 @@
   },
   "devDependencies": {
     "@osn/eslint-config": "^1.0.1",
-    "@testing-library/jest-dom": "^6.1.5",
     "@testing-library/react": "^14.1.2",
     "@vitejs/plugin-react-swc": "^3.5.0",
     "autoprefixer": "^10.4.16",
