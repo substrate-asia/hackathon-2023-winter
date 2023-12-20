@@ -1,7 +1,13 @@
-const { getAccountTag } = require("../../features/address/controllers/tags/account");
-const { getFellowshipRankTag } = require("../../features/address/controllers/tags/fellowship");
+const {
+  getAccountTag,
+} = require("../../features/address/controllers/tags/account");
+const {
+  getFellowshipRankTag,
+} = require("../../features/address/controllers/tags/fellowship");
 const { tags } = require("../../consts");
-const { queryIsActiveVoter } = require("../../features/address/controllers/address/voter");
+const {
+  queryIsActiveVoter,
+} = require("../../features/address/controllers/address/voter");
 const { checkIsIdentityVerified } = require("./identity");
 const {
   treasury: {
@@ -11,12 +17,10 @@ const {
     getBountyBeneficiaryCol,
     getBountyCuratorCol,
   },
-  role: {
-    getValidatorCol,
-    getCouncilorCol,
-  }
+  role: { getValidatorCol, getCouncilorCol },
 } = require("@open-qf/mongo");
 const { isInDb } = require("./isInDb");
+const { checkGithubConnected } = require("@open-qf/mongo/src/qf");
 
 async function getTagsByAddress(address) {
   const candidateTags = [
@@ -25,31 +29,35 @@ async function getTagsByAddress(address) {
   ];
 
   if (await isInDb(await getTipFinderCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isTipFinder"));
+    candidateTags.push(tags.find((tag) => tag.id === "isTipFinder"));
   }
   if (await isInDb(await getTipBeneficiaryCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isTipBeneficiary"));
+    candidateTags.push(tags.find((tag) => tag.id === "isTipBeneficiary"));
   }
   if (await isInDb(await getProposalBeneficiaryCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isProposalBeneficiary"));
+    candidateTags.push(tags.find((tag) => tag.id === "isProposalBeneficiary"));
   }
   if (await checkIsIdentityVerified(address)) {
-    candidateTags.push(tags.find(tag => tag.id === "hasVerifiedIdentity"));
+    candidateTags.push(tags.find((tag) => tag.id === "hasVerifiedIdentity"));
   }
   if (await isInDb(await getBountyBeneficiaryCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isBountyBeneficiary"));
+    candidateTags.push(tags.find((tag) => tag.id === "isBountyBeneficiary"));
   }
   if (await isInDb(await getBountyCuratorCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isBountyCurator"));
+    candidateTags.push(tags.find((tag) => tag.id === "isBountyCurator"));
   }
   if (await isInDb(await getValidatorCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isValidator"));
+    candidateTags.push(tags.find((tag) => tag.id === "isValidator"));
   }
   if (await queryIsActiveVoter(address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isActiveVoter"));
+    candidateTags.push(tags.find((tag) => tag.id === "isActiveVoter"));
   }
   if (await isInDb(await getCouncilorCol(), address)) {
-    candidateTags.push(tags.find(tag => tag.id === "isCouncilor"));
+    candidateTags.push(tags.find((tag) => tag.id === "isCouncilor"));
+  }
+
+  if (await checkGithubConnected(address)) {
+    candidateTags.push(tags.find((tag) => tag.id === "isGithubConnected"));
   }
 
   return candidateTags.filter(Boolean);
@@ -57,4 +65,4 @@ async function getTagsByAddress(address) {
 
 module.exports = {
   getTagsByAddress,
-}
+};

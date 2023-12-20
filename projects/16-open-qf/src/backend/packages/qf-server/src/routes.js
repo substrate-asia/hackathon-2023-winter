@@ -5,6 +5,7 @@ const routes = [
   require("./features/round/routes"),
   require("./features/address/routes"),
   require("./features/tags/routes"),
+  require("./features/github/routes"),
 ];
 
 module.exports = (app) => {

@@ -1,5 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { clearCookie, setCookie } from "@osn/common";
+import { encodeAddress } from "@polkadot/util-crypto";
+import { Chains } from "@osn/constants";
+
+const ss58Format = {
+  [Chains.polkadot]: 0,
+};
 
 const AccountContext = React.createContext();
 
@@ -9,7 +15,11 @@ export const AccountProvider = ({ account: _account, children }) => {
   const login = useCallback((account) => {
     setAccount(account);
     if (typeof window !== "undefined") {
-      const data = `${account.network}/${account.address}/${account.wallet}`;
+      const address = encodeAddress(
+        account.address,
+        ss58Format[account.network],
+      );
+      const data = `${account.network}/${address}/${account.wallet}`;
       setCookie("address", data, 7);
     }
   }, []);

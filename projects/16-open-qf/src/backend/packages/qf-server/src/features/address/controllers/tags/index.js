@@ -1,4 +1,6 @@
-const { utils: { isValidAddress } } = require("@open-qf/common");
+const {
+  utils: { isValidAddress },
+} = require("@open-qf/common");
 const { getTagsByAddress } = require("../../../../common");
 
 async function getAddressTags(ctx) {
@@ -12,4 +14,4 @@ async function getAddressTags(ctx) {
 
 module.exports = {
   getAddressTags,
-}
+};

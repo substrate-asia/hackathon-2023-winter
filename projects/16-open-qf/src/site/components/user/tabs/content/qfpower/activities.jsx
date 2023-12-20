@@ -15,7 +15,11 @@ export default function UserTabQFpowerActivities() {
         On-chain Activities
       </h3>
 
-      <ActivityList data={[...userActivityTags, ...restUserActivityTags]} />
+      <ActivityList
+        data={[...userActivityTags, ...restUserActivityTags].filter(
+          (tag) => tag.type === "On-chain Activities",
+        )}
+      />
     </div>
   );
 }

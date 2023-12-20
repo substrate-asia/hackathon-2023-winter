@@ -14,4 +14,4 @@ module.exports = {
   qf,
   common,
   governance,
-}
+};

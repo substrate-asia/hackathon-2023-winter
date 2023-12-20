@@ -9,9 +9,8 @@ const {
     getBountyBeneficiaryCol,
     getBountyCuratorCol,
   },
-  role: {
-    getValidatorCol,
-  }
+  role: { getValidatorCol },
+  qf: { checkGithubConnected },
 } = require("@open-qf/mongo");
 const { checkIsIdentityVerified } = require("../../../../common");
 
@@ -21,11 +20,18 @@ async function queryAddressInfo(address) {
 
   const isTipFinder = await isInDb(await getTipFinderCol(), address);
   const isTipBeneficiary = await isInDb(await getTipBeneficiaryCol(), address);
-  const isProposalBeneficiary = await isInDb(await getProposalBeneficiaryCol(), address);
-  const isBountyBeneficiary = await isInDb(await getBountyBeneficiaryCol(), address);
+  const isProposalBeneficiary = await isInDb(
+    await getProposalBeneficiaryCol(),
+    address
+  );
+  const isBountyBeneficiary = await isInDb(
+    await getBountyBeneficiaryCol(),
+    address
+  );
   const isBountyCurator = await isInDb(await getBountyCuratorCol(), address);
   const isValidator = await isInDb(await getValidatorCol(), address);
   const isActiveVoter = await queryIsActiveVoter(address);
+  const isGithubConnected = await checkGithubConnected(address);
 
   return {
     fellowshipRank,
@@ -37,9 +43,10 @@ async function queryAddressInfo(address) {
     isBountyCurator,
     isValidator,
     isActiveVoter,
+    isGithubConnected,
   };
 }
 
 module.exports = {
   queryAddressInfo,
-}
+};
