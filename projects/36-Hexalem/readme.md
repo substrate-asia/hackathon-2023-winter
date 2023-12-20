@@ -117,7 +117,19 @@ Assets from the Unity Asset Store:
 
 ## Demo & Visuals
 
-### Screenshots
+### Screenshots (Samsung S23)
+
+<p align="center">
+  <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/7a65b571-bb2d-41a7-971a-d3c4f9caaa56" alt="Start Screen" width="30%"/>
+  <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/6945795a-455b-4ae4-8e3f-c5ec4e37ad1a" alt="Choose Screen" width="30%"/>
+  <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/1fe8e685-d1ea-4809-855b-d095732aa9a6" alt="Place Tile" width="30%"/>
+</p>
+
+<p align="center">
+  <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/0128997a-e108-4777-aca0-415c6a6f25f1" alt="Upgrade Tile" width="30%"/>
+  <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/c4c4ee8b-1cc6-4c3a-9aab-9a25a92dc277" alt="Ranking Players" width="30%"/>
+  <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/62097337-bc52-4386-92ac-9d709d88c8f3" alt="Made with Unity" width="30%"/>
+</p>
 
 ## Future Features planed
 
