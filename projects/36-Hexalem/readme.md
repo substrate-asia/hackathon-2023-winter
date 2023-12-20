@@ -11,7 +11,7 @@ Date: 7th November, Kick-Off Meeting
 - **Project Type:** Multiplayer Mobile Blockchain Game
 - **Genere:** Strategy / Godgame
 - **Platform:** Android & iOS
-- (WIP)**Business**: [Ideation](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/bd-model.md)
+- (WIP)**Business Model**: [Ideation](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/bd-model.md)
 
 ### Logo
 
