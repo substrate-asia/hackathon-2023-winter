@@ -7,6 +7,9 @@ describe('test some RPC methods at web3.polka.substrate', () => {
   beforeAll(async () => {
     web3 = new Web3('ws://127.0.0.1:9944/');
     web3.registerPlugin(new PolkaPlugin());
+    web3.provider?.on('error', (error: any) => {
+      console.log('Caught provider error: ', error.message || error);
+    });
   });
 
   afterAll(() => {

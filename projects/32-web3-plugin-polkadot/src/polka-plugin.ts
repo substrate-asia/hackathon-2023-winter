@@ -1,14 +1,10 @@
-import { Web3PluginBase } from 'web3';
+import { Web3, Web3PluginBase } from 'web3';
 
 import {
   PolkadotSimpleRpcInterfaceFiltered,
   KusamaSimpleRpcInterfaceFiltered,
   SubstrateSimpleRpcInterfaceFiltered,
 } from './types/web3.js-friendly/simple-rpc-interfaces-filtered';
-
-import { PolkadotRpcList } from './interfaces/polkadot/augment-api-rpc';
-import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
-import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
 
 import {
   PolkadotRpcInterfaceFlatFiltered,
@@ -19,6 +15,8 @@ import {
 import { PolkadotSupportedRpcMethods } from './types/polkadot/supported-rpc-methods';
 import { KusamaSupportedRpcMethods } from './types/kusama/supported-rpc-methods';
 import { SubstrateSupportedRpcMethods } from './types/substrate/supported-rpc-methods';
+import { Filter } from './types/web3.js-friendly/filter-transformers';
+import { SubstrateSimpleRpcInterface } from './interfaces/substrate/augment-api-rpc';
 
 // The generic types: PolkadotRpcInterfaceFlatFiltered | KusamaRpcInterfaceFlatFiltered | SubstrateRpcInterfaceFlatFiltered,
 // enables having strongly typed variables returned when calling `this.requestManager.send`.
@@ -34,8 +32,13 @@ export class PolkaPlugin extends Web3PluginBase<
   public pluginNamespace = 'polka';
 
   /**
-   * Dynamically create Rpc callers organized inside namespaces and return them
-   * This is equivalent to having a code like this for every endpoint:
+   * Dynamically create Rpc callers organized inside namespaces and return them.
+   * @param supported a flat array of supported rpcs to be used to create the rpc callers. For example: `["chain_getBlock", "chain_getBlockHash", ...]`
+   * @returns Rpc callers organized inside namespaces
+   * @note This is a simplified version of the `createRpcMethods` method.
+   * It is used to create the `polkadot`, `kusama` and `substrate` namespaces.
+   * And any other custom namespace.
+   * The function is equivalent to having a code like this for every endpoint:
    * ```  
       public get chain(): RpcApiSimplified["chain"] {
         return {
@@ -57,14 +60,14 @@ export class PolkaPlugin extends Web3PluginBase<
       ...
    * ```
    */
-  private createRpcMethods(rpcList: Record<string, readonly string[]>, supported: readonly string[]) {
+  private createRpcMethods(supportedRpcs: readonly string[]) {
     const returnedRpcMethods: Record<string, any> = {};
-    const objectKeys = Object.keys(rpcList) as Array<keyof typeof rpcList>;
+    const objectKeys = supportedRpcs.map((rpc) => rpc.split('_', 2)[0]);
     for (let rpcNamespace of objectKeys) {
-      const endpointNames = rpcList[rpcNamespace];
+      const endpointNames = supportedRpcs.map((rpc) => rpc.split('_', 2)[1]);
       const endPoints: any = {};
       for (let endpointName of endpointNames) {
-        if (!supported.includes(`${rpcNamespace}_${endpointName}`)) {
+        if (!supportedRpcs.includes(`${rpcNamespace}_${endpointName}`)) {
           continue;
         }
         endPoints[endpointName] = (args: any) =>
@@ -113,30 +116,44 @@ export class PolkaPlugin extends Web3PluginBase<
 
   constructor() {
     super();
+    this.polkadot = this.createRpcMethods(PolkadotSupportedRpcMethods) as PolkadotSimpleRpcInterfaceFiltered;
+    this.kusama = this.createRpcMethods(KusamaSupportedRpcMethods) as KusamaSimpleRpcInterfaceFiltered;
+    this.substrate = this.createRpcMethods(SubstrateSupportedRpcMethods) as SubstrateSimpleRpcInterfaceFiltered;
+  }
 
-    this.polkadot = this.createRpcMethods(
-      PolkadotRpcList,
-      PolkadotSupportedRpcMethods
-    ) as PolkadotSimpleRpcInterfaceFiltered;
-    this.kusama = this.createRpcMethods(KusamaRpcList, KusamaSupportedRpcMethods) as KusamaSimpleRpcInterfaceFiltered;
-    this.substrate = this.createRpcMethods(
-      SubstrateRpcList,
-      SubstrateSupportedRpcMethods
-    ) as SubstrateSimpleRpcInterfaceFiltered;
+  /**
+   * Register the plugin with web3 and return the web3 instance.
+   * @note There would be some work to refactor and enhance the typescript types for `registerAt`. Or possibly refactor web3.registerPlugin for the matter.
+   * @param web3
+   * @param pluginNamespace
+   * @param supportedRpcs
+   * @returns web3 instance with the plugin registered
+   */
+  public registerAt<
+    NameSpace extends string,
+    TypeOfSupportedRpcs extends readonly string[],
+    // SimpleRpcInterface is identical, at least at this moment for all networks.
+    // So, it is fair enough to use SubstrateSimpleRpcInterface as the default.
+    T extends Record<string, any> = SubstrateSimpleRpcInterface
+  >(
+    web3: Web3,
+    pluginNamespace: NameSpace,
+    supportedRpcs: TypeOfSupportedRpcs
+  ): Web3 & { polka: Record<NameSpace, Filter<T, typeof supportedRpcs>> } {
+    (this as any)[pluginNamespace] = this.createRpcMethods(supportedRpcs) as any;
+
+    web3.registerPlugin(this);
+    return web3 as Web3 & { polka: Record<NameSpace, Filter<T, typeof supportedRpcs>> };
   }
 }
 
-// Module Augmentation
+// Using Module Augmentation seems a bit hacky. Revisit this in the future and possibly use generics instead.
 declare module 'web3' {
   interface Web3 {
-    // This seems a bit hacky. Revisit this in the future and possibly use generics instead.
-    polka: Omit<PolkaPlugin, keyof Web3PluginBase>;
-    // The following could be used instead of the above to disable PolkaPlugin inherited methods.
-    // However a solution using generics, instead of module augmentation, will be done later at web3.js and then used here.
-    // polka: {
-    //   polkadot: PolkadotSimpleRpcInterfaceFiltered;
-    //   kusama: KusamaSimpleRpcInterfaceFiltered;
-    //   substrate: SubstrateSimpleRpcInterfaceFiltered;
-    // };
+    polka: {
+      polkadot: PolkadotSimpleRpcInterfaceFiltered;
+      kusama: KusamaSimpleRpcInterfaceFiltered;
+      substrate: SubstrateSimpleRpcInterfaceFiltered;
+    };
   }
 }

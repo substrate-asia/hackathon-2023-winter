@@ -1213,12 +1213,15 @@ export interface PolkadotSimpleRpcInterface {
 
 /**
  * @description
- * This list allow to iterate over all rpc methods, because interfaces are not iterable. Also, note the use of `as const` to make the list as a fixed type.
+ * Contains a nested list of all the rpc methods exposed. However, this const is not used. Because it turns out that it is identical for all networks as no information about the network is included in the edgeware.json file.
+ * For that, a list of rpc methods is saved for each network after calling rpc_methods endpoint to get the list.
  * @remarks
+ * This const is not used. But it is kept as it could be used later because this project is a PoC and in the process of seeking the best approach.
  * This const in not inside a module augmentation because the compiler does not allow.
- * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, when used inside another project, tricking it to see every property as `any`.
+ * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, tricking it to see every property as `any`.
  */
-export const PolkadotRpcList = {
+/*
+export const RpcList = {
   author : [
     'hasKey',
     'hasSessionKeys',
@@ -1391,10 +1394,13 @@ export const PolkadotRpcList = {
     'sha3',
   ],
 } as const;
+*/
 
 /**
- * This class is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.
+ * @description
+ * An empty abstract class implementing SimpleRpcInterface.
  * @remarks
+ * This class is not used. But it is kept as it could be used later because this project is a PoC and in the process of seeking the best approach.
  * This class in not inside a module augmentation because the compiler does not allow.
  * Additionally, this module augmentation causes confusion to TypeScript Intellisense, when used inside another project.
  */ 
