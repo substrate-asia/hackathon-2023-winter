@@ -83,11 +83,11 @@ We are a team of Web3 enthusiasts who share the vision of creating real-world ut
 
 ### Barath Kanna ([Github](https://github.com/) ;  [LinkedIn](https://www.linkedin.com/in/barath-kanna-23a23a172/)) : Remote edge server, backend API, integration
 
-Barath is an experienced entrepreneur who has a deep understanding of the technical challenges and opportunities in these areas and has significant experience in the blockchain sector. As a leader, he spearheads the team's vision and directs the overarching strategy of the Cyborg Network. He is a graduate of the Polkadot Blockchain Academy ([https://polkadot.network/development/blockchain-academy/]) that was conducted at UC Berkeley.
+Barath is an experienced entrepreneur who has a deep understanding of the technical challenges and opportunities in these areas and has significant experience in the blockchain sector. As a leader, he spearheads the team's vision and directs the overarching strategy of the Cyborg Network. He is a graduate of the [Polkadot Blockchain Academy](https://polkadot.network/development/blockchain-academy/) that was conducted at UC Berkeley.
 
 ### Kresna Sucandra ([Github](https://github.com/SHA888) ; [LinkedIn](https://www.linkedin.com/in/kresna-sucandra/)) : Substrate nodes, pallet, offchain worker, runtime
 
-Kresna is a specialist in blockchain and decentralized systems, with notable expertise as a Rust/Substrate developer in various blockchain projects. After working with prominent blockchain projects, Kresna now oversees the development and execution of Cyborg Network's technological framework. He is the former co-founder at Invarch Network ([https://invarch.network/]) which is currently a parachain on Polkadot and Kusama.
+Kresna is a specialist in blockchain and decentralized systems, with notable expertise as a Rust/Substrate developer in various blockchain projects. After working with prominent blockchain projects, Kresna now oversees the development and execution of Cyborg Network's technological framework. He is the former co-founder at [Invarch Network](https://invarch.network/) which is currently a parachain on Polkadot and Kusama.
 
 ### Megha Varshini ([Github](https://github.com/) ; [LinkedIn](https://www.linkedin.com/in/megha-varshini-tamilarasan-b1247a212/)) : Operations, Education, Media
 
