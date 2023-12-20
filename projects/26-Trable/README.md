@@ -130,13 +130,31 @@ https://docs.google.com/presentation/d/1YajFYiBXxBr2Q0o1F3PbKhmQ7hMsGFVRvAOra6DJ
 项目包含了针对合约功能的测试用例，确保了各项功能的正确性和安全性。
 
 ## 队员信息
+Name: Yanbo
+Introduction:
 
-（GitHub）
-@yanboishere
-@lbr77 
-@s7iter
-@nuttt
+Yanbo is an experienced blockchain product manager with a deep understanding of technical challenges and project management in various areas of Web3.
+Role: He possesses valuable expertise in public goods and leads the team's vision and overall strategy at Trable as an accomplished product manager.
 
-（WeChat）
-@ZZJZZJ9248
+GitHub:yanboishere
+WeChat ID: YanboAtWeb3
+
+Name：nuttt
+Introduction：SEU EEer, building hacking with me!
+GitHub: RbRe145
+WeChat ID：zhj314816759
+
+Name：Zijing
+Introduction：BD Head of Go2Mars
+Role：I am in charge of Trable business model 
+GitHub: zijin79
+WeChat ID：ZZJZZJ9248
+
+
+Name: HH Tsang
+Introduction:
+Role:
+GitHub: N/A
+WeChat ID: N/A
+
 
