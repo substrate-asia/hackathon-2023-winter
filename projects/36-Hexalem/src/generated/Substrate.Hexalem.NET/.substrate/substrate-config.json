@@ -1,0 +1,13 @@
+{
+  "projects": {
+    "net_api": "Substrate.Hexalem.NET.NetApiExt",
+    "rest_service": "Substrate.Hexalem.NET.RestService",
+    "rest_client": "Substrate.Hexalem.NET.RestClient"
+  },
+   "metadata": {
+      "websocket": "ws://127.0.0.1:9944"
+   },
+  "rest_client_settings": {
+    "service_assembly": "Substrate.Hexalem.NET.RestService.dll"
+  }
+}
