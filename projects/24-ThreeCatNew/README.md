@@ -1,8 +1,7 @@
-## 基本资料
+## Basic information
+**Project Name**: ThreeCat (Three Cat Application Chain Testing Framework)
 
-项目名称：ThreeCat(三只猫应用链测试框架)
-
-项目立项日期：2023-12-09
+**Project Approval Date**: December 9, 2023
 
 ## Project Introduction
 
@@ -26,8 +25,9 @@ Three cats can integrate multiple SDKs and their corresponding language assertio
 You can freely add plugins and necessary check items for the inspection phase in the unit testing environment.
 
 By using a framework to record the execution time and whether it can continue in each environment, the user's operations are greatly simplified.
+3. web3/HashUtil.java provides various data conversion capabilities.
 
-Flowchart of assembly line (follow-up plan)
+## Flowchart of assembly line (follow-up plan)
 
 ![pipelineTest](./assets/pipelineTest.png)
 
@@ -86,6 +86,12 @@ Because some members are relatively thin, some are overweight, and after calcula
 
 # 中文项目介绍
 
+## 基本资料
+
+项目名称：ThreeCat(三只猫应用链测试框架)
+项目立项日期：2023-12-09
+
+
 ## 背景
    三只猫用于测试和调试的自动化工具以及用于安全审计的智能合约的测试框架。  
 通过base.yaml里面的配置生成。单元测试和测试结论的收集，产出报告。
@@ -97,6 +103,7 @@ Because some members are relatively thin, some are overweight, and after calcula
      三只猫可以集成多个SDK和SDK对应语言的断言能力。  
      在单元测试环境可以自由添加检查环节的插件和必备检查项。 
      通过框架进行每个环境记录执行时间和是否可以继续的结论信息，大大简化了使用者的操作。
+3. web3/HashUtil.java提供各种数据转换的能力。
 
 ## 流水线的流程图(后续计划)
 ![Logo](./assets/pipelineTest.png)  
