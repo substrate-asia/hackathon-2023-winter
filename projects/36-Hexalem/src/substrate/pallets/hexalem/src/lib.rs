@@ -14,15 +14,16 @@ mod mock;
 #[cfg(test)]
 mod tests;
 
-//#[cfg(feature = "runtime-benchmarks")]
+//#[cfg(any(test, feature = "runtime-benchmarks"))]
 //mod benchmarking;
 
 pub mod weights;
+pub use weights::*;
+
 use frame_support::{
 	ensure, sp_runtime, sp_runtime::SaturatedConversion, traits::Get, StorageHasher,
 };
 use scale_info::prelude::vec;
-pub use weights::*;
 
 #[frame_support::pallet]
 pub mod pallet {
@@ -1034,7 +1035,7 @@ impl<T: Config> Pallet<T> {
 	) -> Result<(), sp_runtime::DispatchError> {
 		let tile = hex_board.hex_grid[index as usize];
 
-		if tile.get_pattern() == TilePattern::Normal {
+		if tile.get_pattern() != TilePattern::Normal {
 			return Ok(())
 		}
 

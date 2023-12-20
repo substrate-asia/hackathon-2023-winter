@@ -1,13 +1,13 @@
 use crate::{
 	mock::{self, *},
 	pallet, Error, Event, GameProperties, GameState, GameStorage, GetTileInfo, HexBoard,
-	HexBoardStorage, HexGrid, Move, ResourceType, ResourceUnit, NUMBER_OF_LEVELS,
-	NUMBER_OF_RESOURCE_TYPES,
+	HexBoardStorage, HexGrid, Move, ResourceType, ResourceUnit, TilePattern, TileType,
+	NUMBER_OF_LEVELS, NUMBER_OF_RESOURCE_TYPES,
 };
 use frame_support::{assert_noop, assert_ok};
 
 #[test]
-fn create_new_game_successfully() {
+fn game_loop() {
 	new_test_ext().execute_with(|| {
 		// Go past genesis block so events get deposited
 		System::set_block_number(1);
@@ -175,6 +175,8 @@ fn create_new_game_successfully() {
 		assert_eq!(game.get_selection_size(), 4);
 
 		assert_eq!(game.get_state(), GameState::Playing);
+
+		
 	});
 }
 
@@ -471,6 +473,140 @@ fn play() {
 }
 
 #[test]
+fn play_pattern() {
+	new_test_ext().execute_with(|| {
+		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1, 2], 25));
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		let new_hex_grid: HexGrid<TestRuntime> = vec![
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(24),
+			HexalemTile(24),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile::get_home(),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(0),
+			HexalemTile(56),
+			HexalemTile(0),
+			HexalemTile(24),
+			HexalemTile(0),
+			HexalemTile(56),
+			HexalemTile(0),
+			HexalemTile(24),
+			HexalemTile(0),
+			HexalemTile(0),
+		]
+		.try_into()
+		.unwrap();
+
+		let game_id = hex_board.game_id;
+		// Set player resources to 0
+		HexalemModule::set_hex_board(
+			1,
+			HexBoard {
+				game_id,
+				hex_grid: new_hex_grid.clone(),
+				resources: [5; NUMBER_OF_RESOURCE_TYPES],
+			},
+		);
+
+		let game_option = GameStorage::<TestRuntime>::get(game_id);
+
+		let game = game_option.unwrap();
+
+		assert_eq!(
+			<mock::TestRuntime as pallet::Config>::TileCosts::get()[game.selection[1] as usize]
+				.tile_to_buy,
+			HexalemTile(56)
+		);
+
+		assert_ok!(HexalemModule::play(
+			RuntimeOrigin::signed(1),
+			Move { place_index: 21, buy_index: 0 }
+		));
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		//assert_eq!(hex_board.hex_grid, new_hex_grid);
+
+		assert_eq!(hex_board.hex_grid[16].get_type(), TileType::Cave);
+		assert_eq!(hex_board.hex_grid[20].get_type(), TileType::Cave);
+		assert_eq!(hex_board.hex_grid[21].get_type(), TileType::Cave);
+		assert_eq!(hex_board.hex_grid[16].get_pattern(), TilePattern::Delta);
+		assert_eq!(hex_board.hex_grid[20].get_pattern(), TilePattern::Delta);
+		assert_eq!(hex_board.hex_grid[21].get_pattern(), TilePattern::Delta);
+
+
+		let game_option = GameStorage::<TestRuntime>::get(game_id);
+
+		let game = game_option.unwrap();
+
+		assert_eq!(
+			<mock::TestRuntime as pallet::Config>::TileCosts::get()[game.selection[2] as usize]
+				.tile_to_buy,
+			HexalemTile(24)
+		);
+
+		assert_eq!(
+			<mock::TestRuntime as pallet::Config>::TileCosts::get()[game.selection[3] as usize]
+				.tile_to_buy,
+			HexalemTile(24)
+		);
+
+		assert_ok!(HexalemModule::play(
+			RuntimeOrigin::signed(1),
+			Move { place_index: 8, buy_index: 2 }
+		));
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		assert_eq!(hex_board.hex_grid[6].get_type(), TileType::Water);
+		assert_eq!(hex_board.hex_grid[7].get_type(), TileType::Water);
+		assert_eq!(hex_board.hex_grid[8].get_type(), TileType::Water);
+		assert_eq!(hex_board.hex_grid[6].get_pattern(), TilePattern::Line);
+		assert_eq!(hex_board.hex_grid[7].get_pattern(), TilePattern::Line);
+		assert_eq!(hex_board.hex_grid[8].get_pattern(), TilePattern::Line);
+
+		assert_ok!(HexalemModule::play(
+			RuntimeOrigin::signed(1),
+			Move { place_index: 17, buy_index: 2 }
+		));
+
+		let hex_board_option: Option<HexBoard<TestRuntime>> =
+			HexBoardStorage::<TestRuntime>::get(1);
+
+		let hex_board = hex_board_option.unwrap();
+
+		assert_eq!(hex_board.hex_grid[18].get_type(), TileType::Water);
+		assert_eq!(hex_board.hex_grid[17].get_type(), TileType::Water);
+		assert_eq!(hex_board.hex_grid[22].get_type(), TileType::Water);
+		assert_eq!(hex_board.hex_grid[22].get_pattern(), TilePattern::Delta);
+		assert_eq!(hex_board.hex_grid[18].get_pattern(), TilePattern::Delta);
+		assert_eq!(hex_board.hex_grid[17].get_pattern(), TilePattern::Delta);
+	});
+	
+}
+
+#[test]
 fn upgrade() {
 	new_test_ext().execute_with(|| {
 		assert_ok!(HexalemModule::create_game(RuntimeOrigin::signed(1), vec![1, 2], 25));
@@ -596,4 +732,100 @@ fn upgrade() {
 			Error::<TestRuntime>::TileOnMaxLevel
 		);
 	})
+}
+
+#[test]
+fn coords_to_sindex() {
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &0, &0), 12);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &-2, &-2), 0);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &2, &2), 24);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &2, &-2), 4);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &-2, &2), 20);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &1, &0), 13);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &2, &0), 14);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &2, &1), 19);
+	assert_eq!(crate::Pallet::<TestRuntime>::coords_to_index(&2, &5, &-1, &1), 16);
+}
+
+#[test]
+fn get_neighbouring_tiles() {
+	assert_eq!(
+		crate::Pallet::<TestRuntime>::get_neighbouring_tiles(&2, &0, &0),
+		Ok(vec![
+			Some((0, -1)),
+			Some((1, -1)),
+			Some((1, 0)),
+			Some((0, 1)),
+			Some((-1, 1)),
+			Some((-1, 0))
+		])
+	);
+
+	assert_eq!(
+		crate::Pallet::<TestRuntime>::get_neighbouring_tiles(&2, &-2, &-2),
+		Ok(vec![None, None, Some((-1, -2)), Some((-2, -1)), None, None])
+	);
+
+	assert_eq!(
+		crate::Pallet::<TestRuntime>::get_neighbouring_tiles(&2, &-2, &2),
+		Ok(vec![Some((-2, 1)), Some((-1, 1)), Some((-1, 2)), None, None, None])
+	);
+}
+
+#[test]
+fn is_valid_hex() {
+	assert!(crate::Pallet::<TestRuntime>::is_valid_hex(&2, &0, &0));
+
+	assert!(crate::Pallet::<TestRuntime>::is_valid_hex(&2, &1, &-1));
+
+	assert!(crate::Pallet::<TestRuntime>::is_valid_hex(&2, &-2, &-2));
+
+	assert!(crate::Pallet::<TestRuntime>::is_valid_hex(&2, &2, &-2));
+
+	assert!(!crate::Pallet::<TestRuntime>::is_valid_hex(&2, &-3, &2));
+
+	assert!(!crate::Pallet::<TestRuntime>::is_valid_hex(&2, &-3, &-2));
+
+	assert!(!crate::Pallet::<TestRuntime>::is_valid_hex(&2, &-1, &-3));
+
+	assert!(!crate::Pallet::<TestRuntime>::is_valid_hex(&2, &-1, &10));
+}
+
+#[test]
+fn index_to_coords() {
+	assert_eq!(crate::Pallet::<TestRuntime>::index_to_coords(0, &5, &2), Ok((-2, -2)));
+
+	assert_eq!(crate::Pallet::<TestRuntime>::index_to_coords(12, &5, &2), Ok((0, 0)));
+}
+
+#[test]
+fn match_tiles() {
+	assert_eq!(crate::Pallet::<TestRuntime>::match_same_tile(None, None, None), None);
+
+	assert_eq!(
+		crate::Pallet::<TestRuntime>::match_same_tile(
+			Some((16, HexalemTile(56))),
+			Some((20, HexalemTile(56))),
+			Some((21, HexalemTile(56)))
+		),
+		Some(vec![16, 20, 21])
+	);
+
+	assert_eq!(
+		crate::Pallet::<TestRuntime>::match_same_tile(
+			Some((11, HexalemTile(16))),
+			Some((10, HexalemTile(16))),
+			Some((15, HexalemTile(16)))
+		),
+		Some(vec![11, 10, 15])
+	);
+}
+
+#[test]
+fn tiles() {
+	assert_eq!(HexalemTile(0).get_type(), TileType::Empty);
+
+	assert_eq!(HexalemTile(24).get_type(), TileType::Water);
+
+	assert_eq!(HexalemTile(56).get_type(), TileType::Cave);
 }
