@@ -12,14 +12,14 @@ const AccountContext = React.createContext();
 export const AccountProvider = ({ account: _account, children }) => {
   const [account, setAccount] = useState(_account);
 
-  const login = useCallback((account) => {
+  const login = useCallback((acc) => {
+    const account = {
+      ...acc,
+      address: encodeAddress(acc.address, ss58Format[acc.network]),
+    };
     setAccount(account);
     if (typeof window !== "undefined") {
-      const address = encodeAddress(
-        account.address,
-        ss58Format[account.network],
-      );
-      const data = `${account.network}/${address}/${account.wallet}`;
+      const data = `${account.network}/${account.address}/${account.wallet}`;
       setCookie("address", data, 7);
     }
   }, []);
