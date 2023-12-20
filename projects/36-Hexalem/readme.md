@@ -114,9 +114,9 @@ Assets from the Unity Asset Store:
 
 ### Screenshots
 
-## Future Features to add
+## Future Features planed
 
-### The Lobby and Payer Matchmaker
+### The Lobby Matchmaker
 To have proper matchmaking, that queues players looking for a game according to their ranking in different clusters. [pallet_matchmaker](https://github.com/ajuna-network/pallet-ajuna-matchmaker/blob/master/src/lib.rs)
 
 ### The Hidden Agenda (Private Player Goals)
@@ -128,3 +128,15 @@ Add multiple target goals and a selection at the beginning of the game that uses
   - When achieving the game goal, the player can call for the win, by revealing his seed and proving his choice from the begining
   - If verified and true, he won the game
   - Else the game continues, with the player having exposed his target, and making him easier to combat.
+
+### Account/Wallet Creation
+To make sure we can add new players and accounts, we need to add the [.NET API Wallet](https://github.com/SubstrateGaming/Substrate.NET.Wallet) project and integrate an onboarding workflow, similar to the one The Big Ballz of Bajun did.
+![image](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/8f0db391-ef3a-49b9-937b-bfa82dab5f50)
+
+## Why Pallet and not EVM
+
+Pallets offer enhanced flexibility and integration, especially in C# environments, by exposing comprehensive metadata like types, calls, events, errors, and constants. This allows seamless interaction with the Substrate blockchain, similar to conventional backend systems. Current advancements aim to reduce latency to around 6 seconds.
+
+Using a pallet as a game engine enables leveraging extensive on-chain functionalities. For instance, pallet_nfts provide on-chain attributes, significantly enhancing NFT utility.
+
+While this flexibility is advantageous, it also brings greater responsibility.
