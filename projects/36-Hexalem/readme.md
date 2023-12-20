@@ -30,7 +30,7 @@ Hexalem distinguishes itself as a strategy-god game, offering an immersive singl
 
 Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and Repeat
 
-### Hackathon Deliverables & Priority
+### Hackathon Deliverables & Artifacts
 
 1. Documentation
 - [Initial GDD](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/GDD.md), align the idea on the game design concept and the game core loop.
@@ -56,9 +56,12 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 4. Client
 - [Unity Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/ui/substrate.hexalem.unity)
 - [Headless Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Console)
+- [UI/UX FIGMA](https://www.figma.com/file/G2CPE1He0xMv0BgxbBpUFT/Untitled?type=design&node-id=0-1&mode=design&t=Hq3JXp0Fpl9CQ2d0-0)
 
 5. Additional
-- (wip)[AI Simulations](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Bot), for simulating opponents, and for load testing
+- (WIP)[AI Simulations](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Bot), for simulating opponents, and for load testing
+
+Assets from the Unity Asset Store: 
 
 ### Team
 
