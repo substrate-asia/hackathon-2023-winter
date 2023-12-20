@@ -74,6 +74,10 @@ Assets from the Unity Asset Store:
 - Romain Friot (https://github.com/Apolixit)
 - Cedric Decoster (https://github.com/darkfriend77)
 
+### Project presentation slides
+
+[Slide presentation](https://docs.google.com/presentation/d/1ZcUa8e96SjcZLaGhSgcaE7s-XTcgDmQ8Ta2X1gSe0do)
+
 ## Project Folders
 
 - `36-Hexalem`
@@ -86,7 +90,8 @@ Assets from the Unity Asset Store:
 
 ## Architecture Overview
 
-![FRIOT Romain's landscape - Big picture (Latest)](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/4fc2323e-457f-461c-b3d0-d608b405c763)
+![FRIOT Romain's landscape - Big picture (Latest)](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/23503416/dda07104-c951-4b5b-be92-e203debb685b)
+[View on IcePanel](https://s.icepanel.io/zWHET9Tj4wybDh/elfG)
 
 ### Datamodel & Entities
 
