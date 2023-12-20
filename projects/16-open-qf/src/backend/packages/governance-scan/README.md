@@ -1,7 +1,7 @@
-## Contributor scan
+## Governance scan
 
-This package scans history blocks, check transfer event, and save related quadratic funding contributor info to
-database.
+This package scans history blocks, check and save OpenGov referenda and voters data. Saved data will be used to check
+whether an address is an active voter.
 
 ### How to run
 

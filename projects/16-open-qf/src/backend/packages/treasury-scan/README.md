@@ -1,7 +1,7 @@
-## Contributor scan
+## Role scan
 
-This package scans history blocks, check transfer event, and save related quadratic funding contributor info to
-database.
+This package scans history blocks, check and save treasury related data. Saved data will be used to check whether an
+address is a treasury beneficiary, proposer or curator.
 
 ### How to run
 

@@ -1,7 +1,7 @@
-## Contributor scan
+## Account scan
 
-This package scans history blocks, check transfer event, and save related quadratic funding contributor info to
-database.
+This package scans history blocks, check and save address debut info. With this package, we will know when an address
+first appear on a substrate chain.
 
 ### How to run
 
