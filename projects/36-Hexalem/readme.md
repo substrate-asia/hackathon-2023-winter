@@ -66,7 +66,7 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 - Romain Friot (https://github.com/Apolixit)
 - Cedric Decoster (https://github.com/darkfriend77)
 
-## File structure
+## Project Folders
 
 - `36-Hexalem`
   - `docs` (Concept documents, like the Game Design Document and more)
@@ -86,20 +86,26 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 
 ### Backend
 
-Substrate Blockchain
-- Pallet Hexalem (Testing: Localhost, Production: Tanssi)
-  - Testing: Localhost - ws://127.0.0.1:9944
-  - Production: Tanssi - wss://fraa-dancebox-3023-rpc.a.dancebox.tanssi.network/
+**Substrate Blockchain**
+- **Pallet Hexalem**
+  - **Testing**: Localhost 
+    - URL: `ws://127.0.0.1:9944`
+  - **Production**: Tanssi 
+    - URL: `wss://fraa-dancebox-3023-rpc.a.dancebox.tanssi.network/`
 
 ### Frontend Client
 
-Unity Mobile Client
-- Unity Client
-  - Testing: Unity Simulator and Android Live Debug on Device
-  - Production: Google App Store - Internal Testing (https://play.google.com/apps/internaltest/4700550332736328157)
+**Unity Mobile Client**
+- **Unity Client**
+  - **Testing**: 
+    - Methods: Unity Simulator and Android Live Debug on Device
+  - **Production**: 
+    - Google App Store - Internal Testing 
+    - [App Store Link](https://play.google.com/apps/internaltest/4700550332736328157)
 
-Additional repo for the Tanssi integration,
-https://github.com/ajuna-network/tanssi/tree/ds/add_aaa
+**Additional Repository for Tanssi Integration**
+- [Tanssi Integration on GitHub](https://github.com/ajuna-network/tanssi/tree/ds/add_aaa)
+
 
 ## Demo & Visuals
 
