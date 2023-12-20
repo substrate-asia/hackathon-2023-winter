@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use crate::{AddrCache, Command};
+use crate::{AddrCache, Command, shared::CreatedSubscription};
 use anyhow::Context;
 use cumulus_primitives_core::relay_chain::ValidatorId;
 use futures::{
@@ -81,18 +81,20 @@ impl Service {
 	}
 
 	// 订阅主题
-	pub async fn subscribe(&self, topic: Sha256Topic) -> anyhow::Result<()> {
-		let (result_sender, result_receiver) = oneshot::channel();
-		self.to_worker.clone().send(Command::Subscribe { topic, result_sender }).await?;
+    pub async fn subscribe(&self, topic_name: &str) -> anyhow::Result<CreatedSubscription> {
+        let topic = Sha256Topic::new(topic_name);
+        let (result_sender, result_receiver) = oneshot::channel();
+        self.to_worker.clone().send(Command::Subscribe { topic, result_sender }).await?;
 
-		match result_receiver.await.context("Failed receiving subscribe response") {
-			Ok(_) => Ok(()),
-			Err(e) => Err(e.into()),
-		}
-	}
+        match result_receiver.await.context("Failed receiving subscribe response") {
+            Ok(result) => result.map_err(Into::into),
+            Err(e) => Err(e.into()),
+        }
+    }
 
 	// 发布主题
-	pub async fn publish(&self, topic: Sha256Topic, message: Vec<u8>) -> anyhow::Result<()> {
+	pub async fn publish(&self, topic_name: &str, message: Vec<u8>) -> anyhow::Result<()> {
+		let topic = Sha256Topic::new(topic_name);
 		let (sender, receiver) = oneshot::channel();
 		self.to_worker.clone().send(Command::Publish { topic, message, sender }).await?;
 		receiver.await.context("Failed receiving publish response")?

@@ -11,15 +11,11 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-use codec::{Decode, Encode};
 
-pub mod crypto;
+use rc_validator_network::{Service as ValidatorNetworkService, Command};
+use futures::{StreamExt, channel::mpsc};
+use std::{sync::Arc, error::Error};
 
-sp_api::decl_runtime_apis! {
-    pub trait GetValidatorsFromRuntime<ValidatorId>
-    where
-        ValidatorId: Encode + Decode,
-    {
-        fn validators() -> Vec<ValidatorId>;
-    }
-}
+mod worker;
+
+pub use worker::Worker;

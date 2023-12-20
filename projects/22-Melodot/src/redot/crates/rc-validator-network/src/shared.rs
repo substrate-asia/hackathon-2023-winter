@@ -23,13 +23,13 @@ use libp2p::{
 use bytes::Bytes;
 
 #[derive(Debug)]
-pub(crate) struct CreatedSubscription {
+pub struct CreatedSubscription {
 	/// Subscription ID to be used for unsubscribing.
 	#[allow(dead_code)]
-	pub(crate) subscription_id: usize,
+	pub subscription_id: usize,
 	/// Receiver side of the channel with new messages.
 	#[allow(dead_code)]
-	pub(crate) receiver: mpsc::UnboundedReceiver<Bytes>,
+	pub receiver: mpsc::UnboundedReceiver<Bytes>,
 }
 
 #[derive(Debug)]
