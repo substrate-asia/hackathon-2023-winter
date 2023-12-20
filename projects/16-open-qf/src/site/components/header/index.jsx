@@ -16,6 +16,7 @@ export default function Header() {
         className={cn(
           "w-full max-w-[1440px]",
           "py-5 px-8",
+          "max-sm:px-6",
           "flex items-center justify-between",
         )}
       >
