@@ -314,11 +314,11 @@ public class TemplateUtil {
 //        String currentProjectPath = System.getProperty("user.dir");
 //        String testDirectory = currentProjectPath + "/src/test/java/";
 //        String o = "e:/longce/";
-        String jsonString = "D:\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\build\\contracts";
+        String abiPath = "D:\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\build\\contracts";
         String currentProjectPath = System.getProperty("user.dir");
         String saveFilePath = currentProjectPath + "/src/main/resources/templates/";
         String solPath = "D:\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\contracts\\Lottery.sol\\";
-        toTestTemplate(jsonString, solPath, saveFilePath);
+        toTestTemplate(abiPath, solPath, saveFilePath);
     }
 
 

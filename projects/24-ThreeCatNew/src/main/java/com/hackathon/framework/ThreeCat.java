@@ -5,6 +5,7 @@ import com.hackathon.framework.provider.impl.GenerateEngineImpl;
 import com.hackathon.framework.utils.ReportUtil;
 import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.StrategyConfigUtil;
+import com.hackathon.framework.utils.TemplateUtil;
 import com.jcraft.jsch.JSchException;
 
 import javax.swing.*;
@@ -115,9 +116,22 @@ public class ThreeCat extends JFrame {
                         successCount +=1;
                     }
                 }else if (command.contains("compile --coverage")){
-                    // 生成覆盖率，参数需要指定
+                    // TODO 生成覆盖率，参数需要指定
                 }else if (command.contains("genTest")){
                     // 生成单测测试用例，需要添加断言
+                    String[] commands = command.split(" ");
+                    String solPath = commands[2];
+                    String abiPath = commands[1];
+                    String testFilePath = commands[3];
+                    Result generateTestResult;
+                    try {
+                        generateTestResult = TemplateUtil.toTestTemplate(abiPath, solPath, testFilePath);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if(generateTestResult.getHasError().isEmpty()){
+                        successCount +=1;
+                    }
                 }else{
                     errologs.setText("Unknown command: " + command);
                 }

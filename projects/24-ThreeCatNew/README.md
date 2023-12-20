@@ -9,25 +9,50 @@
 ### Background
 An automated tool for testing and debugging using three cats, as well as a testing framework for smart contracts for security auditing.
 
-It can be divided into unit testing, which helps developers and testers generate test cases and inspection conclusions for the entire contract pipeline.
+Generate through the configuration in base.yaml. Collect unit tests and test conclusions, and produce reports.
 
 The current unit testing framework has the following issues:
-1. Each step needs to be handled by oneself
 
-The three cats have the ability to concatenate steps and generate corresponding framework files using the command line.
+1. Each step needs to be processed by typing commands yourself
 
-The conclusion of a single inspection can be achieved through the framework to ensure whether the single test can be included.
+Three cats configure the development framework, compilation method, and assertion method you have chosen in base.yaml, integrating multiple original command typing steps
 
-2. Insufficient scalability
+And it can support initializing the development framework ->generating use cases ->executing use cases after adjustment ->collecting conclusions ->generating HTML reports.
+
+2. Provides scalability capabilities that regular unit testing does not possess
 
 Three cats can integrate multiple SDKs and their corresponding language assertion capabilities.
 
-In the unit testing environment, plugins and necessary check items for the inspection phase can be freely added
+You can freely add plugins and necessary check items for the inspection phase in the unit testing environment.
 
-### Technical Architecture
-**Backend**: Using Java as the main language, generating single test templates based on the language of the smart contract Sdk framework.
+By using a framework to record the execution time and whether it can continue in each environment, the user's operations are greatly simplified.
 
-**Single test**: A unit testing framework for the corresponding language.
+Flowchart of assembly line (follow-up plan)
+
+![pipelineTest](./assets/pipelineTest.png)
+
+In the assembly line, it will be processed through abstract methods in the process.
+
+Construction of lower level (providing slots and the ability of lower level 2)
+
+For example, when calling JenkinsJob, the parameter in Yaml will be a package that reads the local Jenkins construction.
+
+2. Generate files that support assembly lines.
+
+3. Combining version control management.
+
+
+### Technical architecture  
+**Backend**: A language that uses Java as the main body, with some logical relationships in base.yaml.
+
+Other single test templates generated based on the Sdk framework of smart contracts currently include Jest from Js.
+
+**Client**: Java swing
+
+There are two stages in base.yaml, which read generateEngine and generateTestCaseFile, respectively.
+![init_project](./assets/init_project.png)  
+![generate_test](./assets/generate_test.png)  
+![coverage](./assets/coverage.png)  
 
 ### he completion items of this hacker loosening plan
 **Command line generation**:
@@ -37,27 +62,41 @@ In the unit testing environment, plugins and necessary check items for the inspe
 **Unit testing detection function**: Call Sdk to test the abi interface, return result assertions, and generate code coverage  
 **Scan function after merging**: Configure allowed scan items, rules, mandatory scan items, and generate final report. 
 
+
+##Team member information
+
+Team Name: Three Cats
+
+Because some members are relatively thin, some are overweight, and after calculation, there are still three cats
+
+| Role                    | Name       | Wechat              | Github |
+|-------------------------|------------|---------------------| --- |
+| Product Manager/Captain | big cat    | lihaizhang2013      |  |
+| Developer               | middle cat | xiaozhao129540      |  |
+| Developer               | xin cat    | wxid_s598vo46kd8b22 |  |
+| Developer               | small cat  | pinganmomod1989     |  |
+
 ## Logo
 
 ![Logo](./assets/logo.png)
 
 
 - **Demo**
-  https://github.com/parity-asia/hackathon-2023-winter/tree/main/projects/24-ThreeCatNew/src
-
+  https://github.com/parity-asia/hackathon-2023-winter/tree/main/projects/24-ThreeCatNew
 
 # 中文项目介绍
 
 ## 背景
-三只猫用于测试和调试的自动化工具以及用于安全审计的智能合约的测试框架。  
-可以分为单元测试，帮助开发人员以及测试人员生成测试用例和整个合约流水线的检查结论。
+   三只猫用于测试和调试的自动化工具以及用于安全审计的智能合约的测试框架。  
+通过base.yaml里面的配置生成。单元测试和测试结论的收集，产出报告。
 目前的单元测试框架存在以下问题：  
-1. 每个步骤需要自己处理  
-   三只猫把步骤具备串联的能力，以及使用命令行可生成对应的框架文件。
-   通过框架可以完成一次检查的结论，确保单测是否可以被合入。
-2. 扩展性不够  
-   三只猫可以集成多个SDK和SDK对应语言的断言能力。  
-   在单元测试环境可以自由添加检查环节的插件和必备检查项
+1. 每个步骤需要自己敲命令处理  
+     三只猫在base.yaml配置你所选择的开发框架，编译方式，断言方式，集成了多个原有敲命令的步骤
+     并且可以支持初始化开发框架->生成用例->调整后执行用例->收集结论->产生Html报告。
+2. 提供了普通单元测试不具备的扩展能力  
+     三只猫可以集成多个SDK和SDK对应语言的断言能力。  
+     在单元测试环境可以自由添加检查环节的插件和必备检查项。 
+     通过框架进行每个环境记录执行时间和是否可以继续的结论信息，大大简化了使用者的操作。
 
 ## 流水线的流程图(后续计划)
 ![Logo](./assets/pipelineTest.png)  
@@ -69,10 +108,14 @@ In the unit testing environment, plugins and necessary check items for the inspe
 
 ## 技术架构
 
-**后端**: 使用Java作为主体的语言，其他根据智能合约Sdk框架的语言生成单测模板。  
-**单测**: 对应语言的单元测试框架。
-**客户端**: 会通过一个客户端来简化操作，这个是最后实现的。  
-PS:Yaml里面有2个阶段，分别读取generateEngine和generateTestCaseFile。
+**后端**: 使用Java作为主体的语言，部分逻辑关系在base.yaml里面。  
+          其他根据智能合约Sdk框架的语言生成单测模板，目前有Js的Jest的。
+**客户端**: Java swing  
+PS:base.yaml里面有2个阶段，分别读取generateEngine和generateTestCaseFile。
+![init_project](./assets/init_project.png)  
+![generate_test](./assets/generate_test.png)  
+![coverage](./assets/coverage.png)
+
 
 ## 本次黑客松计划完成事项
 ### 功能1：命令行生成工程`  
@@ -141,4 +184,3 @@ PS:Yaml里面有2个阶段，分别读取generateEngine和generateTestCaseFile�
 | Developer               | middle cat | xiaozhao129540      |  |
 | Developer               | xin cat    | wxid_s598vo46kd8b22 |  |
 | Developer               | small cat  | pinganmomod1989     |  |
-现在队伍新增成员xin，暂时不用添加了
