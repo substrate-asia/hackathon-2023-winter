@@ -11,7 +11,6 @@ Date: 7th November, Kick-Off Meeting
 - **Project Type:** Multiplayer Mobile Blockchain Game
 - **Genere:** Strategy / Godgame
 - **Platform:** Android & iOS
-- (WIP)**Business Model**: [Ideation](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/bd-model.md)
 
 ### Logo
 
@@ -44,6 +43,7 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 - [Basic UI/UX](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/UX.md), align the basic features and experiences for the UI.
 - Testing Workflow, align test coverage to achieve, and agree on certain shortcuts, to achieve the timeline.
 - Tooling, align tooling to be used for each artifact.
+- [Buisness Model Ideation](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/bd-model.md)
 
 2. Backend
 - [Reference Hexalem Game Engine (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.NET)
