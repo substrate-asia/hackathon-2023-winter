@@ -12,7 +12,7 @@ Date: 7th November, Kick-Off Meeting
 
 ![small_logo](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/ef3a3811-a5a0-46c1-ba2a-cdf437df9a0f)
 
-### Background
+### Background ???
 
 ### Introduction
 
@@ -24,30 +24,29 @@ The blockchain aspect is crucial, as it records each move, ensuring a transparen
 
 The game’s round-based mechanics allow for thoughtful, turn-by-turn gameplay, where players' actions are sequential rather than concurrent for now. This design choice respects the need for strategic planning and decision-making, which is central to the game's experience. The shared tile selection pool introduces an element of shared fate and competition, as players must anticipate and react to the choices of their opponents.
 
-While the current implementation has players interacting with their grids, future iterations have the potential to introduce more versatile interactions, including acting on opponent boards with spells cast with mana, to harm production or destroy elemental buildings, and create an advantage to reach the own goal, adding an additional layer of strategy and competition.
+The current version of Hexalem allows players to engage with their grids, yet future updates are poised to expand the scope of interaction. Players will be able to influence their opponents' boards by utilizing mana to cast spells, potentially disrupting resource production or demolishing elemental structures. These strategic maneuvers are designed to provide a competitive edge and advance players toward their goals.
 
-Hexalem stands out as a strategy-god game that offers a rich solo experience with extensive multiplayer capabilities. Its blockchain integration isn't just a feature—it's a foundational component that offers a new dimension of gameplay and strategy, making Hexalem a fitting entry for a susbtrate-based mobile game. The game aims to push the boundaries of what is possible at the intersection of strategy gaming and blockchain technology.
-
-As future plans, additionally to spells, the integration of 
-
+Hexalem distinguishes itself as a strategy-god game, offering an immersive single-player experience while boasting robust multiplayer functionality. The integration of blockchain technology is not merely an added feature but a core aspect of the game's architecture. It introduces a layer for digital ownership and an unbreakable backend, to host thousands of games, establishing Hexalem as a prime candidate for a mobile game first and a candidate to become a UNity Demo game for the Polkadot Unity SDK. The ambition of Hexalem is to explore and expand the frontiers of strategy gaming through the lens of blockchain innovation.
 
 Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and Repeat
 
 ### Hackathon Deliverables & Priority
 
 1. Documentation
-- Initial GDD, allign the idea on the game design concept and the game core loop.
-- Backend Specification, allign datamodel for storage and function calls.
-- Basic UI/UX, allign abput the basic features and experiences for the UI.
-- Testing Workflow, allign test coverage to achieve, and agree on certain shortcuts, to achieve the timeline.
-- Tooling, allign tooling to be used for each artifacts.
-
-Challenges, address workflow for creative idea to follow an implemtation path, to avoid inconsistency.
+- [Initial GDD](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/GDD.md), align the idea on the game design concept and the game core loop.
+- [MVP](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/MVP.md), align for the minimal version to achieve
+- [Backend Specification](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/Pallet.md), align data model for storage, function calls, and grid algorithms.
+- [Basic UI/UX](https://github.com/SubstrateGaming/hackathon-2023-winter/blob/main/projects/36-Hexalem/docs/UX.md), align the basic features and experiences for the UI.
+- Testing Workflow, align test coverage to achieve, and agree on certain shortcuts, to achieve the timeline.
+- Tooling, align tooling to be used for each artifact.
 
 2. Backend
-- ref. game engine (C#)
-- ref. game engine unit test (C#)
-- WebAPI, to simulate Blockchain
+- [Reference Hexalem Game Engine (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.NET)
+- [Hexalem Unit Tests (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Test)
+- [Hexalem/Substrate Integration & Wrapper](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Integration)
+- [Hexalem/Substrate Integration Tests](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Integration.Test)
+- (generated)[.NET API Hexalem Extension](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.NET.NetApiExt)
+- (not used)[WebAPI](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.WebAPI), to simulate Blockchain
 
 3. Blockchain
 - game engine pallet (Rust/Substrate)
@@ -55,12 +54,11 @@ Challenges, address workflow for creative idea to follow an implemtation path, t
 - tanssi integration parachain (Rust/Substrate)
 
 4. Client
-- Unity Client (C#)
-- Headless Client (C#)
+- [Unity Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/ui/substrate.hexalem.unity)
+- [Headless Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Console)
 
-5. Additonal
-- AI Opponents, for simulating training games, and loadtesting purpose
-- Googla App Store, publishing for internal testing
+5. Additional
+- (wip)[AI Simulations](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Bot), for simulating opponents, and for load testing
 
 ### Team
 
@@ -110,7 +108,10 @@ https://github.com/ajuna-network/tanssi/tree/ds/add_aaa
 
 ### Screenshots
 
-## Future Features
+## Future Features to add
+
+### The Lobby and Payer Matchmaker
+To have proper matchmaking, that queues players looking for a game according to their ranking in different clusters. [pallet_matchmaker](https://github.com/ajuna-network/pallet-ajuna-matchmaker/blob/master/src/lib.rs)
 
 ### The Hidden Agenda (Private Player Goals)
 Add multiple target goals and a selection at the beginning of the game that uses the [Choose](https://github.com/ajuna-network/pallet-ajuna-rps/blob/937bd81d823cea007c6ef20f48edc7c0ac752dba/src/lib.rs#L378) & [Reveal](https://github.com/ajuna-network/pallet-ajuna-rps/blob/937bd81d823cea007c6ef20f48edc7c0ac752dba/src/lib.rs#L412) concept, to add a small privacy layer.
