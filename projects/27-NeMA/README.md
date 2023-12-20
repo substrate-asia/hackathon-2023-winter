@@ -1,14 +1,24 @@
+<img src="https://badgen.net/static/license/MIT/green" style="zoom:150%;" />
+
+<img src="https://img.shields.io/badge/truffle-v5.11.5-blue" style="zoom:150%;" />
+
+<img src="https://img.shields.io/badge/solidity-v0.5.16-red" style="zoom:150%;" />
+
 ## 基本资料	
 
 ### 项目名称
 
 NeMA
 
-### 项目立项日期
+### 项目立项日期	
 
 2023年12月
 
 ## 项目整体简介
+
+### Project logo
+
+![image-20231219192356424](./static/image-20231219192356424.png)
 
 ### Project background
 
@@ -20,19 +30,10 @@ NeMA
 * KOL经常需要在平台发布抽奖活动，增加曝光，但这其中同样存在抽奖的信任危机：（1）Web2中大量抽奖活动都是打着“抽奖”的名义，实为广告营销，“套路”消费者腰包，并有套取个人信息之嫌（2）平台利用开奖过程的不透明而操纵开奖过程，后台完全自己操控，可以控制流量、粉丝以及指定中奖人，涉嫌欺诈（3）中奖的账户并不一定是真人而是机器人，真实用户不明真相，被蒙在鼓里。
 
   **NeMA平台通过区块链技术解决上述信任危机，保护用户以及KOL的利益。**
-  
-  * Trust relationship: The OTC market is decentralized, unlike conventional exchanges, without the supervision of a central authority.If one party chooses not to fulfill its obligations, the other party will suffer significant losses, leading to a trust crisis between the two parties and the guarantor.
-  * Traditional OTC manual guarantee has high risks and expensive handling fees.
-  *  Lack of invitation platform: There is a lack of suitable platforms to purchase real user invitations.
-  *  KOLs often need to launch sweepstakes on platforms to increase exposure, but there is also a trust crisis in sweepstakes: (1) In Web2, a large number of sweepstakes are in the name of "sweepstakes", but in fact they are advertising marketing, "tricks" consumers' pockets, and there is suspicion of obtaining personal information.  (2) Platforms manipulate the process of awarding prizes by using the opacity of the process, and the background is completely controlled by themselves, which can control traffic, fans, and designated winners, which is suspected of fraud.  (3) The account that wins the prize is not necessarily a real person but a robot, and the real user is not aware of the truth and is kept in the dark.
-  
-  **The NeMA platform uses blockchain technology to solve the above trust crisis and protect the interests of users and KOLs.**
 
 ### Project Introduction
 
 该项目是一个多功能集成的OTC交易平台，致力于将 Web3 的线下交易桥接到链上，同时通过区块链技术为买卖双方提供基于区块链的稳定担保服务，实现用户于平台之间的互信互惠互利。主要服务包括c2c+otc模式的场外交易支持、链上抽奖、邀请分佣等。
-
-This project is a multifunctional integrated OTC trading platform, committed to bridging Web3 offline transactions onto the chain, and providing stable guarantee services based on blockchain for buyers and sellers through blockchain technology, achieving mutual trust and mutual benefit between users and the platform. The main services include over-the-counter trading support in the c2c+otc mode, on chain lottery, invitation commission sharing, etc.
 
 ### Technical highlights
 
@@ -40,23 +41,11 @@ This project is a multifunctional integrated OTC trading platform, committed to 
 
 哈希锁定模式是指用户在规定的时间段对于哈希值的原值进行猜测来支付的一种机制。它允许用户通过提供一个哈希值来锁定一定数量的代币，并在满足特定条件时进行提取。用户在锁定代币时需要提供一个哈希值，该哈希值与特定条件相关联。当满足条件时，用户可以提供与哈希值相匹配的原始数据来解锁并提取代币。简单讲，就是在智能合约的基础上，双方先锁定资产，如果都在有限的时间内输入正确哈希值的原值，即可完成交易。在这样的机制下可以实现小额支付的快速确认以及安全的交易和条件付款，确保交易的可信性和可靠性。
 
-Hash Lock Mode refers to a mechanism in which users guess the original value of the hash value within a specified time period to pay for it. It allows users to lock a certain amount of tokens by providing a hash value, and withdraw them when specific conditions are met.Users need to provide a hash value when locking the tokens, which is associated with specific conditions.When the conditions are met, users can provide the original data that matches the hash value to unlock and withdraw the tokens.In simple terms, on the basis of smart contracts, both parties first lock assets, and if they enter the correct original value of the hash value within a limited time, the transaction can be completed.Under such a mechanism, fast confirmation of small payments and secure transactions and conditional payments can be achieved, ensuring the credibility and reliability of transactions.
-
-### Project logo
-
-
-
 ### Key Dapp Features
-
-#### NFT白名单服务
-
-NFT白名单服务允许将特定的NFT合约地址添加到白名单中或从白名单中移除。白名单是一个存储了被授权的NFT合约地址的列表。只有在白名单中的NFT合约才能与链上钱包合约进行交互。这样做的好处是可以限制只有特定的NFT合约能够与链上钱包合约进行交互，增加了安全性和控制性。
-
-"The NFT whitelist service allows the addition or removal of specific NFT contract addresses from the whitelist. The whitelist is a list that stores authorized NFT contract addresses. Only NFT contracts listed in the whitelist are permitted to interact with the on-chain wallet contract. This approach serves to restrict interactions with the on-chain wallet contract to specific NFT contracts, thereby enhancing security and control."
 
 #### 场外交易支持
 
-主要存在两种情况：1.平台挂单，用户通过平台撮合进行交易。2.用户事先达成共识，平台提供合约支持。
+主要存在两种情况：1.平台挂单，用户通过平台撮合进行交易。2.用户事先达成共识，平台仅提供合约支持。
 
 **主要流程：**
 
@@ -67,25 +56,43 @@ NFT白名单服务允许将特定的NFT合约地址添加到白名单中或从�
 
 2. 另一位用户可以通过平台搜索符合条件的交易订单。如果找到合适的订单，可以发送交易请求。
 
-交易请求中需要包含以下信息：交易的价格、交易的数量。
-该用户同样可以选择交易方式（限价单、市价单）
+交易请求中需要包含以下信息：交易的价格、交易的数量。该用户同样可以选择交易方式（限价单、市价单）。
 
-3. 双方确认交易信息
+注意：成功发送交易请求的前提是买家提前将资产质押到智能合约中。
 
-交易双方收到交易请求后，需要确认交易信息是否正确，确保理解合约条款。
+3. 卖家确认后转移资产，卖家收到通知后将资产转移到买家账户，等待买家确认。
 
-4. 智能合约自动执行交易，将数字资产从一方转移到另一方，交易信息上链。
+4. 买家确认资产成功到账，则智能合约自动执行交易，将数字资产从一方转移到另一方，交易信息上链。
 
-There are mainly two situations: 1. The platform places orders, and users engage in transactions through platform matchmaking. 2. Users reach a consensus in advance, and the platform provides contract support.
+```mermaid
+graph TD
 
-**Main process:**
+subgraph 用户发布交易订单
+  提供信息(数字资产类型, 交易数量, 交易价格, 交易期限, 交易方式, 手续费, 评价)
+  平台["发布至平台"]
+  提供信息 -->|提供信息| 平台
+  平台 -->|平台撮合服务| 撮合
+  撮合 --> 执行交易
+end
 
-1. The user provides information such as the type of digital asset being traded, the quantity of transactions, the price of transactions, and the duration of transactions to be listed on the platform.Users can also choose the following options: trading method: limit order, market order, stop loss order, stop profit order; Transaction evaluation, etc.After the user posts the order, the order will be publicly displayed on the platform.
-2. Another user can search for eligible transaction orders through the platform. If a suitable order is found, a transaction request can be sent.The transaction request needs to include the following information: price and quantity of transactions.The user can also choose the transaction method (limit order, market order)
-3. Both parties confirm transaction informationAfter receiving the transaction request, both parties need to confirm whether the transaction information is correct and ensure understanding of the contract terms.
-4. Smart contracts automatically execute transactions, transferring digital assets from one party to another, and uploading transaction information on the chain.
+subgraph 另一位用户匹配订单
+  搜索条件(搜索条件, 找到合适订单)
+  用户["发送交易请求"]
+  搜索条件(搜索条件, 找到合适订单) --> 交易请求信息(交易价格, 交易数量, 交易方式, 手续费)
+  平台 -->|用户搜索条件| 搜索条件
+  平台 -->|找到合适订单| 交易请求信息
+  交易请求信息 -->|交易请求| 用户
+  用户["发送交易请求"] --> 智能合约执行交易
+end
 
-![image-20231217235404179](./static/image-20231217235404179.png)
+
+subgraph 智能合约执行交易
+  平台 -->|智能合约自动执行| 执行交易
+  执行交易 -->|数字资产转移| 交易完成
+end
+```
+
+
 
 #### 抽奖全流程上链
 
@@ -96,15 +103,32 @@ There are mainly two situations: 1. The platform places orders, and users engage
 
 抽奖逻辑（合约细节）： 在智能合约中执行抽奖逻辑，确定中奖者。
 
-Award information: Stores the description and quantity of each award.
+```mermaid
+sequenceDiagram
+  participant 用户
+  participant 智能合约
 
-Lottery results: Storing the lottery results (including winners and prizes) on the blockchain ensures verifiability and transparency.
+  用户->>智能合约: 参与抽奖
+  智能合约->>用户: 返回参与结果
 
-Participant record: Record the participant's information (address, participation time, etc.) on the blockchain.
+  activate 智能合约
+    智能合约->>奖项信息: 获取奖项信息
+    奖项信息-->>智能合约: 返回奖项信息
 
-Lottery logic (contract details): Implement the lottery logic in the smart contract to determine the winners.
+    智能合约->>参与者记录: 记录参与者信息
+    参与者记录-->>智能合约: 返回记录结果
 
-![image-20231217221450580](./static/image-20231217221450580.png)
+    智能合约->>抽奖逻辑: 执行抽奖逻辑
+    抽奖逻辑-->>智能合约: 返回中奖者信息
+
+    智能合约->>抽奖结果: 存储抽奖结果
+  deactivate 智能合约
+
+  用户->>智能合约: 查询抽奖结果
+  智能合约->>用户: 返回抽奖结果
+```
+
+
 
 #### 邀请分佣机制
 
@@ -112,37 +136,159 @@ Lottery logic (contract details): Implement the lottery logic in the smart contr
 
 在我们的分佣结构中，用户将获得下级用户交易额的1%作为他的直接分佣，同时平台享有交易额3%的收益。这个优越的分佣比例不仅体现了我们对用户贡献的认可，以增加用户粘性，同时确保平台有现金流的保障持续运行。
 
-The core concept of the invitation commission mechanism is first-level commission and permanent binding, providing users with a long-term stable source of income.Specifically, when a user successfully invites a new user to trade on the platform, the user will enjoy the benefits of first-level commission.At the same time, this binding relationship will be permanently effective, ensuring that users will receive corresponding commission benefits from each transaction of their subordinates.
 
-In our commission structure, users will receive 1% of the transaction amount of their subordinate users as their direct commission, while the platform will enjoy a 3% revenue share.This advantageous commission ratio not only reflects our recognition of user contributions to increase user stickiness, but also ensures the continuous operation of the platform with cash flow guarantees.
 
-![image-20231216000526281](./static/invite2.png)
+```mermaid
+graph TD
+
+subgraph 用户与分佣机制
+  A[用户A] -->|邀请| B[用户B]
+  B -->|1%分佣| A
+  B -->|邀请| C[用户C]
+  C -->|1%分佣| B
+end
+
+subgraph 平台
+  D[平台] -->|3%收益返佣| B
+  D[平台] -->|3%收益返佣| A
+end
+
+```
+
+#### NFT白名单交易
+
+一般流程
+
+1. 发布白名单交易订单
+
+卖家在平台上发布白名单交易订单，一般要求提供以下信息：NFT项目名称、白名单名额数量、交易价格（支持多种加密货币计价）、交易方式、交易截止时间、其他可选信息。
+
+2. 搜索白名单交易订单
+
+买家可以通过平台搜索符合条件的白名单交易订单。可以根据以下条件进行筛选：NFT项目名称、价格范围、交易方式、卖家信誉
+
+3. 合约自动与前端交互，自动执行资产转移，保障交易。
+3. 交易完成后，买家可以正常参与NFT项目的铸造或预售，获得NFT资产。平台允许交易双方互相评价，建立平台信誉体系。
+
+
+
+全流程由平台提供担保，保障交易安全。同时给出温馨提示：
+
+NFT白名单交易是一个新兴的市场，存在一定的风险。
+买家在交易之前应仔细审核项目信息，并选择信誉良好的卖家。
+卖家应确保所提供的白名单名额真实有效。
 
 ### Project demo
 
-video here
+link here
 
 ## 黑客松期间计划完成的事项
 
-### 链端
+### 前端开发
 
-OTC交易功能的支持
+UI开发是项目中至关重要的一环，它直接关系到用户体验和整体项目的可用性。
 
-抽奖行为上链的逻辑，确保数据的可信上链
+1. **需求分析：** 明确项目的功能和业务需求。确定用户在Web端需要执行的操作，例如注册、登录、浏览信息、发起交易等。
+2. **界面设计：** 制定UI设计方案，包括页面布局、颜色搭配、图标使用等。考虑到用户友好性，确保界面简洁清晰，易于导航。
+3. **响应式设计：** 确保UI在不同屏幕尺寸和设备上都能正常显示和操作，采用响应式设计原则进行布局。
+4. **交互设计：** 设计良好的交互流程，确保用户能够顺利完成各项操作。包括表单验证、错误提示、加载状态等。
+5. **前端与链端交互：** 通过API或其他方式与链端进行数据交互，确保前端能够获取和展示后端返回的数据。
+6. **测试与优化：**包括功能测试、性能测试、兼容性测试等。根据测试结果进行优化，确保系统稳定运行。
 
-分佣机制的合约设计
+### 链上抽奖的合约编写
 
-#### web端（Front-End）
+链上抽奖合约的编写是基于区块链技术的智能合约开发，需要考虑以下方面：
 
-前端UI设计，更直观展示项目功能及逻辑
+1. **抽奖逻辑：** 设计抽奖的逻辑，包括参与条件、奖品设定、中奖规则等。确保逻辑的公平性和透明性。
+
+2. **安全性考虑：** 避免合约中的安全漏洞，采用最佳实践，确保合约的安全性。此部分可以通过导入第三方库来实现。
+
+3. **事件触发：** 在合约中设置事件，以便用户和前端可以监听合约的状态变化，及时更新UI。
+
+4. **随机性保障：** 在抽奖中引入随机性，确保每个参与者有相等的机会中奖。可以使用链上的随机数生成算法。
+
+5. **Gas费用优化：** 考虑到交易的成本，优化合约以减少Gas费用，提高用户参与的吸引力。
+
+### OTC交易的合约支持
+
+OTC交易合约需要满足双方的交易需求，确保安全、透明和可执行。以下是合约编写的关键点：
+
+1. **资金锁定机制：** 设计合约以确保交易双方的资金安全，采用锁定和释放机制，防止欺诈行为。
+2. **交易参数：** 定义交易的相关参数，包括交易数量、价格、交易方身份验证等。
+3. **交易状态：** 在合约中定义不同的交易状态，以确保交易的顺利进行，包括订单创建、付款、确认等状态。
+4. **前端集成：** 与前端开发人员密切合作，确保前端能够正确地与合约进行交互，实现交易的展示和操作。
+
+### Hashlock技术的引入
+
+主要步骤包括：
+
+1. **合约设计：** 在智能合约中实现Hashlock逻辑，包括锁定资产、验证哈希条件、解锁资产等。
+
+2. **交易原子性：** 保证交易的原子性，即在交易完成之前，资产要么被锁定，要么被解锁，防止中间状态的出现。
+3. **合约安全性：** 考虑智能合约的安全性，防止重入攻击和其他潜在的漏洞。
+4. **事件通知：** 在合约中设置事件，以便用户和前端可以监听合约的状态变化，及时更新UI。
+5. **测试与优化：** 进行严格的测试，包括功能测试、安全性测试等。根据测试结果进行合约的优化。
+
+### **文档编写**
+
+编写清晰详尽的介绍文档和使用手册。
 
 ## 黑客松期间所完成的事项
 
-### 最终完成的功能点
+主要功能的UI开发。
 
-### 完成的开发工作及代码结构
+移动端的UI展示（一个demo，主要用于提前展示项目的逻辑）。
+
+链上抽奖的合约编写。
+
+OTC交易支持的合约编写。
+
+hashlock开源技术复现。
+
+### 代码结构
+
+├─docs
+├─src
+│  ├─hashlock
+│  │  ├─.deps
+│  │  │  └─npm
+│  │  │      └─@openzeppelin
+│  │  │          └─contracts
+│  │  │              ├─interfaces
+│  │  │              ├─token
+│  │  │              │  └─ERC20
+│  │  │              │      └─extensions
+│  │  │              └─utils
+│  │  ├─contracts
+│  │  │  └─artifacts
+│  │  │      └─build-info
+│  │  ├─scripts
+│  │  └─tests
+│  └─otc
+│      ├─.deps
+│      │  └─npm
+│      │      └─@openzeppelin
+│      │          └─contracts
+│      │              ├─interfaces
+│      │              ├─token
+│      │              │  └─ERC20
+│      │              │      └─extensions
+│      │              └─utils
+│      ├─.vscode
+│      ├─build
+│      │  └─contracts
+│      ├─contracts
+│      │  └─artifacts
+│      │      └─build-info
+│      ├─migrations
+│      ├─scripts
+│      ├─test
+│      └─UI
+└─static
 
 ### PPT等大文件链接地址
+
+
 
 ## API介绍
 
@@ -159,7 +305,7 @@ OTC交易功能的支持
 
 ## 使用方法
 
-使用合约提供的接口进行代币存款、提款、NFT白名单管理和哈希锁定操作
+
 
 ## 测试
 
@@ -167,5 +313,4 @@ OTC交易功能的支持
 
 ## 队员信息
 
-包含参赛者名称及介绍 在团队中担任的角色 GitHub 帐号 微信账号（如有请留下，方便及时联系）
-
+包含参赛者名称及介绍 在团队中担任的角色 GitHub 帐号 微信账号（如有请留下，方便及时联系）	

@@ -1,5 +1,5 @@
 // this file is auto-generated from a modified template file
-// the original template file is '@polkadot/typegen/template/rpc.hbs'
+// the original template file is '@polkadot/typegen/templates/rpc.hbs'
 // and the modification template file is at 'static/type-generation/rpc.hbs'
 
 // Auto-generated via `yarn polkadot-types-from-chain`, do not edit
@@ -35,180 +35,6 @@ import type { ApplyExtrinsicResult, ChainProperties, ChainType, Health, NetworkS
 import type { IExtrinsic, Observable } from '@polkadot/types/types';
 
 export type __AugmentedRpc = AugmentedRpc<() => unknown>;
-
-export const PolkadotRpcList = {
-  author : [
-    'hasKey',
-    'hasSessionKeys',
-    'insertKey',
-    'pendingExtrinsics',
-    'removeExtrinsic',
-    'rotateKeys',
-    'submitAndWatchExtrinsic',
-    'submitExtrinsic',
-  ],
-  babe : [
-    'epochAuthorship',
-  ],
-  beefy : [
-    'getFinalizedHead',
-    'subscribeJustifications',
-  ],
-  chain : [
-    'getBlock',
-    'getBlockHash',
-    'getFinalizedHead',
-    'getHeader',
-    'subscribeAllHeads',
-    'subscribeFinalizedHeads',
-    'subscribeNewHeads',
-  ],
-  childstate : [
-    'getKeys',
-    'getKeysPaged',
-    'getStorage',
-    'getStorageEntries',
-    'getStorageHash',
-    'getStorageSize',
-  ],
-  contracts : [
-    'call',
-    'getStorage',
-    'instantiate',
-    'rentProjection',
-    'uploadCode',
-  ],
-  dev : [
-    'getBlockStats',
-  ],
-  engine : [
-    'createBlock',
-    'finalizeBlock',
-  ],
-  eth : [
-    'accounts',
-    'blockNumber',
-    'call',
-    'chainId',
-    'coinbase',
-    'estimateGas',
-    'feeHistory',
-    'gasPrice',
-    'getBalance',
-    'getBlockByHash',
-    'getBlockByNumber',
-    'getBlockTransactionCountByHash',
-    'getBlockTransactionCountByNumber',
-    'getCode',
-    'getFilterChanges',
-    'getFilterLogs',
-    'getLogs',
-    'getProof',
-    'getStorageAt',
-    'getTransactionByBlockHashAndIndex',
-    'getTransactionByBlockNumberAndIndex',
-    'getTransactionByHash',
-    'getTransactionCount',
-    'getTransactionReceipt',
-    'getUncleByBlockHashAndIndex',
-    'getUncleByBlockNumberAndIndex',
-    'getUncleCountByBlockHash',
-    'getUncleCountByBlockNumber',
-    'getWork',
-    'hashrate',
-    'maxPriorityFeePerGas',
-    'mining',
-    'newBlockFilter',
-    'newFilter',
-    'newPendingTransactionFilter',
-    'protocolVersion',
-    'sendRawTransaction',
-    'sendTransaction',
-    'submitHashrate',
-    'submitWork',
-    'subscribe',
-    'syncing',
-    'uninstallFilter',
-  ],
-  grandpa : [
-    'proveFinality',
-    'roundState',
-    'subscribeJustifications',
-  ],
-  mmr : [
-    'generateProof',
-    'root',
-    'verifyProof',
-    'verifyProofStateless',
-  ],
-  net : [
-    'listening',
-    'peerCount',
-    'version',
-  ],
-  offchain : [
-    'localStorageGet',
-    'localStorageSet',
-  ],
-  payment : [
-    'queryFeeDetails',
-    'queryInfo',
-  ],
-  rpc : [
-    'methods',
-  ],
-  state : [
-    'call',
-    'getChildKeys',
-    'getChildReadProof',
-    'getChildStorage',
-    'getChildStorageHash',
-    'getChildStorageSize',
-    'getKeys',
-    'getKeysPaged',
-    'getMetadata',
-    'getPairs',
-    'getReadProof',
-    'getRuntimeVersion',
-    'getStorage',
-    'getStorageHash',
-    'getStorageSize',
-    'queryStorage',
-    'queryStorageAt',
-    'subscribeRuntimeVersion',
-    'subscribeStorage',
-    'traceBlock',
-    'trieMigrationStatus',
-  ],
-  syncstate : [
-    'genSyncSpec',
-  ],
-  system : [
-    'accountNextIndex',
-    'addLogFilter',
-    'addReservedPeer',
-    'chain',
-    'chainType',
-    'dryRun',
-    'health',
-    'localListenAddresses',
-    'localPeerId',
-    'name',
-    'networkState',
-    'nodeRoles',
-    'peers',
-    'properties',
-    'removeReservedPeer',
-    'reservedPeers',
-    'resetLogFilter',
-    'syncState',
-    'version',
-  ],
-  web3 : [
-    'clientVersion',
-    'sha3',
-  ],
-} as const;
 
 declare module '@polkadot/rpc-core/types/jsonrpc' {
   interface PolkadotRpcInterface {
@@ -794,19 +620,787 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
   } // RpcInterface
 } // declare module
 
-/*
-// the class RpcBaseClass is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.  
+// -----------------
+// Added types
+// -----------------
 
-// type transoms RpcInterface to be implemented by RpcBaseClass
-type RemoveAugmentAroundFunction<Namespace> = {
-  [Func in keyof Namespace ]: Namespace[Func] extends AugmentedRpc<infer U> ? U : never
-};
-type RemoveAugment<T> = {
-  [Namespace in keyof T]: RemoveAugmentAroundFunction<T[Namespace]>;
-};
-// Note: this class in not inside a module augmentation because class implantation cannot be inside `declare module '...' { block }`
-import { RpcInterface} from '@polkadot/rpc-core/types/jsonrpc';
-export class RpcBaseClass implements RemoveAugment<RpcInterface> {
+/**
+ * This interface is used to generate the rpc methods that is compatible with web3.js types.
+ * @remarks 
+ * This interface in not inside a module augmentation because it causes confusion to TypeScript compiler, when used inside another project, tricking it to see every property as `any`.
+ */
+export interface PolkadotSimpleRpcInterface {
+  author: {
+    /**
+     * Returns true if the keystore has private keys for the given public key and key type.
+     **/
+    hasKey: (publicKey: Bytes | string | Uint8Array, keyType: Text | string) => Promise<bool>;
+    /**
+     * Returns true if the keystore has private keys for the given session public keys.
+     **/
+    hasSessionKeys: (sessionKeys: Bytes | string | Uint8Array) => Promise<bool>;
+    /**
+     * Insert a key into the keystore.
+     **/
+    insertKey: (keyType: Text | string, suri: Text | string, publicKey: Bytes | string | Uint8Array) => Promise<Bytes>;
+    /**
+     * Returns all pending extrinsics, potentially grouped by sender
+     **/
+    pendingExtrinsics: () => Promise<Vec<Extrinsic>>;
+    /**
+     * Remove given extrinsic from the pool and temporarily ban it to prevent reimporting
+     **/
+    removeExtrinsic: (bytesOrHash: Vec<ExtrinsicOrHash> | (ExtrinsicOrHash | { Hash: any } | { Extrinsic: any } | string | Uint8Array)[]) => Promise<Vec<Hash>>;
+    /**
+     * Generate new session keys and returns the corresponding public keys
+     **/
+    rotateKeys: () => Promise<Bytes>;
+    /**
+     * Submit and subscribe to watch an extrinsic until unsubscribed
+     **/
+    submitAndWatchExtrinsic: (extrinsic: Extrinsic | IExtrinsic | string | Uint8Array) => Promise<ExtrinsicStatus>;
+    /**
+     * Submit a fully formatted extrinsic for block inclusion
+     **/
+    submitExtrinsic: (extrinsic: Extrinsic | IExtrinsic | string | Uint8Array) => Promise<Hash>;
+  };
+  babe: {
+    /**
+     * Returns data about which slots (primary or secondary) can be claimed in the current epoch with the keys in the keystore
+     **/
+    epochAuthorship: () => Promise<HashMap<AuthorityId, EpochAuthorship>>;
+  };
+  beefy: {
+    /**
+     * Returns hash of the latest BEEFY finalized block as seen by this client.
+     **/
+    getFinalizedHead: () => Promise<H256>;
+    /**
+     * Returns the block most recently finalized by BEEFY, alongside its justification.
+     **/
+    subscribeJustifications: () => Promise<BeefyVersionedFinalityProof>;
+  };
+  chain: {
+    /**
+     * Get header and body of a relay chain block
+     **/
+    getBlock: (hash?: BlockHash | string | Uint8Array) => Promise<SignedBlock>;
+    /**
+     * Get the block hash for a specific block
+     **/
+    getBlockHash: (blockNumber?: BlockNumber | AnyNumber | Uint8Array) => Promise<BlockHash>;
+    /**
+     * Get hash of the last finalized block in the canon chain
+     **/
+    getFinalizedHead: () => Promise<BlockHash>;
+    /**
+     * Retrieves the header for a specific block
+     **/
+    getHeader: (hash?: BlockHash | string | Uint8Array) => Promise<Header>;
+    /**
+     * Retrieves the newest header via subscription
+     **/
+    subscribeAllHeads: () => Promise<Header>;
+    /**
+     * Retrieves the best finalized header via subscription
+     **/
+    subscribeFinalizedHeads: () => Promise<Header>;
+    /**
+     * Retrieves the best header via subscription
+     **/
+    subscribeNewHeads: () => Promise<Header>;
+  };
+  childstate: {
+    /**
+     * Returns the keys with prefix from a child storage, leave empty to get all the keys
+     **/
+    getKeys: (childKey: PrefixedStorageKey | string | Uint8Array, prefix: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array) => Promise<Vec<StorageKey>>;
+    /**
+     * Returns the keys with prefix from a child storage with pagination support
+     **/
+    getKeysPaged: (childKey: PrefixedStorageKey | string | Uint8Array, prefix: StorageKey | string | Uint8Array | any, count: u32 | AnyNumber | Uint8Array, startKey?: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array) => Promise<Vec<StorageKey>>;
+    /**
+     * Returns a child storage entry at a specific block state
+     **/
+    getStorage: (childKey: PrefixedStorageKey | string | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array) => Promise<Option<StorageData>>;
+    /**
+     * Returns child storage entries for multiple keys at a specific block state
+     **/
+    getStorageEntries: (childKey: PrefixedStorageKey | string | Uint8Array, keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: Hash | string | Uint8Array) => Promise<Vec<Option<StorageData>>>;
+    /**
+     * Returns the hash of a child storage entry at a block state
+     **/
+    getStorageHash: (childKey: PrefixedStorageKey | string | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array) => Promise<Option<Hash>>;
+    /**
+     * Returns the size of a child storage entry at a block state
+     **/
+    getStorageSize: (childKey: PrefixedStorageKey | string | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: Hash | string | Uint8Array) => Promise<Option<u64>>;
+  };
+  contracts: {
+    /**
+     * @deprecated Use the runtime interface `api.call.contractsApi.call` instead
+     * Executes a call to a contract
+     **/
+    call: (callRequest: ContractCallRequest | { origin?: any; dest?: any; value?: any; gasLimit?: any; storageDepositLimit?: any; inputData?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<ContractExecResult>;
+    /**
+     * @deprecated Use the runtime interface `api.call.contractsApi.getStorage` instead
+     * Returns the value under a specified storage key in a contract
+     **/
+    getStorage: (address: AccountId | string | Uint8Array, key: H256 | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<Option<Bytes>>;
+    /**
+     * @deprecated Use the runtime interface `api.call.contractsApi.instantiate` instead
+     * Instantiate a new contract
+     **/
+    instantiate: (request: InstantiateRequestV1 | { origin?: any; value?: any; gasLimit?: any; code?: any; data?: any; salt?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<ContractInstantiateResult>;
+    /**
+     * @deprecated Not available in newer versions of the contracts interfaces
+     * Returns the projected time a given contract will be able to sustain paying its rent
+     **/
+    rentProjection: (address: AccountId | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<Option<BlockNumber>>;
+    /**
+     * @deprecated Use the runtime interface `api.call.contractsApi.uploadCode` instead
+     * Upload new code without instantiating a contract from it
+     **/
+    uploadCode: (uploadRequest: CodeUploadRequest | { origin?: any; code?: any; storageDepositLimit?: any } | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<CodeUploadResult>;
+  };
+  dev: {
+    /**
+     * Reexecute the specified `block_hash` and gather statistics while doing so
+     **/
+    getBlockStats: (at: Hash | string | Uint8Array) => Promise<Option<BlockStats>>;
+  };
+  engine: {
+    /**
+     * Instructs the manual-seal authorship task to create a new block
+     **/
+    createBlock: (createEmpty: bool | boolean | Uint8Array, finalize: bool | boolean | Uint8Array, parentHash?: BlockHash | string | Uint8Array) => Promise<CreatedBlock>;
+    /**
+     * Instructs the manual-seal authorship task to finalize a block
+     **/
+    finalizeBlock: (hash: BlockHash | string | Uint8Array, justification?: Justification) => Promise<bool>;
+  };
+  eth: {
+    /**
+     * Returns accounts list.
+     **/
+    accounts: () => Promise<Vec<H160>>;
+    /**
+     * Returns the blockNumber
+     **/
+    blockNumber: () => Promise<U256>;
+    /**
+     * Call contract, returning the output data.
+     **/
+    call: (request: EthCallRequest | { from?: any; to?: any; gasPrice?: any; gas?: any; value?: any; data?: any; nonce?: any } | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array) => Promise<Bytes>;
+    /**
+     * Returns the chain ID used for transaction signing at the current best block. None is returned if not available.
+     **/
+    chainId: () => Promise<U64>;
+    /**
+     * Returns block author.
+     **/
+    coinbase: () => Promise<H160>;
+    /**
+     * Estimate gas needed for execution of given contract.
+     **/
+    estimateGas: (request: EthCallRequest | { from?: any; to?: any; gasPrice?: any; gas?: any; value?: any; data?: any; nonce?: any } | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array) => Promise<U256>;
+    /**
+     * Returns fee history for given block count & reward percentiles
+     **/
+    feeHistory: (blockCount: U256 | AnyNumber | Uint8Array, newestBlock: BlockNumber | AnyNumber | Uint8Array, rewardPercentiles: Option<Vec<f64>> | null | Uint8Array | Vec<f64> | (f64)[]) => Promise<EthFeeHistory>;
+    /**
+     * Returns current gas price.
+     **/
+    gasPrice: () => Promise<U256>;
+    /**
+     * Returns balance of the given account.
+     **/
+    getBalance: (address: H160 | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array) => Promise<U256>;
+    /**
+     * Returns block with given hash.
+     **/
+    getBlockByHash: (hash: H256 | string | Uint8Array, full: bool | boolean | Uint8Array) => Promise<Option<EthRichBlock>>;
+    /**
+     * Returns block with given number.
+     **/
+    getBlockByNumber: (block: BlockNumber | AnyNumber | Uint8Array, full: bool | boolean | Uint8Array) => Promise<Option<EthRichBlock>>;
+    /**
+     * Returns the number of transactions in a block with given hash.
+     **/
+    getBlockTransactionCountByHash: (hash: H256 | string | Uint8Array) => Promise<U256>;
+    /**
+     * Returns the number of transactions in a block with given block number.
+     **/
+    getBlockTransactionCountByNumber: (block: BlockNumber | AnyNumber | Uint8Array) => Promise<U256>;
+    /**
+     * Returns the code at given address at given time (block number).
+     **/
+    getCode: (address: H160 | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array) => Promise<Bytes>;
+    /**
+     * Returns filter changes since last poll.
+     **/
+    getFilterChanges: (index: U256 | AnyNumber | Uint8Array) => Promise<EthFilterChanges>;
+    /**
+     * Returns all logs matching given filter (in a range 'from' - 'to').
+     **/
+    getFilterLogs: (index: U256 | AnyNumber | Uint8Array) => Promise<Vec<EthLog>>;
+    /**
+     * Returns logs matching given filter object.
+     **/
+    getLogs: (filter: EthFilter | { fromBlock?: any; toBlock?: any; blockHash?: any; address?: any; topics?: any } | string | Uint8Array) => Promise<Vec<EthLog>>;
+    /**
+     * Returns proof for account and storage.
+     **/
+    getProof: (address: H160 | string | Uint8Array, storageKeys: Vec<H256> | (H256 | string | Uint8Array)[], number: BlockNumber | AnyNumber | Uint8Array) => Promise<EthAccount>;
+    /**
+     * Returns content of the storage at given address.
+     **/
+    getStorageAt: (address: H160 | string | Uint8Array, index: U256 | AnyNumber | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array) => Promise<H256>;
+    /**
+     * Returns transaction at given block hash and index.
+     **/
+    getTransactionByBlockHashAndIndex: (hash: H256 | string | Uint8Array, index: U256 | AnyNumber | Uint8Array) => Promise<EthTransaction>;
+    /**
+     * Returns transaction by given block number and index.
+     **/
+    getTransactionByBlockNumberAndIndex: (number: BlockNumber | AnyNumber | Uint8Array, index: U256 | AnyNumber | Uint8Array) => Promise<EthTransaction>;
+    /**
+     * Get transaction by its hash.
+     **/
+    getTransactionByHash: (hash: H256 | string | Uint8Array) => Promise<EthTransaction>;
+    /**
+     * Returns the number of transactions sent from given address at given time (block number).
+     **/
+    getTransactionCount: (address: H160 | string | Uint8Array, number?: BlockNumber | AnyNumber | Uint8Array) => Promise<U256>;
+    /**
+     * Returns transaction receipt by transaction hash.
+     **/
+    getTransactionReceipt: (hash: H256 | string | Uint8Array) => Promise<EthReceipt>;
+    /**
+     * Returns an uncles at given block and index.
+     **/
+    getUncleByBlockHashAndIndex: (hash: H256 | string | Uint8Array, index: U256 | AnyNumber | Uint8Array) => Promise<EthRichBlock>;
+    /**
+     * Returns an uncles at given block and index.
+     **/
+    getUncleByBlockNumberAndIndex: (number: BlockNumber | AnyNumber | Uint8Array, index: U256 | AnyNumber | Uint8Array) => Promise<EthRichBlock>;
+    /**
+     * Returns the number of uncles in a block with given hash.
+     **/
+    getUncleCountByBlockHash: (hash: H256 | string | Uint8Array) => Promise<U256>;
+    /**
+     * Returns the number of uncles in a block with given block number.
+     **/
+    getUncleCountByBlockNumber: (number: BlockNumber | AnyNumber | Uint8Array) => Promise<U256>;
+    /**
+     * Returns the hash of the current block, the seedHash, and the boundary condition to be met.
+     **/
+    getWork: () => Promise<EthWork>;
+    /**
+     * Returns the number of hashes per second that the node is mining with.
+     **/
+    hashrate: () => Promise<U256>;
+    /**
+     * Returns max priority fee per gas
+     **/
+    maxPriorityFeePerGas: () => Promise<U256>;
+    /**
+     * Returns true if client is actively mining new blocks.
+     **/
+    mining: () => Promise<bool>;
+    /**
+     * Returns id of new block filter.
+     **/
+    newBlockFilter: () => Promise<U256>;
+    /**
+     * Returns id of new filter.
+     **/
+    newFilter: (filter: EthFilter | { fromBlock?: any; toBlock?: any; blockHash?: any; address?: any; topics?: any } | string | Uint8Array) => Promise<U256>;
+    /**
+     * Returns id of new block filter.
+     **/
+    newPendingTransactionFilter: () => Promise<U256>;
+    /**
+     * Returns protocol version encoded as a string (quotes are necessary).
+     **/
+    protocolVersion: () => Promise<u64>;
+    /**
+     * Sends signed transaction, returning its hash.
+     **/
+    sendRawTransaction: (bytes: Bytes | string | Uint8Array) => Promise<H256>;
+    /**
+     * Sends transaction; will block waiting for signer to return the transaction hash
+     **/
+    sendTransaction: (tx: EthTransactionRequest | { from?: any; to?: any; gasPrice?: any; gas?: any; value?: any; data?: any; nonce?: any } | string | Uint8Array) => Promise<H256>;
+    /**
+     * Used for submitting mining hashrate.
+     **/
+    submitHashrate: (index: U256 | AnyNumber | Uint8Array, hash: H256 | string | Uint8Array) => Promise<bool>;
+    /**
+     * Used for submitting a proof-of-work solution.
+     **/
+    submitWork: (nonce: H64 | string | Uint8Array, headerHash: H256 | string | Uint8Array, mixDigest: H256 | string | Uint8Array) => Promise<bool>;
+    /**
+     * Subscribe to Eth subscription.
+     **/
+    subscribe: (kind: EthSubKind | 'newHeads' | 'logs' | 'newPendingTransactions' | 'syncing' | number | Uint8Array, params?: EthSubParams | { None: any } | { Logs: any } | string | Uint8Array) => Promise<Null>;
+    /**
+     * Returns an object with data about the sync status or false.
+     **/
+    syncing: () => Promise<EthSyncStatus>;
+    /**
+     * Uninstalls filter.
+     **/
+    uninstallFilter: (index: U256 | AnyNumber | Uint8Array) => Promise<bool>;
+  };
+  grandpa: {
+    /**
+     * Prove finality for the given block number, returning the Justification for the last block in the set.
+     **/
+    proveFinality: (blockNumber: BlockNumber | AnyNumber | Uint8Array) => Promise<Option<EncodedFinalityProofs>>;
+    /**
+     * Returns the state of the current best round state as well as the ongoing background rounds
+     **/
+    roundState: () => Promise<ReportedRoundStates>;
+    /**
+     * Subscribes to grandpa justifications
+     **/
+    subscribeJustifications: () => Promise<JustificationNotification>;
+  };
+  mmr: {
+    /**
+     * Generate MMR proof for the given block numbers.
+     **/
+    generateProof: (blockNumbers: Vec<u64> | (u64 | AnyNumber | Uint8Array)[], bestKnownBlockNumber?: u64 | AnyNumber | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<MmrLeafBatchProof>;
+    /**
+     * Get the MMR root hash for the current best block.
+     **/
+    root: (at?: BlockHash | string | Uint8Array) => Promise<MmrHash>;
+    /**
+     * Verify an MMR proof
+     **/
+    verifyProof: (proof: MmrLeafBatchProof | { blockHash?: any; leaves?: any; proof?: any } | string | Uint8Array) => Promise<bool>;
+    /**
+     * Verify an MMR proof statelessly given an mmr_root
+     **/
+    verifyProofStateless: (root: MmrHash | string | Uint8Array, proof: MmrLeafBatchProof | { blockHash?: any; leaves?: any; proof?: any } | string | Uint8Array) => Promise<bool>;
+  };
+  net: {
+    /**
+     * Returns true if client is actively listening for network connections. Otherwise false.
+     **/
+    listening: () => Promise<bool>;
+    /**
+     * Returns number of peers connected to node.
+     **/
+    peerCount: () => Promise<Text>;
+    /**
+     * Returns protocol version.
+     **/
+    version: () => Promise<Text>;
+  };
+  offchain: {
+    /**
+     * Get offchain local storage under given key and prefix
+     **/
+    localStorageGet: (kind: StorageKind | 'PERSISTENT' | 'LOCAL' | number | Uint8Array, key: Bytes | string | Uint8Array) => Promise<Option<Bytes>>;
+    /**
+     * Set offchain local storage under given key and prefix
+     **/
+    localStorageSet: (kind: StorageKind | 'PERSISTENT' | 'LOCAL' | number | Uint8Array, key: Bytes | string | Uint8Array, value: Bytes | string | Uint8Array) => Promise<Null>;
+  };
+  payment: {
+    /**
+     * @deprecated Use `api.call.transactionPaymentApi.queryFeeDetails` instead
+     * Query the detailed fee of a given encoded extrinsic
+     **/
+    queryFeeDetails: (extrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<FeeDetails>;
+    /**
+     * @deprecated Use `api.call.transactionPaymentApi.queryInfo` instead
+     * Retrieves the fee information for an encoded extrinsic
+     **/
+    queryInfo: (extrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<RuntimeDispatchInfoV1>;
+  };
+  rpc: {
+    /**
+     * Retrieves the list of RPC methods that are exposed by the node
+     **/
+    methods: () => Promise<RpcMethods>;
+  };
+  state: {
+    /**
+     * Perform a call to a builtin on the chain
+     **/
+    call: (method: Text | string, data: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<Bytes>;
+    /**
+     * Retrieves the keys with prefix of a specific child storage
+     **/
+    getChildKeys: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<Vec<StorageKey>>;
+    /**
+     * Returns proof of storage for child key entries at a specific block state.
+     **/
+    getChildReadProof: (childStorageKey: PrefixedStorageKey | string | Uint8Array, keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: BlockHash | string | Uint8Array) => Promise<ReadProof>;
+    /**
+     * Retrieves the child storage for a key
+     **/
+    getChildStorage: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<StorageData>;
+    /**
+     * Retrieves the child storage hash
+     **/
+    getChildStorageHash: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<Hash>;
+    /**
+     * Retrieves the child storage size
+     **/
+    getChildStorageSize: (childStorageKey: StorageKey | string | Uint8Array | any, childDefinition: StorageKey | string | Uint8Array | any, childType: u32 | AnyNumber | Uint8Array, key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<u64>;
+    /**
+     * @deprecated Use `api.rpc.state.getKeysPaged` to retrieve keys
+     * Retrieves the keys with a certain prefix
+     **/
+    getKeys: (key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<Vec<StorageKey>>;
+    /**
+     * Returns the keys with prefix with pagination support.
+     **/
+    getKeysPaged: (key: StorageKey | string | Uint8Array | any, count: u32 | AnyNumber | Uint8Array, startKey?: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<Vec<StorageKey>>;
+    /**
+     * Returns the runtime metadata
+     **/
+    getMetadata: (at?: BlockHash | string | Uint8Array) => Promise<Metadata>;
+    /**
+     * @deprecated Use `api.rpc.state.getKeysPaged` to retrieve keys
+     * Returns the keys with prefix, leave empty to get all the keys (deprecated: Use getKeysPaged)
+     **/
+    getPairs: (prefix: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<Vec<KeyValue>>;
+    /**
+     * Returns proof of storage entries at a specific block state
+     **/
+    getReadProof: (keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: BlockHash | string | Uint8Array) => Promise<ReadProof>;
+    /**
+     * Get the runtime version
+     **/
+    getRuntimeVersion: (at?: BlockHash | string | Uint8Array) => Promise<RuntimeVersion>;
+    /**
+     * Retrieves the storage for a key
+     **/
+    getStorage: <T = Codec>(key: StorageKey | string | Uint8Array | any, block?: Hash | Uint8Array | string) => Promise<T>;
+    /**
+     * Retrieves the storage hash
+     **/
+    getStorageHash: (key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<Hash>;
+    /**
+     * Retrieves the storage size
+     **/
+    getStorageSize: (key: StorageKey | string | Uint8Array | any, at?: BlockHash | string | Uint8Array) => Promise<u64>;
+    /**
+     * Query historical storage entries (by key) starting from a start block
+     **/
+    queryStorage: <T = Codec[]>(keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], fromBlock?: Hash | Uint8Array | string, toBlock?: Hash | Uint8Array | string) => Promise<[Hash, T][]>;
+    /**
+     * Query storage entries (by key) starting at block hash given as the second parameter
+     **/
+    queryStorageAt: <T = Codec[]>(keys: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[], at?: Hash | Uint8Array | string) => Promise<T>;
+    /**
+     * Retrieves the runtime version via subscription
+     **/
+    subscribeRuntimeVersion: () => Promise<RuntimeVersion>;
+    /**
+     * Subscribes to storage changes for the provided keys
+     **/
+    subscribeStorage: <T = Codec[]>(keys?: Vec<StorageKey> | (StorageKey | string | Uint8Array | any)[]) => Promise<T>;
+    /**
+     * Provides a way to trace the re-execution of a single block
+     **/
+    traceBlock: (block: Hash | string | Uint8Array, targets: Option<Text> | null | Uint8Array | Text | string, storageKeys: Option<Text> | null | Uint8Array | Text | string, methods: Option<Text> | null | Uint8Array | Text | string) => Promise<TraceBlockResponse>;
+    /**
+     * Check current migration state
+     **/
+    trieMigrationStatus: (at?: BlockHash | string | Uint8Array) => Promise<MigrationStatusResult>;
+  };
+  syncstate: {
+    /**
+     * Returns the json-serialized chainspec running the node, with a sync state.
+     **/
+    genSyncSpec: (raw: bool | boolean | Uint8Array) => Promise<Json>;
+  };
+  system: {
+    /**
+     * Retrieves the next accountIndex as available on the node
+     **/
+    accountNextIndex: (accountId: AccountId | string | Uint8Array) => Promise<Index>;
+    /**
+     * Adds the supplied directives to the current log filter
+     **/
+    addLogFilter: (directives: Text | string) => Promise<Null>;
+    /**
+     * Adds a reserved peer
+     **/
+    addReservedPeer: (peer: Text | string) => Promise<Text>;
+    /**
+     * Retrieves the chain
+     **/
+    chain: () => Promise<Text>;
+    /**
+     * Retrieves the chain type
+     **/
+    chainType: () => Promise<ChainType>;
+    /**
+     * Dry run an extrinsic at a given block
+     **/
+    dryRun: (extrinsic: Bytes | string | Uint8Array, at?: BlockHash | string | Uint8Array) => Promise<ApplyExtrinsicResult>;
+    /**
+     * Return health status of the node
+     **/
+    health: () => Promise<Health>;
+    /**
+     * The addresses include a trailing /p2p/ with the local PeerId, and are thus suitable to be passed to addReservedPeer or as a bootnode address for example
+     **/
+    localListenAddresses: () => Promise<Vec<Text>>;
+    /**
+     * Returns the base58-encoded PeerId of the node
+     **/
+    localPeerId: () => Promise<Text>;
+    /**
+     * Retrieves the node name
+     **/
+    name: () => Promise<Text>;
+    /**
+     * Returns current state of the network
+     **/
+    networkState: () => Promise<NetworkState>;
+    /**
+     * Returns the roles the node is running as
+     **/
+    nodeRoles: () => Promise<Vec<NodeRole>>;
+    /**
+     * Returns the currently connected peers
+     **/
+    peers: () => Promise<Vec<PeerInfo>>;
+    /**
+     * Get a custom set of properties as a JSON object, defined in the chain spec
+     **/
+    properties: () => Promise<ChainProperties>;
+    /**
+     * Remove a reserved peer
+     **/
+    removeReservedPeer: (peerId: Text | string) => Promise<Text>;
+    /**
+     * Returns the list of reserved peers
+     **/
+    reservedPeers: () => Promise<Vec<Text>>;
+    /**
+     * Resets the log filter to Substrate defaults
+     **/
+    resetLogFilter: () => Promise<Null>;
+    /**
+     * Returns the state of the syncing of the node
+     **/
+    syncState: () => Promise<SyncState>;
+    /**
+     * Retrieves the version of the node
+     **/
+    version: () => Promise<Text>;
+  };
+  web3: {
+    /**
+     * Returns current client version.
+     **/
+    clientVersion: () => Promise<Text>;
+    /**
+     * Returns sha3 of the given data
+     **/
+    sha3: (data: Bytes | string | Uint8Array) => Promise<H256>;
+  };
+} // SimpleRpcInterface
+
+/**
+ * @description
+ * This list allow to iterate over all rpc methods, because interfaces are not iterable. Also, note the use of `as const` to make the list as a fixed type.
+ * @remarks
+ * This const in not inside a module augmentation because the compiler does not allow.
+ * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, when used inside another project, tricking it to see every property as `any`.
+ */
+export const PolkadotRpcList = {
+  author : [
+    'hasKey',
+    'hasSessionKeys',
+    'insertKey',
+    'pendingExtrinsics',
+    'removeExtrinsic',
+    'rotateKeys',
+    'submitAndWatchExtrinsic',
+    'submitExtrinsic',
+  ],
+  babe : [
+    'epochAuthorship',
+  ],
+  beefy : [
+    'getFinalizedHead',
+    'subscribeJustifications',
+  ],
+  chain : [
+    'getBlock',
+    'getBlockHash',
+    'getFinalizedHead',
+    'getHeader',
+    'subscribeAllHeads',
+    'subscribeFinalizedHeads',
+    'subscribeNewHeads',
+  ],
+  childstate : [
+    'getKeys',
+    'getKeysPaged',
+    'getStorage',
+    'getStorageEntries',
+    'getStorageHash',
+    'getStorageSize',
+  ],
+  contracts : [
+    'call',
+    'getStorage',
+    'instantiate',
+    'rentProjection',
+    'uploadCode',
+  ],
+  dev : [
+    'getBlockStats',
+  ],
+  engine : [
+    'createBlock',
+    'finalizeBlock',
+  ],
+  eth : [
+    'accounts',
+    'blockNumber',
+    'call',
+    'chainId',
+    'coinbase',
+    'estimateGas',
+    'feeHistory',
+    'gasPrice',
+    'getBalance',
+    'getBlockByHash',
+    'getBlockByNumber',
+    'getBlockTransactionCountByHash',
+    'getBlockTransactionCountByNumber',
+    'getCode',
+    'getFilterChanges',
+    'getFilterLogs',
+    'getLogs',
+    'getProof',
+    'getStorageAt',
+    'getTransactionByBlockHashAndIndex',
+    'getTransactionByBlockNumberAndIndex',
+    'getTransactionByHash',
+    'getTransactionCount',
+    'getTransactionReceipt',
+    'getUncleByBlockHashAndIndex',
+    'getUncleByBlockNumberAndIndex',
+    'getUncleCountByBlockHash',
+    'getUncleCountByBlockNumber',
+    'getWork',
+    'hashrate',
+    'maxPriorityFeePerGas',
+    'mining',
+    'newBlockFilter',
+    'newFilter',
+    'newPendingTransactionFilter',
+    'protocolVersion',
+    'sendRawTransaction',
+    'sendTransaction',
+    'submitHashrate',
+    'submitWork',
+    'subscribe',
+    'syncing',
+    'uninstallFilter',
+  ],
+  grandpa : [
+    'proveFinality',
+    'roundState',
+    'subscribeJustifications',
+  ],
+  mmr : [
+    'generateProof',
+    'root',
+    'verifyProof',
+    'verifyProofStateless',
+  ],
+  net : [
+    'listening',
+    'peerCount',
+    'version',
+  ],
+  offchain : [
+    'localStorageGet',
+    'localStorageSet',
+  ],
+  payment : [
+    'queryFeeDetails',
+    'queryInfo',
+  ],
+  rpc : [
+    'methods',
+  ],
+  state : [
+    'call',
+    'getChildKeys',
+    'getChildReadProof',
+    'getChildStorage',
+    'getChildStorageHash',
+    'getChildStorageSize',
+    'getKeys',
+    'getKeysPaged',
+    'getMetadata',
+    'getPairs',
+    'getReadProof',
+    'getRuntimeVersion',
+    'getStorage',
+    'getStorageHash',
+    'getStorageSize',
+    'queryStorage',
+    'queryStorageAt',
+    'subscribeRuntimeVersion',
+    'subscribeStorage',
+    'traceBlock',
+    'trieMigrationStatus',
+  ],
+  syncstate : [
+    'genSyncSpec',
+  ],
+  system : [
+    'accountNextIndex',
+    'addLogFilter',
+    'addReservedPeer',
+    'chain',
+    'chainType',
+    'dryRun',
+    'health',
+    'localListenAddresses',
+    'localPeerId',
+    'name',
+    'networkState',
+    'nodeRoles',
+    'peers',
+    'properties',
+    'removeReservedPeer',
+    'reservedPeers',
+    'resetLogFilter',
+    'syncState',
+    'version',
+  ],
+  web3 : [
+    'clientVersion',
+    'sha3',
+  ],
+} as const;
+
+/**
+ * This class is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.
+ * @remarks
+ * This class in not inside a module augmentation because the compiler does not allow.
+ * Additionally, this module augmentation causes confusion to TypeScript Intellisense, when used inside another project.
+ */ 
+/*
+import { SimpleRpcInterface} from '@polkadot/rpc-core/types/jsonrpc';
+export class RpcBaseClass implements SimpleRpcInterface {
   public get author() {
     return {
       hasKey: (publicKey: Bytes | string | Uint8Array, keyType: Text | string): Observable<bool> => {
@@ -1282,5 +1876,5 @@ export class RpcBaseClass implements RemoveAugment<RpcInterface> {
       },
     }
   };
-} // RpcConst
+} // RpcBaseClass
 */

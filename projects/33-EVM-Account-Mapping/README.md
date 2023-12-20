@@ -19,11 +19,7 @@ The pallet is very lightweight without any additional dependencies. Unlike Front
 
 ### Demo
 
-TODO
-
-### Architecture
-
-TODO
+[OneDrive](https://1drv.ms/v/s!AipA6eXBza6Khp1NDiOCu3qlhyXV8g?e=U0m00r)
 
 ## 黑客松期间计划完成的事项
 
