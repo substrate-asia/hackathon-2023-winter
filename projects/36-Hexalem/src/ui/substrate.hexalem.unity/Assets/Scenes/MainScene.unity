@@ -267,13 +267,15 @@ MonoBehaviour:
   _homeTile: {fileID: 7535761464842861189, guid: 7ac4d9f2c3355e74e9b1dd336046365f, type: 3}
   _rareHomeTile: {fileID: 7535761464842861189, guid: c8b31314346709e4db6827a310babc3b, type: 3}
   _epicHomeTile: {fileID: 7535761464842861189, guid: b50980af26190674badf8a06633353aa, type: 3}
+  _legendaryHomeTile: {fileID: 7535761464842861189, guid: fc30de8843a71574e89a29674abdc447, type: 3}
   _grassTile: {fileID: 3604290564195660183, guid: 2aa1827cca7eefd4fab04654ce228a9b, type: 3}
   _waterTile: {fileID: 5716525105324350660, guid: 6eee664e07d115345ba3afbf14b24e53, type: 3}
   _mountainTile: {fileID: 3054226215825228916, guid: 4ca22e86fc765dc41b8f5332f9a93299, type: 3}
   _treesTile: {fileID: 3202582487521064602, guid: d50c9ed70326c9a47939cf1539623b9e, type: 3}
   _desertTile: {fileID: 8706329026578284017, guid: fc9eb7854517e1d449a63b950712b60e, type: 3}
   _caveTile: {fileID: 2758082140818558022, guid: 03c4ad2224bbae44e835b1be8327c163, type: 3}
-  _delta: {fileID: 2100000, guid: cf96460760ec5eb468136871abfc1df3, type: 2}
+  _grassDeltaTile: {fileID: 3871148027407231258, guid: 59d673fc6e5366d42ae9cefe3614f1f3, type: 3}
+  _treesDeltaTile: {fileID: 6114412543288471618, guid: 6f7213687ddc4a341b31cadf8898483f, type: 3}
 --- !u!1 &185871275
 GameObject:
   m_ObjectHideFlags: 0

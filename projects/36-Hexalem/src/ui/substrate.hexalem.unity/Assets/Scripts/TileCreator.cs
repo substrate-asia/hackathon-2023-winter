@@ -1,5 +1,6 @@
 using Assets.Scripts;
 using Substrate.Hexalem.Engine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -21,6 +22,9 @@ namespace Assets.Scripts
         private GameObject _epicHomeTile;
 
         [SerializeField]
+        private GameObject _legendaryHomeTile;
+
+        [SerializeField]
         private GameObject _grassTile;
 
         [SerializeField]
@@ -39,7 +43,10 @@ namespace Assets.Scripts
         private GameObject _caveTile;
 
         [SerializeField]
-        private Material _delta;
+        private GameObject _grassDeltaTile;
+
+        [SerializeField]
+        private GameObject _treesDeltaTile;
 
         // Start is called before the first frame update
         void Start()
@@ -56,60 +63,104 @@ namespace Assets.Scripts
         public GameObject CreateTile(TileType tileType, byte tileRarity, TilePattern tilePattern, Transform gridParent)
         {
             GameObject tile;
-            switch (tileType)
+
+            switch (tilePattern)
             {
-                case TileType.Empty:
-                    tile = Instantiate(_emptyTile, gridParent);
-                    break;
+                case TilePattern.Normal:
 
-                case TileType.Home:
-                    if (tileRarity == 1)
+                    switch (tileType)
                     {
-                        tile = Instantiate(_rareHomeTile, gridParent);
+                        case TileType.Empty:
+                            tile = Instantiate(_emptyTile, gridParent);
+                            break;
+
+                        case TileType.Home:
+                            if (tileRarity == 1)
+                            {
+                                tile = Instantiate(_rareHomeTile, gridParent);
+                            }
+                            else if (tileRarity == 2)
+                            {
+                                tile = Instantiate(_epicHomeTile, gridParent);
+                            }
+                            else if(tileRarity == 3)
+                            {
+                                tile = Instantiate(_legendaryHomeTile, gridParent);
+                            }
+                            else
+                            {
+                                tile = Instantiate(_homeTile, gridParent);
+                            }
+                            break;
+
+                        case TileType.Grass:
+                            tile = Instantiate(_grassTile, gridParent);
+                            break;
+
+                        case TileType.Water:
+                            tile = Instantiate(_waterTile, gridParent);
+                            break;
+
+                        case TileType.Mountain:
+                            tile = Instantiate(_mountainTile, gridParent);
+                            break;
+
+                        case TileType.Tree:
+                            tile = Instantiate(_treesTile, gridParent);
+                            break;
+
+                        case TileType.Desert:
+                            tile = Instantiate(_desertTile, gridParent);
+                            break;
+
+                        case TileType.Cave:
+                            tile = Instantiate(_caveTile, gridParent);
+                            break;
+
+                        default:
+                            tile = Instantiate(_emptyTile, gridParent);
+                            break;
                     }
-                    else if (tileRarity == 2)
+                    break;
+
+                case TilePattern.Delta:
+                    switch (tileType)
                     {
-                        tile = Instantiate(_epicHomeTile, gridParent);
+                        case TileType.Grass:
+                            tile = Instantiate(_grassDeltaTile, gridParent);
+                            break;
+
+                        case TileType.Water:
+                            tile = Instantiate(_waterTile, gridParent);
+                            break;
+
+                        case TileType.Mountain:
+                            tile = Instantiate(_mountainTile, gridParent);
+                            break;
+
+                        case TileType.Tree:
+                            tile = Instantiate(_treesDeltaTile, gridParent);
+                            break;
+
+                        case TileType.Desert:
+                            tile = Instantiate(_desertTile, gridParent);
+                            break;
+
+                        case TileType.Cave:
+                            tile = Instantiate(_caveTile, gridParent);
+                            break;
+
+                        default:
+                            Debug.LogError($"Major issue {tilePattern}, {tileType}");
+                            tile = Instantiate(_emptyTile, gridParent);
+                            break;
+
                     }
-                    else
-                    {
-                        tile = Instantiate(_homeTile, gridParent);
-                    }
-
                     break;
-
-                case TileType.Grass:
-                    tile = Instantiate(_grassTile, gridParent);
-                    break;
-
-                case TileType.Water:
-                    tile = Instantiate(_waterTile, gridParent);
-                    break;
-
-                case TileType.Mountain:
-                    tile = Instantiate(_mountainTile, gridParent);
-                    break;
-
-                case TileType.Tree:
-                    tile = Instantiate(_treesTile, gridParent);
-                    break;
-
-                case TileType.Desert:
-                    tile = Instantiate(_desertTile, gridParent);
-                    break;
-
-                case TileType.Cave:
-                    tile = Instantiate(_caveTile, gridParent);
-                    break;
-
                 default:
+                    Debug.LogError($"Major issue {tilePattern}, {tileType}");
                     tile = Instantiate(_emptyTile, gridParent);
                     break;
-            }
-
-            if (tilePattern == TilePattern.Delta)
-            {
-                tile.GetComponent<MeshRenderer>().material = _delta;
             }
 
             return tile;
