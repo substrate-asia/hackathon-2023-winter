@@ -5,8 +5,11 @@ Date: 7th November, Kick-Off Meeting
 ## Project Informations
 
 ### Description
-- Project Name: Hexalem
-- Initial Kickof: Start of November '23
+- **Project Name:** Hexalem  
+- **Initial Kickof:** Start of November '23
+- **Project Type:** Multiplayer Mobile Blockchain Game
+- **Genere:** Strategy / Godgame
+- (optional)**Buisness Model**: Ideation
 
 ### Logo
 
