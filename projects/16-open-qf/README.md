@@ -26,9 +26,9 @@ project received in a donation round, the more fund will be matched from a publi
 
 The most important innovation OpenQF will bring is a donation matching augmentation algorithm based on on-chain
 activities and off-chain real world information bindings. History on chain activities and information will be indexed
-and used to calculated as users' contribution to the polkadot ecosystem. Off-chain information will be used to prove
-donators are real world person. The final goal will be a project receive more fund from more real world person who have
-more contributions to the polkadot ecosystem will receive more fund from a public fund pool.
+for calculating an address' contribution to the polkadot ecosystem. Off-chain information will be used to prove
+donators are real world person. The final goal will be if a project receive more donations from more real world person
+who have more contributions to the polkadot ecosystem, this project receive more fund from a public fund pool.
 
 ### Demo
 
@@ -44,6 +44,7 @@ https://qf-demo.opensquare.io
     - Role scan. It scans blocks data and extract history councilor and validator data.
     - Governance scan. It scans blocks data and extract active OpenGov voter data.
     - Treasury scan. It scans blocks data and extract treasury related data.
+    - Contributor scan. It scans balances transfer data and save the community donations.
 - Quadratic funding data processing jobs and data server.
     - It calculates contributors' matching power.
     - Projects' matched fund from public matching pool is calculated.
@@ -75,9 +76,35 @@ Fronted pages:
 
 ## Things accomplished during the hackathon (submitted before preliminary review at 11:59 am on December 22, 2023)
 
-- Scripts to scan polkadot history blocks for extracting pool matching related address business.
-- A server which handles quadratic funding data processing and serves business data.
-- Various fronted pages which support a whole quadratic funding round workflow and show related information.
+- Polkadot chain data scan scripts
+    - Account scan: scan blocks and extract address debut data. We can know the time when an address first appear.
+    - Governance scan: scan blocks and extract OpenGov data. We can know whether an address is an active voter.
+    - Role scan: scan blocks and extract validator and councilor data. We can know whether an address was once a
+      councilor or validator.
+    - Treasury scan: scan blocks and extract treasury related data. We can know whether an address is a tip finder,
+      beneficiary or bounty curator.
+    - Contributor scan: scan blocks and extract community donation info to projects.
+- QF server
+    - A restful server
+        - to serve quadratic funding business related data.
+        - to accept new project application data(disabled in demo environment).
+        - to support github account link to polkadot address.
+    - API instances are maintained to support on-chain data query.
+    - Scripts to populate mock data.
+    - Scripts to calculate contributors' matching power.
+    - Scripts to calculate final matched fund from public pool.
+- Fronted pages
+    - Home page or fund round list page. Check [here](https://qf-demo.opensquare.io/).
+    - Fund round detail page on which we can see round detail and projects.
+      Check [here](https://qf-demo.opensquare.io/rounds/1).
+    - Project detail page on which we can see project detail, contributors, discussions, fund matching info. And we can
+      also do donation on this page, but disabled in demo environment.
+      Check [here](https://qf-demo.opensquare.io/rounds/1/projects/5) for an example.
+    - Profile page on which we can see matching power details of an address, and we can link a github account to an
+      address if a user login in with this address.
+      Check [here](https://qf-demo.opensquare.io/users/12sNU8BXivMj1xQmcd4T39ugCyHjmhir8jkPqfAw5ZDESrx4) for an example.
+    - New project page on which we can submit a new project for review. The submit button is disabled in demo.
+      Check [here](https://qf-demo.opensquare.io/apply).
 
 ## Team information
 
