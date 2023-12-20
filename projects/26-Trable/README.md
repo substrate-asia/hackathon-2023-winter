@@ -43,7 +43,7 @@ Users simply need to select the desired cryptocurrency for payment and complete 
 
   <img src="https://github.com/Web3-Club/Trable/assets/76860915/7e5a55f1-1486-4de6-a28e-7080e046f19d" alt="25461702219436_ pic">
 
-### Basic technical architecture
+### 在黑客马拉松期间完成的代码功能
 
 #### Solidity
 
