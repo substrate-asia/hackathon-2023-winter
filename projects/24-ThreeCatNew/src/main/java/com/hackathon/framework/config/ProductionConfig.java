@@ -28,15 +28,15 @@ public class ProductionConfig {
      * @return
      */
     public static String getPassWord() {
-        return "!hai@#$Xing%^*1)";
+        return "YS.UFJW_Cd97xX_";
     }
 
     /**
-     * 百度云外网地址
+     * 阿里云外网地址
      * @return
      */
     public static String networkAddress() {
-        return "120.48.150.143";
+        return "8.130.43.19";
     }
 
     /**
