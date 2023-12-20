@@ -46,7 +46,7 @@ function TotalRaised({ project }) {
     <div className="mt-5 space-y-1">
       <div className="text14medium text-text-tertiary">Total Raised</div>
       <div className="text16semibold text-text-primary">
-        <LocaleSymbol value={project.raised || 0}/>
+        <LocaleSymbol value={project.raised || 0} />
       </div>
       <div className="text12medium text-text-tertiary">
         from{" "}
@@ -72,7 +72,7 @@ function Footer({ project }) {
   );
 }
 
-function CardBase({ className, project, children }) {
+function CardBase({ className, project, children, hoverable }) {
   return (
     <Card
       className={className}
@@ -80,6 +80,7 @@ function CardBase({ className, project, children }) {
       cover={<IpfsImage cid={project.bannerCid} className="object-cover" />}
       coverPosition="top"
       size="small"
+      hoverable={hoverable}
       head={
         <div className="flex flex-col flex-1">
           <Logo project={project} />
@@ -99,7 +100,7 @@ export function SimpleProjectCard({ project }) {
 
 export default function ProjectCard({ project }) {
   return (
-    <CardBase project={project}>
+    <CardBase hoverable project={project}>
       <TotalRaised project={project} />
     </CardBase>
   );

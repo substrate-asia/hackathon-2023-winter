@@ -24,10 +24,13 @@ export default function Contribution() {
   const { detail } = useServerSideProps();
 
   return (
-    <div className="w-full p-[32px] shadow-shadow-card-default">
+    <div className="bg-fill-bg-primary w-full p-[32px] shadow-shadow-card-default">
       <div className="flex flex-col gap-[20px] items-center">
         <Content>
-          <Info title="Total Raised" value={<LocaleSymbol value={detail.raised || 0}/>} />
+          <Info
+            title="Total Raised"
+            value={<LocaleSymbol value={detail.raised || 0} />}
+          />
           <Info title="Contributors" value={detail.contributorsCount || 0} />
           <Info
             title="Donation Address"

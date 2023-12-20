@@ -57,7 +57,7 @@ export default function MatchingFunds() {
   const percentage = (matched / poll) * 100;
 
   return (
-    <div className="flex flex-col w-full p-[32px] shadow-shadow-card-default gap-[24px]">
+    <div className="flex flex-col w-full p-[32px] shadow-shadow-card-default gap-[24px] bg-fill-bg-primary ">
       <div className="flex items-center justify-between pb-[16px] border-b border-stroke-border-default">
         <span className="text-text-primary text16semibold">Matching Funds</span>
         <SvgSystemReward className="[&_path]:fill-text-tertiary" />
