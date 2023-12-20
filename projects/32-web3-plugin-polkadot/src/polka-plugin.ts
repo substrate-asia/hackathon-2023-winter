@@ -4,22 +4,23 @@ import {
   PolkadotSimpleRpcInterfaceFiltered,
   KusamaSimpleRpcInterfaceFiltered,
   SubstrateSimpleRpcInterfaceFiltered,
-} from './types/filtered-rpc-types';
+} from './types/web3.js-friendly/simple-rpc-interfaces-filtered';
 
 import { PolkadotRpcList } from './interfaces/polkadot/augment-api-rpc';
 import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
 import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
 
 import {
-  KusamaRpcApiFlatFiltered,
-  PolkadotRpcApiFlatFiltered,
-  SubstrateRpcApiFlatFiltered,
-} from './types/filtered-rpc-types';
+  PolkadotRpcInterfaceFlatFiltered,
+  KusamaRpcInterfaceFlatFiltered,
+  SubstrateRpcInterfaceFlatFiltered,
+} from './types/web3.js-friendly/simple-rpc-interfaces-flat-filtered';
+
 import { PolkadotSupportedRpcMethods } from './types/polkadot/supported-rpc-methods';
 import { KusamaSupportedRpcMethods } from './types/kusama/supported-rpc-methods';
 import { SubstrateSupportedRpcMethods } from './types/substrate/supported-rpc-methods';
 
-// The generic types: PolkadotRpcApiFlattened | KusamaRpcApiFlattened | SubstrateRpcApiFlattened,
+// The generic types: PolkadotRpcInterfaceFlatFiltered | KusamaRpcInterfaceFlatFiltered | SubstrateRpcInterfaceFlatFiltered,
 // enables having strongly typed variables returned when calling `this.requestManager.send`.
 // For example:
 // const res = // res will automatically  be of type `Promise<SignedBlock>
@@ -28,7 +29,7 @@ import { SubstrateSupportedRpcMethods } from './types/substrate/supported-rpc-me
 //     params: [],
 //   });
 export class PolkaPlugin extends Web3PluginBase<
-  PolkadotRpcApiFlatFiltered | KusamaRpcApiFlatFiltered | SubstrateRpcApiFlatFiltered
+  PolkadotRpcInterfaceFlatFiltered | KusamaRpcInterfaceFlatFiltered | SubstrateRpcInterfaceFlatFiltered
 > {
   public pluginNamespace = 'polka';
 
@@ -127,8 +128,15 @@ export class PolkaPlugin extends Web3PluginBase<
 
 // Module Augmentation
 declare module 'web3' {
-  interface Web3Context {
+  interface Web3 {
     // This seems a bit hacky. Revisit this in the future and possibly use generics instead.
-    polka: PolkaPlugin;
+    polka: Omit<PolkaPlugin, keyof Web3PluginBase>;
+    // The following could be used instead of the above to disable PolkaPlugin inherited methods.
+    // However a solution using generics, instead of module augmentation, will be done later at web3.js and then used here.
+    // polka: {
+    //   polkadot: PolkadotSimpleRpcInterfaceFiltered;
+    //   kusama: KusamaSimpleRpcInterfaceFiltered;
+    //   substrate: SubstrateSimpleRpcInterfaceFiltered;
+    // };
   }
 }
