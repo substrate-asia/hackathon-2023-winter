@@ -29,23 +29,32 @@ declare module '@polkadot/rpc-core/types/jsonrpc' {
 // Added types
 // -----------------
 
-declare module '@polkadot/rpc-core/types/jsonrpc' {
-  interface SimpleRpcInterface {
-    {{#each modules}}
-    {{{name}}}: {
-      {{#each items}}
-      {{> docs}}
-      {{{name}}}: {{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}) => Promise<{{{type}}}>;
-      {{/each}}
-    };
+/**
+ * This interface is used to generate the rpc methods that is compatible with web3.js types.
+ * @remarks 
+ * This interface in not inside a module augmentation because it causes confusion to TypeScript compiler, when used inside another project, tricking it to see every property as `any`.
+ */
+export interface SimpleRpcInterface {
+  {{#each modules}}
+  {{{name}}}: {
+    {{#each items}}
+    {{> docs}}
+    {{{name}}}: {{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}) => Promise<{{{type}}}>;
     {{/each}}
-  } // SimpleRpcInterface
-} // declare module
+  };
+  {{/each}}
+} // SimpleRpcInterface
 
-
+/**
+ * @description
+ * This list allow to iterate over all rpc methods, because interfaces are not iterable. Also, note the use of `as const` to make the list as a fixed type.
+ * @remarks
+ * This const in not inside a module augmentation because the compiler does not allow.
+ * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, when used inside another project, tricking it to see every property as `any`.
+ */
 export const RpcList = {
   {{#each modules}}
-  '{{{name}}}' : [
+  {{{name}}} : [
   {{#each items}}
     '{{{name}}}',
   {{/each}}
@@ -53,9 +62,13 @@ export const RpcList = {
   {{/each}}
 } as const;
 
+/**
+ * This class is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.
+ * @remarks
+ * This class in not inside a module augmentation because the compiler does not allow.
+ * Additionally, this module augmentation causes confusion to TypeScript Intellisense, when used inside another project.
+ */ 
 /*
-// the class RpcBaseClass is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.  
-// Note: this class in not inside a module augmentation because class implantation cannot be inside `declare module '...' { block }`
 import { SimpleRpcInterface} from '@polkadot/rpc-core/types/jsonrpc';
 export class RpcBaseClass implements SimpleRpcInterface {
   {{#each modules}}

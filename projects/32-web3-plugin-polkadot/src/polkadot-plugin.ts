@@ -5,9 +5,11 @@ import {
   KusamaSimpleRpcInterfaceFiltered,
   SubstrateSimpleRpcInterfaceFiltered,
 } from './types/filtered-rpc-types';
-import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
-import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
+
 import { PolkadotRpcList } from './interfaces/polkadot/augment-api-rpc';
+import { KusamaRpcList } from './interfaces/kusama/augment-api-rpc';
+import { SubstrateRpcList } from './interfaces/substrate/augment-api-rpc';
+
 import {
   KusamaRpcApiFlatFiltered,
   PolkadotRpcApiFlatFiltered,
@@ -25,7 +27,7 @@ import { SubstrateSupportedRpcMethods } from './types/substrate/supported-rpc-me
 //     method: `chain_getBlock`,
 //     params: [],
 //   });
-export class PolkadotPlugin extends Web3PluginBase<
+export class PolkaPlugin extends Web3PluginBase<
   PolkadotRpcApiFlatFiltered | KusamaRpcApiFlatFiltered | SubstrateRpcApiFlatFiltered
 > {
   public pluginNamespace = 'polka';
@@ -52,7 +54,7 @@ export class PolkadotPlugin extends Web3PluginBase<
         };
       }
       ...
-    * ```
+   * ```
    */
   private createRpcMethods(rpcList: Record<string, readonly string[]>, supported: readonly string[]) {
     const returnedRpcMethods: Record<string, any> = {};
@@ -77,14 +79,14 @@ export class PolkadotPlugin extends Web3PluginBase<
 
   // The following commented code contains experiments with using index signature instead of using the method `createRpcMethods`.
   // Left for revisit later...
-  // And that would need the constructor to have at the end: `return new Proxy(this, PolkadotPlugin.indexedHandler);`
+  // And that would need the constructor to have at the end: `return new Proxy(this, PolkaPlugin.indexedHandler);`
   // // Index signature to allow indexing the class using a string
   // [rpcNamespace: (string | symbol)]: RpcInterface[RpcApiNamespaces] | any;
   // Or something like: [rpcNamespace: keyof RpcApiSimplified]: PickMethods<typeof rpcNamespace>;
   // Or something like: [rpcNamespace: keyof typeof RpcList]: RpcApiSimplified[typeof rpcNamespace];
 
-  // private static indexedHandler: ProxyHandler<PolkadotPlugin> = {
-  //   get(target: PolkadotPlugin,
+  // private static indexedHandler: ProxyHandler<PolkaPlugin> = {
+  //   get(target: PolkaPlugin,
   //     property: RpcApiNamespaces,
   //     receiver: any) {
   //       if(target[property]){
@@ -93,7 +95,7 @@ export class PolkadotPlugin extends Web3PluginBase<
 
   //       if(property in Object.keys(RpcList)) {
   //         console.log(receiver)
-  //         const response = new PolkadotPlugin().requestManager.send({
+  //         const response = new PolkaPlugin().requestManager.send({
   //           method: `${property}_${receiver}}`,
   //           params: [receiver]
   //         });
@@ -127,6 +129,6 @@ export class PolkadotPlugin extends Web3PluginBase<
 declare module 'web3' {
   interface Web3Context {
     // This seems a bit hacky. Revisit this in the future and possibly use generics instead.
-    polka : PolkadotPlugin
+    polka: PolkaPlugin;
   }
 }

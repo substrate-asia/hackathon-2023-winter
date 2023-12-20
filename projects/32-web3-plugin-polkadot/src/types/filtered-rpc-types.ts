@@ -1,10 +1,8 @@
-import { PolkadotRpcApiFlattened, KusamaRpcApiFlattened, SubstrateRpcApiFlattened } from './web3js-friendly-types';
+import { PolkadotSimpleRpcInterface } from '../interfaces/polkadot/augment-api-rpc';
+import { KusamaSimpleRpcInterface } from '../interfaces/kusama/augment-api-rpc';
+import { SubstrateSimpleRpcInterface } from '../interfaces/substrate/augment-api-rpc';
 
-import {
-  PolkadotSimpleRpcInterface,
-  KusamaSimpleRpcInterface,
-  SubstrateSimpleRpcInterface,
-} from '@polkadot/rpc-core/types/jsonrpc';
+import { PolkadotRpcApiFlattened, KusamaRpcApiFlattened, SubstrateRpcApiFlattened } from './web3js-friendly-types';
 
 import { KusamaSupportedRpcMethods } from './kusama/supported-rpc-methods';
 import { PolkadotSupportedRpcMethods } from './polkadot/supported-rpc-methods';
