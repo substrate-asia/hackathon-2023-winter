@@ -1,0 +1,3 @@
+[submodule "projects/49-DePHY-Blockchain/src/dephy-blockchain"]
+	path = projects/49-DePHY-Blockchain/src/dephy-blockchain
+	url = https://github.com/dephy-io/dephy-blockchain
