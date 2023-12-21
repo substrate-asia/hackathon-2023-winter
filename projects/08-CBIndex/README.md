@@ -21,7 +21,7 @@
 >
 > We were very lucky to win the 3rd place of the smart contract track.
 >
-> This time, we've done sufficient research and planning. We would love to try completing one of our advanced features, namely active on-chain funds, on Moonbase Alpha TestNet.
+> This time, we've done sufficient research and planning. We would love to try completing one of our advanced features, namely active on-chain funds, on the Moonbase Alpha TestNet.
 
 ## Planned Tasks for the Hackathon
 
