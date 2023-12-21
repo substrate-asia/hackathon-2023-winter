@@ -64,13 +64,13 @@ class GenerateEngineImplTest {
     }
 
     @Test
-    void testLoadContract() {
+    void testLoadContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException {
         Result result = generateEngineImpl.loadContract();
         Assertions.assertEquals(new Result(0L, "hasError", "result"), result);
     }
 
     @Test
-    void testCompilationContract() {
+    void testCompilationContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException {
         Result result = generateEngineImpl.compilationContract();
         Assertions.assertEquals(new Result(0L, "hasError", "result"), result);
     }

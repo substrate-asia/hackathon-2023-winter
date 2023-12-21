@@ -52,12 +52,12 @@ public interface GenerateEngine {
     /**
      * 载入合约
      */
-    Result loadContract();
+    Result loadContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException;
 
     /**
      * 编译合约
      */
-    Result compilationContract();
+    Result compilationContract() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException;
 
     /**
      * 生成后检查生成目录是否正确(最后一个接口)

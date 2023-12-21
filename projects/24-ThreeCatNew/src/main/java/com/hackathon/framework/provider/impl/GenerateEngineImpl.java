@@ -128,18 +128,64 @@ public class GenerateEngineImpl implements GenerateEngine {
         return new Result(startTime,errText,successText);
     }
 
+    /**
+     * 加载合约
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     @Override
-    public Result loadContract() {
+    public Result loadContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
-        return new Result(startTime,"","");
+        // mv操作应是在truffle初始化的目录下进行
+        strategyBean = StrategyConfigUtil.getStrategy("generateEngine");;
+        String mvContractCommand = "mv /root/Hackathon-2023-winter/contract/* " + strategyBean.getEnginePath() + "/contracts/";
+        String errorMessage = sshUtil.executeCmd(mvContractCommand);
+        return new Result(startTime,errorMessage,"");
     }
 
+    /**
+     * 获取合约ABI
+     * @return
+     * @throws IOException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws JSchException
+     * @throws InterruptedException
+     */
     @Override
-    public Result compilationContract() {
+    public Result compilationContract() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
-        return new Result(startTime,"","");
+        // 获取工程路径
+        strategyBean = StrategyConfigUtil.getStrategy("generateEngine");
+        String abi = null;
+        String errorMessage = null;
+
+        // 拷贝模板truffle-config.js
+        String cpTemplateConfigurationFile = "cp -f /root/truffle-config.js " + strategyBean.getEnginePath() + "/truffle-config.js";
+        errorMessage += sshUtil.executeCmd(cpTemplateConfigurationFile);
+
+        String cdPathCommand = "cd " + strategyBean.getEnginePath();
+        errorMessage += sshUtil.executeCmd(cdPathCommand);
+        // 编译合约
+        String compileContractCommand = "truffle compile";
+        errorMessage += sshUtil.executeCmd(compileContractCommand);
+
+        // 查看合约abi，两个合约采用\n分隔
+        String catContractEtherStoreAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + "EtherStore.json\n";
+        abi += sshUtil.executeCmd(catContractEtherStoreAbiCommand);
+        String catContractAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + "Attack.json";
+        abi += sshUtil.executeCmd(catContractAbiCommand);
+        if (errorMessage.isEmpty()) {
+            return new Result(startTime,errorMessage, abi);
+        }
+
+        return new Result(startTime,errorMessage,"");
     }
 
     @Override
