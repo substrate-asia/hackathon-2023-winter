@@ -60,7 +60,7 @@ demo视频：https://youtu.be/amm_Vk0vzP4
 
 > 名词解释： EOA账户，即普通单签账户
 
-在以太坊生态中，多签已成为常见的需求，而且成为了ETH最重要的账户抽象赛道的最重要的应用。以太坊最大的多签钱包Safe中管理了大约**1%**的ETH资产($3B)，其他的如Social Recovery、Seedless Login也已经有大量项目参与开发与规则制定。
+在以太坊生态中，多签已成为常见的需求，而且成为了ETH最重要的账户抽象赛道的最重要的应用。以太坊最大的多签钱包Safe中管理了大约 **1%** 的ETH资产($3B)，其他的如Social Recovery、Seedless Login也已经有大量项目参与开发与规则制定。
 
 而Substrate中早已经有了相关的功能模块，如Multisig Pallet、Recovery、Proxy等都可以实现、或者通过功能组合实现强大的各类AA（账户抽象）功能，且波卡中的Multisig控制了**5%**的DOT资产，多签需求是以太坊的**5倍**，这表明波卡生态的用户有着更加旺盛的需求。
 
