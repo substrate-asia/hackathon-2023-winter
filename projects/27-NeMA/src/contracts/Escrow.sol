@@ -83,20 +83,20 @@ contract Escrow {
     }
 
     function claimByArbiter() external onlySeller inState(State.BuyerConfirmed) {
-        // Optional: Implement a dispute resolution mechanism using an arbiter
+        // 可选：使用仲裁员实施争议解决机制
         require(arbiter != address(0), "Arbiter address not set");
         state = State.Completed;
         emit Completed(buyer, seller);
-        // Transfer assets to the seller
+        // 将资产转让给卖方
         payable(seller).transfer(amount);
     }
 
     function refundByArbiter() external onlyBuyer inState(State.SellerDeposited) {
-        // Optional: Implement a dispute resolution mechanism using an arbiter
+        // 可选：使用仲裁者实施争议解决机制
         require(arbiter != address(0), "Arbiter address not set");
         state = State.Completed;
         emit Completed(buyer, seller);
-        // Refund the buyer
+        // 退还买方
         payable(buyer).transfer(amount);
     }
 }
