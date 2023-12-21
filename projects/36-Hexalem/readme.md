@@ -16,8 +16,6 @@
 
 ![small_logo](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/ef3a3811-a5a0-46c1-ba2a-cdf437df9a0f)
 
-### Background ???
-
 ### Introduction
 
 Hexalem is a multiplayer strategy game built on a hexagonal grid, designed to leverage the transparency and immutability of blockchain technology. At its core, the game is a strategic contest where players, acting as deities overseeing their realms, manage resources on a personal 5x5 grid to grow their civilization and harness the mystical energy known as Mana.
@@ -137,6 +135,10 @@ Assets from the Unity Asset Store:
   <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/c4c4ee8b-1cc6-4c3a-9aab-9a25a92dc277" alt="Ranking Players" width="30%"/>
   <img src="https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/62097337-bc52-4386-92ac-9d709d88c8f3" alt="Made with Unity" width="30%"/>
 </p>
+
+## Presentation
+
+[hexalem.pdf](https://github.com/SubstrateGaming/hackathon-2023-winter/files/13742202/hexalem.pdf)
 
 ## Future Features planed
 
