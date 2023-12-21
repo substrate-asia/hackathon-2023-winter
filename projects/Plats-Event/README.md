@@ -24,11 +24,11 @@ Even if event organizers were pleased to use many tools or platforms at the same
 In recent years, event sponsoring plays an important role in event organizing process for both event organizers and sponsors. It has been considered as an effective way to promote the company's brand. Sponsoring is a priority for 82% of marketers (Splash). While sponsors struggle in finding suitable events, many event organizers still face finance difficulties. 46.3% of event professionals consider the increased price of putting on events to be the biggest challenge they face (Knowland, 2022)
 
 ### Solutions
-- Our solution to this problem is to create an all-in-one event platform to support event organizers comprehensively. Applying technology into organizing plays an important role, 68.7% of event professionals agree that using technology to improve the attendee experience is a trend with staying power (Knowland, 2022).
+- `Our solution to this problem is to create an all-in-one event platform to support event organizers comprehensively`. Applying technology into organizing plays an important role, 68.7% of event professionals agree that using technology to improve the attendee experience is a trend with staying power (Knowland, 2022).
 
-- Our existing platform has successfully supported some events with our basic functions including Standard Ticketing, check-in by QR code, Users management.
+- Our existing platform has successfully supported some events with our basic functions including `Standard Ticketing`, `check-in by QR code`, `Users management`.
 
-- In this Polkadot hackathon, we plan to develop some new features applied Aleph Zero & Polkadot blockchain including NFT Generator (AZERO), NFT Claim (AZERO), Crowdsponsor (DOT, ASTR, AZERO). In adition, in first, second and third quarter of 2024, we will fulfill this platform as our roadmap to become a comprehensive event platform.
+- In this Polkadot hackathon, we plan to develop some new features applied Aleph Zero & Polkadot blockchain including `NFT Generator (AZERO), NFT Claim (AZERO), Crowdsponsor (DOT, ASTR, AZERO)`. In adition, in first, second and third quarter of 2024, we will fulfill this platform as our roadmap to become a comprehensive event platform.
 
 
 
@@ -37,11 +37,11 @@ In details, the benefits that Plats will bring to the Polkadot Ecosystem & Aleph
 
 Event platform with integration into the Polkadot Ecosystem & Aleph Zero network:
 
-- Plats will help save a lot of time and effort to organize a event by automatic tools • Our previous MVP has successfully shown the capability of serving an event with over 10000 attendees.
+- Plats will help save a lot of time and effort to organize a event by automatic tools • `Our previous MVP has successfully shown the capability of serving an event with over 10000 attendees`.
 
-- Onboard more Web 2 users to the Polkadot Ecosystem & Aleph Zero network: • Billions of people are attending traditional events every day. With the capabilities of supporting both Web 2 and Web 3 events, Plats can reward DOT, ASTR & AZERO, as well as NFTs, directly to new users' wallets without a hassle. This would increase the number of new users and new wallets. DOT, ASTR & AZERO usage in Plats Events will increase liquidity, trading volume and use case for DOT, ASTR & AZERO
+- `Onboard more Web 2 users to the Polkadot Ecosystem & Aleph Zero network and more parachain`: • Billions of people are attending traditional events every day. With the capabilities of supporting both Web 2 and Web 3 events, Plats can reward DOT, ASTR & AZERO, as well as NFTs, directly to new users' wallets without a hassle. This would increase the number of new users and new wallets. DOT, ASTR & AZERO usage in Plats Events will increase liquidity, trading volume and use case for DOT, ASTR & AZERO
 
-- The use of DOT, ASTR & AZERO as fuel for rewarding and sponsoring will increase the liquidity and trading volume as more participants engage within the platform.
+- `The use of DOT, ASTR & AZERO` as fuel for rewarding and sponsoring will increase the liquidity and trading volume as more participants engage within the platform.
 
 Strengthening Polkadot Ecosystem & Aleph Zero network in all over the world
 
@@ -82,7 +82,28 @@ File structure:
 - ink! smart contract: nft reward, crowdsponsor 
 
 ## Team members
-- Marcus Hung: Founder of Plats Network and VAIX Viet Nam  . (https://www.linkedin.com/in/nguyen-plats/)
-- Dustin: Blockchain Engineer . He has more than 3 years experiences in blockchain field. GitHub: @cocdap
-- Thanh: Mobile Developer . He is mobile developer with 3 years experience.
-- Chinh: Frontend Developer @vaix-chinhtv . He has more than 2 years experiences in software development 
+**Marcus Nguyen- Project Manager**
+
++ Founder of Vaix Vietnam Co., Ltd, an IT offshore company specialized for the Japanese market.
+Extensive leadership and management experience
+Strong spirit of web3 true builder
+
+**Dustin Dung - Backend & Blockchain Developer**
+
++ Blockchain developer at 5ire Chain
+Blockchain Mentor at Vietnam Blockchain Innovation (VBI)
+
+**Le Huu Thanh - Mobile Developer**
+
++ 3 years of experience in mobile app development
+Passionate about crypto currency and blockchain.
+
+**Tran Chinh - Blockchain Developer**
+
++ 2 years of experience in backend development
+1 year of experience in blockchain development
+
+**Adela Mai - CM & BD Manager**
+
++ Founder of SKC Blockchain HR with 20K+ active crypto talents in Vietnam Founder of Hanoi Hold Coin with 6K+ members
+Extensive background in sales, marketing, community building and crypto long-term investment.
