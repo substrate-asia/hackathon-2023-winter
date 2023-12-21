@@ -42,14 +42,17 @@
 
 **Blockchain Side**
 
-- [✓] Develop the smart contracts for the ACTIVE FUND feature (fund creation, investment, withdrawal, and etc.).
-- [✓] Test and deploy the smart contracts on Moonbase Alpha TestNet.
-- [✓] Build an environment for demoing the active funds, including issue ERC20 tokens, set up LP pools, mock Chainlink's V3's price feed, and deploy Uniswap V2.
+✅ Develop the smart contracts for the ACTIVE FUND feature (fund creation, investment, withdrawal, and etc.).
+
+✅ Test and deploy the smart contracts on Moonbase Alpha TestNet.
+
+✅ Build an environment for demoing the active funds, including issue ERC20 tokens, set up LP pools, mock Chainlink's V3's price feed, and deploy Uniswap V2.
 
 **Client Side**
 
-- [✓] Develop the frontend for the ACTIVE FUND feature using NextJS.
-- [✓] Realize wallet connection by integrating Web3Modal V3.
+✅ Develop the frontend for the ACTIVE FUND feature using NextJS.
+
+✅ Realize wallet connection by integrating Web3Modal V3.
 
 ---
 
