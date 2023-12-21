@@ -1,3 +1,6 @@
+# Table of contents
+
+- [Table of contents](#table-of-contents)
 - [Project Introduction(English Version)](#project-introductionenglish-version)
   - [Background](#background)
     - [1.1 Account Creation and Management](#11-account-creation-and-management)
