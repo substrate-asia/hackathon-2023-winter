@@ -1,6 +1,6 @@
-# Hexalem
+![HexalemDemo](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/99bc2659-6bf1-4a54-bc24-3a862b972494)
 
-Date: 7th November, Kick-Off Meeting
+**Date:** 7th November, Kick-Off Meeting
 
 ## Project Informations
 
@@ -121,6 +121,8 @@ Assets from the Unity Asset Store:
 
 
 ## Demo & Visuals
+
+[![Video Thumbnail](https://github.com/SubstrateGaming/hackathon-2023-winter/assets/17710198/80129049-11d8-4c10-9533-0f8365a59564)](https://youtu.be/RfqcXIQcWNY)
 
 ### Screenshots (Samsung S23)
 
