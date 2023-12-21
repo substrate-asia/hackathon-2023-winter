@@ -1,0 +1,243 @@
+[
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "beaconGuardianLogic_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "beaconVaultLogic_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "constructor"
+  },
+  {
+    "anonymous": false,
+    "inputs": [],
+    "name": "Activated",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "globalShared",
+        "type": "address"
+      }
+    ],
+    "name": "GlobalSharedSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "guardianLibSet",
+        "type": "address"
+      }
+    ],
+    "name": "GuardianLibSet",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "guardianProxy",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "denominationAsset",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "sharesActionTimelock",
+        "type": "uint256"
+      }
+    ],
+    "name": "GuardianProxyDeployed",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "creator",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "vaultProxy",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "address",
+        "name": "guardianProxy",
+        "type": "address"
+      }
+    ],
+    "name": "NewVaultCreated",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "activate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_vaultName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_vaultSymbol",
+        "type": "string"
+      },
+      {
+        "internalType": "address",
+        "name": "_denominationAsset",
+        "type": "address"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_sharesActionTimelock",
+        "type": "uint256"
+      }
+    ],
+    "name": "createNewVault",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "guardianProxy_",
+        "type": "address"
+      },
+      {
+        "internalType": "address",
+        "name": "vaultProxy_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getCreator",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "creator_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGlobalShared",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "globalShared_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getGuardianLib",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "guardianLib_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getOwner",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "owner_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVaultLib",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "vaultLib_",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isActivated",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "activated_",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "globalShared_",
+        "type": "address"
+      }
+    ],
+    "name": "setGlobalShared",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  }
+]
