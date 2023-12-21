@@ -47,6 +47,17 @@ But as a recommendation from [Web 3 Foundation](https://web3.foundation/) We hav
 
 ![10k Feet  (1)](https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/0fa5eab3-3bf0-49e5-9bdf-952ba345a276)
 
+## Hackathon project submission - Enhanced Cyborg Node implementation to support full decentralized Connectivity of offchain worker
+
+Cyborg Node Implementation: [Websocket Connection Branch](https://github.com/Cyborg-Network/cyborg-node/tree/websocket_connection)
+
+We have been working on improving the pre existing working setup to remove centralized server implementation from the architecture and push the full functionality into the substrate off-chain worker which can be called from the pallets, so that the end user can control their deployments directly from their UI since they have connected their wallets with whose private keys we would be cryptographically encrypting the compute though the instances come from a third party that has physical access to the machines.
+
+Sample Mockups of End user's UI (Here we have shown a product type for hosting Blockchain Nodes)
+
+<img width="1077" alt="Screenshot 2023-12-21 at 23 50 36" src="https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/38dc7993-2fe7-4a74-a3b4-15b69dbb4d69">
+
+
 ## How to run
 
 ### Build Cyborg Node
