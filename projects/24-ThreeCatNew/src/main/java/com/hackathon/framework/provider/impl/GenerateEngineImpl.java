@@ -81,10 +81,25 @@ public class GenerateEngineImpl implements GenerateEngine {
         if(envResult.getHasError().isEmpty()){
             String compileName = strategyBean.getCompile();
             sshUtil.executeCmd(compileName+" init");
-            // TODO sshUtil.executeCmd这个处理命令行，用这个验证下init生成的文件是否包含truffle init的文件
-            List<String>compileList = strategyBean.getDirectory();
+
+            // 查看对应路径下的文件
+            String compilePathList = sshUtil.executeCmd("ls" + strategyBean.getEnginePath());
             //这里result应该传输null也行，只要验证truffle init的文件
+
+            if(!compilePathList.contains("contracts")) {
+                errorMessage += "The initialized truffle does not have a contracts folder\n";
+            }
+            if(!compilePathList.contains("migrations")) {
+                errorMessage += "The initialized truffle does not have a migrations folder\n";
+            }
+            if(!compilePathList.contains("test")) {
+                errorMessage += "The initialized truffle does not have a test folder\n";
+            }
+            if(!compilePathList.contains("truffle-config.js")) {
+                errorMessage += "The initialized truffle does not have a truffle-config.js file\n";
+            }
             return new Result(startTime,errorMessage,null);
+
         }
         // 这里如果hasError是空字符串代表成功
         return new Result(startTime,envResult.getHasError(),null);
