@@ -6,5 +6,6 @@ The `net` folder contains:
 - `WebAPI`, that was initially used for quick scaffolding.
 - `NetApiExt`, which is an automatically generated c# project by Substrate.Net.Toolchain, for communication with the Substrate Node.
 - `Integration`, that combines `Engine` and `NetApiExt`.
+- `bot`, that implements a simple AI to play against
 
 # Prerequisites
