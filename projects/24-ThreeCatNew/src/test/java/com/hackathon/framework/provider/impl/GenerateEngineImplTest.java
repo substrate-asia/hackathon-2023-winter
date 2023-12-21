@@ -4,6 +4,7 @@ import com.hackathon.framework.bean.StrategyBean;
 import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.SshUtil;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,7 +47,7 @@ class GenerateEngineImplTest {
     }
 
     @Test
-    void testInitDirectoryForServer() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException {
+    void testInitDirectoryForServer() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException, SftpException {
         when(strategyBean.getEnginePath()).thenReturn("getEnginePathResponse");
         when(strategyBean.getDirectory()).thenReturn(Arrays.<String>asList("String"));
         when(strategyBean.getCompile()).thenReturn("getCompileResponse");

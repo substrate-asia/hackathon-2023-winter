@@ -6,6 +6,7 @@ import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.SshUtil;
 import com.hackathon.framework.utils.StrategyConfigUtil;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class GenerateEngineImpl implements GenerateEngine {
      * @throws JSchException
      * @throws InterruptedException
      */
-    public Result initDirectoryForServer() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException {
+    public Result initDirectoryForServer() throws JSchException, SftpException, IOException, InvocationTargetException, IllegalAccessException, InterruptedException {
         long startTime = System.nanoTime();
         // 创建工程名称
         strategyBean = StrategyConfigUtil.getStrategy("generateEngine");
@@ -81,25 +82,16 @@ public class GenerateEngineImpl implements GenerateEngine {
         if(envResult.getHasError().isEmpty()){
             String compileName = strategyBean.getCompile();
             sshUtil.executeCmd(compileName+" init");
-
-            // 查看对应路径下的文件
-            String compilePathList = sshUtil.executeCmd("ls" + strategyBean.getEnginePath());
+            List<String> compileList = strategyBean.getDirectory();
+            // 获取当前路径下的文件和文件夹
+            String initPathList = sshUtil.getFolder();
             //这里result应该传输null也行，只要验证truffle init的文件
-
-            if(!compilePathList.contains("contracts")) {
-                errorMessage += "The initialized truffle does not have a contracts folder\n";
+            for(String element : compileList) {
+                if (!initPathList.contains(element)) {
+                    errorMessage = "Failed to initialize the truffle directory";
+                    return new Result(startTime,errorMessage,null);
+                }
             }
-            if(!compilePathList.contains("migrations")) {
-                errorMessage += "The initialized truffle does not have a migrations folder\n";
-            }
-            if(!compilePathList.contains("test")) {
-                errorMessage += "The initialized truffle does not have a test folder\n";
-            }
-            if(!compilePathList.contains("truffle-config.js")) {
-                errorMessage += "The initialized truffle does not have a truffle-config.js file\n";
-            }
-            return new Result(startTime,errorMessage,null);
-
         }
         // 这里如果hasError是空字符串代表成功
         return new Result(startTime,envResult.getHasError(),null);

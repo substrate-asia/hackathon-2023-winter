@@ -1,14 +1,12 @@
 package com.hackathon.framework.utils;
 
 import com.hackathon.framework.config.ProductionConfig;
-import com.jcraft.jsch.ChannelExec;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
+import com.jcraft.jsch.*;
 
 import java.io.*;
 import java.net.URL;
 import java.util.Properties;
+import java.util.Vector;
 
 public class SshUtil {
     private final String username;
@@ -88,6 +86,22 @@ public class SshUtil {
         return output.toString();
     }
 
+
+    /**
+     * 获取服务器当前路径下的文件和文件夹
+     * @return
+     * @throws JSchException
+     * @throws SftpException
+     */
+    public String getFolder() throws JSchException, SftpException{
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            ChannelSftp sftpChannel = (ChannelSftp) channel;
+            // 获取当前路径下的文件及文件夹
+            Vector<ChannelSftp.LsEntry> entries = sftpChannel.ls("./");
+            // 遍历文件和文件夹
+            return entries.toString();
+    }
 
     /**
      * 全部用完后关闭服务器，提供给其他人调用
