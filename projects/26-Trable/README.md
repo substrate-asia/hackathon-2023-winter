@@ -90,6 +90,7 @@ To address these challenges, our project proposes a solution that optimizes the 
 
 
 
+
 ### Project Introduction
 
 Trable is an overseas travel product Dapp application for cryptocurrency payment.
@@ -99,8 +100,23 @@ This application integrates Uniswap V4 and other technologies and relies on the 
 Users only need to select the required payment password and complete the signature to easily book overseas travel products on this Dapp. We have solved the problems of personal foreign exchange limit limits and insufficient payment tools, and provided necessary legal currency payment support. At the same time, we monitor the flow of funds in real time on the chain to ensure the safety of funds. During the entire process, only one handling fee will be charged, providing comprehensive protection for users’ ordering experience.
 
 
+## Acala asset router technical analysis
 
-  <img src="https://github.com/Web3-Club/Trable/assets/76860915/7e5a55f1-1486-4de6-a28e-7080e046f19d" alt="25461702219436_ pic">
+We aim to help users who want to pay their travel fee directly through polka related asset like DOT. Thus transfering polka asset from parachain to USDC on EVM is our primary target. 
+
+We utilize acala asset router to achieve the target. The following 6 steps describe how it works in detail.
+
+1. In our front page, users only need to select the source and target chains, as well as the token to transfer. As we can see in the demo video. Our web extension will save order information and jump to trable payment page.
+
+2. The second step is get a router address on karura network. In our project, we will send a shoudRounteWormhole request. 
+
+3. We will pop a signature request that prompts users to sign a transtraction from parachain to karura chain
+
+4. After the signature, we will send tokens to wormhole. In our code, the routeWormhole will achieve this.
+
+5. After send the  token, router will be listening and waiting for VAA. After fetch it, the router interact with wormhole core contract。
+
+6. At the final step, user will sign a transaction with MetaMask that redeems the token on the target EVM chain.
 
 ### 在黑客马拉松期间完成的代码功能
 
