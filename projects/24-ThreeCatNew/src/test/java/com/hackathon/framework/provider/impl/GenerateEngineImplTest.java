@@ -71,7 +71,7 @@ class GenerateEngineImplTest {
 
     @Test
     void testCompilationContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException {
-        Result result = generateEngineImpl.compilationContract();
+        Result result = generateEngineImpl.compilationContract("EtherStore", "Attack");
         Assertions.assertEquals(new Result(0L, "hasError", "result"), result);
     }
 

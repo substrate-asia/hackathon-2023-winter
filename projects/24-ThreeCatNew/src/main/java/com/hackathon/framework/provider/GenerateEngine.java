@@ -57,7 +57,7 @@ public interface GenerateEngine {
     /**
      * 编译合约
      */
-    Result compilationContract() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException;
+    Result compilationContract(String EtherStoreContract, String AttackContract) throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException;
 
     /**
      * 生成后检查生成目录是否正确(最后一个接口)

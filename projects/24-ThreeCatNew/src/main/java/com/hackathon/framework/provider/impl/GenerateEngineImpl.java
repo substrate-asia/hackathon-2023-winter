@@ -15,7 +15,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GenerateEngineImpl implements GenerateEngine {
 
@@ -149,7 +151,7 @@ public class GenerateEngineImpl implements GenerateEngine {
     }
 
     /**
-     * 获取合约ABI
+     * 获取合约ABI和合约
      * @return
      * @throws IOException
      * @throws InvocationTargetException
@@ -158,13 +160,15 @@ public class GenerateEngineImpl implements GenerateEngine {
      * @throws InterruptedException
      */
     @Override
-    public Result compilationContract() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException {
+    public Result compilationContract(String EtherStoreContract, String AttackContract) throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
         // 获取工程路径
         strategyBean = StrategyConfigUtil.getStrategy("generateEngine");
+        String contract = null;
         String abi = null;
         String errorMessage = null;
+        Map<String, String> resultMap = new HashMap<>();
 
         // 拷贝模板truffle-config.js
         String cpTemplateConfigurationFile = "cp -f /root/truffle-config.js " + strategyBean.getEnginePath() + "/truffle-config.js";
@@ -176,13 +180,23 @@ public class GenerateEngineImpl implements GenerateEngine {
         String compileContractCommand = "truffle compile";
         errorMessage += sshUtil.executeCmd(compileContractCommand);
 
-        // 查看合约abi，两个合约采用\n分隔
-        String catContractEtherStoreAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + "EtherStore.json\n";
-        abi += sshUtil.executeCmd(catContractEtherStoreAbiCommand);
-        String catContractAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + "Attack.json";
-        abi += sshUtil.executeCmd(catContractAbiCommand);
+        // 查看合约
+        String catContractEtherStoreCommand = "cat " + strategyBean.getEnginePath() + "contracts/" + EtherStoreContract + ".sol";
+        contract = sshUtil.executeCmd(catContractEtherStoreCommand);
+        resultMap.put("EtherStore.sol", contract);
+        String catContractAttackCommand = "cat " + strategyBean.getEnginePath() + "contracts/" + AttackContract + ".sol";
+        contract = sshUtil.executeCmd(catContractAttackCommand);
+        resultMap.put("Attack.sol", contract);
+
+        // 查看合约abi
+        String catContractEtherStoreAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + EtherStoreContract + ".json";
+        abi = sshUtil.executeCmd(catContractEtherStoreAbiCommand);
+        resultMap.put("EtherStore.json", abi);
+        String catContractAttackAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + AttackContract + ".json";
+        abi = sshUtil.executeCmd(catContractAttackAbiCommand);
+        resultMap.put("Attack.json", abi);
         if (errorMessage.isEmpty()) {
-            return new Result(startTime,errorMessage, abi);
+            return new Result(startTime,errorMessage, resultMap);
         }
 
         return new Result(startTime,errorMessage,"");
