@@ -11,7 +11,11 @@ This package will run a restful server for quadratic funding related business da
 ### How to run
 
 1. Set `.env`. We can simply run `cat .env.example > .env`, or edit `.env` by your local environment.
-2. Run `node src/index.js`.
+2. Generate mock data
+    1. `node src/scripts/index.js`, this script populate round, project and contributors data.
+    2. `node src/scripts/power/index.js`, calculate contributor matching power.
+    3. `node src/scripts/match/index.js`, calculate public pool matched fund for projects.
+3. Run `node src/index.js`.
 
 ### env variables
 
