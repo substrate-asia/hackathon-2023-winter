@@ -25,4 +25,5 @@ demo: https://youtu.be/ZdKE_th-YDg
 
 website: https://humble-tenure-116815.framer.app/
 
-![website](https://github.com/Willy-Qiu/hackathon-2023-winter/assets/139307665/4f5690a7-91ba-4802-9e97-293911397fc4)
+
+![website](https://github.com/Willy-Qiu/hackathon-2023-winter/assets/139307665/277b2f4c-3912-4f56-8201-ecce27fc5b94)
