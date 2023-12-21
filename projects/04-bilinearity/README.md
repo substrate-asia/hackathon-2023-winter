@@ -6,32 +6,41 @@ Project establishment date 11/2023
 
 ## Overall introduction to the project
 - Project background/original reasons/problems to be solved (If there are other attachments, they can be placed in the `docs` directory. Submit in English).
-  - We aim to explore applications of the Bullshark and Narwhal consensus mechanisms to Substrate blockchains. These are notable consensus mechanisms due to their impressive theoretical performance of around 100k TPS and offloading of consensus work. If time permits, we would also explore applying this as a sub-consensus mechanism for parachains, which would improve finality lag for parachain teams. 
-- Project Introduction
-  - Attempt implementation of Bullshark and Narwhal consensus mechanisms in Substrate. 
+  - The project aims to enhance the security and transparency of codebase validation by introducing a zero-knowledge proof system for unit test results, based on the existing RISC Zero test tooling. Through this innovation, the project ensures that unit tests pass without revealing any sensitive information, and the proof of the passing tests is recorded securely on a custom blockchain.
+  This allows for:
+    - Assurance of software behavior; even closed-source projects can prove their code behaves correctly without being revealed.
+    - Supply-chain security
+    - Solving problems around trusted blockchain code - See this post: https://forum.polkadot.network/t/trustless-wasm-compilation-with-snarks/3825. This may allow blockchain software to be shared more readily among different runtimes.
 - Technology Architecture
   ![Substrate solution architecture](./docs/architecture.png)
+- Project Layout
+  - `substrate-winter-2023-hackathon`: this is the substrate blockchain node which contains the validation logic for the test proofs
+  - `example-ci-project`: this is a sample Rust project which utilizes the test proofs in CI, and sends the proofs onchain
 
 ## Things planned to be accomplished during the hackathon
 
 **Blockchain side**
 
-- `client-narwhal`
-   - [ ] Adapt from existing sc-transaction-pool crate
-   - [ ] Add `Core`(rounds support), `Certificate`s, and `Header`s
-   - [ ] Optional: Organize logic under Primary and Worker
-- `client-bullshark`
-   - [ ] Add Dag receipt and ordering functionality
-- `pallet-bullshark`
-   - [ ] Add consensus and finality state
-   - [ ] Runtime apis for communication from client
+- `proof-tests-pallet`
+   - [x] Adapt existing code for verifying ZK proofs
+   - [ ] Implement requests for work, and rewards
 
-**Client**
-- Transaction Client
-   - [ ] Add transaction sign and submission example, with certificates
+**Prover side**
+
+- `Tests prover`
+   - [x] Integrate RISC Zero tool to prove tests pass/fail for project
+   - [] Provide generic Gitlab runner for other projects
+
+**Consumer side**
+
+- `Example project`
+   - [x] Demonstrate integration of the tool and blockchain in an example Rust project
 
 
 ## Things accomplished during the hackathon (submitted before preliminary review at 11:59 am on December 22, 2023)
+   - [x] Adapt existing code for verifying ZK proofs
+   - [x] Integrate RISC Zero tool to prove tests pass/fail for project
+   - [x] Demonstrate integration of the tool and blockchain in an example Rust project
 
 ## Team information
 
