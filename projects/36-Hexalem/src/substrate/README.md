@@ -1,12 +1,6 @@
-# Substrate Node Template
+# Hexalem Substrate Node
 
-A fresh [Substrate](https://substrate.io/) node, ready for hacking :rocket:
-
-A standalone version of this template is available for each release of Polkadot in the [Substrate Developer Hub Parachain Template](https://github.com/substrate-developer-hub/substrate-parachain-template/) repository.
-The parachain template is generated directly at each Polkadot release branch from the [Node Template in Substrate](https://github.com/paritytech/substrate/tree/master/bin/hexalem) upstream
-
-It is usually best to use the stand-alone version to start a new project.
-All bugs, suggestions, and feature requests should be made upstream in the [Substrate](https://github.com/paritytech/substrate/tree/master/bin/hexalem) repository.
+Substrate Node with a custom Hexalem pallet to handle all game logic fully on-chain.
 
 ## Getting Started
 
@@ -21,6 +15,17 @@ Use the following command to build the node without launching it:
 ```sh
 cargo build --release
 ```
+
+### Test
+
+All of the edge cases have been tested, to ensure no one can cheat or attack the games.
+
+```sh
+cargo test -p pallet-hexalem --release
+```
+
+We paid special attention to motive players for playing correctly/quickly:
+- If you play one turn for longer than 60 seconds (10 blocks), any other player in the game can call `force_finish_turn` to finish your turn earlier and punish you by not giving you the resources that you would have otherwise received by finishing the turn in time.
 
 ### Embedded Docs
 
@@ -62,7 +67,6 @@ Development chains:
 - Use the **Alice** and **Bob** accounts as default validator authorities.
 - Use the **Alice** account as the default `sudo` account.
 - Are preconfigured with a genesis state (`/node/src/chain_spec.rs`) that includes several prefunded development accounts.
-
 
 To persist chain state between runs, specify a base path by running a command similar to the following:
 
