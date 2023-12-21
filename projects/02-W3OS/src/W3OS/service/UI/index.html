@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <style>
+            .screen{height: 160px;width: 100%;background: #EEEEEE;overflow: auto;}
+            .live{background: #bbdbb9;margin: 0 auto;padding: 0px 0px 0px 0px;}
+            .single{background: #ffb4f5;margin: 0 auto;padding: 0px 0px 0px 0px;cursor: pointer;}
+            .single small{color: #666666;background: #EEEEEE;}
+            .active{background: #ffb4f5;margin: 0 auto;padding: 0px 0px 0px 0px;}
+            .notice{background: #ffb4f5;margin: 0 auto;padding: 0px 0px 0px 0px;}
+            .error{font:#FFFFFF;background: #ffb4f5;margin: 0 auto;padding: 0px 0px 0px 0px;}
+        </style>
+    </head>
+    <script src="./lib/polkadot.min.js"></script>
+    <script src="./lib/jquery.min.js"></script>
+    <script src="./lib/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./lib/bootstrap.min.css">
+    <script>
+        const url="ws://localhost:7788";
+        //const url="ws://45.63.91.147:7788"
+        //const url="ws://android.im:7788"
+        //const url="wss://chat.metanchor.net"
+        const wmap={},spams={},count={};
+        const accounts=[
+            "5FQmGPk7qGBmU3K6kDfMSBiUHBYq5NqXpx93KFEvDvyz5sRJ",
+            "5CSTSUDaBdmET2n6ju9mmpEKwFVqaFtmB8YdB23GMYCJSgmw",
+            //"5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY",
+            "5FHneW46xGXgs5mUiveU4sbTyGBzmstUspZC92UhjJM694ty",
+            "5FLSigC9HGRKVhB9FiEo4Y3koPsNmBmLJbpXg2mp1hXcS59Y",
+        ];
+        const shorten=function(addr){
+            return addr.substr(0, 5) + '...' + addr.substr(addr.length - 5, 5);
+        }
+
+        const self={
+            init:(url,agent,ck,index)=>{
+                const ws=new WebSocket(url);
+                ws.onopen=(res)=>{
+                    agent.open(res,index);
+                };
+                ws.onmessage=(res)=>{
+                    agent.message(res,index);
+                };
+                ws.onclose=(res)=>{
+                    agent.close(res,index);
+                };
+                ws.onerror=(res)=>{
+                    agent.error(res,index);
+                };
+                return ck && ck(ws,index);
+            },
+            send:(obj,index)=>{
+                if(!wmap[index]) return false;
+                if(!count[index]){
+                    count[index]=1;
+                }else{
+                    count[index]++;
+                }
+                const ws=wmap[index];
+                obj.order=count[index];
+                ws.send(JSON.stringify(obj));
+                return true;
+            },
+            getIndex:(acc)=>{
+                for(let i=0;i<accounts.length;i++){
+                    if(acc===accounts[i]) return i;
+                }
+                return false;
+            },
+            actions:()=>{
+                $(".single").off("click").on("click",function(){
+                    const sel=$(this);
+                    const acc=sel.attr("data");
+                    const index=sel.attr("index");
+                    $(`#target_${index}`).val(!acc?"":acc);
+                });
+            },
+        };
+
+        $(function(){
+            var tpl=`<div class="row">`;
+            for(var i=0;i<accounts.length;i++){
+                const row=accounts[i];
+                const chat=`<div class="col-6 col-lg-6">
+                    <div class="row pt-4 pb-2">
+                        <div class="col-12 col-lg-12">
+                            <div id="screen_${i}" class="screen"></div>
+                        </div>
+                        <div class="col-1 col-lg-1 pt-2">From</div>
+                        <div class="col-11 col-lg-11 pt-2" id="mine_${i}">${row}</div>
+                        <div class="col-1 col-lg-1">To</div>
+                        <div class="col-11 col-lg-11">
+                            <input type="text" id="target_${i}" class="form-control" value="">
+                        </div>
+                        <div class="col-5 col-lg-5 pt-3">
+                            <button class="btn btn-md btn-success btn_link" id="link_${i}" data="${i}">Link</button>
+                            <button class="btn btn-md btn-danger btn_leave" id="link_${i}" data="${i}">Leave</button>
+                            <button class="btn btn-md btn-primary btn_reg" id="link_${i}" data="${i}">Reg</button>
+                        </div>
+                        <div class="col-5 col-lg-5 pt-3">
+                            <input type="text" id="content_${i}" class="form-control" value="">
+                        </div>
+                        <div class="col-2 col-lg-2 pt-3 text-end">
+                            <button class="btn btn-md btn-primary btn_send" id="btn_${i}" data="${i}">Send</button>
+                        </div>
+                    </div>
+                </div>`;
+                tpl+=chat;
+            }
+            tpl+=`</div>`;
+            $("#container").html(tpl);
+            $(".btn_send").on("click",(ev)=>{
+                const sel=$(ev.target);
+                const index=sel.attr("data");
+                const target=$("#target_"+index).val();
+                const ctx=$("#content_"+index).val();
+                const data={
+                    act:"chat",
+                    cat:target.length===48?"chat":"group",
+                    to:target,
+                    msg:ctx,
+                    spam:spams[index],
+                }
+                self.send(data,index);
+                $("#content_"+index).val("");
+                const mine=$("#mine_"+index).html();
+                const str=`<p class="single" index="${index}"><small>${shorten(mine)}</small>${ctx}</p>`;
+                $("#screen_"+index).prepend(str);
+            });
+
+            $(".btn_link").on("click",(ev)=>{
+                const sel=$(ev.target);
+                const index=sel.attr("data");
+                const data={
+                    act:"active",
+                    acc:accounts[index],
+                    spam:spams[index],
+                }
+                self.send(data,index);
+            });
+
+            $(".btn_leave").on("click",(ev)=>{
+                const sel=$(ev.target);
+                const index=sel.attr("data");
+                const data={
+                    act:"offline",
+                    spam:spams[index],
+                }
+                self.send(data,index);
+                $("#screen_"+index).prepend(`<p class="notice">Leaving from chat server.</p>`);
+            })
+
+            $(".btn_reg").on("click",(ev)=>{
+                const sel=$(ev.target);
+                const index=sel.attr("data");
+                const data={
+                    act:"reg",
+                    acc:accounts[index],
+                    spam:spams[index],
+                }
+                self.send(data,index);
+            })
+            //websocket group
+
+            for(var i=0;i<accounts.length;i++){
+                const agent={
+                    open:(res,index)=>{
+                        const welcome=`<p class="live">Client actived, welcome!</p>`;
+                        $("#screen_"+index).prepend(welcome);
+                    },
+                    message:(res,index)=>{
+                        const input=JSON.parse(res.data);
+                        if(!input) return false;
+                        console.log(input);
+                        switch (input.act) {
+                            case "init":
+                                spams[index]=input.spam;
+                                break;
+                            case "chat":
+                                const ctx=`<p class="single" data="${input.from}" index="${index}"><small>${shorten(input.from)}</small>${input.msg}</p>`;
+                                $("#screen_"+index).prepend(ctx);
+                                self.actions()
+                                break;
+                            case "history":
+                                const his=`<p class="single" data="${input.from}" index="${index}"><small>${shorten(input.from)}</small>${input.msg}</p>`;
+                                $("#screen_"+index).prepend(his);
+                                self.actions()
+                                break;
+                            case "active":
+                                const act=`<p class="active">The ${input.count} active user.</p>`;
+                                $("#screen_"+index).prepend(act);
+                                break;
+                            case "notice":
+                                const notice=`<p class="notice">${JSON.stringify(input.msg)}</p>`;
+                                $("#screen_"+index).prepend(notice);
+
+                                break;
+                            case "error":
+                                const err=`<p class="error">${input.msg}</p>`;
+                                $("#screen_"+index).prepend(err);
+                                break;
+                            default:
+                                break;
+                        }
+                    },
+                    close:(res,index)=>{
+                        const notice=`<p class="notice">Disconnected</p>`;
+                        $("#screen_"+index).prepend(notice);
+                        console.log(res);
+                    },
+                    error:(res,index)=>{
+                        const notice=`<p class="notice">${JSON.stringify(res)}</p>`;
+                        $("#screen_"+index).prepend(notice);
+                    }
+                }
+                self.init(url,agent,(ws,index)=>{
+                    wmap[i]=ws;
+                },i);
+            }
+        });
+    </script>
+    <body style="width: 90%;margin: 0 auto;">
+        
+        <!-- <p>5D5K7bHqrjqEMd9sgNeb28w9TsR8hFTTHYs6KTGSAZBhcePg</p>
+        <div>5D5K7bHqrjqEMd9sgNeb28w9TsR8hFTTHYs6KTGSAZBhcePg</div> -->
+        <div id="container" style="width: 100%;margin: 0 auto;"></div>
+        <div class="row pt-2">
+            <div class="col-6">
+                <div class="row">
+                    <div class="col-12 pt-2 pb-2">
+                        
+                    </div>
+                    <div class="col-10">
+                        <small>The create account is index 1 : <span id="from">5FQmGPk7qGBmU3K6kDfMSBiUHBYq5NqXpx93KFEvDvyz5sRJ</span></small>
+                        <textarea id="accounts" class="form-control" rows="2" style="width: 100%;" 
+                            placeholder="Please input the accounts list, seperate by ,"></textarea>
+                        </div>
+                    <div class="col-2 text-end">
+                        <button class="btn btn-md btn-primary" id="group_create">Create</button>
+                        <p id="create_info" style="word-break: break-all;"></p>
+                        <script>
+                            $("#group_create").off("click").on("click",function(){
+                                //1.get accounts to create group
+                                const str=$("#accounts").val();
+                                const arr=str.split(",");
+                                const nlist=[];
+                                const map={};
+                                for(let i=0;i<arr.length;i++){
+                                    const row=arr[i].trim();
+                                    if(row.length===48 && !map[row]){
+                                        map[row]=true;
+                                        nlist.push(row);
+                                    } 
+                                }
+                                if(nlist.length===0 || nlist.length===1) return $("#create_info").html("Empty accounts");
+                                $("#create_info").html(JSON.stringify(nlist));
+        
+                                const from=$("#from").html();
+                                const from_index=0;
+                                self.send({list:nlist,cat:"group",act:"create",spam:spams[from_index]},from_index);
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+
+            </div>
+
+            <div class="col-6">
+                <div class="row pt-2">
+                    <div class="col-9">
+                        <input type="text" class="form-control" 
+                            placeholder="Please input group ID."
+                        >
+                    </div>
+                    <div class="col-3 text-end">
+                        <button class="btn btn-md btn-primary">Information</button>
+                    </div>
+                    <div class="col-12 pt-2">
+                        <textarea disabled class="form-control" rows="3" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="row pt-2">
+                    <div class="col-12 text-end">
+                        <button class="btn btn-md btn-primary">List</button>
+                    </div>
+                    <div class="col-12 pt-2">
+                        <textarea disabled class="form-control" rows="3" style="width: 100%;"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12"><hr /></div>
+        </div>
+    </body>
+</html>

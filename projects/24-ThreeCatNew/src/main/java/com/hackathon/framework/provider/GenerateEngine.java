@@ -27,10 +27,9 @@ public interface GenerateEngine {
      * 生成前检查生成环境是否缺失
      * 包含检查合同目录，编写脚本部署目录等，对应compile的环境
      * 防御性判断是否执行后面
-     * @param compile Yaml generateEngine.compile节点决定
      * @return
      */
-    Result preCheckGenerationEnv(String compile);
+    Result preCheckGenerationEnv() throws JSchException, IOException, InterruptedException;
 
     /**
      * 在服务器上面进行链接

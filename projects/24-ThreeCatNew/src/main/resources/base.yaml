@@ -1,7 +1,7 @@
 # 界面参数默认提供的
 guiCommand:
   # 组合输入框
-  comboBox: {"生成工程":init <替换生成目标绝对路径>,"生成测试文件":genTest <替换生成的位置>,"收集覆盖":compile --coverage <替换覆盖率文件位置>}
+  comboBox: {"生成工程":init <替换生成目标绝对路径>,"生成测试文件":genTest <合约abi文件路径> <sol合约文件地址> <自定义生成test文件路径>,"收集覆盖":compile --coverage <上面自定义生成test文件路径>}
 
 # 第一阶段 生成测试工程
 generateEngine:
@@ -23,6 +23,8 @@ generateEngine:
   compiledNames: abi
   # Sdk名称
   sdkName: xxx
+  # 断言名称
+  assertionName: jest
   # 选择断言模板l路径-匹配模板
   assertionPath: jest.config.js
 
