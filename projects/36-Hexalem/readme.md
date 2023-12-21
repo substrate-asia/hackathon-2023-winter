@@ -7,9 +7,9 @@
 ### Description
 
 - **Project Name:** Hexalem  
-- **Initial Kickof:** Start of November '23
-- **Project Type:** Multiplayer Mobile Blockchain Game
-- **Genere:** Strategy / Godgame
+- **Initial Kickof:** 7th November 2023
+- **Project Type:** Multiplayer Mobile Fully On-chain Blockchain Game
+- **Genre:** Strategy / Godgame
 - **Platform:** Android & iOS
 
 ### Logo
@@ -65,6 +65,7 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 - (WIP)[AI Simulations](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Bot), for simulating opponents, and for load testing
 
 Assets from the Unity Asset Store: 
+- [Mini Toon Hexagonal Tiles](https://assetstore.unity.com/packages/3d/environments/mini-toon-hexagonal-tiles-village-258801)
 
 ### Team
 
@@ -74,7 +75,7 @@ Assets from the Unity Asset Store:
 
 ### Project presentation slides
 
-[Slide presentation](https://docs.google.com/presentation/d/1ZcUa8e96SjcZLaGhSgcaE7s-XTcgDmQ8Ta2X1gSe0do)
+[Canva presentation](https://www.canva.com/design/DAF3mPdCMO4/OK-kPSV8PcZIMZD2GWe4_A/edit?utm_content=DAF3mPdCMO4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Project Folders
 
@@ -103,6 +104,8 @@ Assets from the Unity Asset Store:
     - URL: `ws://127.0.0.1:9944`
   - **Production**: Tanssi 
     - URL: `wss://fraa-dancebox-3023-rpc.a.dancebox.tanssi.network/`
+
+More info in [Substrate node readme](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/substrate/README.md).
 
 ### Frontend Client
 
@@ -138,7 +141,7 @@ Assets from the Unity Asset Store:
 
 ## Presentation
 
-[hexalem.pdf](https://github.com/SubstrateGaming/hackathon-2023-winter/files/13742202/hexalem.pdf)
+- [Latest Canva presentation](https://www.canva.com/design/DAF3mPdCMO4/OK-kPSV8PcZIMZD2GWe4_A/edit?utm_content=DAF3mPdCMO4&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
 
 ## Future Features planed
 
