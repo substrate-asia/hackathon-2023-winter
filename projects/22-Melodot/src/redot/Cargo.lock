@@ -9436,6 +9436,7 @@ name = "rc-validator"
 version = "0.1.0"
 dependencies = [
  "anyhow",
+ "cumulus-primitives-core",
  "frost-ed25519",
  "futures",
  "log",

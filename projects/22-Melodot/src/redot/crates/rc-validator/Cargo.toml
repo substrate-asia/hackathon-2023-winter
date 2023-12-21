@@ -30,6 +30,8 @@ rc-validator-network = { path = "../rc-validator-network", default-features = fa
 melo-das-db = { git = "https://github.com/ZeroDAO/melodot", default-features = false }
 
 # Substrate
+cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
+
 # cumulus-relay-chain-interface = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
 # cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
 

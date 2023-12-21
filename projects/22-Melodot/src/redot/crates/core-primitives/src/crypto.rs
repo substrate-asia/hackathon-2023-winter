@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use crate::DkgVerifyingKey;
 use anyhow::{anyhow, Context, Ok, Result};
 use frost::keys::dkg::round1::{Package as Round1Package, SecretPackage as Round1Secret};
 use frost::keys::dkg::round2::{Package as Round2Package, SecretPackage as Round2Secret};
@@ -65,6 +66,8 @@ pub struct DkgKeypair {
 pub struct FrostDkg {
 	dkg_keypair: Option<DkgKeypair>,
 	round2_packages: BTreeMap<Identifier, Round2Package>,
+	// TODO: Add coordinator support
+	#[allow(dead_code)]
 	is_coordinator: bool,
 	round1_secret: Option<Round1Secret>,
 	round1_package: Option<Round1Package>,
@@ -81,8 +84,39 @@ pub struct FrostDkg {
 }
 
 impl FrostDkg {
-	pub fn start_sign(&mut self) -> Result<SignMessage> {
+
+	pub fn new(id: Identifier) -> Self {
+		Self {
+			dkg_keypair: None,
+			round2_packages: BTreeMap::new(),
+			is_coordinator: false,
+			round1_secret: None,
+			round1_package: None,
+			round1_packages: BTreeMap::new(),
+			round2_secret: None,
+			t: 0,
+			n: 0,
+			signing_commitments: BTreeMap::new(),
+			sign_round1_nonce: None,
+			signing_package: None,
+			sign_round2_signature_shares: BTreeMap::new(),
+			sign_message: vec![],
+			id,
+		}
+	}
+
+	pub fn set_nt(&mut self, n: u16, t: u16) -> Result<()> {
+		if n < t {
+			return Err(anyhow!("n must be greater than t"));
+		}
+		self.n = n;
+		self.t = t;
+		Ok(())
+	}
+
+	pub fn start_sign(&mut self, msg: &[u8]) -> Result<SignMessage> {
 		if let Some(dkg_keypair) = &self.dkg_keypair {
+			self.sign_message = msg.to_vec();
 			let (nonce, commitment) =
 				frost::round1::commit(&dkg_keypair.key.signing_share(), &mut rand::rngs::OsRng);
 
@@ -168,7 +202,7 @@ impl FrostDkg {
 		Ok(None)
 	}
 
-	pub fn dkg_part2(&mut self, dkg_part2_message: DkgPart2Message) -> Result<()> {
+	pub fn dkg_part2(&mut self, dkg_part2_message: DkgPart2Message) -> Result<Option<DkgVerifyingKey>> {
 		if let Some(round2_secret) = &self.round2_secret {
 			let my_package = dkg_part2_message.part2.get(&self.id);
 
@@ -186,10 +220,12 @@ impl FrostDkg {
 				)?;
 
 				self.dkg_keypair =
-					Some(DkgKeypair { key: key_package, public: public_key_package });
+					Some(DkgKeypair { key: key_package, public: public_key_package.clone() });
+
+				return Ok(Some(public_key_package.verifying_key().clone()));
 			}
 
-			Ok(())
+			Ok(None)
 		} else {
 			Err(anyhow!("Missing secrets for DKG Part2 processing"))
 		}
@@ -309,8 +345,7 @@ mod tests {
 		let sign_message = b"Test message".to_vec();
 		let mut messages_to_send = Vec::new();
 		for participant in participants.values_mut() {
-			participant.sign_message = sign_message.clone();
-			let sign_msg = participant.start_sign().unwrap();
+			let sign_msg = participant.start_sign(sign_message.as_slice()).unwrap();
 
 			if let SignMessage::SignPart1(msg) = sign_msg {
 				messages_to_send.push((participant.id, msg));

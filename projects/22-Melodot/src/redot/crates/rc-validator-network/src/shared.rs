@@ -25,10 +25,8 @@ use bytes::Bytes;
 #[derive(Debug)]
 pub struct CreatedSubscription {
 	/// Subscription ID to be used for unsubscribing.
-	#[allow(dead_code)]
 	pub subscription_id: usize,
 	/// Receiver side of the channel with new messages.
-	#[allow(dead_code)]
 	pub receiver: mpsc::UnboundedReceiver<Bytes>,
 }
 

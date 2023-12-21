@@ -11,16 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-use codec::{Decode, Encode};
-pub use frost_ed25519::{VerifyingKey as DkgVerifyingKey, Signature as DkgSignature, Identifier};
 
-pub mod crypto;
+use crate::{DkgSignature, DkgVerifyingKey};
+use anyhow::Result;
+use cumulus_primitives_core::relay_chain::ValidatorId;
+use futures::channel::oneshot;
 
-sp_api::decl_runtime_apis! {
-    pub trait GetValidatorsFromRuntime<ValidatorId>
-    where
-        ValidatorId: Encode + Decode,
-    {
-        fn validators() -> Vec<ValidatorId>;
-    }
+#[derive(Debug)]
+pub enum Command {
+	RotateKey { sender: oneshot::Sender<Result<DkgVerifyingKey>> },
+	Sign { message: Vec<u8>, sender: oneshot::Sender<Result<DkgSignature>> },
+	Setup { nt: (u16, u16), sender: oneshot::Sender<Result<()>> },
+	RemoveValidators { validators: Vec<ValidatorId>, sender: oneshot::Sender<Result<()>> },
+	AddValidators { validators: Vec<ValidatorId>, sender: oneshot::Sender<Result<()>> },
 }
