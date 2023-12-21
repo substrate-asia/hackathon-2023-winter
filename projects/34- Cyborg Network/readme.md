@@ -95,3 +95,13 @@ Kresna is a specialist in blockchain and decentralized systems, with notable exp
 ### Megha Varshini ([Github](https://github.com/) ; [LinkedIn](https://www.linkedin.com/in/megha-varshini-tamilarasan-b1247a212/)) : Operations, Education, Media
 
 Megha has an impressive history in business development and operations, with experience spanning the startups. She is responsible for managing daily operations, forging partnerships, and ensuring the continued growth and success of the Cyborg Network. Megha is going to the Polkadot Blockchain Academy in Hong Kong in January 2024.
+
+## Achievements
+
+Winners - [web3hackx](https://www.hkweb3month.com/hackathon) Hackathon - Hong Kong (Nov 2024)
+
+Top 10 Finalist - [Bybit DMCC Web3 Innovation Challenge](https://finance.yahoo.com/news/bybit-dmcc-crypto-centre-announce-100000868.html) Hackathon
+
+[Polkadot Relayers Incubator](https://www.polkadotglobalseries.com/incubator/) - Top 14 Selected teams - Sep 2023
+
+[Polkadot Encode Accelerator](https://www.encode.club/encode-polkadot-accelerator-2023) - Top 10 teams - Ongoing
