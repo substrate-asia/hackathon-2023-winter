@@ -2,9 +2,9 @@ import { PolkadotSimpleRpcInterface } from '../../interfaces/polkadot/augment-ap
 import { KusamaSimpleRpcInterface } from '../../interfaces/kusama/augment-api-rpc';
 import { SubstrateSimpleRpcInterface } from '../../interfaces/substrate/augment-api-rpc';
 
-import { KusamaSupportedRpcMethods } from '../kusama/supported-rpc-methods';
-import { PolkadotSupportedRpcMethods } from '../polkadot/supported-rpc-methods';
-import { SubstrateSupportedRpcMethods } from '../substrate/supported-rpc-methods';
+import { KusamaSupportedRpcMethods } from '../constants/kusama-supported-rpc-methods';
+import { PolkadotSupportedRpcMethods } from '../constants/polkadot-supported-rpc-methods';
+import { SubstrateSupportedRpcMethods } from '../constants/substrate-supported-rpc-methods';
 import { Filter } from './filter-transformers';
 
 export type PolkadotSimpleRpcInterfaceFiltered = Filter<PolkadotSimpleRpcInterface, typeof PolkadotSupportedRpcMethods>;

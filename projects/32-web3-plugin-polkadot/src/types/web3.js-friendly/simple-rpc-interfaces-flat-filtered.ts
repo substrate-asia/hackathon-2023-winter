@@ -4,9 +4,9 @@
 // And there is no need to change them to the modified ones. However, this can be changed later if needed.
 import { PolkadotRpcInterface, KusamaRpcInterface, SubstrateRpcInterface } from '@polkadot/rpc-core/types/jsonrpc';
 
-import { KusamaSupportedRpcMethods } from '../kusama/supported-rpc-methods';
-import { PolkadotSupportedRpcMethods } from '../polkadot/supported-rpc-methods';
-import { SubstrateSupportedRpcMethods } from '../substrate/supported-rpc-methods';
+import { KusamaSupportedRpcMethods } from '../constants/kusama-supported-rpc-methods';
+import { PolkadotSupportedRpcMethods } from '../constants/polkadot-supported-rpc-methods';
+import { SubstrateSupportedRpcMethods } from '../constants/substrate-supported-rpc-methods';
 import { FlattenerFilter } from './flattener-filter-transformers';
 
 export type PolkadotRpcInterfaceFlatFiltered = FlattenerFilter<
