@@ -183,21 +183,31 @@ GitHub:yanboishere
 WeChat ID: YanboAtWeb3
 
 ### nuttt
-Introduction：SEU EEer, building hacking with me!
-GitHub: RbRe145
-WeChat ID：zhj314816759
+#### Introduction
+SEU EEer, building hacking with me!
+#### GitHub
+RbRe145
+#### WeChat ID
+zhj314816759
 
 ### Zijing
-Introduction：BD Head of Go2Mars
-Role：I am in charge of Trable business model 
-GitHub: zijin79
-WeChat ID：ZZJZZJ9248
+#### Introduction
+BD Head of Go2Mars
+#### Role
+I am in charge of Trable business model 
+#### GitHub
+zijin79
+#### WeChat ID
+ZZJZZJ9248
 
 
 ### HH Tsang
-Introduction:
-Role:
-GitHub: N/A
-WeChat ID: N/A
+#### Introduction
+
+#### Role
+
+#### GitHub
+
+#### WeChat ID
 
 
