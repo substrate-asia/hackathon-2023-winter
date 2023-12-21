@@ -52,14 +52,14 @@ graph TD
 
 
 ### Drawbacks:
-• ❌ DEX conversion friction costs
-• ❌ CEX transaction fees
-• ❌ Currency conversion loss during withdrawal
-• ❌ Currency conversion fees for foreign money payments
+- ❌ DEX conversion friction costs
+- ❌ CEX transaction fees
+- ❌ Currency conversion loss during withdrawal
+- ❌ Currency conversion fees for foreign money payments
 
 
 Trable's Objective:
-• ✅ One-step signing, minimal fees
+- ✅ One-step signing, minimal fees
 
 
 
