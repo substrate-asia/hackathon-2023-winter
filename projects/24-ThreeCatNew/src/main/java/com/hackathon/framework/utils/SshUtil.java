@@ -94,13 +94,13 @@ public class SshUtil {
      * @throws SftpException
      */
     public String getFolder() throws JSchException, SftpException{
-            Channel channel = session.openChannel("sftp");
-            channel.connect();
-            ChannelSftp sftpChannel = (ChannelSftp) channel;
-            // 获取当前路径下的文件及文件夹
-            Vector<ChannelSftp.LsEntry> entries = sftpChannel.ls("./");
-            // 遍历文件和文件夹
-            return entries.toString();
+        Channel channel = session.openChannel("sftp");
+        channel.connect();
+        ChannelSftp sftpChannel = (ChannelSftp) channel;
+        // 获取当前路径下的文件及文件夹
+        Vector<ChannelSftp.LsEntry> entries = sftpChannel.ls("./");
+        // 遍历文件和文件夹
+        return entries.toString();
     }
 
     /**

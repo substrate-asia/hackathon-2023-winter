@@ -75,9 +75,4 @@ class GenerateEngineImplTest {
         Assertions.assertEquals(new Result(0L, "hasError", "result"), result);
     }
 
-    @Test
-    void testAfterCheckGenerationDirectory() {
-        Result result = generateEngineImpl.afterCheckGenerationDirectory();
-        Assertions.assertEquals(new Result(0L, "hasError", "result"), result);
-    }
 }

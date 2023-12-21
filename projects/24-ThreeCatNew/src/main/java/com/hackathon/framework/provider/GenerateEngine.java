@@ -64,5 +64,5 @@ public interface GenerateEngine {
      * 防御性判断是否执行后面
      * @return Result
      */
-    Result afterCheckGenerationDirectory();
+    Result afterCheckGenerationDirectory(String contractOne, String contractTwo);
 }

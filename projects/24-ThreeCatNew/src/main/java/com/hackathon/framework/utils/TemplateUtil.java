@@ -32,7 +32,7 @@ public class TemplateUtil {
     static {
         assertionMap.put("jest", Arrays.asList("js","function","return"));
     }
-    
+
     /**
      * 读取abi文件以及sol文件生成对应的SolBean对象
      *
@@ -320,6 +320,4 @@ public class TemplateUtil {
         String solPath = "D:\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\contracts\\Lottery.sol\\";
         toTestTemplate(abiPath, solPath, saveFilePath);
     }
-
-
 }
