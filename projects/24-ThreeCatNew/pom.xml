@@ -41,13 +41,13 @@
             <artifactId>groovy-all</artifactId>
             <version>${groovy-all.core.version}</version>
         </dependency>
-        <!--字符串模板 用于生成测试类-->
+<!--        字符串模板 用于生成测试类-->
         <dependency>
             <groupId>org.FreeMarker</groupId>
             <artifactId>FreeMarker</artifactId>
             <version>${FreeMarker.core.version}</version>
         </dependency>
-        <!-- Fastjson 用于处理json串-->
+<!--         Fastjson 用于处理json串-->
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>
@@ -59,6 +59,28 @@
             <groupId>org.web3j</groupId>
             <artifactId>core</artifactId>
             <version>${web3j.core.version}</version>
+        </dependency>
+
+        <!--ssh链接服务器-->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
+        <!--单元测试-->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <!--单元测试-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.3.3</version>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

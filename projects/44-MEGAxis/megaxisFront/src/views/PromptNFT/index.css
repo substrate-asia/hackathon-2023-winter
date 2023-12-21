@@ -1,0 +1,18 @@
+.card-container:hover {
+  background-color: rgba(82, 82, 91, 1) !important;
+}
+
+.card-container {
+  transition-property       : all;
+  transition-timing-function: cubic-bezier(.4, 0, .2, 1);
+  transition-duration       : .15s;
+
+  border-radius: 12px;
+  height       : 130px;
+  width        : 100%;
+  color        : rgba(255, 255, 255, 1);
+  background   : rgba(46, 48, 51, 1);
+  overflow     : hidden;
+  display      : flex;
+  align-items  : center
+}

@@ -1,107 +1,183 @@
-## 基本资料	
+## Basic Info
 
-### 项目名称
-
+### Project Name
 Trable
 
-### 项目立项日期
+### Date of project initiation:
 
-2023年12月
+2023/12/02
 
-## 项目整体简介
+## Introduction
 
-### Project background
+With the growing Web3 ecosystem, more and more people are entering the Web3 industry, leading to an increasing number of individuals using cryptocurrencies for payments of products and services. However, the process of completing a purchase has become cumbersome, especially when it involves overseas products, requiring multiple asset conversions. This process is time-consuming and incurs high costs.
 
-随着Web3生态的不断壮大，拥有数字货币的地址数量逐年增加，自然有越来越多的人使用加密货币进行产品和服务的支付，但如今想要走完购买的全流程非常繁琐（尤其涉及到境外产品时），中间需经历数次的资产置换。这个过程不仅耗时，还会对用户原先的资产产生多次消耗，成本高昂。
+Traditional crypto payment process for overseas travel products:
 
-对此我们的项目提出解决方案，优化资产转换流程，提升用户在Web3的体验。并且后疫情时代，旅游业蓬勃发展，Trable进入这个庞大的市场，旨在提供独特的价值主张。
+    Cryptocurrency - DEX - CEX - Fiat currency - Foreign fiat currency payment
 
 
-<h3 align="center">
-  链上-DEX-CEX-法币-非本国法币支付
-  
-    ❌DEX转换磨损
-    ❌CEX交易手续费  
-    ❌出金汇率磨损
-    ❌非本国发币支付货币转换费
-    
-    ✅一步签名即到位 仅收取较少费用
-    
-</h3>
+### Flowchart Demo
+
+
+```mermaid
+graph TD
+  subgraph Multi-chain Token
+    A1[main network]
+    A2[Layer2 Token]
+    A3[other Tokens]
+  end
+
+  B[Cross-chain Bridge]
+
+  subgraph DEX/CEX
+    C1[DEX1]
+    C2[CEX1]
+    C3[DEX2]
+  end
+
+  subgraph Monetary Conversion
+    D[c2c domestic currency deposit and withdrawal]
+    D1[Conversion of various legal currencies.]
+  end
+
+  E[Credit Card<br>visa/mastercard/China UnionPay/JCB/American Express]
+  F[Payment for Overseas Products]
+
+  A1 -->|Asset Replacement| B -->|gas consumption<br>Waiting for the payment to be credited.| C1 -->|Asset Transfer| C2 
+  A2 -->|Asset Replacement| B -->|gas consumption<br>Waiting for the payment to be credited.| C2 -->|Asset Transfer| D
+  A3 -->|Asset Replacement| B -->|gas consumption<br>Waiting for the payment to be credited.| C3 -->|Asset Transfer| D -->|Rate Discount| D1 --> E
+  E --> |Currency Conversion Fee| F
+```
+
+
+### Drawbacks:
+- ❌ DEX conversion friction costs
+- ❌ CEX transaction fees
+- ❌ Currency conversion loss during withdrawal
+- ❌ Currency conversion fees for foreign money payments
+
+
+Trable's Objective:
+- ✅ One-step signing, minimal fees
+
+
+
+```mermaid
+graph TD
+  C[The user has explicitly paid for the product.]
+  subgraph User Action
+    A1[main networdk]
+    A2[Layer2 Token]
+    A3[Multi-chain Token]
+  end
+  subgraph  Trable
+    B[Signature confirmation]
+    F[Stablecoin]
+    Z[uniswap V4<br>hook pool]
+    D[Payment Successful]
+  end
+
+C --> A1 --> B
+C --> A2 --> B
+C --> A3 --> B 
+B --> Z -->F --> D
+```
+
+
+
+To address these challenges, our project proposes a solution that optimizes the asset conversion process and enhances users' Web3 experience. In the post-pandemic era, the travel industry is thriving, and Trable aims to enter this vast market by offering unique value propositions.
+
+
+
+
 
 ### Project Introduction
 
-Trable是一款针对加密货币支付的境外旅游产品Dapp应用。此应用通过集成Uniswap V4等技术，有效地简化了用户使用加密货币订购境外旅游产品的流程，缩减所需时间及降低DEX/CEX货币转换的成本。
+Trable is an overseas travel product Dapp application for cryptocurrency payment.
 
-用户仅需选择所需的支付加密货币并完成签名，即可轻松在本Dapp预订境外旅游产品。我们解决了个人外汇额度限制和支付工具不足的问题，提供了必要的法币支付支持。同时，我们在链上实时监控资金流向，确保资金安全。在整个过程中，只会收取一次手续费，为用户的订购体验提供全面保障。
+This application integrates Uniswap V4 and other technologies and relies on the Acala and Moonbean platforms in the Polkadot ecosystem to effectively simplify the process for users to order overseas travel products using cryptocurrency, shorten the time required for consumers and reduce the cost of DEX/CEX currency conversion. .
 
-Trable is a DApp application designed for overseas travel products with a focus on cryptocurrency payments. By integrating technologies such as Uniswap V4, this application effectively streamlines the process for users to order overseas travel products using cryptocurrency, reducing the time required and lowering the cost of DEX-CEX currency conversions.
-
-Users simply need to select the desired cryptocurrency for payment and complete the signature, making it easy to book overseas travel products through this DApp. We address issues such as individual foreign exchange limits and insufficient payment tools by providing necessary fiat currency payment support. Additionally, we monitor the flow of funds in real-time on the blockchain to ensure the security of funds. Throughout the entire process, a single transaction fee is charged, offering comprehensive protection for the user's booking experience.
+Users only need to select the required payment password and complete the signature to easily book overseas travel products on this Dapp. We have solved the problems of personal foreign exchange limit limits and insufficient payment tools, and provided necessary legal currency payment support. At the same time, we monitor the flow of funds in real time on the chain to ensure the safety of funds. During the entire process, only one handling fee will be charged, providing comprehensive protection for users’ ordering experience.
 
 
+## Acala asset router technical analysis
 
-  <img src="https://github.com/Web3-Club/Trable/assets/76860915/7e5a55f1-1486-4de6-a28e-7080e046f19d" alt="25461702219436_ pic">
+We aim to help users who want to pay their travel fee directly through polka related asset like DOT. Thus transfering polka asset from parachain to USDC on EVM is our primary target. 
 
-### Basic technical architecture
+We utilize acala asset router to achieve the target. The following 6 steps describe how it works in detail.
 
-#### Uniswap V4
+1. In our front page, users only need to select the source and target chains, as well as the token to transfer. As we can see in the demo video. Our web extension will save order information and jump to trable payment page.
 
-在Uniswap V3中，给每个流动性资金池部署单独的合约，这样创建资金池和执行多池兑换的成本更高。
+2. The second step is get a router address on karura network. In our project, we will send a shoudRounteWormhole request. 
 
-Uniswap V4将所有资金池都存储在一个合约中，从而节省了大量的燃料成本，因为兑换将不再需要在不同的合约中的资金池之间转移代币。
+3. We will pop a signature request that prompts users to sign a transtraction from parachain to karura chain
 
-In Uniswap V3, each liquidity pool is deployed with its own individual contract, resulting in higher costs for creating pools and executing multi-pool exchanges.
+4. After the signature, we will send tokens to wormhole. In our code, the routeWormhole will achieve this.
 
-Uniswap V4 consolidates all liquidity pools into a single contract, thereby saving significant gas costs. This is because exchanges will no longer require the transfer of tokens between pools in different contracts.
+5. After send the  token, router will be listening and waiting for VAA. After fetch it, the router interact with wormhole core contract。
+
+6. At the final step, user will sign a transaction with MetaMask that redeems the token on the target EVM chain.
+
+### 在黑客马拉松期间完成的代码功能
 
 #### Solidity
 
-
+#### Acala
 
 ### Project logo
 
-If we have
+
+
 
 ### Key Dapp Features
 
-#### Support for fiat currency payments（支持法币支付）
+- Support for fiat currency payments（法币支付支持）
 
 确保旅游产品跨境crypto直接支付的便利性
 
-#### Fast transactions anytime, anywhere（随时随地、快速交易）
+- Fast transactions anytime, anywhere（随时随地、快速交易）
 
 简化虚拟货币转移过程（多链资产转换）
 
-#### Save time and effort, lower loss（省时省力、更低损耗）
+- Save time and effort, lower loss（省时省力、更低损耗）
 
 结合Uniswap V4 降低多种token的swap成本，减少不必要的原始资产的转换和支付磨损
 
-#### No need to consider personal foreign exchange restrictions（无需考虑个人外汇限制）
+- No need to consider personal foreign exchange restrictions（无需考虑个人外汇限制）
 
 不受传统银行外汇限额的影响，更流畅的旅行体验
 
-### Project demo
+### Project demo 
 
 
 
 ## 黑客松期间计划完成的事项
 
+
 ### 区块链端
 
-smart contract
+
 
 ### 客户端
 
-Front-End
+front-end
+
+
+
+### 后端
+
 
 ## 黑客松期间所完成的事项
+
+
 
 ### 最终完成的功能点
 
 ### 完成的开发工作及代码结构
 
 ### PPT等大文件链接地址
+
+https://docs.google.com/presentation/d/1YajFYiBXxBr2Q0o1F3PbKhmQ7hMsGFVRvAOra6DJ3pg/edit?usp=sharing
 
 ## 使用方法
 
@@ -111,13 +187,42 @@ Front-End
 
 项目包含了针对合约功能的测试用例，确保了各项功能的正确性和安全性。
 
-## 队员信息
+## Member
+### Yanbo
+Introduction:
 
-（以下为GitHub）
-@yanboishere
-@lbr77 
-@s7iter
+Yanbo is an experienced blockchain product manager with a deep understanding of technical challenges and project management in various areas of Web3.
+Role: He possesses valuable expertise in public goods and leads the team's vision and overall strategy at Trable as an accomplished product manager.
 
-（以下为WeChat）
-@ZZJZZJ9248
+GitHub:yanboishere
+WeChat ID: YanboAtWeb3
+
+### nuttt
+#### Introduction
+SEU EEer, building hacking with me!
+#### GitHub
+RbRe145
+#### WeChat ID
+zhj314816759
+
+### Zijing
+#### Introduction
+BD Head of Go2Mars
+#### Role
+I am in charge of Trable business model 
+#### GitHub
+zijin79
+#### WeChat ID
+ZZJZZJ9248
+
+
+### HH Tsang
+#### Introduction
+
+#### Role
+
+#### GitHub
+
+#### WeChat ID
+
 
