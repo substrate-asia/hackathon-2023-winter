@@ -1,0 +1,517 @@
+{
+    //账号相关操作接口
+    "user" : [
+        {
+            //todo： 新用户绑定后直接初始化可能会被数据库恶意攻击
+            "name": "用户登录",
+            "description": "用户链接钱包后，获取该账户的用户信息",
+            "url": "/user/login",
+            "requestbody":{
+                "address": ""      //用户钱包账户
+            },
+            "return-content":
+            {
+                "code": 1,          // int ，0表示登录成功
+                "message": "",          // string
+                "data": {
+                    "address": "",
+                    "uid": 2000,        //用户id
+                    "username":"",      // 用户名
+                    "score": 299        // 积分
+                    // "desc": ""          // 简介
+                    // "avatar": "data:image/png;base64,iVBORw",  //用户头像 base64
+                }
+            }
+        },
+        {
+            "name": "用户修改信息",
+            "description": "用户修改个人信息",
+            "url": "/user/changeProfile",
+            "requestbody":{
+                "uid": 2000,        //用户id
+                "username":""      // prompt名称
+                //"desc": ""          // 简介
+            },
+            "return-content":
+            {
+                "code": 1,              // int 根据code判断是否修改成功，0为成功
+                "message": "",              // string
+                "data": "" //
+            }
+        },
+        {
+            "name": "*用户更换头像",
+            "description": "用户单独更换头像，自行上传",
+            "url": "/user/changeImg",
+            "requestbody":{
+                "uid": 2000,        //用户id
+                "img": ""              //
+            },
+            "return-content":
+            {
+                "code": 1,              // int
+                "message": "",              // string
+                "data": "change success" //
+            }
+        },
+        {
+            "name": "*心跳检测",
+            "description": "用户在该界面时持续发送,若长时间离开时后端默认自动断开,需重新连接钱包和登录",
+            "url": "/user/changeProfile",
+            "requestbody":{
+                "uid": 2000        //用户id
+                //timstamp
+            },
+            "return-content":
+            {
+                "code": 1,              // int
+                "message": "",              // string
+                "data": "OK"
+            }
+        },
+        {
+            "name": "用户购买时的交易操作, 对接合约"
+        }
+    ],
+    // chatgpt账号相关操作接口
+    "PlusGPT":[
+        {
+            "name": "gpt提问",
+            "description": "用户链接钱包后在主界面对chatgpt提问",
+            "url": "/chatgpt/ask",
+            "requestbody": {
+                "content": [        // 当前界面的所有问题一起发送
+                    {
+                        "uid": 2000,
+                        "data": [{
+                            "type": 1, // int 1表示ai回答，2表示用户使用prompt提问，3表示用户使用content体温
+                            "pid": "", // string
+                            "params": ['s1', 's2'],
+                            "content": "", //string
+                            },
+                            {}]
+                    }
+                ]  // 内容：历史提问，数组
+
+            },
+            "return-content":
+            {
+                "code": 1,                // int
+                "message": "",                // string
+                "data": "i don't know\n"  // 回答内容,markdown格式
+
+            }
+        },
+        {
+            "name": "调取已有的prompt参数",
+            "description": "用户点击使用自己已有的prompt,获取该prompt的参数(或者直接调用prompt的接口)",
+            "url": "/chatgpt/getPromptParams",
+            "requestbody": {
+                "uid": "",          // 用户id
+                "pid": 2000         // prompt id
+            },
+            "return-content":
+            {
+                "code": 1,                // int
+                "message": "",                // string
+                "data": {
+                    "params": ["params1", "params2"] // prompt参数
+                }
+            }
+        },
+    ],
+    "PromptNFT":[
+        //////////////////////////查询prompt//////////////////////
+        {
+            "name": "查询某类prompt",
+            "description": "用户在按分类找prompt时根据类别查询prompt, 或者用户输入内容中包含该类名称时进行查询",
+            "url": "/prompt/getByType",
+            "requestbody":{
+                "type": 1,
+                "offset": 1,        //分页查询,第几页
+                "limit": 10         //分页查询，每页几个
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": [{
+                    "pid": 2000,
+                    "prompt_name":"",   // prompt名称
+                    "creator": "",      // 作者的username
+                    "price": "",        // 价格
+                    "update_time": "",  // 更新时间
+                    "desc": "",         // 描述
+                    "img_url": "",      // url
+
+                    // 以下可暂时不用
+                    "views": 1000,
+                    "likes": 1000,
+                    "comments": 1000
+
+                },
+                    {
+                        "prompt_name":"..."
+                    }]
+
+            }
+        },
+        {
+            "name": "查询关键字prompt",
+            "description": "根据用户对话框中输入检索相关联的prompt(也可前端进行检索)",
+            "url": "/prompt/getByKey",
+            "requestbody":{
+                "key": "",         //输入内容
+                "offset": 1,        //分页查询,第几页
+                "limit": 10   //分页查询，每页几个
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": [{
+                    "pid": 2000,
+                    "prompt_name":"",   // prompt名称
+                    "creator": "",      // 作者的username
+                    "price": "",        // 价格
+                    "update_time": "",  // 更新时间
+                    "desc": "",         //描述
+                    "img_url": "",      // url
+
+                    // 以下可暂时不用
+                    "views": 1000,
+                    "likes": 1000,
+                    "comments": 1000
+
+                },
+                    {
+                        "prompt_name":"..."
+                    }]
+
+            }
+        },
+        {
+            "name": "*查询当前用户收藏的prompt",
+            "description": "在chatgpt界面默认优先推荐收藏的prompt",
+            "url": "/prompt/getFavorites",
+            "requestbody":{
+                "uid": "",
+                "page": 1,          //分页查询,第几页
+                "num_per_page": 10  //分页查询，每页几个
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": [{
+                    "pid": 2000,
+                    "prompt_name":"",
+                    "creator": "",   // 作者的username
+                    "price": "",
+                    "update_time": "",
+                    "desc": "",
+                    "img_url": "",      // url
+
+                    // 以下可暂时不用
+                    "views": 1000,
+                    "likes": 1000,
+                    "comments": 1000
+
+                },
+                    {
+                        "prompt_name":"..."
+                    }]
+
+            }
+        },
+        {
+            "name": "查询已购prompt",
+            "description": "查询当前用户购买的prompt",
+            "url": "/prompt/getBought",
+            "requestbody":{
+                "uid": "",
+                "page": 1,          //分页查询,第几页
+                "num_per_page": 10  //分页查询，每页几个
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": [{
+                    "pid": 2000,
+                    "prompt_name":"",
+                    "creator": "",   // 作者的username
+                    "price": "",
+                    "update_time": "",
+                    "desc": "",
+                    "img_url": "",      // url
+
+                    // 以下可暂时不用
+                    "views": 1000,
+                    "likes": 1000,
+                    "comments": 1000
+                },
+                    {
+                        "prompt_name":"..."
+                    }]
+
+            }
+        },
+        {
+            "name": "查询创建prompt",
+            "description": "查询当前用户创建的prompt",
+            "url": "/prompt/getMyPrompt",
+            "requestbody":{
+                "uid": "",
+                "page": 1,          //分页查询,第几页
+                "num_per_page": 10  //分页查询，每页几个
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": [{
+                    "pid": 2000,
+                    "prompt_name":"",
+                    "creator": "",   // 作者
+                    "price": "",
+                    "update_time": "2022-12-22",
+                    "desc": "",
+                    // 以下可暂时不用
+                    "views": 1000,
+                    "likes": 1000,
+                    "comments": 1000
+                },
+                    {
+                        "prompt_name":"..."
+                    }]
+
+            }
+        },
+        {
+            "name": "查询prompt详情",
+            "description": "点开prompt详情页,查询prompt所有信息",
+            "url": "/prompt/getDetail",
+            "requestbody":{
+                "uid": "",
+                "pid": 2000 //prompt id
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": {
+                    "prompt_name":"",
+                    "creator": "",   // 作者
+                    "price": "",
+                    "update_time": "",
+                    "desc": "",
+                    // 以下可暂时不用
+                    "views": 1000,
+                    "likes": 1000,
+                    "comments": 1000,
+
+                    // 详情页里多的内容
+                    "type": 2,
+                    "params": ["params1", "params2"],    // 参数
+                    "create_time": "2022-12-22",
+                    // "creator_img": "data:image/png;base64,iVBORw",  //创建者头像
+                    "examples": [{
+                        "input":"",
+                        "output": ""
+                    }],                                  //输入和输出例子
+                    "auth_level" : 0    //1（作者）看全部，2（购买者）看params不能看content，3（没买也不是作者）除了content和params都能看
+
+                }
+
+            }
+        },
+        //////////////////////////评论comment//////////////////////
+        {
+            "name": "*评论prompt",
+            "description": "评论prompt或对该prompt的评论进行回复",
+            "url": "/prompt/addComment",
+            "requestbody":{
+                "uid": "",          // 用户id
+                "pid": 2000,        // 评论的prompt id
+                "cid": 2500,        // 回复的评论id，可选
+                "text": ""          // 评论内容
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": "comment success!"  //可不返回
+
+            }
+        },
+        {
+            "name": "*查询prompt的评论",
+            "description": "在详情页,查看该prompt的评论",
+            "url": "/prompt/getComments",
+            "requestbody":{
+                "pid": 2000,        //prompt id
+                "page": 1,          //分页查询,第几页
+                "num_per_page": 10  //分页查询，每页几个
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": [{
+                    "pid": 2000,
+                    "username": "",     // 评论用户的用户名
+                    "cid": 3000,        // 评论id, int64
+                    "text": "",         // 评论内容
+                    "parent_id": 2500,  // 回复的评论id, int64, 可选
+                    "create_time": "2022-12-22" //评论时间
+                },
+                    {
+                        "pid":"..."
+                    }]
+
+            }
+        },
+        {
+            "name": "用户购买prompt",
+            "description": "用户在详情页或推荐页直接购买prompt",
+            "url": "/prompt/purchase",
+            "requestbody":{
+                "uid": "",           // 用户id
+                "pid": 2000         // prompt id
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": "success"   // 可不填
+
+            }
+        },
+        //////////////////////////创建与修改prompt内容//////////////////////
+        {
+            "name": "创建prompt",
+            "description": "输入prompt信息后,创建prompt",
+            "url": "/prompt/make",
+            "requestbody":{
+                "uid": "",          //用户id
+                "pid": 2000,         // 创建nft返回的promptID
+                "prompt_name":"",   // prompt名称
+                "price": 128.0,     // 价格
+                "desc": "",         // 描述
+                "type": 2,          // 分类
+                "tag" :"",
+                "avatar" :"",
+                "params": ["params1", "params2"],       // 参数,也可以自己识别用户内容里的 %%vegetabl%%
+                "content": "",      // 内容
+                "examples": [{
+                    "input":"",
+                    "output": ""
+                }]                  //输入和输出例子，可不填
+
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": {
+                    //生成的promptid ，也可不返回data
+                }
+            }
+        },
+        {
+            "name": "查询prompt内容",
+            "description": "用户修改时,调用此接口和getDetail显示至修改界面(或者此接口直接返回所有信息？)",
+            "url": "/prompt/getContent",
+            "requestbody":{
+                "uid": "", //用户id
+                "pid": 2000  //promptid
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": {
+                    "pid": 2000,
+                    "content": ""   //prompt 具体内容
+                }
+
+            }
+        },
+        {
+            "name": "更改prompt内容",
+            "description": "更改prompt内容",
+            "url": "/prompt/change",
+            "requestbody":{
+                "uid": "",          // 用户id
+                "pid": 2000,        // prompt id
+                "prompt_name":"",   // prompt名称
+                "price": "",        // 价格
+                "desc": "",         // 描述
+                "type": 2,          // 分类
+                "params": ["params1", "params2"],       // 参数，也可以自己识别用户内容里的【】
+                "content": "",       // 具体内容
+                "examples": [{
+                    "input":"",
+                    "output": ""
+                }]                  //输入和输出例子，可不填
+
+            },
+            "return-content":
+            {
+                "code": 1,          // int
+                "message": "",          // string
+                "data": "change success" //可不返回
+            }
+        },
+        {
+            "name": "用户点赞/点踩prompt",
+            "url": "/prompt/like",
+            "requestbody":{
+                "uid": "",          //用户id
+
+                "pid": 2000,        //prompt id
+                "like": 1           // 1-like, -1-dislike, 0-cancel
+            },
+            "return-content":
+            {
+                "code": 0,          // int
+                "message": "",          // string
+                "data": "success" //可不返回
+            }
+        },
+        {
+            "name": "*用户举报prompt",
+            "url": "/prompt/report",
+            "requestbody":{
+                "uid": "",          // 用户id
+                "pid": 2000,        // prompt id
+                "reason": 1,        // 举报原因，enum
+                "text": "black"     // 额外说明，可为空
+
+            },
+            "return-content":
+            {
+                "code": 0,          // int
+                "message": "",          // string
+                "data": "report success" //可不返回
+            }
+        },
+        {
+            "name": "用户购买prompt NFT",
+            "url": "/prompt/buyNFT",
+            "requestbody":{
+                "address": 2000,     // 购买prompt用户钱包地址
+
+                "pid": ""         // promptId
+
+            },
+            "return-content":
+            {
+                "code": 0,          // int
+                "message": "",          // string
+                "data": "success" //可不返回
+            }
+        }
+    ]
+}
