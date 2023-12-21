@@ -32,13 +32,13 @@ describe('PolkaPlugin Tests', () => {
 
     it('should throw `InvalidResponseError` when the method is not supported by the provider (simulated)', async () => {
       // simulate calling a method that is not supported by the provider
-      web3.polka.substrate.chain.getBlock = () =>
+      web3.polka.substrate.rpc.chain.getBlock = () =>
         web3.requestManager.send({
           method: `unsupported_method_by the provider`,
         });
 
       try {
-        await web3.polka.substrate.chain.getBlock();
+        await web3.polka.substrate.rpc.chain.getBlock();
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(InvalidResponseError);
@@ -49,7 +49,7 @@ describe('PolkaPlugin Tests', () => {
     it('should throw `InvalidResponseError` when the method is not supported by the provider (calling polkadot method at substrate node)', async () => {
       try {
         // the connected provider is a substrate node and does not support this polkadot method
-        await web3.polka.polkadot.beefy.getFinalizedHead();
+        await web3.polka.polkadot.rpc.beefy.getFinalizedHead();
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(InvalidResponseError);
