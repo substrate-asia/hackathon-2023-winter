@@ -35,6 +35,7 @@ public class TemplateUtil {
         assertionMap.put("jest", Arrays.asList("js","function","return"));
     }
 
+
     /**
      * 如果result无错误信息的话，将result中存储的map中的文件存储到yaml指定路径
      * @param result
@@ -74,6 +75,7 @@ public class TemplateUtil {
         return new Result(startTime, errText.toString(),"");
     }
     
+
     /**
      * 读取abi文件以及sol文件生成对应的SolBean对象
      *
