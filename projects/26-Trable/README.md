@@ -98,12 +98,6 @@ B --> Z -->F --> D
 To address these challenges, our project proposes a solution that optimizes the asset conversion process and enhances users' Web3 experience. In the post-pandemic era, the travel industry is thriving, and Trable aims to enter this vast market by offering unique value propositions.
 
 
-## Acala asset router technical analysis
-
-We aim to help users who want to pay their travel fee directly through polka related asset like DOT. Thus transfering polka asset from parachain to USDC on EVM is our primary target. 
-
-We utilize acala asset router to achieve the target. The following 6 steps describe how it works in detail.
-
 
 
 
