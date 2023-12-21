@@ -42,6 +42,10 @@ Project establishment date 11/2023
    - [x] Integrate RISC Zero tool to prove tests pass/fail for project
    - [x] Demonstrate integration of the tool and blockchain in an example Rust project
 
+## Demo Video
+See a demonstration of a Github CI action that uses the tool to prove its tests, and submit those proofs to be verified by a live running substrate node:
+https://youtu.be/ojrd1BTj8HU
+
 ## Team information
 
 Justin Frevert
