@@ -127,7 +127,7 @@ impl Default for ValidatorNetworkConfig {
 	fn default() -> Self {
 		ValidatorNetworkConfig {
 			listen_addr: "0.0.0.0".to_string(),
-			listen_port: 4417,
+			listen_port: 4422,
 			bootstrap_nodes: vec![],
 			max_retries: 3,
 			retry_delay: Duration::from_secs(5),
