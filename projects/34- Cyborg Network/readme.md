@@ -35,6 +35,17 @@ Cyborg Network is a revolution in edge computing. It introduces a decentralized 
 
 - Cyborg PoC [demo video](https://youtu.be/xHdELatEaoc)
 
+## Already completed - before Polkadot Winter Hackathon start date 01-11-2023
+
+Our team has successfully finalized the development of a resilient low-level client software written in Rust. This software has been optimized to run efficiently on various devices, including smaller ones like Raspberry Pi. It exposes data based on API calls, allowing seamless integration with other systems.
+
+Additionally, we have introduced a new pallet in Substrate called "Edge Connect." This pallet enables the writing of data from an edge server directly to the Blockchain. It serves as a crucial component in facilitating the connectivity between edge servers and the Blockchain.
+
+Furthermore, we have implemented a server implementation in Rust. This server communicates with all connected clients, sending API requests and collecting their responses. The responses are then posted to a specified HTTP endpoint, ensuring efficient data transmission and retrieval.
+
+But as a recommendation from [Web 3 Foundation](https://web3.foundation/) We have started working on eliminating the centralized server implementation to promote further decentralization of the protocol. This is our old architecture which has been updated to the one in the top and worked for in this hackathon.
+
+![10k Feet ](https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/fe7de20b-c0a5-4681-aebb-47c886219cb1)
 
 ## How to run
 
