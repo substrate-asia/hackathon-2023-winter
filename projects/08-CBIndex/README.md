@@ -9,20 +9,19 @@
 **Useful Links:**
 
 - [**Demo Website**](https://moonbase.cbindex.finance/)
-- [**Deck for Hackathon**]()
+- [**Deck for Hackathon**](https://docsend.com/view/v6nkyudvtjsr55v5)
 - [**Demo Video**]()
-- [**Whitepaper**]()
-- [**X (Twitter)**]()
-- [**Telegram**]()
+- [**Whitepaper**](https://cbindex.finance/CBIndex_whitepaper_2023_v1.pdf)
+- [**X (Twitter)**](https://twitter.com/CBIndex_Global)
+- [**Telegram**](https://t.me/CBIndexGlobalM)
 
 ## Important Note
 
 > The Project CBIndex attended Polkadot Hackathon Summer 2023. At that time, we tried to complete the copy-investing feature for the copy fund (the basic feature of our project), and tried to deploy on the Vara blockchain. Due to the lack of maturity of the infra and time constraints, we barely finished the copy-investing feature during the hackathon.
-> 
+>
 > We were very lucky to win the 3rd place of the smart contract track.
 >
 > This time, we've done sufficient research and planning. We would love to try completing one of our advanced features, namely active on-chain funds, on Moonbase Alpha TestNet.
-
 
 ## Planned Tasks for the Hackathon
 
@@ -90,4 +89,3 @@
 - UniswapV2Router02 ([``]() is used for swap.
 
 ---
-

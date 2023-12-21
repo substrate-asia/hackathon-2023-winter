@@ -9,11 +9,11 @@
 **Useful Links:**
 
 - [**Demo Website**](https://moonbase.cbindex.finance/)
-- [**Deck for Hackathon**]()
+- [**Deck for Hackathon**](https://docsend.com/view/v6nkyudvtjsr55v5)
 - [**Demo Video**]()
-- [**Whitepaper**]()
-- [**X (Twitter)**]()
-- [**Telegram**]()
+- [**Whitepaper**](https://cbindex.finance/CBIndex_whitepaper_2023_v1.pdf)
+- [**X (Twitter)**](https://twitter.com/CBIndex_Global)
+- [**Telegram**](https://t.me/CBIndexGlobalM)
 
 ## Important Note
 
