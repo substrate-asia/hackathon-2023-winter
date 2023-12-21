@@ -1,0 +1,166 @@
+.connect-wallet-btn {
+    float: right;
+    width: 240px;
+    height: 60px;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-color: #73E2BB;
+    border-top-width: 5px;
+    border-right-width: 5px;
+    border-bottom-width: 5px;
+    border-left-width: 5px;
+}
+.connect-wallet-bg {
+    padding: 4px;
+    background: #373938;
+    /* background: linear-gradient(to right, #73E2BB, #E1FFF4
+    ); */
+    border-radius: 10px;
+}
+.connect-wallet-connect {
+ 
+    height: 50%;
+    padding:10px ;
+    border-radius: 10px;
+    text-align: center;
+}
+.connect-wallet-connect:hover {
+    background-color:rgba(0,0,0, 0);
+}
+.connect-wallet-btn:hover {
+    /*transform: scale(1.05);*/
+    border: none;
+    background: linear-gradient(to right, #73E2BB, #E1FFF4);
+    box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);
+    color:#373938;
+}
+
+.create-prompt-btn {
+    float:right;
+    width: 80px;
+    height: 60px;
+    color: #fff;
+    font-size: 1.2rem;
+    font-weight: bold;
+    border-radius: 10px;
+    border-color: #FF7676;
+}
+.create-prompt-bg {
+    float:right;
+    margin-right: 30px;
+
+}
+
+.create-prompt-btn:hover {
+    border: none;
+    background: linear-gradient(to bottom, #000B7B, #FF7676);
+    /*box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.2);*/
+}
+.create-prompt-create {
+    background: black;
+    height: 100%;
+    color: #fff;
+    /*padding:15px 0;*/
+    border-radius: 10px;
+    text-align: center;
+}
+
+.create-button {
+    width: 60px;
+    height: 60px;
+    border-radius: 10px;
+    background-color: black;
+    font-size: 18px;
+    border: 3px solid transparent;
+    background-image: linear-gradient(to right, #73E2BB, #E1FFF4);
+    color:#373938;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.create-button:hover {
+    background-image: linear-gradient(to bottom, #000B7B, #FF7676);
+    border: none;
+    cursor: pointer;
+}
+
+.disconnect-button {
+    float: right;
+    width: 240px;
+    height: 56px;
+    /*border-radius: 10px;*/
+    background-color: black;
+    color: white;
+    font-size: 18px;
+    border:  2px solid;
+    border-image: linear-gradient(to right, #73E2BB, #E1FFF4);
+    border-image-slice: 1;
+    
+    /*background-image: linear-gradient(to bottom, #000B7B, #FF7676);*/
+    /*transition: background-color 0.2s ease, border-color 0.2s ease;*/
+}
+.disconnect-button:hover {
+    background-image: linear-gradient(to right, #73E2BB, #E1FFF4);
+    color:#373938;
+    border: none;
+    cursor: pointer;
+    height: 60px;
+    width: 244px;
+    font-size: 18px;
+    float: right;
+    padding-top: 1.2px;
+    font-weight: bold;
+}
+
+.create-container{
+    float: right;
+    border:  2px solid;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-image: linear-gradient(to right, #73E2BB, #E1FFF4);
+    border-image-slice: 1;
+    background-color: transparent;
+    margin-right: 10px;
+}
+.button-new{
+    align-content: center;
+    border: 1px solid transparent;
+    margin: 1px;
+    background-color:transparent;
+    color: white;
+}
+
+.addicon{
+    margin-left: 15px;
+    color: white;
+    align-content: center;
+}
+
+.create-container:hover > .addicon{
+    color:#373938;
+    cursor: pointer;
+}
+
+.create-container:hover > button{
+    color:#373938;
+    cursor: pointer;
+}
+
+.create-container:hover{
+    color:#373938;
+    float: right;
+    border:  2px solid;
+    height: 56px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* border-image: linear-gradient(to right, #73E2BB, #E1FFF4); */
+    /* border-image-slice: 1; */
+    /* background-color: transparent; */
+    margin-right: 10px;
+    background: linear-gradient(to right, #73E2BB, #E1FFF4);
+    cursor: pointer;
+}
