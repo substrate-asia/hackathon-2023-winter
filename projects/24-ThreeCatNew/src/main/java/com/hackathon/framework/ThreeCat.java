@@ -152,6 +152,7 @@ public class ThreeCat extends JFrame {
                     String testFilePath = commands[3];
                     Result generateTestResult;
                     try {
+
                         generateTestResult = TemplateUtil.toTestTemplate(abiPath, solPath, testFilePath);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONException;
 import com.hackathon.framework.bean.FunctionBean;
 import com.hackathon.framework.bean.SolBean;
 import com.hackathon.framework.bean.StrategyBean;
+import com.hackathon.framework.provider.impl.GenerateEngineImpl;
 import freemarker.template.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
@@ -84,7 +85,7 @@ public class TemplateUtil {
      * @return Result
      * @throws IOException
      */
-    public static Result toTestTemplate(String jsonPath, String saveFilePath) throws IOException {
+    public static Result toTestTemplate(String jsonPath, String migrationsPath,String saveFilePath) throws IOException {
 
         long startTime = System.nanoTime();
         //错误信息内容
@@ -101,9 +102,9 @@ public class TemplateUtil {
             solBean.setAbiName(f.getName());
             //开始读取文件，进行读取文件内容
             fileStr = FileUtil.readFileToString(f);
-            errText.append(jsonCheckToClass(fileStr, solBean)).append("|");
+            errText.append(jsonCheckToClass(fileStr, solBean,migrationsPath)).append("|");
             System.out.println(JSON.toJSONString(solBean));
-            saveTestFile(solBean, saveFilePath);
+            saveTestFile(solBean, migrationsPath,saveFilePath);
         }
 
         return new Result(startTime, errText.toString(), "");
@@ -116,7 +117,7 @@ public class TemplateUtil {
      * @param solBean      脚本对象
      * @param saveFilePath js文件存储地址
      */
-    public static Result saveTestFile(SolBean solBean, String saveFilePath) {
+    public static Result saveTestFile(SolBean solBean, String migrationsPath,String saveFilePath) {
         // 创建 FreeMarker 配置
         long startTime = System.nanoTime();
         String errorMessage = "";
@@ -158,14 +159,13 @@ public class TemplateUtil {
      *
      * @param solBean 脚本对象
      * @param fileStr 文件内容
-     * @param solPath sol文件地址
      * @return Result
      */
-    public static String jsonCheckToClass(String fileStr, SolBean solBean) throws IOException {
+    public static String jsonCheckToClass(String fileStr, SolBean solBean,String migrationsPath) throws IOException {
         String errText = "";
         if (isJsonContent(fileStr)) {
             //进行内容解析生成测试文件
-            getTestObject(fileStr, solBean);
+            getTestObject(fileStr, solBean,migrationsPath);
         } else {
             errText = "请求数据格式无法解读，请检查数据内容。";
         }
@@ -174,23 +174,15 @@ public class TemplateUtil {
 
 
     //根据符合格式的json数据，生成对应的测试文件对象
-    public static String getTestObject(String jsonString, SolBean solBean) throws IOException {
+    public static String getTestObject(String jsonString, SolBean solBean,String migrationsPath) throws IOException {
 
         String errText = "";
 
         try {
             // 使用 Fastjson 解析 合约请求描述文件，json字符串
             FunctionBean functionBean = JSON.parseObject(jsonString, FunctionBean.class);
-
-            String currentProjectPath = System.getProperty("user.dir");
-            StrategyBean strategy = StrategyConfigUtil.getStrategy("generateEngine");
-            String solPath = currentProjectPath+strategy.getSolPath();
-
-            System.out.println("========================="+solPath+solBean.getAbiName().replace(".json", ".sol"));
-            System.out.println("========================="+solPath+solBean.getAbiName().replace(".json", ".sol"));
-
 //            从sol文件中获取所有function 对象
-            Map<String, Integer> keyValueMap = extractFunctionLines(solPath+(solBean.getAbiName().replace(".json", ".sol")));
+            Map<String, Integer> keyValueMap = extractFunctionLines(migrationsPath+(solBean.getAbiName().replace(".json", ".sol")));
 
             //循环与sol文件中的方法进和匹配，如果文件中的方法，没有inputs和outputs 就以sol文件为准
             //如果
@@ -390,7 +382,7 @@ public class TemplateUtil {
 
         Result jsonresult =  checkMap(result, currentProjectPath+"contracts",currentProjectPath+"migrations");
         //通过jsonpath读取abi和sol
-        toTestTemplate((String)jsonresult.getResult(), currentProjectPath+"test");
+        toTestTemplate((String)jsonresult.getResult(), currentProjectPath+"migrations",currentProjectPath+"test");
 
     }
 
