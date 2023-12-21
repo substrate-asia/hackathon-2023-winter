@@ -6,7 +6,7 @@ Trable
 
 ### Date of project initiation:
 
-2023/12
+2023/12/02
 
 ## Introduction
 
