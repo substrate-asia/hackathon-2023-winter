@@ -2,6 +2,7 @@ package com.hackathon.framework.provider;
 
 import com.hackathon.framework.utils.Result;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,7 +41,7 @@ public interface GenerateEngine {
      * @throws JSchException
      * @throws InterruptedException
      */
-    Result initDirectoryForServer() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException;
+    Result initDirectoryForServer() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException, SftpException;
 
     /**
      * 初始化生成目录
@@ -51,12 +52,12 @@ public interface GenerateEngine {
     /**
      * 载入合约
      */
-    Result loadContract();
+    Result loadContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException;
 
     /**
      * 编译合约
      */
-    Result compilationContract();
+    Result compilationContract(String EtherStoreContract, String AttackContract) throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException;
 
     /**
      * 生成后检查生成目录是否正确(最后一个接口)

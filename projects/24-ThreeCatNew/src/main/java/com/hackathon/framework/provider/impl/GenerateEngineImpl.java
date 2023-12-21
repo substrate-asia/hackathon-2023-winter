@@ -6,6 +6,7 @@ import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.SshUtil;
 import com.hackathon.framework.utils.StrategyConfigUtil;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -14,7 +15,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class GenerateEngineImpl implements GenerateEngine {
 
@@ -67,7 +70,7 @@ public class GenerateEngineImpl implements GenerateEngine {
      * @throws JSchException
      * @throws InterruptedException
      */
-    public Result initDirectoryForServer() throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException {
+    public Result initDirectoryForServer() throws JSchException, SftpException, IOException, InvocationTargetException, IllegalAccessException, InterruptedException {
         long startTime = System.nanoTime();
         // 创建工程名称
         strategyBean = StrategyConfigUtil.getStrategy("generateEngine");
@@ -81,10 +84,16 @@ public class GenerateEngineImpl implements GenerateEngine {
         if(envResult.getHasError().isEmpty()){
             String compileName = strategyBean.getCompile();
             sshUtil.executeCmd(compileName+" init");
-            // TODO sshUtil.executeCmd这个处理命令行，用这个验证下init生成的文件是否包含truffle init的文件
-            List<String>compileList = strategyBean.getDirectory();
+            List<String> compileList = strategyBean.getDirectory();
+            // 获取当前路径下的文件和文件夹
+            String initPathList = sshUtil.getFolder();
             //这里result应该传输null也行，只要验证truffle init的文件
-            return new Result(startTime,errorMessage,null);
+            for(String element : compileList) {
+                if (!initPathList.contains(element)) {
+                    errorMessage = "Failed to initialize the truffle directory";
+                    return new Result(startTime,errorMessage,null);
+                }
+            }
         }
         // 这里如果hasError是空字符串代表成功
         return new Result(startTime,envResult.getHasError(),null);
@@ -121,18 +130,76 @@ public class GenerateEngineImpl implements GenerateEngine {
         return new Result(startTime,errText,successText);
     }
 
+    /**
+     * 加载合约
+     * @return
+     * @throws JSchException
+     * @throws IOException
+     * @throws InterruptedException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     */
     @Override
-    public Result loadContract() {
+    public Result loadContract() throws JSchException, IOException, InterruptedException, InvocationTargetException, IllegalAccessException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
-        return new Result(startTime,"","");
+        // mv操作应是在truffle初始化的目录下进行
+        strategyBean = StrategyConfigUtil.getStrategy("generateEngine");;
+        String mvContractCommand = "mv /root/Hackathon-2023-winter/contract/* " + strategyBean.getEnginePath() + "/contracts/";
+        String errorMessage = sshUtil.executeCmd(mvContractCommand);
+        return new Result(startTime,errorMessage,"");
     }
 
+    /**
+     * 获取合约ABI和合约
+     * @return
+     * @throws IOException
+     * @throws InvocationTargetException
+     * @throws IllegalAccessException
+     * @throws JSchException
+     * @throws InterruptedException
+     */
     @Override
-    public Result compilationContract() {
+    public Result compilationContract(String EtherStoreContract, String AttackContract) throws IOException, InvocationTargetException, IllegalAccessException, JSchException, InterruptedException {
         long startTime = System.nanoTime();
         // 代码逻辑待补
-        return new Result(startTime,"","");
+        // 获取工程路径
+        strategyBean = StrategyConfigUtil.getStrategy("generateEngine");
+        String contract = null;
+        String abi = null;
+        String errorMessage = null;
+        Map<String, String> resultMap = new HashMap<>();
+
+        // 拷贝模板truffle-config.js
+        String cpTemplateConfigurationFile = "cp -f /root/truffle-config.js " + strategyBean.getEnginePath() + "/truffle-config.js";
+        errorMessage += sshUtil.executeCmd(cpTemplateConfigurationFile);
+
+        String cdPathCommand = "cd " + strategyBean.getEnginePath();
+        errorMessage += sshUtil.executeCmd(cdPathCommand);
+        // 编译合约
+        String compileContractCommand = "truffle compile";
+        errorMessage += sshUtil.executeCmd(compileContractCommand);
+
+        // 查看合约
+        String catContractEtherStoreCommand = "cat " + strategyBean.getEnginePath() + "contracts/" + EtherStoreContract + ".sol";
+        contract = sshUtil.executeCmd(catContractEtherStoreCommand);
+        resultMap.put("EtherStore.sol", contract);
+        String catContractAttackCommand = "cat " + strategyBean.getEnginePath() + "contracts/" + AttackContract + ".sol";
+        contract = sshUtil.executeCmd(catContractAttackCommand);
+        resultMap.put("Attack.sol", contract);
+
+        // 查看合约abi
+        String catContractEtherStoreAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + EtherStoreContract + ".json";
+        abi = sshUtil.executeCmd(catContractEtherStoreAbiCommand);
+        resultMap.put("EtherStore.json", abi);
+        String catContractAttackAbiCommand = "cat " + strategyBean.getEnginePath() + "/build/contracts/" + AttackContract + ".json";
+        abi = sshUtil.executeCmd(catContractAttackAbiCommand);
+        resultMap.put("Attack.json", abi);
+        if (errorMessage.isEmpty()) {
+            return new Result(startTime,errorMessage, resultMap);
+        }
+
+        return new Result(startTime,errorMessage,"");
     }
 
     @Override
