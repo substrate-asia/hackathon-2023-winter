@@ -58,49 +58,7 @@ Sample Mockups of End user's UI (Here we have shown a product type for hosting B
 <img width="1077" alt="Screenshot 2023-12-21 at 23 50 36" src="https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/38dc7993-2fe7-4a74-a3b4-15b69dbb4d69">
 
 
-## How to run
 
-### Build Cyborg Node
-
-Compile the code
-
-```sh
-cargo build --release
-```
-
-Execute the off chain worker module
-
-```sh
-./target/release/cyborg-node --dev --offchain-worker always
-```
-
-### Build Cyberhub
-
-Run the server
-
-```sh
-cargo run
-```
-
-### Build Cyborg Smart Client
-
-Compile the code
-
-```sh
-cargo build --release
-```
-
-Create a config using any token string
-
-```sh
-Cargo run create config "any name"
-```
-
-Execute CSC using the existing Config
-
-```sh
-./target/release/bin run
-```
 
 ## About Cyborg Team
 
