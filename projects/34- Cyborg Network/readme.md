@@ -33,7 +33,7 @@ Cyborg Network is a revolution in edge computing. It introduces a decentralized 
 
 ### Tools used: Substrate, Rust, Javascript.
 
-- Cyborg PoC [demo video]([https://www.youtube.com/watch?v=xHdELatEaoc](https://youtu.be/xHdELatEaoc))
+- Cyborg PoC [demo video](https://youtu.be/xHdELatEaoc)
 
 
 ## How to run
