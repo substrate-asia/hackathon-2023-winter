@@ -8,8 +8,10 @@ import com.hackathon.framework.bean.StrategyBean;
 import freemarker.template.*;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
+import com.hackathon.framework.provider.GenerateEngine;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -33,26 +35,65 @@ public class TemplateUtil {
         assertionMap.put("jest", Arrays.asList("js","function","return"));
     }
 
+
+    /**
+     * 如果result无错误信息的话，将result中存储的map中的文件存储到yaml指定路径
+     * @param result
+     * @return Result
+     * @throws IOException
+     */
+    public static  Result checkMap(Result result , String contractsPath,String migrationsPath) throws FileNotFoundException, IllegalAccessException, InvocationTargetException {
+
+        long startTime = System.nanoTime();
+        //错误信息内容
+        StringBuilder errText = new StringBuilder();
+
+        //如果result无错误信息的话，进行文件生成
+        if (result.getHasError().isEmpty()){
+            if (result.getResult() instanceof Map) {
+                Map<String, String> resultMap = (Map<String, String>) result.getResult();
+                //将map中的文件生成
+                for (Map.Entry<String, String> entry : resultMap.entrySet()) {
+                    String key = entry.getKey();
+                    //判断key的.后面是json还是sol
+                    if (key.endsWith(".json")) {
+                        FileUtil.saveFile(contractsPath + key, entry.getValue());
+
+                    } else if (key.endsWith(".sol")) {
+                        FileUtil.saveFile(migrationsPath + key, entry.getValue());
+
+                    } else {
+                        errText.append("未知文件扩展名");
+                        System.out.println("未知文件扩展名");
+                    }
+                }
+            }else {
+                errText.append("result.getResult()对象类型错误");
+                System.out.println("result.getResult()对象类型错误");
+            }
+        }
+        return new Result(startTime, errText.toString(),"");
+    }
+    
+
     /**
      * 读取abi文件以及sol文件生成对应的SolBean对象
      *
-     * @param abiPath      abi文件地址
-     * @param abiPath      solPath文件址
+     * @param jsonPath      abi文件地址
      * @param saveFilePath js文件存储地址
      * @return Result
      * @throws IOException
      */
-
-    public static Result toTestTemplate(String abiPath, String solPath, String saveFilePath) throws IOException {
+    public static Result toTestTemplate(String jsonPath, String saveFilePath) throws IOException {
 
         long startTime = System.nanoTime();
         //错误信息内容
         StringBuilder errText = new StringBuilder();
         //文件信息内容
         String fileStr = "";
-
         //判断文件夹中是否存在文件
-        List<String> filelist = FileUtil.getAllFile(abiPath, false);
+        List<String> filelist = FileUtil.getAllFile(jsonPath, false);
+
         for (String filep : filelist) {
             SolBean solBean = new SolBean();
             File f = new File(filep);
@@ -60,7 +101,7 @@ public class TemplateUtil {
             solBean.setAbiName(f.getName());
             //开始读取文件，进行读取文件内容
             fileStr = FileUtil.readFileToString(f);
-            errText.append(jsonCheckToClass(fileStr, solBean, solPath)).append("|");
+            errText.append(jsonCheckToClass(fileStr, solBean)).append("|");
             System.out.println(JSON.toJSONString(solBean));
             saveTestFile(solBean, saveFilePath);
         }
@@ -97,6 +138,8 @@ public class TemplateUtil {
             // 输出到文件
             String generatedCode = out.toString();
             filepath = saveFilePath + solBean.getAbiName() + "." + assertionMap.get(strategy.getAssertionName()).get(0);
+
+            System.out.println("====="+filepath);
             FileWriter fileWriter = new FileWriter(filepath);
             fileWriter.write(generatedCode);
             out.close();
@@ -118,11 +161,11 @@ public class TemplateUtil {
      * @param solPath sol文件地址
      * @return Result
      */
-    public static String jsonCheckToClass(String fileStr, SolBean solBean, String solPath) throws IOException {
+    public static String jsonCheckToClass(String fileStr, SolBean solBean) throws IOException {
         String errText = "";
         if (isJsonContent(fileStr)) {
             //进行内容解析生成测试文件
-            getTestObject(fileStr, solBean, solPath);
+            getTestObject(fileStr, solBean);
         } else {
             errText = "请求数据格式无法解读，请检查数据内容。";
         }
@@ -131,19 +174,23 @@ public class TemplateUtil {
 
 
     //根据符合格式的json数据，生成对应的测试文件对象
-    public static String getTestObject(String jsonString, SolBean solBean, String solPath) throws IOException {
+    public static String getTestObject(String jsonString, SolBean solBean) throws IOException {
 
         String errText = "";
 
         try {
             // 使用 Fastjson 解析 合约请求描述文件，json字符串
-//            List<FunctionBean> functionInfoList = JSON.parseArray(jsonString, FunctionBean.class);
             FunctionBean functionBean = JSON.parseObject(jsonString, FunctionBean.class);
-//            System.out.println(functionBean.getContractName());
-//            System.out.println(functionBean.getAbi().size());
+
+            String currentProjectPath = System.getProperty("user.dir");
+            StrategyBean strategy = StrategyConfigUtil.getStrategy("generateEngine");
+            String solPath = currentProjectPath+strategy.getSolPath();
+
+            System.out.println("========================="+solPath+solBean.getAbiName().replace(".json", ".sol"));
+            System.out.println("========================="+solPath+solBean.getAbiName().replace(".json", ".sol"));
 
 //            从sol文件中获取所有function 对象
-            Map<String, Integer> keyValueMap = extractFunctionLines(solPath);
+            Map<String, Integer> keyValueMap = extractFunctionLines(solPath+(solBean.getAbiName().replace(".json", ".sol")));
 
             //循环与sol文件中的方法进和匹配，如果文件中的方法，没有inputs和outputs 就以sol文件为准
             //如果
@@ -309,15 +356,42 @@ public class TemplateUtil {
         return matcher.find();
     }
 
-    public static void main(String[] args) throws IOException, TemplateException {
+    public static void main(String[] args) throws IOException, TemplateException, InvocationTargetException, IllegalAccessException {
 //        String jsonString = "[{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"x\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"y\",\"type\":\"uint256\"}],\"name\":\"add\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"myString\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"view\",\"type\":\"function\"}]";
 //        String currentProjectPath = System.getProperty("user.dir");
 //        String testDirectory = currentProjectPath + "/src/test/java/";
 //        String o = "e:/longce/";
-        String abiPath = "D:\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\build\\contracts";
+//        String abiPath = "E:\\newCat1216\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\build\\contracts";
         String currentProjectPath = System.getProperty("user.dir");
-        String saveFilePath = currentProjectPath + "/src/main/resources/templates/";
-        String solPath = "D:\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\contracts\\Lottery.sol\\";
-        toTestTemplate(abiPath, solPath, saveFilePath);
+//        String saveFilePath = currentProjectPath + "/src/main/resources/templates/";
+
+        GenerateEngine generateEngine = new GenerateEngineImpl();
+        generateEngine.initDirectoryForLocal(currentProjectPath,Arrays.asList("contracts","migrations","test"));
+
+//        String solPath = "E:\\newCat1216\\hackathon-2023-winter\\projects\\27-NeMA\\src\\otc\\contracts\\Lottery.sol\\";
+
+
+        Map<String, String> resultMap = new HashMap<String, String>();
+        resultMap.put("Attack.json",
+                FileUtil.readFileToString(
+                        new File("C:\\Users\\86159\\Downloads\\test(1)\\test\\build\\contracts\\Attack.json")));
+        resultMap.put("EtherStore.json",
+                FileUtil.readFileToString(
+                        new File("C:\\Users\\86159\\Downloads\\test(1)\\test\\build\\contracts\\EtherStore.json")));
+        resultMap.put("Attack.sol",
+                FileUtil.readFileToString(
+                        new File("C:\\Users\\86159\\Downloads\\test(1)\\test\\contracts\\Attack.sol")));
+        resultMap.put("EtherStore.sol",
+                FileUtil.readFileToString(
+                        new File("C:\\Users\\86159\\Downloads\\test(1)\\test\\contracts\\EtherStore.sol")));
+        long startTime = System.nanoTime();
+        Result result = new Result(startTime,"",resultMap);
+        //上面是他传入的值
+
+        Result jsonresult =  checkMap(result, currentProjectPath+"contracts",currentProjectPath+"migrations");
+        //通过jsonpath读取abi和sol
+        toTestTemplate((String)jsonresult.getResult(), currentProjectPath+"test");
+
     }
+
 }
