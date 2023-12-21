@@ -30,7 +30,7 @@ public class PipelineProcess {
         this.taskMap.put(taskId,new ArrayList<>());
     }
 
-    private static class PipelineResult {
+    static class PipelineResult {
         public long executionTime;
         public String hasError;
         public Object result;

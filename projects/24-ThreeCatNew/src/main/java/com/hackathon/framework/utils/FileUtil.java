@@ -261,6 +261,42 @@ public class FileUtil {
         return flag;
     }
 
+    public static long copy(InputStream input, OutputStream output)
+            throws IOException {
+        byte[] buffer = new byte[4096];
+        long count = 0;
+        int n = 0;
+        while (-1 != (n = input.read(buffer))) {
+            output.write(buffer, 0, n);
+            count += n;
+        }
+        return count;
+    }
+
+    /**
+     * 拷贝文件
+     * @param srcPath
+     * @param dstPath
+     * @throws IOException
+     */
+    public static Boolean copyFile(File srcPath, File dstPath) throws IOException {
+        InputStream is = null;
+        OutputStream os = null;
+        try {
+            is = Files.newInputStream(srcPath.toPath());
+            os = Files.newOutputStream(dstPath.toPath());
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            Objects.requireNonNull(is).close();
+            Objects.requireNonNull(os).close();
+        }
+        return dstPath.exists();
+    }
+
 
     /**
      * delete Files.

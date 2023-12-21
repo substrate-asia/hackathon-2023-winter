@@ -7,6 +7,9 @@ describe('test some RPC methods at web3.polka.substrate', () => {
   beforeAll(async () => {
     web3 = new Web3('ws://127.0.0.1:9944/');
     web3.registerPlugin(new PolkaPlugin());
+    web3.provider?.on('error', (error: any) => {
+      console.log('Caught provider error: ', error.message || error);
+    });
   });
 
   afterAll(() => {
@@ -65,8 +68,8 @@ describe('test some RPC methods at web3.polka.substrate', () => {
   });
 
   it('should not have the rpc methods that is not available at substrate (for example beefy.[method])', async () => {
-    expect((web3.polka.substrate.beefy as any).getFinalizedHead).toBeUndefined();
-    expect((web3.polka.substrate.beefy as any).subscribeJustifications).toBeUndefined();
-    expect((web3.polka.substrate.beefy as any).unsubscribeJustifications).toBeUndefined();
+    expect((web3.polka.substrate as any).beefy?.getFinalizedHead).toBeUndefined();
+    expect((web3.polka.substrate as any).beefy?.subscribeJustifications).toBeUndefined();
+    expect((web3.polka.substrate as any).beefy?.unsubscribeJustifications).toBeUndefined();
   });
 });

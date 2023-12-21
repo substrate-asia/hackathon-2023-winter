@@ -1213,13 +1213,16 @@ export interface SubstrateSimpleRpcInterface {
 
 /**
  * @description
- * This list allow to iterate over all rpc methods, because interfaces are not iterable. Also, note the use of `as const` to make the list as a fixed type.
+ * Contains a nested list of all the rpc methods exposed. However, this const is not used. Because it turns out that it is identical for all networks as no information about the network is included in the edgeware.json file.
+ * For that, a list of rpc methods is saved for each network after calling rpc_methods endpoint to get the list.
  * @remarks
+ * This const is not used. But it is kept as it could be used later because this project is a PoC and in the process of seeking the best approach.
  * This const in not inside a module augmentation because the compiler does not allow.
- * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, when used inside another project, tricking it to see every property as `any`.
+ * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, tricking it to see every property as `any`.
  */
-export const SubstrateRpcList = {
-  'author' : [
+/*
+export const RpcList = {
+  author : [
     'hasKey',
     'hasSessionKeys',
     'insertKey',
@@ -1229,14 +1232,14 @@ export const SubstrateRpcList = {
     'submitAndWatchExtrinsic',
     'submitExtrinsic',
   ],
-  'babe' : [
+  babe : [
     'epochAuthorship',
   ],
-  'beefy' : [
+  beefy : [
     'getFinalizedHead',
     'subscribeJustifications',
   ],
-  'chain' : [
+  chain : [
     'getBlock',
     'getBlockHash',
     'getFinalizedHead',
@@ -1245,7 +1248,7 @@ export const SubstrateRpcList = {
     'subscribeFinalizedHeads',
     'subscribeNewHeads',
   ],
-  'childstate' : [
+  childstate : [
     'getKeys',
     'getKeysPaged',
     'getStorage',
@@ -1253,21 +1256,21 @@ export const SubstrateRpcList = {
     'getStorageHash',
     'getStorageSize',
   ],
-  'contracts' : [
+  contracts : [
     'call',
     'getStorage',
     'instantiate',
     'rentProjection',
     'uploadCode',
   ],
-  'dev' : [
+  dev : [
     'getBlockStats',
   ],
-  'engine' : [
+  engine : [
     'createBlock',
     'finalizeBlock',
   ],
-  'eth' : [
+  eth : [
     'accounts',
     'blockNumber',
     'call',
@@ -1312,34 +1315,34 @@ export const SubstrateRpcList = {
     'syncing',
     'uninstallFilter',
   ],
-  'grandpa' : [
+  grandpa : [
     'proveFinality',
     'roundState',
     'subscribeJustifications',
   ],
-  'mmr' : [
+  mmr : [
     'generateProof',
     'root',
     'verifyProof',
     'verifyProofStateless',
   ],
-  'net' : [
+  net : [
     'listening',
     'peerCount',
     'version',
   ],
-  'offchain' : [
+  offchain : [
     'localStorageGet',
     'localStorageSet',
   ],
-  'payment' : [
+  payment : [
     'queryFeeDetails',
     'queryInfo',
   ],
-  'rpc' : [
+  rpc : [
     'methods',
   ],
-  'state' : [
+  state : [
     'call',
     'getChildKeys',
     'getChildReadProof',
@@ -1362,10 +1365,10 @@ export const SubstrateRpcList = {
     'traceBlock',
     'trieMigrationStatus',
   ],
-  'syncstate' : [
+  syncstate : [
     'genSyncSpec',
   ],
-  'system' : [
+  system : [
     'accountNextIndex',
     'addLogFilter',
     'addReservedPeer',
@@ -1386,15 +1389,18 @@ export const SubstrateRpcList = {
     'syncState',
     'version',
   ],
-  'web3' : [
+  web3 : [
     'clientVersion',
     'sha3',
   ],
 } as const;
+*/
 
 /**
- * This class is not used. But it could be used later as this project is in PoC and in the process of seeking the best approach.
+ * @description
+ * An empty abstract class implementing SimpleRpcInterface.
  * @remarks
+ * This class is not used. But it is kept as it could be used later because this project is a PoC and in the process of seeking the best approach.
  * This class in not inside a module augmentation because the compiler does not allow.
  * Additionally, this module augmentation causes confusion to TypeScript Intellisense, when used inside another project.
  */ 

@@ -5,6 +5,8 @@ import com.hackathon.framework.provider.impl.GenerateEngineImpl;
 import com.hackathon.framework.utils.ReportUtil;
 import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.StrategyConfigUtil;
+import com.hackathon.framework.utils.TemplateUtil;
+import com.jcraft.jsch.JSchException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -14,6 +16,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -102,14 +105,33 @@ public class ThreeCat extends JFrame {
                         throw new RuntimeException(ex);
                     }
                     // command里面就代表了详细情况。
-                    Result initDirResult = generateEngine.initDirectory(parameter,strategy.getDirectory());
+                    Result initDirResult;
+                    try {
+                        initDirResult = generateEngine.initDirectoryForServer();
+                    } catch (IOException | InvocationTargetException | IllegalAccessException | JSchException |
+                             InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     if(initDirResult.getHasError().isEmpty()){
                         successCount +=1;
                     }
                 }else if (command.contains("compile --coverage")){
-                    // 生成覆盖率，参数需要指定
+                    // TODO 生成覆盖率，参数需要指定
                 }else if (command.contains("genTest")){
                     // 生成单测测试用例，需要添加断言
+                    String[] commands = command.split(" ");
+                    String solPath = commands[2];
+                    String abiPath = commands[1];
+                    String testFilePath = commands[3];
+                    Result generateTestResult;
+                    try {
+                        generateTestResult = TemplateUtil.toTestTemplate(abiPath, solPath, testFilePath);
+                    } catch (IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if(generateTestResult.getHasError().isEmpty()){
+                        successCount +=1;
+                    }
                 }else{
                     errologs.setText("Unknown command: " + command);
                 }
