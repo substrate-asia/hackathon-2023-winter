@@ -1,0 +1,61 @@
+[package]
+name = "pallet-evm_account_mapping"
+version = "0.0.1"
+description = "A Substrate pallet for compatible with EVM wallets."
+authors.workspace = true
+repository.workspace = true
+homepage.workspace = true
+license.workspace = true
+edition = "2021"
+publish = false
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.6.4", default-features = false, features = ["derive"] }
+scale-info = { version = "2.9.0", default-features = false, features = ["derive"] }
+sp-io = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false }
+sp-runtime = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false }
+sp-std = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false }
+sp-core = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false, features = ["serde"] }
+frame-benchmarking = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", optional = true, default-features = false }
+frame-support = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false }
+frame-system = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false }
+pallet-transaction-payment = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master", default-features = false }
+
+hex = { version = "0.4", default-features = false, features = ["alloc"] }
+log = { version = "0.4", default-features = false }
+ethabi = { version = "18.0", default-features = false }
+
+[dev-dependencies]
+pallet-balances = { git = "https://github.com/paritytech/polkadot-sdk", branch = "master" }
+
+[features]
+default = ["std"]
+std = [
+	"codec/std",
+	"scale-info/std",
+	"sp-io/std",
+	"sp-runtime/std",
+	"sp-std/std",
+	"sp-core/std",
+	"frame-benchmarking?/std",
+	"frame-support/std",
+	"frame-system/std",
+	"pallet-transaction-payment/std",
+	"hex/std",
+	"log/std",
+	"ethabi/std",
+]
+runtime-benchmarks = [
+	"frame-benchmarking/runtime-benchmarks",
+	"frame-support/runtime-benchmarks",
+	"frame-system/runtime-benchmarks",
+	"sp-runtime/runtime-benchmarks"
+]
+try-runtime = [
+	"frame-support/try-runtime",
+	"frame-system/try-runtime",
+	"sp-runtime/try-runtime"
+]

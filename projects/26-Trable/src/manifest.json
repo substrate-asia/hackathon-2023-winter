@@ -1,0 +1,13 @@
+{
+    "manifest_version": 3,
+    "name": "Trable Payment",
+    "version": "1.0",
+    "description": "Pay through Trable and redirect to XXX",
+    "action": {
+      "default_title": "Pay through Trable",
+      "default_popup": "popup.html"
+    },
+    "permissions": ["activeTab", "tabs"]
+  }
+  
+  

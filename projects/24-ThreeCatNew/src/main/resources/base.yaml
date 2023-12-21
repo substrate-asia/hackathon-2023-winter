@@ -1,0 +1,53 @@
+# 界面参数默认提供的
+guiCommand:
+  # 组合输入框
+  comboBox: {"生成工程":init <替换生成目标绝对路径>,"生成测试文件":genTest <合约abi文件路径> <sol合约文件地址> <自定义生成test文件路径>,"收集覆盖":compile --coverage <上面自定义生成test文件路径>}
+
+# 第一阶段 生成测试工程
+generateEngine:
+  # 服务器上面的工程地址
+  enginePath: xxx
+  # 合约地址
+  contractAddress: xxxx
+  # 合约类型
+  contractType: sol
+  # 开发框架 检查编译方式对应的合约目录
+  compile: truffle
+
+  # 服务器上面配置对应目录
+  directory:
+    - contracts
+    - migrations
+    - test
+  # 编译后文件命名 compiledKey隐藏在代码工程
+  compiledNames: abi
+  # Sdk名称
+  sdkName: xxx
+  # 断言名称
+  assertionName: jest
+  # 选择断言模板l路径-匹配模板
+  assertionPath: jest.config.js
+
+# 第二阶段 生成测试用例文件
+generateTestCaseFile:
+  #是否开启覆盖率指标。默认1=开启，0=关闭
+  enableCoverageTarget: true
+  # 覆盖率总体水位线
+  coverageThreshold: 80.7
+  # 核心文件阈值 由覆盖率指标和核心文件阈值一起才是准出
+  coreFileThreshold: 70
+  # CI的选择器（支持Jenkins）
+  CISelector: xxx
+  # 扫描工序接入（flow）key代表添加的插件名称，xxx代表检查数据的位置
+  scanStages: {"stage1":xxx,"stage2":xxx,"stage3":xxx}
+  # 扫描权限需要包含如下和scanStages结合
+  # 比如scanStages有3个扫描工序scanWeight里面的配置2个包含在scanStages上面，则配置合法
+  scanWeight:
+    - xxx
+    - xxx
+  # 报告模式(也代表报告后缀)
+  reportMode: html
+  # 报告保存路径位置和名称(如果不填写默认是yyyy-MM-dd HHmmss.报告后缀)
+  reportSavePath:
+
+
