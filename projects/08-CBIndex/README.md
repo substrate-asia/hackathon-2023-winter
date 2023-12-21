@@ -10,31 +10,38 @@
 
 - [**Demo Website**](https://moonbase.cbindex.finance/)
 - [**Deck for Hackathon**](https://docsend.com/view/v6nkyudvtjsr55v5)
-- [**Demo Video**]()
+- [**Demo Video**](https://www.youtube.com/watch?v=ODh7vhxKT5A)
 - [**Whitepaper**](https://cbindex.finance/CBIndex_whitepaper_2023_v1.pdf)
 - [**X (Twitter)**](https://twitter.com/CBIndex_Global)
 - [**Telegram**](https://t.me/CBIndexGlobalM)
 
 ## Important Note
 
-> The Project CBIndex attended Polkadot Hackathon Summer 2023. At that time, we tried to complete the copy-investing feature for the copy fund (the basic feature of our project), and tried to deploy on the Vara blockchain. Due to the lack of maturity of the infra and time constraints, we barely finished the copy-investing feature during the hackathon.
->
-> We were very lucky to win the 3rd place of the smart contract track.
->
-> This time, we've done sufficient research and planning. We would love to try completing one of our advanced features, namely active on-chain funds, on the Moonbase Alpha TestNet.
+<div style="color:darkred">
+The Project CBIndex attended Polkadot Hackathon Summer 2023. At that time, we tried to complete the copy-investing feature for the copy fund (the basic feature of our project), and tried to deploy on the Vara blockchain. Due to the lack of maturity of the infra and time constraints, we barely finished the copy-investing feature during the hackathon.
+<br />
+<br />
+We were very lucky to win the 3rd place of the smart contract track.
+<br />
+<br />
+This time, we've done sufficient research and planning. We would love to try completing one of our advanced features, namely active on-chain funds, on the Moonbase Alpha TestNet.
+</div>
 
 ## Planned Tasks for the Hackathon
 
 **Blockchain Side**
 
-- [x] Develop the smart contracts for the ACTIVE FUND feature (fund creation, investment, withdrawal, and etc.).
-- [x] Test and deploy the smart contracts on Moonbase Alpha TestNet.
-- [x] Build an environment for demoing the active funds, including issue ERC20 tokens, set up LP pools, mock Chainlink's V3's price feed, and deploy Uniswap V2.
+[x] Develop the smart contracts for the ACTIVE FUND feature (fund creation, investment, withdrawal, and etc.).
+
+[x] Test and deploy the smart contracts on Moonbase Alpha TestNet.
+
+[x] Build an environment for demoing the active funds, including issue ERC20 tokens, set up LP pools, mock Chainlink's V3's price feed, and deploy Uniswap V2.
 
 **Client Side**
 
-- [x] Develop the frontend for the ACTIVE FUND feature using NextJS.
-- [x] Realize wallet connection by integrating Web3Modal V3.
+[x] Develop the frontend for the ACTIVE FUND feature using NextJS.
+
+[x] Realize wallet connection by integrating Web3Modal V3.
 
 ---
 
@@ -94,5 +101,3 @@
 **6. Deployed `Adaptor` for Uniswap V2 to enable swap.**
 
 - UniswapV2Router02 ([`0x0E1CE7f7E08682E581166E2610Ba185Bff3C78B4`](https://moonbase.moonscan.io/address/0x0E1CE7f7E08682E581166E2610Ba185Bff3C78B4)) is used for swap.
-
----
