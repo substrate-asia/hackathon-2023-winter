@@ -1,0 +1,49 @@
+.container {
+  position: sticky;
+  display: flex;
+  flex-direction: column;
+  top: 130px;
+  padding: var(--padding-lg);
+  border-radius: var(--border-radius-sm);
+  background-color: var(--bg-second-color);
+  height: calc(100vh - 100px);
+}
+
+.functionArea {
+  display: flex;
+  flex-direction: column;
+  height: 60%;
+  justify-content: space-between;
+}
+
+.fauceBtn {
+  margin: auto;
+  width: 100%;
+}
+
+.claimLoaidng {
+  width: 100%;
+  height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-main-color);
+}
+
+.faucetSuccess {
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faucetSuccessIcon {
+  margin-right: 10px;
+}
+
+@media screen and (max-width: @--mobile-width-max-media) {
+  .container {
+    display: none;
+  }
+}

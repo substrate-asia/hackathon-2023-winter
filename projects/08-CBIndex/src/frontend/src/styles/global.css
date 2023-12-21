@@ -1,0 +1,254 @@
+:root {
+  color-scheme: dark;
+
+  /* layout */
+  --width-min: 340px;
+  /* the minimum width of the page */
+  --pc-width-max: 1440px;
+  /* the maximum width of the page for pc */
+  --mobile-width-max: 1024px;
+  /* the maximum width of the page for mobile */
+
+  /* color */
+  --primary-green: #50f6bf;
+  /* the primary green color */
+  --positive-change-green: #39b37e;
+  /* the green color used for positive changes */
+  --negative-change-red: #f23838;
+  /* the red color used for negative changes */
+
+  /* button color */
+  --button-green: #54db85;
+  /* the green color used for buttons */
+  --button-blue: #4486f1;
+  /* the blue color used for buttons */
+  --max-button-red: #db5462;
+  /* the red color used for max buttons */
+  --max-button-purple: #a644f1;
+  /* the purple color used for max buttons */
+  --cancel-button-blue: #4e51eb;
+  /* the blue color used for cancel buttons */
+  --cancel-button-purple: #5500c4;
+  /* the purple color used for cancel buttons */
+
+  /* background colors */
+  --bg-main-color: #181a1e;
+  /* the main background of each page */
+  --bg-second-color: #1e2026;
+  /* the second background, used for large panels rgb(30, 32, 38), gray */
+
+  --bg--third-color: #25272f;
+  /* the third background, used for cards */
+  --bg-third-hover-color: #2c2e38;
+  /* the secondary background when hover */
+  --bg-third-color: #343641;
+  /* the third background */
+
+  /* text colors */
+  --text-main-color: var(--primary-green);
+  /* the main text color, primary green */
+  --text-second-color: white;
+  /* the second text color, white */
+  --text-third-color: #76808f;
+  /* the third text color, gray */
+
+  /* border colors */
+  --border-main-color: var(--primary-green);
+  /* the main border color, primary green */
+  --border-second-color: white;
+  /* the second border color, white */
+  --border-third-color: #76808f;
+  /* the third border color, gray   */
+  --border-fourth-color: #333;
+  /* the fourth border color, dark gray */
+
+  /* padding */
+  --padding-lg: 30px;
+  --padding-md: 20px;
+  --padding-sm: 10px;
+
+  /* margin */
+  --margin-lg: 30px;
+  --margin-md: 20px;
+  --margin-sm: 10px;
+  --margin-xs: 4px;
+
+  /* border radius */
+  --border-radius-lg: 30px;
+  --border-radius-md: 20px;
+  --border-radius-sm: 10px;
+}
+
+a {
+  color: var(--text-third-color);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--text-second-color);
+}
+
+body {
+  background-color: #181a1e;
+  color: #ffffff;
+  font-size: 16px !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif !important;
+  margin: 0;
+}
+
+.button {
+  /* height: 33px; */
+  display: flex;
+  font-size: 14px;
+  color: white !important;
+  justify-content: center;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  background: linear-gradient(to right,
+      var(--button-green),
+      var(--button-blue));
+}
+
+.button:hover {
+  cursor: pointer;
+  background: linear-gradient(to right,
+      var(--button-blue),
+      var(--button-green));
+}
+
+.plainBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 1px solid var(--border-third-color);
+  width: fit-content;
+  color: var(--text-third-color);
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: var(--border-radius-md);
+  /* margin: auto; */
+  cursor: pointer;
+}
+
+.switchNetworksBtn {
+  display: flex;
+  font-size: 14px;
+  color: white !important;
+  justify-content: center;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: var(--border-radius-md);
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  background: linear-gradient(90deg, #db5462, #a644f1);
+  align-items: center;
+}
+
+.switchNetworksBtn:hover {
+  background: linear-gradient(90deg, #a644f1, #db5462);
+}
+
+.connectWalletBtn {
+  display: flex;
+  font-size: 14px;
+  color: white !important;
+  justify-content: center;
+  padding: var(--padding-sm) var(--padding-md);
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  align-items: center;
+  background: linear-gradient(to right,
+      var(--cancel-button-blue),
+      var(--cancel-button-purple));
+}
+
+.connectWalletBtn:hover {
+  cursor: pointer;
+  background: linear-gradient(to right,
+      var(--cancel-button-purple),
+      var(--cancel-button-blue));
+}
+
+.plainBtnActive {
+  color: var(--text-third-color);
+  border: 1px solid var(--primary-green);
+}
+
+/* antd pagination */
+
+.ant-pagination .ant-pagination-item-active {
+  font-weight: 600;
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.ant-pagination .ant-pagination-item-active:hover {
+  border-color: var(--border-fourth-color);
+}
+
+.ant-pagination .ant-pagination-item a {
+  display: block;
+  padding: 0 6px;
+  color: rgba(255, 255, 255, 0.85) !important;
+  transition: none;
+}
+
+.ant-tabs-tab.ant-tabs-tab-active {
+  border-bottom: 2px solid #47d4a5 !important;
+  z-index: 2;
+}
+
+.ant-modal .ant-modal-content {
+  position: relative;
+  background-color: rgb(24, 26, 30);
+  border: solid 0.5px #2f2f2f;
+  border-radius: 8px;
+}
+
+/* antd input */
+.ant-input {
+  background-color: transparent;
+}
+
+.ant-input-number-group .ant-input-number-group-addon {
+  background-color: transparent;
+  border: none;
+}
+
+.myCreateLabel {
+  background-color: var(--primary-green);
+  opacity: 0.8;
+  border-radius: 2px;
+  font-size: 10px;
+  padding: 2px;
+  line-height: 1
+}
+
+/* segment */
+.ant-segmented {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 2px;
+  color: var(--text-third-color);
+  font-size: 14px;
+  line-height: 1.5714285714285714;
+  list-style: none;
+  display: inline-block;
+  background-color: transparent;
+  border-radius: 6px;
+  /* transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1); */
+}
+
+.ant-segmented .ant-segmented-item:hover {
+  background-color: var(--bg-third-hover-color);
+}
+
+.ant-segmented .ant-segmented-item-selected {
+  background-color: var(--bg-third-color);
+  color: var(--text-second-color);
+}
