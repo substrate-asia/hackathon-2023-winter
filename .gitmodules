@@ -1,0 +1,6 @@
+[submodule "projects/03-inscribe/src/Inscribe-app"]
+	path = projects/03-inscribe/src/Inscribe-app
+	url = git@github.com:hacker20234/Inscribe-app.git
+[submodule "projects/03-inscribe/src/Inscribe"]
+	path = projects/03-inscribe/src/Inscribe
+	url = git@github.com:hacker20234/Inscribe.git
