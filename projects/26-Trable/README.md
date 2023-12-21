@@ -7,6 +7,16 @@ Trable
 
 2023/12/02
 
+## Origin
+
+This project was initiated by Yanbo, the initiator of the project. 
+
+During his participation in Token2049 in September 2023, when he used crypto to pay for air tickets and hotels from mainland China to Singapore, he encountered problems such as **cumbersome time and steps, and large wear and tear on funds**.
+
+During this period, he learned about Polkadot’s series of cross-chain ecology at the Polkadot booth of Token2049 and came up with the idea of building a set of crypto tourism products on the Polkadot ecosystem that are low-loss, fast and efficient and simplify consumer payment steps. 
+
+Therefore, in this winter hackathon, we tried to make a solution to the trable project.
+
 ## Introduction
 
 With the growing Web3 ecosystem, more and more people are entering the Web3 industry, leading to an increasing number of individuals using cryptocurrencies for payments of products and services. However, the process of completing a purchase has become cumbersome, especially when it involves overseas products, requiring multiple asset conversions. This process is time-consuming and incurs high costs.
@@ -88,6 +98,19 @@ B --> Z -->F --> D
 To address these challenges, our project proposes a solution that optimizes the asset conversion process and enhances users' Web3 experience. In the post-pandemic era, the travel industry is thriving, and Trable aims to enter this vast market by offering unique value propositions.
 
 
+## Acala asset router technical analysis
+
+We aim to help users who want to pay their travel fee directly through polka related asset like DOT. Thus transfering polka asset from parachain to USDC on EVM is our primary target. 
+
+We utilize acala asset router to achieve the target. The following 6 steps describe how it works in detail.
+
+- 1. In our front page, users only need to select the source and target chains, as well as the token to transfer. As we can see in the demo video. Our web extension will save order information and jump to trable payment page.
+- 2. The second step is get a router address on karura network. In our project, we will send a shoudRounteWormhole request. 
+- 3. We will pop a signature request that prompts users to sign a transtraction from parachain to karura chain
+- 4. After the signature, we will send tokens to wormhole. In our code, the routeWormhole will achieve this.
+- 5. After send the  token, router will be listening and waiting for VAA. After fetch it, the router interact with wormhole core contract。
+- 6. At the final step, user will sign a transaction with MetaMask that redeems the token on the target EVM chain.
+
 
 
 ### Project Introduction
@@ -101,6 +124,7 @@ Users only need to select the required payment password and complete the signatu
 
 
   <img src="https://github.com/Web3-Club/Trable/assets/76860915/7e5a55f1-1486-4de6-a28e-7080e046f19d" alt="25461702219436_ pic">
+  
 
 ### 在黑客马拉松期间完成的代码功能
 
@@ -134,30 +158,14 @@ Users only need to select the required payment password and complete the signatu
 ### Project demo 
 
 
+## Things planned to be accomplished during the hackathon
 
-## 黑客松期间计划完成的事项
-
-
-### 区块链端
+## Things accomplished during the hackathon
 
 
+## Finally completed function points
 
-### 客户端
-
-front-end
-
-
-
-### 后端
-
-
-## 黑客松期间所完成的事项
-
-
-
-### 最终完成的功能点
-
-### 完成的开发工作及代码结构
+## Completed development work and code structure
 
 ### PPT等大文件链接地址
 
