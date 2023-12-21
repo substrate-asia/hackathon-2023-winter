@@ -4,8 +4,10 @@
 
 ## Basic Information
 
-- Project Name: Cyborg Network
+- Project Name: [Cyborg Network](https://cyborgnetwork.io/)
 - Project Establishment: April 2023
+- Whitepaper link: [Cyborg Technical Whitepaper](https://drive.google.com/file/d/1NIFXUuLOZuMIjcGDUBrnP10ZwN-w7QZS/view?usp=drive_link)
+- Executive Summary: [Cyborg One Pager](https://drive.google.com/file/d/1VTMqxvwKu4QK2uE-SkW7JscCKeKr4nCu/view?usp=drive_link)
 
 ## Description
 
