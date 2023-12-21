@@ -1,0 +1,235 @@
+.lower {
+    height: 87%;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+
+.box {
+    position: relative;
+    border: 1px solid #757575;
+    margin-bottom: 8px;
+    background: linear-gradient(180deg, #1e1e1e 0%, rgba(55, 57, 56, 0) 82.27%);
+    backdrop-filter: blur(10px);
+}
+.first-box {
+    clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 0 100%);
+}
+.first-box::before {
+    content: '';
+    position: absolute;
+    top: 12px;
+    right: -1px;
+    width: 52px;
+    height: 41px;
+    border-top: 1px solid rgba(236, 236, 236, 0.5);
+    transform: rotate(-135deg) scaleY(-1);
+}
+
+.box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px;
+}
+
+.box-title {
+    color: white;
+}
+
+.search-bar {
+    display: inline-block;
+    background-color: black;
+    border-radius: 4px;
+    padding: 4px;
+    margin-right: 26px;
+}
+
+.box-content {
+    overflow: auto;
+    padding: 8px;
+}
+
+.chat-left {
+    width: 40%;
+    margin-right: 20px;
+    margin-left: 10px;
+    padding: 0 0 27px 0 !important;
+}
+
+.chat-container {
+    width: 60%;
+    padding: 0 20px 37px 0 !important;
+    margin: 0 10px 10px 10px;
+}
+
+.chat-window {
+
+    height: 89%;
+    background-color: black;
+    overflow-y: auto;
+    flex-direction:column;
+    border: 1px solid #757575;
+
+}
+.prompt-use-card {
+
+    height: 132px;
+    margin-top:360px;
+    border-top: 1px solid #757575;
+    padding:20px;
+    text-align: left;
+    background-color: rgba(0,0,0, 0.3);
+    background-image: linear-gradient(to bottom, rgba(0, 11, 123, 0.39), rgba(0,0,0,0.65));
+}
+.bigbox{
+    margin-left: 20px;
+}
+.divider{
+    width: 95%; /* Adjust this value to change the length of the divider */
+    height: 1px;
+    background-color: #757575;
+    margin: 10px auto; /* This will center the divider */
+}
+.prompt-use-author {
+    margin-left: 50px;
+    font-size: 14px;
+
+}
+.author{
+    color: #CCCCCC;
+    text-decoration: underline;
+}
+.author:hover{
+    color: #1677ff;
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+
+    transition: color 0.3s;
+}
+
+.prompt-use-info {
+    color: #ffffff;
+    font-weight: bolder;
+    font-size: 20px;
+}
+.close-prompt {
+
+}
+
+.prompt-params {
+    overflow: auto;
+    margin: 20px;
+}
+.params-form {
+    color: white;
+    float: left;
+    width: 200px;
+
+}
+.params-input {
+    width: 180px;
+    height: 25px;
+    flex-grow: 1;
+    outline: none;
+    border: 1px solid #757575;
+    border-radius: 4px;
+    padding: 4px;
+    background-color: black;
+    color: #ffffff;
+    margin-top: 8px;
+    margin-right: 18px;
+}
+
+.chat-message {
+    text-align: left;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.input-container {
+    position: relative;
+    height: 12% !important;
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border: 1px solid #757575;
+    background: linear-gradient(180deg, #1A1A1A 0%, rgba(27, 29, 28, 0) 100%);
+    backdrop-filter: blur(2px);
+}
+
+.input-box {
+    flex-grow: 1;
+    outline: none;
+    background: #000000;
+    border: 1px solid #757575;
+    border-radius: 5px;
+    padding: 12px;
+    margin-right: 50px;
+    color: #ffffff;
+    resize: none;
+    overflow: hidden;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    height: 52px;
+    font-family: 'PingFang SC';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 26px;
+}
+
+.send-button {
+    position: relative;
+    right:25px;
+    color: white;
+    cursor: pointer;
+    font-size: 24px;}
+
+
+/*以下部分是chat-window的代码部分*/
+
+.chat-message  {
+    padding: 15px 30px;
+}
+.chat-user{
+    margin: 8px 0 ;
+    font-weight: bold;
+
+}
+.chat-content{
+    position: relative !important;
+}
+.chat-content p{
+    margin: 7px 0 !important;
+}
+.chat-divider {
+    width: 95%; /* Adjust this value to change the length of the divider */
+    height: 1px;
+    background-color: #757575;
+    margin: 2px auto; /* This will center the divider */
+}
+.voting-buttons {
+    position: absolute;
+    top: -40px;
+    right: 10px;
+}
+
+.upvote,
+.downvote {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.upvote {
+    color: white;
+}
+
+.downvote {
+    color: white;
+}
+
+

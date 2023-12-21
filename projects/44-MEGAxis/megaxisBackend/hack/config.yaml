@@ -1,0 +1,7 @@
+# GoFrame CLI tool configuration.
+gfcli:
+  gen:
+    dao:
+        removePrefix: "gf_"
+        descriptionTag: true
+        noModelComment: true
