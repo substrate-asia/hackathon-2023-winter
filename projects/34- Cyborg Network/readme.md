@@ -45,7 +45,7 @@ Furthermore, we have implemented a server implementation in Rust. This server co
 
 But as a recommendation from [Web 3 Foundation](https://web3.foundation/) We have started working on eliminating the centralized server implementation to promote further decentralization of the protocol. This is our old architecture which has been updated to the one in the top and worked for in this hackathon.
 
-![10k Feet ](https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/fe7de20b-c0a5-4681-aebb-47c886219cb1)
+![10k Feet  (1)](https://github.com/Cyborg-Network/hackathon-2023-winter/assets/93442895/0fa5eab3-3bf0-49e5-9bdf-952ba345a276)
 
 ## How to run
 
