@@ -1,0 +1,10 @@
+[workspace]
+members = [
+	"collection",
+	"nft_collection_factory"
+]
+resolver = "2"
+
+[workspace.package]
+authors = ["Parity Technologies <admin@parity.io>"]
+edition = "2021"
