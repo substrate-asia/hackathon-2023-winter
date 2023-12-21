@@ -83,13 +83,13 @@
 
 **5. Built a Uniswap V2 on the Moonbase Alpha TestNet with the `UniswapV2Factory`([`0x7cfEc7b0C916682f41AaD078F72960BDFaC59B41`](https://moonbase.moonscan.io/address/0x7cfEc7b0C916682f41AaD078F72960BDFaC59B41)), `adapterUniswapV2Exchange`([`0x9E21b1C0335DC42ddD1a0a6054Afe04f5AE4cC9D`](https://moonbase.moonscan.io/address/0x9E21b1C0335DC42ddD1a0a6054Afe04f5AE4cC9D)), and `adapterUniswapV2LP`([`0xE280491f1A7505cd5871c04175F0e01FaA98DB16`](https://moonbase.moonscan.io/address/0xE280491f1A7505cd5871c04175F0e01FaA98DB16)) to create four Liquidity Pools on the XRPL EVM Sidechain containing the five crypto assets, the contract addresses are:**
 
-- WDEV/DAI LP: [``]()
-- WBTC/DAI LP: [``]()
-- WETH/DAI LP: [``]()
-- WSOL/DAI LP: [``]()
+- WDEV/DAI LP
+- WBTC/DAI LP
+- WETH/DAI LP
+- WSOL/DAI LP
 
 **6. Deployed `Adaptor` for Uniswap V2 to enable swap.**
 
-- UniswapV2Router02 ([`0x0E1CE7f7E08682E581166E2610Ba185Bff3C78B4`](https://moonbase.moonscan.io/address/0x0E1CE7f7E08682E581166E2610Ba185Bff3C78B4) is used for swap.
+- UniswapV2Router02 ([`0x0E1CE7f7E08682E581166E2610Ba185Bff3C78B4`](https://moonbase.moonscan.io/address/0x0E1CE7f7E08682E581166E2610Ba185Bff3C78B4)) is used for swap.
 
 ---
