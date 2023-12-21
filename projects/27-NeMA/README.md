@@ -2,8 +2,8 @@
     <img src="https://badgen.net/static/license/MIT/green" style="zoom:150%;" />
     <img src="https://img.shields.io/badge/truffle-v5.11.5-blue" style="zoom:150%;" />
     <img src="https://img.shields.io/badge/solidity-v0.5.16-red" style="zoom:150%;" />
+    <img src="https://img.shields.io/badge/last commit-December-orange" style="zoom:150%;" />
 </div>
-
 
 ## Basic information	
 
@@ -34,9 +34,9 @@ December 2023
 
 Our project belongs to the Dapp & Smart Contracts track and is a multi-functional integrated OTC trading platform.  It is committed to bridging offline transactions in Web3 to the chain, and providing blockchain-based stable guarantee services for buyers and sellers through blockchain technology, to achieve mutual trust, reciprocity and mutual benefit between users and the platform.The main services include c2c+otc mode of OTC support, chain lottery, invitation commission, etc.
 
-### Technical Architecture
+### Architecture
 
-<img src="./static/Technical Architecture.svg" alt="技术架构" style="zoom:200%;" />
+<img src="./static/architecture-en.svg" alt="技术架构" style="zoom:200%;" />
 
 #### Hashlock
 
@@ -71,94 +71,32 @@ There are primarily two scenarios:
 ```mermaid
 graph TD
 
-subgraph 用户发布交易订单
-  提供信息(数字资产类型, 交易数量, 交易价格, 交易期限, 交易方式, 手续费, 评价)
-  平台["发布至平台"]
-  提供信息 -->|提供信息| 平台
-  平台 -->|平台撮合服务| 撮合
-  撮合 --> 执行交易
+subgraph The user issues a transaction order
+  Information-Provision(asset type, transaction quantity, transaction price, transaction deadline, transaction method, handling fee)
+  Platform["Publish to the platform"]
+  Information-Provision -->|Provide information| Platform
+  Platform -->|Platform matching service| matchmaking
+  matchmaking --> Execute-Transaction
 end
 
-subgraph 另一位用户匹配订单
-  搜索条件(搜索条件, 找到合适订单)
-  用户["发送交易请求"]
-  搜索条件(搜索条件, 找到合适订单) --> 交易请求信息(交易价格, 交易数量, 交易方式, 手续费)
-  平台 -->|用户搜索条件| 搜索条件
-  平台 -->|找到合适订单| 交易请求信息
-  交易请求信息 -->|交易请求| 用户
-  用户["发送交易请求"] --> 智能合约执行交易
+subgraph Another user matches the order
+  Search-criteria(search criteria, find suitable orders)
+  User["send transaction request"]
+  Search-criteria(Search criteria, find the right order) --> Transaction-request-information(Transaction price, transaction quantity, transaction method, handling fee)
+  Platform -->|User search criteria| Search-criteria
+  Platform -->|Find the right order| Transaction-request-information
+ Transaction-request-information -->|Transaction Request| User
+  User["Send transaction request"] --> Smart-contract-execution-transaction
 end
 
 
-subgraph 智能合约执行交易
-  平台 -->|智能合约自动执行| 执行交易
-  执行交易 -->|数字资产转移| 交易完成
+subgraph Smart contract execution transaction
+  Platform -->|Automated execution of smart contracts| Execute-Transaction
+  Execute-Transaction -->|digital asset transfer| Transaction-completed
 end
 ```
 
-
-
-#### Lottery whole process is on-chain
-
-Award Information: Storing the descriptions and quantities of various awards.
-
-Lottery results: The lottery results, including the winners and prizes, are stored on the blockchain to ensure verifiability and transparency.
-
-Participant Record: The information of the participants (address, participation time, etc.) is recorded on the chain.
-
-Lottery Logic (Contract Details): Implementing the lottery logic in a smart contract to determine the winners.
-
-```mermaid
-sequenceDiagram
-  participant 用户
-  participant 智能合约
-
-  用户->>智能合约: 参与抽奖
-  智能合约->>用户: 返回参与结果
-
-  activate 智能合约
-    智能合约->>奖项信息: 获取奖项信息
-    奖项信息-->>智能合约: 返回奖项信息
-
-    智能合约->>参与者记录: 记录参与者信息
-    参与者记录-->>智能合约: 返回记录结果
-
-    智能合约->>抽奖逻辑: 执行抽奖逻辑
-    抽奖逻辑-->>智能合约: 返回中奖者信息
-
-    智能合约->>抽奖结果: 存储抽奖结果
-  deactivate 智能合约
-
-  用户->>智能合约: 查询抽奖结果
-  智能合约->>用户: 返回抽奖结果
-```
-
-#### Invitational Commission Mechanism
-
-The core concept of the invitation commission mechanism is first-level commission with permanent binding, providing users with a long-term stable source of income.Specifically, when a user successfully invites a new user to transact on the platform, that user will enjoy the benefits of first-level commission.Meanwhile, this binding relationship will remain permanently valid, ensuring that users can earn the corresponding commission revenue on every transaction made by their subordinates.
-
-In our commission structure, users will receive 1% of the transaction amount of their subordinate users as their direct commission, while the platform enjoys a 3% revenue share from the transaction amount.This advantageous commission ratio not only reflects our recognition of user contributions to enhance user retention but also ensures the continuous operation of the platform with cash flow security.
-
-
-
-```mermaid
-graph TD
-
-subgraph 用户与分佣机制
-  A[用户A] -->|邀请| B[用户B]
-  B -->|1%分佣| A
-  B -->|邀请| C[用户C]
-  C -->|1%分佣| B
-end
-
-subgraph 平台
-  D[平台] -->|3%收益返佣| B
-  D[平台] -->|3%收益返佣| A
-end
-
-```
-
-#### NFT whitelist trading
+#### NFT whitelist trading/Pol-20 spot trading support
 
 General Process：
 
@@ -174,17 +112,74 @@ General Process：
 
 4. After the transaction is completed, buyers can participate in the creation or presale of NFT projects as usual, acquiring the NFT assets.The platform allows both parties to the transaction to evaluate each other, establishing a reputation system for the platform.
 
+   
 
-
-#### **The spot trading of Pol-20 is similar to the basic process described above.  It is worth mentioning that there is currently no platform that supports spot trading of Pol-20. **
+**Pol-20 spot trading is similar to the basic process described above, but it is worth mentioning that there is currently no platform that supports pol-20 spot trading. **
 
 
 
 The entire process is guaranteed by the platform to ensure secure transactions.Additionally, a friendly reminder is provided:The NFT whitelist trading is an emerging market, presenting certain risks.Before engaging in a transaction, buyers should carefully review the project information and select sellers with a reputable standing.The seller should ensure the authenticity and validity of the provided whitelist quotas.
 
-### Project demo
+#### Lottery whole process is on-chain
 
-link here
+Award Information: Storing the descriptions and quantities of various awards.
+
+Lottery results: The lottery results, including the winners and prizes, are stored on the blockchain to ensure verifiability and transparency.
+
+Participant Record: The information of the participants (address, participation time, etc.) is recorded on the chain.
+
+Lottery Logic (Contract Details): Implementing the lottery logic in a smart contract to determine the winners.
+
+```mermaid
+sequenceDiagram
+  participant User
+  participant Smart Contract
+
+  User->>Smart Contract: Participate in the lucky draw
+  Smart Contract->>User: Return to the participation results
+
+  activate Smart Contract
+    Smart Contract->>Prize information: Get award information
+    Prize information-->>Smart Contract: Return to award information
+
+    Smart Contract->>Participants' records: Record participant information
+    Participants' records-->>Smart Contract: Return the recorded results
+
+    Smart Contract->>Lottery logic: Execute the lottery logic
+    Lottery logic-->>Smart Contract: Return the information of the winner
+
+    Smart Contract->>Lottery results: Store the lottery results
+  deactivate Smart Contract
+
+  User->>Smart Contract: Query the lottery results
+  Smart Contract->>User: Return the lottery results
+```
+
+#### Invitational Commission Mechanism
+
+The core concept of the invitation commission mechanism is first-level commission with permanent binding, providing users with a long-term stable source of income.Specifically, when a user successfully invites a new user to transact on the platform, that user will enjoy the benefits of first-level commission.Meanwhile, this binding relationship will remain permanently valid, ensuring that users can earn the corresponding commission revenue on every transaction made by their subordinates.
+
+In our commission structure, users will receive 1% of the transaction amount of their subordinate users as their direct commission, while the platform enjoys a 3% revenue share from the transaction amount.This advantageous commission ratio not only reflects our recognition of user contributions to enhance user retention but also ensures the continuous operation of the platform with cash flow security.
+
+
+
+```mermaid
+graph TD
+
+subgraph User and commission mechanism
+  A[User A] -->|invite| B[User B]
+  B -->|1% commission| A
+  B -->|invite| C[User C]
+  C -->|1% commission| B
+end
+
+subgraph Platform
+  D[Platform] -->|3% rebate on earnings| B
+  D[Platform] -->|3% rebate on earnings| A
+end
+```
+
+
 
 ## The tasks planned to be completed during the hackathon.
 
@@ -240,38 +235,45 @@ Prepare clear and detailed introductory documents and user manuals.
 * Contract drafting supported by OTC trading.
 * The open-source technology of hashlock is replicated.
 
-### Link to large files such as PowerPoint presentations
+### Link to large files
 
 Demo YouTube show:
 
 https://www.youtube.com/watch?v=yNmXrcWoBhc
 
-## API介绍
+## API
 
-The following is an API introduction from the project's .sol file:
-
-| function                                             | description                                                  |
-| ---------------------------------------------------- | ------------------------------------------------------------ |
-| `addNFTToWhitelist(address nftContract)`             | Add the specified NFT contract address to the whitelist.     |
-| `removeNFTFromWhitelist(address nftContract)`        | Remove the specified NFT contract address from the whitelist. |
-| `depositTokens(uint256 amount)`                      | Deposit a specified amount of tokens into the contract.      |
-| `withdrawTokens(uint256 amount)`                     | Extract a specified quantity of tokens from the contract.    |
-| `lockTokens(uint256 amount, bytes32 hash)`           | Locking using a specified number of tokens and hash values.  |
-| `unlockTokens(uint256 amount, bytes32 originalData)` | Based on the original data, unlock and extract a specified number of tokens. |
-
-## Instructions for Use
-
-
+| function name                  | 参数                                                    | 返回值类型           | 描述                                                         |
+| ------------------------------ | ------------------------------------------------------- | -------------------- | ------------------------------------------------------------ |
+| `lock`                         | `_hash: string`                                         | `string`             | Lock the proposal and return the result string.If the proposal does not exist, has been completed, or has been rolled back, the corresponding error message will be returned. |
+| `unlock`                       | `_hash: string`, `_secret: string`                      | `string`             | Unlock the proposal and return the result string.If the proposal does not exist, is completed, is not locked, or has been rolled back, the corresponding error message will be returned. |
+| `rollback`                     | `_hash: string`                                         | `string`             | Rollback proposal, return the result string.If the proposal does not exist, is completed, not locked, unlocked, or rolled back, the corresponding error message is returned. |
+| `newProposal`                  | `_hash: string`, `_role: string`, ...                   | `string`             | Create a new proposal and return the resulting string.If the proposal already exists, the time lock is set incorrectly, or the roles do not match, an appropriate error message is returned. |
+| `setNewProposalTxInfo`         | `_hash: string`, `_txHash: string`, `_blockNum: string` | No return            | Set the transaction information for the new proposal.        |
+| `getNewProposalTxInfo`         | `_hash: string`                                         | `string`             | Get the transaction information of the new proposal.If the transaction information does not exist, return "null". |
+| `getNegotiatedData`            | `_hash: string`                                         | `string`             | Gets the negotiated data and returns a string containing the initiator and participant information.If the proposal does not exist, an appropriate error message is returned. |
+| `getProposalInfo`              | `_hash: string`                                         | `string`             | Gets the details of the proposal and returns a string containing the proposal status and related flags.If the proposal does not exist, it returns "null". |
+| `setSecret`                    | `_hash: string`, `_secret: string`                      | `string`             | Set the key for the proposal and return the result string.If the provided key does not match the hash value, the corresponding error message will be returned. |
+| `getProposalIDs`               | 无                                                      | `string`             | Get the hash values of all proposals and return a string containing all the hash values. |
+| `deleteProposalID`             | `_id: string`                                           | `string`             | Deletes the proposal with the specified hash value and returns a result string.If the proposal does not exist or the deletion fails, the corresponding error message is returned. |
+| `getIndex`                     | `_hash: string`                                         | `(uint256, uint256)` | Get the index and depth of the proposal in the queue.        |
+| `setCounterpartyLockState`     | `_hash: string`                                         | No return            | Set the lock status of the other party.                      |
+| `setCounterpartyUnlockState`   | `_hash: string`                                         | No return            | Set the unlock status of the other party.                    |
+| `setCounterpartyRollbackState` | `_hash: string`                                         | No return            | Set the rollback status of the other party.                  |
 
 ## Test
 
-The project encompasses test cases specific to contract functionality, ensuring the correctness and security of various features.
+The src folder contains test cases for contract functions, and some local tests have been conducted using`truffle test` in the early stages.
 
 ## builder information
 
-|  Name  | Role                  | GitHub ID        | Wechat ID      |
-| :----: | --------------------- | ---------------- | -------------- |
-|   TK   | pm                    | Richard tsang202 | tk_nom         |
-|        |                       |                  |                |
-|  探姬  | CTFer                 | ProbiusOfficial  | ProbiusProtoss |
-| V1cent | builder, UI developer | L011apa100za     | SWS18312967544 |
+|  Name  |             Role             |    GitHub ID     |   Wechat ID    |
+| :----: | :--------------------------: | :--------------: | :------------: |
+|   TK   | pm, Business Logic Developer | Richard tsang202 |     tk_nom     |
+| S7iter |           rear-end           |      S7iter      |   shihuobiu    |
+|  探姬  |     Full Stack Developer     | ProbiusOfficial  | ProbiusProtoss |
+| V1cent |    front-end, UI Designer    |   L011apa100za   | SWS18312967544 |
+
+## License
+
+[License](./LICENSE)
