@@ -34,7 +34,7 @@ AIDot is an AI chatbot seamlessly integrated with all Polkadot ecosystem resourc
 * [Website](http://wwww.aidot.tech).
 * [Try it out](http://wwww.aidot.tech).
 * Video: https://youtu.be/NmAM6ASyp3w
-* Powerpoint: 
+* Powerpoint: https://drive.google.com/file/d/13niC1CAIHOBcFZnGuXDJ0lcjbWty7kxT/view?usp=drive_link
 * [Control Panel to customize AI](http://wwww.aidot.tech/control) (Login with test account: `username: dummy123  password: dummy123`).
   Train bot:
     ![Failed to load image.](./assets/train1.png)
@@ -50,7 +50,7 @@ AIDot is an AI chatbot seamlessly integrated with all Polkadot ecosystem resourc
 
 ### How to embed AIDot to other websites
 
-![Failed to load image.]()
+![Failed to load image.](./assets/integrate.png)
 
 
 ### Technical Architecture
