@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "node",
+    "pallets/daos",
+    "pallets/users",
+    "runtime",
+]
+[profile.release]
+panic = "unwind"
+[patch.crates-io]
+parity-scale-codec = { git = "https://github.com/paritytech/parity-scale-codec.git", tag = "v3.6.5" }

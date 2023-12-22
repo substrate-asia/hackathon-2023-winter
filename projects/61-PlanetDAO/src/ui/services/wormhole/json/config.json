@@ -1,0 +1,65 @@
+{	"networks": {
+    "97": {
+        "type": "evm",
+        "name": "Binance Smart Chain Testnet",
+        "chain": "BSC",
+        "chainId": 97,
+        "networkId": 97,
+        "hex":"0x61",
+        "wormholeChainId": 4,
+        "nativeCurrency": { "name": "Binance Chain Native Token", "symbol": "tBNB", "decimals": 18 },
+        "rpc": "https://data-seed-prebsc-1-s3.binance.org:8545",
+        "privateKey": "fcd5e870c919104aa494cf850c4132baa99286a1f863b99888a1853908eaa92c",
+        "bridgeAddress": "0x68605AD7b15c732a30b1BbC62BE8F2A509D74b4D",
+        "tokenBridgeAddress": "0x9dcF9D205C9De35334D646BeE44b2D2859712A09",
+        "testToken": "0xae13d989dac2f0debff460ac112a837c89baa7cd"
+    },
+    "1287": {
+        "type": "evm",
+        "name": "Moonbase Alpha",
+        "wormholeChainId": 16,
+        "chain": "MOON",
+        "chainId": 1287,			
+        "hex": "0x507",
+        "networkId": 1287,
+        "nativeCurrency": { "name": "Dev", "symbol": "DEV", "decimals": 18 },
+        "rpc": "https://rpc.api.moonbase.moonbeam.network",
+        "privateKey": "fcd5e870c919104aa494cf850c4132baa99286a1f863b99888a1853908eaa92c",
+        "tokenBridgeAddress": "0xbc976D4b9D57E57c3cA52e1Fd136C45FF7955A96",
+        "bridgeAddress": "0xa5B7D85a8f27dd7907dc8FdC21FA5657D5E2F901"
+    },
+    "44787":{
+        "type": "evm",
+        "name": "Celo Alfajores Testnet",
+        "wormholeChainId": 14,
+        "chain": "CELO",
+        "chainId": 44787,			
+        "hex": "0xaef3",
+        "networkId": 44787,
+        "nativeCurrency": { "name": "CELO", "symbol": "CELO", "decimals": 18 },
+        "rpc": "https://alfajores-forno.celo-testnet.org",
+        "privateKey": "fcd5e870c919104aa494cf850c4132baa99286a1f863b99888a1853908eaa92c",
+        "tokenBridgeAddress": "0x05ca6037eC51F8b712eD2E6Fa72219FEaE74E153",
+        "bridgeAddress": "0x88505117CA88e7dd2eC6EA1E13f0948db2D50D56",
+        "testToken": "0xDe37f36C9c045164CE89D3cEaeC67949EfACC398"
+    },
+    "5":{
+        "type": "evm",
+        "name": "Goerli",
+        "wormholeChainId": 2,
+        "chain": "ETH",
+        "chainId": 5,			
+        "hex": "0x5",
+        "networkId": 5,
+        "nativeCurrency": { "name": "Goerli Ether", "symbol": "GoerliETH", "decimals": 18 },
+        "rpc": "https://goerli.infura.io/v3/32f0f36f9fa64d1dabac0dbc2a768ba2",
+        "privateKey": "fcd5e870c919104aa494cf850c4132baa99286a1f863b99888a1853908eaa92c",
+        "tokenBridgeAddress": "0xF890982f9310df57d00f659cf4fd87e65adEd8d7",
+        "bridgeAddress": "0x706abc4E45D419950511e474C7B9Ed348A4a716c",
+        "testToken": "0xB4FBF271143F4FBf7B91A5ded31805e42b2208d6"
+    }	
+},
+"wormhole": {
+    "restAddress": "https://wormhole-v2-testnet-api.certus.one"
+}
+}
