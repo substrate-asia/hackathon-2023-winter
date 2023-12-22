@@ -29,6 +29,7 @@ We could let people pay with any asset (using an external DEX).
 ## Project Video Introduction
 
 https://clipchamp.com/watch/DVNogyLvk4z
+https://www.youtube.com/watch?v=R3axwAxh-Po
 
 ## Repository Links:
 
