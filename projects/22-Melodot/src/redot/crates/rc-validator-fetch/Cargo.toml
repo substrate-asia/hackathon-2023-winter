@@ -11,28 +11,22 @@ keywords = ["substrate", "pallet", "macro", "configuration"]
 targets = ["x86_64-unknown-linux-gnu"]
 
 [dependencies]
-codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
-scale-info = { version = "2.2.0", default-features = false, features = ["derive"] }
-
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
 redot-core-primitives = { path = "../core-primitives", default-features = false }
 
 # Melodot
-melo-das-db = { git = "https://github.com/ZeroDAO/melodot", default-features = false }
+melo-das-db = { git = "https://github.com/ZeroDAO/melodot", branch = "polkadot-v1.0.0", default-features = false }
 
 # Substrate
-cumulus-relay-chain-interface = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
+cumulus-relay-chain-interface = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0", optional = true }
 cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
-
-[dev-dependencies]
-serde = { version = "1.0.163" }
 
 [features]
 default = ["std"]
 std = [
 	"melo-das-db/std",
 	"codec/std",
-	"scale-info/std",
-	"serde/std",
 	"redot-core-primitives/std",
 	"cumulus-primitives-core/std",
+	"cumulus-relay-chain-interface",
 ]

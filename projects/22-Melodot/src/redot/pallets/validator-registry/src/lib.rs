@@ -54,7 +54,6 @@ pub use pallet::*;
 
 // A prefix constant used for the off-chain database.
 const DB_PREFIX: &[u8] = b"redot/validator-registry/";
-// A threshold constant used to determine when to delay the acknowledgment of unavailability.
 pub const DELAY_CHECK_THRESHOLD: u32 = 1;
 // Weight constant for each blob.
 pub const WEIGHT_PER_BLOB: Weight = Weight::from_parts(1024, 0);
@@ -64,30 +63,23 @@ pub type AuthIndex = u32;
 
 /// Possible errors that can occur during off-chain execution.
 #[cfg_attr(test, derive(PartialEq))]
-enum OffchainErr<BlockNumber> {
-	WaitingForInclusion(BlockNumber),
+enum OffchainErr {
 	FailedSigning,
-	FailedToAcquireLock,
 	SubmitTransaction,
 }
 
-impl<BlockNumber: sp_std::fmt::Debug> sp_std::fmt::Debug for OffchainErr<BlockNumber> {
+impl sp_std::fmt::Debug for OffchainErr {
 	fn fmt(&self, fmt: &mut sp_std::fmt::Formatter) -> sp_std::fmt::Result {
 		match *self {
-			OffchainErr::WaitingForInclusion(ref block) => {
-				write!(fmt, "Report already sent at {:?}. Waiting for inclusion.", block)
-			},
 			OffchainErr::FailedSigning => write!(fmt, "Failed to sign report"),
-			OffchainErr::FailedToAcquireLock => write!(fmt, "Failed to acquire lock"),
 			OffchainErr::SubmitTransaction => write!(fmt, "Failed to submit transaction"),
 		}
 	}
 }
 
 // Typedef for results returned by off-chain operations.
-type OffchainResult<T, A> = Result<A, OffchainErr<BlockNumberFor<T>>>;
+type OffchainResult<A> = Result<A, OffchainErr>;
 
-// Struct to represent a report of unavailable data.
 #[derive(Encode, Decode, Clone, PartialEq, Eq, TypeInfo, RuntimeDebug)]
 pub struct ValidatorVoteInfo<BlockNumber>
 where
@@ -95,7 +87,6 @@ where
 {
 	pub remove: Vec<ValidatorId>,
 	pub add: Vec<ValidatorId>,
-	/// Index of the authority reporting the unavailability.
 	pub authority_index: AuthIndex,
 	/// Total length of session validator set.
 	pub validators_len: u32,
@@ -167,19 +158,16 @@ pub mod pallet {
 	pub(super) type ValidatorsStatus<T: Config> =
 		StorageMap<_, Twox64Concat, ValidatorId, AuthorityStatus, ValueQuery>;
 
-	/// Represents votes regarding the availability of certain data.
 	#[pallet::storage]
 	#[pallet::getter(fn remove_vote)]
 	pub(super) type RemoveVote<T: Config> =
 		StorageDoubleMap<_, Twox64Concat, BlockNumberFor<T>, Twox64Concat, ValidatorId, u32>;
 
-	/// Represents votes regarding the availability of certain data.
 	#[pallet::storage]
 	#[pallet::getter(fn add_vote)]
 	pub(super) type AddVote<T: Config> =
 		StorageDoubleMap<_, Twox64Concat, BlockNumberFor<T>, Twox64Concat, ValidatorId, u32>;
 
-	/// Represents votes regarding the availability of certain data.
 	#[pallet::storage]
 	#[pallet::getter(fn votes)]
 	pub(super) type Votes<T: Config> = StorageMap<
@@ -190,11 +178,9 @@ pub mod pallet {
 		ValueQuery,
 	>;
 
-	/// Enumerates all the possible events that can be emitted by this pallet.
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		/// Signifies that a report has been submitted.
 		VoteReceived { at_block: BlockNumberFor<T>, from: AuthIndex },
 		/// Denotes the successful registration of a new validator ID.
 		Registered { validator_id: ValidatorId, from: T::AccountId },
@@ -232,7 +218,7 @@ pub mod pallet {
 				AuthorityStatus::Block => Err(Error::<T>::InvalidKey)?,
 				AuthorityStatus::Enabled => {
 					let mut pending = Pending::<T>::get();
-					ensure!(!pending.contains(&validator_id), Error::<T>::UserNotRegistered,);
+					ensure!(!pending.contains(&validator_id), Error::<T>::UserNotRegistered);
 
 					pending
 						.try_push(validator_id.clone())
@@ -323,7 +309,7 @@ pub mod pallet {
 		fn offchain_worker(now: BlockNumberFor<T>) {
 			// Only send messages if we are a potential validator.
 			if sp_io::offchain::is_validator() {
-				for res in Self::send_unavailability_report(now).into_iter().flatten() {
+				for res in Self::send_validators_update(now).into_iter().flatten() {
 					if let Err(e) = res {
 						log::debug!(
 							target: "runtime::melo-store",
@@ -399,18 +385,14 @@ impl<T: Config> Pallet<T> {
 		}
 	}
 
-	/// Assemble and send unavailability reports for any data that is unavailable.
-	///
-	/// # Arguments
-	/// * `now` - The current block number.
-	pub(crate) fn send_unavailability_report(
+	pub(crate) fn send_validators_update(
 		now: BlockNumberFor<T>,
-	) -> OffchainResult<T, impl Iterator<Item = OffchainResult<T, ()>>> {
+	) -> OffchainResult<impl Iterator<Item = OffchainResult<()>>> {
 		let at_block = now;
 		let (add, remove) = Self::fetch_list();
 
 		Ok(Self::local_authority_keys().map(move |(authority_index, key)| {
-			Self::send_single_unavailability_report(
+			Self::send_single_validators_update(
 				authority_index,
 				key,
 				at_block,
@@ -421,20 +403,19 @@ impl<T: Config> Pallet<T> {
 		}))
 	}
 
-	// Helper method to send a single unavailability report.
-	fn send_single_unavailability_report(
+	fn send_single_validators_update(
 		authority_index: u32,
 		key: T::AuthorityId,
 		at_block: BlockNumberFor<T>,
 		now: BlockNumberFor<T>,
 		remove: Vec<ValidatorId>,
 		add: Vec<ValidatorId>,
-	) -> OffchainResult<T, ()> {
+	) -> OffchainResult<()> {
 		if add.is_empty() && remove.is_empty() {
 			return Ok(());
 		}
 
-		let prepare_votes = || -> OffchainResult<T, Call<T>> {
+		let prepare_votes = || -> OffchainResult<Call<T>> {
 			let validators_len = Keys::<T>::decode_len().unwrap_or_default() as u32;
 			let votes =
 				ValidatorVoteInfo { at_block, remove, add, authority_index, validators_len };
@@ -446,8 +427,8 @@ impl<T: Config> Pallet<T> {
 
 		let call = prepare_votes()?;
 		log::info!(
-			target: "runtime::melo-store",
-			"[index: {:?}] Reporting unavailable data of {:?} (at block: {:?}) : {:?}",
+			target: "runtime::validator-registry",
+			"[index: {:?}] Update data of {:?} (at block: {:?}) : {:?}",
 			authority_index,
 			at_block,
 			now,

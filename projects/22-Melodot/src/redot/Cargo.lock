@@ -5618,6 +5618,16 @@ dependencies = [
 [[package]]
 name = "melo-das-db"
 version = "0.0.1"
+source = "git+https://github.com/ZeroDAO/melodot?branch=polkadot-v1.0.0#b6374f1f3242fe41115f588fe14600697072db2e"
+dependencies = [
+ "sp-core 21.0.0",
+ "sp-io 23.0.0",
+ "sp-runtime 24.0.0",
+]
+
+[[package]]
+name = "melo-das-db"
+version = "0.0.1"
 source = "git+https://github.com/ZeroDAO/melodot#d61b1be62427399911830c3406acfa129746280d"
 dependencies = [
  "sp-core 7.0.0",
@@ -7108,6 +7118,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "pallet-task"
+version = "0.1.0"
+dependencies = [
+ "frame-benchmarking",
+ "frame-support",
+ "frame-system",
+ "parity-scale-codec",
+ "redot-core-primitives",
+ "scale-info",
+ "serde",
+ "sp-core 21.0.0",
+ "sp-io 23.0.0",
+ "sp-runtime 24.0.0",
+]
+
+[[package]]
 name = "pallet-timestamp"
 version = "4.0.0-dev"
 source = "git+https://github.com/paritytech/substrate?branch=polkadot-v1.0.0#948fbd2fd1233dc26dbb9f9bbc1d2cca2c03945d"
@@ -7230,7 +7256,7 @@ dependencies = [
  "frame-support",
  "frame-system",
  "log",
- "melo-das-db",
+ "melo-das-db 0.0.1 (git+https://github.com/ZeroDAO/melodot?branch=polkadot-v1.0.0)",
  "parity-scale-codec",
  "rc-validator-fetch",
  "redot-core-primitives",
@@ -9462,7 +9488,7 @@ dependencies = [
  "frost-ed25519",
  "futures",
  "log",
- "melo-das-db",
+ "melo-das-db 0.0.1 (git+https://github.com/ZeroDAO/melodot)",
  "parity-scale-codec",
  "rc-validator-network",
  "redot-core-primitives",
@@ -9477,11 +9503,9 @@ version = "0.1.0"
 dependencies = [
  "cumulus-primitives-core",
  "cumulus-relay-chain-interface",
- "melo-das-db",
+ "melo-das-db 0.0.1 (git+https://github.com/ZeroDAO/melodot?branch=polkadot-v1.0.0)",
  "parity-scale-codec",
  "redot-core-primitives",
- "scale-info",
- "serde",
 ]
 
 [[package]]

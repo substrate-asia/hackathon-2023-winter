@@ -15,7 +15,7 @@ anyhow = "1.0.66"
 rand = "0.8.4"
 serde = { version = "1.0.163" }
 codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
-frost-ed25519 = { version = "1.0.0-rc.0", default-features = false }
+frost-ed25519 = { version = "1.0.0-rc.0", default-features = false, features = ["serde"] }
 scale-info = { version = "2.2.0", default-features = false, features = ["derive"] }
 
 # Substrate

@@ -11,11 +11,17 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+#![cfg_attr(not(feature = "std"), no_std)]
+
 use codec::{Decode, Encode};
-use cumulus_primitives_core::{relay_chain::ValidatorId, BlockT};
+use cumulus_primitives_core::relay_chain::ValidatorId;
+#[cfg(feature = "std")]
+use cumulus_primitives_core::BlockT;
+#[cfg(feature = "std")]
 use cumulus_relay_chain_interface::RelayChainInterface;
 use melo_das_db::traits::DasKv;
 use redot_core_primitives::GetValidatorsFromRuntime;
+#[cfg(feature = "std")]
 use std::sync::Arc;
 
 const STORE_KEY: &[u8] = b"redot_relay_validators";
@@ -84,6 +90,7 @@ impl ValidatorsInfo {
 	/// # Returns
 	/// An `Option` containing a `ValidatorId` of a new validator not present in the current set.
 	/// Returns `None` if no new validator is found or if an error occurs.
+	#[cfg(feature = "std")]
 	pub async fn update_from_relay<RCC, DB>(&mut self, db: &mut DB, client: &Arc<RCC>)
 	where
 		RCC: RelayChainInterface,
@@ -110,13 +117,14 @@ impl ValidatorsInfo {
 	/// # Returns
 	/// An `Option` containing a vector of `ValidatorId` representing validators that have been removed.
 	/// Returns `None` if no validators are removed or if an error occurs.
+	#[cfg(feature = "std")]
 	pub fn update_from_runtime<Runtime, DB, Block>(
 		&mut self,
 		db: &mut DB,
 		block_hash: Block::Hash,
 		runtime: &Arc<Runtime>,
 	) where
-		Runtime: GetValidatorsFromRuntime<Block>,
+		Runtime: GetValidatorsFromRuntime<Block, ValidatorId>,
 		DB: DasKv,
 		ValidatorId: PartialEq + Clone + Encode + Decode,
 		Block: BlockT,
