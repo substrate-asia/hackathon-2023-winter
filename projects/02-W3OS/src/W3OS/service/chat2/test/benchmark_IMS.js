@@ -85,9 +85,3 @@ self.link(config.url,config.account,()=>{
     },4000);
 });
 
-//for(let i=0;i<config.account;i++){
-    //const ws=new WebSocket(config.url);
-//}
-
-
-

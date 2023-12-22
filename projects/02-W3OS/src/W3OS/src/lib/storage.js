@@ -89,6 +89,7 @@ const STORAGE = {
     return JSON.parse(res);
   },
   setKey: (name, obj) => {
+    //console.log(map);
     if (!map[name]) return false;
     const key = map[name];
     if (!hash || ignore[name] === true){

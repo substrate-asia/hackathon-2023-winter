@@ -9,13 +9,51 @@ import BILL from "./bill";
 import IMGC from "../open/IMGC";
 
 
+import { FcEngineering } from "react-icons/fc";
+import { FcDataProtection } from "react-icons/fc";
+import { FcMoneyTransfer } from "react-icons/fc";
+import { FcContacts } from "react-icons/fc";
+import { FcPhone } from "react-icons/fc";
+import { FcHome } from "react-icons/fc";
+import { FcLineChart } from "react-icons/fc";
+import { FcMindMap } from "react-icons/fc";
+import { FcOrgUnit } from "react-icons/fc";
+import { FcMultipleDevices } from "react-icons/fc";
+import { FcOrganization } from "react-icons/fc";
+import { FcPodiumWithAudience } from "react-icons/fc";
+import { FcSelfie } from "react-icons/fc";
+import { FcSalesPerformance } from "react-icons/fc";
+import { FcPuzzle } from "react-icons/fc";
+import { FcProcess } from "react-icons/fc";
+
+const isize=66;
+const icons=[
+  <FcEngineering size={isize} />,
+  <FcDataProtection size={isize} />,
+  <FcMoneyTransfer size={isize}/>,
+  <FcContacts size={isize}/>,
+  <FcPhone size={isize}/>,
+  <FcHome size={isize}/>,
+  <FcLineChart size={isize}/>,    //app random icon from here
+  <FcMindMap size={isize}/>,
+  <FcOrgUnit size={isize}/>,
+  <FcMultipleDevices size={isize}/>,
+  <FcOrganization size={isize}/>,
+  <FcPodiumWithAudience size={isize}/>,
+  <FcSelfie size={isize}/>,
+  <FcSalesPerformance size={isize}/>,
+  <FcPuzzle size={isize}/>,
+  <FcProcess size={isize}/>,
+];
+
 let API = null;
-let wsAPI = null;
-let wss = {};
+let wsAPI = null;   //Polkadot node link
+let wss = {};       //servers links
 let spams = {};
 let nets = {};
 let UI = null;
-let mailer = {}; //mailer cache
+let mailer = {};    //mailer cache
+let closing={};     //closing monitor
 
 let base="";  //avatar base URL
 let type="";  //avatar type set
@@ -28,7 +66,6 @@ const keys = {
   apps: `${prefix}_apps_list`,
   salt: `${prefix}_salt`,
   vertify: `${prefix}_check`,
-  //talking:`${prefix}_talking`,
 };
 STORAGE.setMap(keys);
 
@@ -49,6 +86,13 @@ const Easy = window.Easy;
 const Pok = window.Polkadot;
 
 const RUNTIME = {
+  getICON:(index)=>{
+    if(icons[index]) return icons[index];
+    return icons[0];
+  },
+  getRandomICON:()=>{
+    return tools.rand(5,icons.length-1);
+  },
   /************************************************/
   /********** System initialization ***************/
   /************************************************/
@@ -59,15 +103,18 @@ const RUNTIME = {
     //1. creat salt anyway.
     STORAGE.setIgnore(["salt", "vertify"]); //public data;
     let salt = STORAGE.getKey("salt");
+
+    //1.first time to run W3OS
     if (salt === null) {
-      //1.first time to run W3OS
       const char = tools.char(28, prefix);
       STORAGE.setKey("salt", char);
     }
+
+    //2.check wether no password
     salt = STORAGE.getKey("salt");
     const login = STORAGE.getEncry(); //check storage md5 password hash
     if (!login) {
-      setPass((pass) => {
+      setPass((pass,fresh) => {
         const md5 = Encry.md5(`${salt}${pass}`);
         const check = STORAGE.getKey("vertify");
         //console.log(check);
@@ -75,11 +122,13 @@ const RUNTIME = {
           //a. no password check, create one
           STORAGE.setEncry(md5);
           STORAGE.setKey("vertify", md5);
+          if(fresh) fresh();    //if fresh, do it
+
         } else {
-          //b. no password check, create one
+          //b. do have password
           if (check !== md5) return ck && ck({ msg: "Error password" });
           STORAGE.setEncry(md5);
-          //console.log(`vertify:${check},pass:${md5}`);
+          if(fresh) fresh();    //if fresh, do it
           return ck && ck(true);
         }
       });
@@ -149,7 +198,7 @@ const RUNTIME = {
     return true;
   },
   initAccount:(acc,ck)=>{
-    console.log(`Ready to init base indexedDB tables for account ${acc}, at ${tools.stamp().toLocaleString()}`);
+    //console.log(`Ready to init base indexedDB tables for account ${acc}, at ${tools.stamp().toLocaleString()}`);
     const list=[];
     CHAT.preInit(acc,(tb_chat)=>{
       if(tb_chat!==false) list.push(tb_chat);
@@ -179,14 +228,24 @@ const RUNTIME = {
       const nkey = !stranger ? mine : `${mine}_stranger`;
       let list = STORAGE.getKey(nkey);
       if (list === null) list = {};
-      list[address] = {
-        intro: "",
-        status: 1,
-        type: !stranger ? "friend" : "stranger",
-        network: "Anchor",
-      };
-      STORAGE.setKey(nkey, list);
-      return ck && ck(true);
+      if(!list[address]){
+        list[address] = {
+          short: "",
+          intro: "",
+          status: 1,
+          type: !stranger ? "friend" : "stranger",
+          network: "Anchor",
+        };
+        if(!STORAGE.checkMap(nkey)){
+          const nmap={};
+          nmap[nkey]=`${prefix}_${nkey}`;
+          STORAGE.setMap(nmap);
+        }
+        STORAGE.setKey(nkey, list);
+        return ck && ck(true);
+      }else{
+        return ck && ck(true);
+      }  
     });
   },
   removeContact: (list, ck, stranger) => {
@@ -216,13 +275,30 @@ const RUNTIME = {
       const nkey = !stranger ? mine : `${mine}_stranger`;
       nmap[nkey] = skey;
       STORAGE.setMap(nmap);
-
       const list = STORAGE.getKey(nkey);
       if (list === null) {
         STORAGE.setKey(nkey, !stranger ? config.contacts : {});
       }
       return ck && ck(STORAGE.getKey(nkey));
     });
+  },
+  setContact:(address,data,ck,stranger)=>{
+
+    RUNTIME.getAccount((acc) => {
+      if (!acc || !acc.address) return ck && ck(false);
+      const mine = acc.address;
+      RUNTIME.getContact((clist)=>{
+        if(!clist[address]) return false;
+        console.log(clist[address]);
+        for(let k in clist[address]){
+          if(data[k]) clist[address][k]=data[k];
+        }
+        const nkey = !stranger ? mine : `${mine}_stranger`;
+        STORAGE.setKey(nkey, clist);
+        return ck && ck(true);
+      });
+    });
+    
   },
   singleContact:(address,ck,stranger)=>{
     RUNTIME.getContact((clist)=>{
@@ -368,8 +444,18 @@ const RUNTIME = {
     delete wss[uri];
     return true;
   },
-  websocket: (uri, ck, agent) => {
-    if (wss[uri]) return ck && ck(wss[uri]);
+  wsClose:(uri,fun)=>{
+    if(!closing[uri])closing[uri]=[];
+    closing[uri].push(fun);
+    return true;
+  },
+  websocket: (uri, ck, agent,force) => {
+    if (wss[uri] && !force) return ck && ck(wss[uri]);
+
+    if(force && wss[uri]){
+      wss[uri].close();
+    }
+
     try {
       const ws = new WebSocket(uri);
       ws.onopen = (res) => {
@@ -380,6 +466,11 @@ const RUNTIME = {
       };
       ws.onclose = (res) => {
         if (agent && agent.close) agent.close(res);
+        if(closing[uri] && closing[uri].length!==0){
+          for(let i=0;i<closing[uri].length;i++){
+            closing[uri][i](res);
+          }
+        }
       };
       ws.onerror = (res) => {
         if (agent && agent.error) agent.error(res);
@@ -483,83 +574,124 @@ const RUNTIME = {
   getAvatar:(str)=>{
     return `${base}/${str}.png${type}`;
   },
+
+  /***************************************************************/
+  /******************* Index update functions ********************/
+  /***************************************************************/
+  // getTalkingMastor:(way,from,to)=>{
+  //   if(way==="to") return from;
+  //   return to;
+  // },
+  isGroup: (address) => {
+    if (address.length === 48) return false;
+    return true;
+  },
+  newContact:()=>{
+    return {
+      id:"",                  //address unique id
+      nick:"",                //nickname of contact
+      update:0,   //group update time
+      last:"",                //last message
+      type:"contact",         //talking type
+      un:0,
+    }
+  },
+  newGroup:()=>{
+    return {
+      id:"",
+      last:{
+        from:"",
+        msg:"",
+      },
+      update:0,
+      type:"group",
+      un:0,
+    }
+  },
+  exsistID:(id,list)=>{
+    console.log(`[exsistID] get the index of ${id} from ${JSON.stringify(list)}`)
+    for(let i=0;i<list.length;i++){
+      if(list[i].id===id) return i;
+    }
+    return null;
+  },
+  getAtomID:(way,from,to)=>{
+    if(way==="to") return to;
+    return from;
+  },
+  getAtomFromTalking:(way,from,to,ck)=>{
+    console.log(`[getAtomFromTalking] From ${from}, to ${to}, way: ${way}`);
+    //1.which account to update 
+    
+    RUNTIME.getAccount((fa)=>{
+      //const key=RUNTIME.getTalkingMastor(way,from,to);
+      const key=fa.address;
+      console.log(`Account: ${key} need to update talking index.`);
+      RUNTIME.getTalking(key,(list)=>{
+  
+        //2.check the atom ID
+        if(to.length===48){
+          //2.1. index order when contact
+          const id=RUNTIME.getAtomID(way,from,to);
+          const index=RUNTIME.exsistID(id,list);
+          console.log(`Contact index: ${index}, ID: ${id}`);
+          if(index===null){
+            const atom=RUNTIME.newContact();
+            atom.id=id;     //set the contact ID
+            list.unshift(atom);
+            return ck && ck(list);
+          }else{
+            const nlist=[list[index]];
+            for(let i=0;i<list.length;i++){
+              if(i!==index) nlist.push(list[i]);
+            }
+            return ck && ck(nlist);
+          }
+        }else{
+          //2.2. index order when group
+          const index=RUNTIME.exsistID(to,list);
+          console.log(`Group index: ${index}`);
+          if(index===null){
+            const atom=RUNTIME.newGroup();
+            atom.id=to;
+            list.unshift(atom);
+            return ck && ck(list);
+          }else{
+            const nlist=[list[index]];
+            for(let i=0;i<list.length;i++){
+              if(i!==index) nlist.push(list[i]);
+            }
+            return ck && ck(nlist);
+          }
+        }
+      });
+    });
+  },
   updateTalkingIndex:(from,to,msg,ck,unread,way)=>{
     console.log(`From "RUNTIME.updateTalkingIndex":`);
     console.log(`From: ${from}, to: ${to}, unread: ${unread}, way: ${way}, message: ${msg}`);
 
-    RUNTIME.getTalking(from,(list)=>{
-      //console.log(list);
-      let nlist=[];
-      let target=null;
+    //1. order the talking list
+    RUNTIME.getAtomFromTalking(way,from,to,(list)=>{
+      console.log(`Ordered list: ${JSON.stringify(list)}`);
 
-      //1. filter out the target group
-      for(let i=0;i<list.length;i++){
-        const row=list[i];
-        if(to.length===48){
-          if(row.id===to){
-            target=row;
-          }else{
-            nlist.push(row);
-          }
-        }else{
-          if(row.id===to){
-            target=row;
-          }else{
-            nlist.push(row);
-          }
-        }
+      //2.update the messages
+      console.log(`[updateTalkingIndex] To: ${to}`);
+      if(RUNTIME.isGroup(to)){
+        console.log(list[0]);
+        list[0].last.from=from;
+        list[0].last.msg=msg;
+      }else{  
+        list[0].last=msg;
       }
+      list[0].update=tools.stamp();
 
-      console.log(`The target is : ${JSON.stringify(target)}`);
-
-      //2.update data
-      if(target!==null){
-        //2.1.regroup the index order
-        if(target.type!=="group"){
-          target.last=msg;
-        }else{
-          target.last.from=from;
-          target.last.msg=msg;
-        }
-        target.update=tools.stamp();
-
-        if(unread){
-          if(!target.un) target.un=0;
-          target.un++;
-        }
-        nlist.unshift(target);
-      }else{
-
-        //2.2.create new group here, need to get the details of group
-        if(to.length===48){
-          const contact={
-            id:to,              //address unique id
-            nick:"",            //nickname of contact
-            update:tools.stamp(),         //group update time
-            last:msg,            //last message
-            type:"contact"      //talking type
-          }
-          nlist.unshift(contact);
-        }else{
-          const atom={
-            id:to,
-            last:{
-              from:from,
-              msg:msg,
-            },
-            update:tools.stamp(),
-            type:"group",
-          }
-
-          if(unread){
-            if(!target.un) target.un=0;
-            atom.un++;
-          }
-          nlist.unshift(atom);
-        }
-      }
-
-      RUNTIME.setTalking(from,nlist,ck);
+      //3.update the unread amount
+      if(!list[0].un) list[0].un=0;
+      if(unread) list[0].un=parseInt(list[0].un)+1;
+      RUNTIME.getAccount((fa)=>{
+        RUNTIME.setTalking(fa.address,list,ck);
+      });
     });
   },
 };

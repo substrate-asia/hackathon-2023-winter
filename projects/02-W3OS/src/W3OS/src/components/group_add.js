@@ -76,6 +76,7 @@ function GroupAdd(props) {
     });
   }, []);
 
+  const cmap={height:`${props.amount>9?(window.innerHeight-200):props.amount*90}px`};
   return (
     <Row>
       <Col className="pt-2 pb-2 text-secondary" xs={size.header[0]} sm={size.header[0]} md={size.header[0]} lg={size.header[0]} xl={size.header[0]} xxl={size.header[0]}>
@@ -84,8 +85,8 @@ function GroupAdd(props) {
       <Col className="pt-2 pb-2 text-secondary text-end" xs={size.header[1]} sm={size.header[1]} md={size.header[1]} lg={size.header[1]} xl={size.header[1]} xxl={size.header[1]}>
         {/* <span className="status green" style={{margin:"0 auto"}}></span> */}
       </Col>
-      <Col className="" xs={size.row[1]} sm={size.row[1]} md={size.row[1]} lg={size.row[1]} xl={size.row[1]} xxl={size.row[1]}> 
-        <Row className="talking_container" style={{height:"750px"}}>
+      <Col className="talking_container" style={cmap} xs={size.row[1]} sm={size.row[1]} md={size.row[1]} lg={size.row[1]} xl={size.row[1]} xxl={size.row[1]}> 
+        <Row>
         {list.map((row, index) => (
           <Col className="pt-2" xs={size.row[0]} sm={size.row[0]} md={size.row[0]} lg={size.row[0]} xl={size.row[0]} xxl={size.row[0]}
           key={index} onClick={(ev)=>{
@@ -101,7 +102,7 @@ function GroupAdd(props) {
               
               <Col xs={size.list[2]} sm={size.list[2]} md={size.list[2]} lg={size.list[2]} xl={size.list[2]} xxl={size.list[2]}>
                 <strong>{row.short}</strong>
-                {row.intro},{tools.shorten(row.address)}
+                {!row.short?"":": "}{row.intro}<br/>{tools.shorten(row.address)}
               </Col>
               <Col xs={size.list[1]} sm={size.list[1]} md={size.list[1]} lg={size.list[1]} xl={size.list[1]} xxl={size.list[1]}>
                 <Image
@@ -109,10 +110,15 @@ function GroupAdd(props) {
                     rounded
                     width="100%"
                     style={{maxWidth:"60px",marginTop:"-15px"}}
+                    onClick={(ev)=>{
+                      console.log(`Avatar clicked.`);
+                    }}
                   />
               </Col>
+              <Col xs={size.row[1]} sm={size.row[1]} md={size.row[1]} lg={size.row[1]} xl={size.row[1]} xxl={size.row[1]}>
+                <hr />
+              </Col>
             </Row>
-            <hr />
           </Col>
         ))}
         </Row>

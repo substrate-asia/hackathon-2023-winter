@@ -18,7 +18,7 @@ module.exports = {
             type:"notice",
             from:from,
             to:to,
-            content:obj,            //{method:{cat:"",act:""},data:{}}
+            content:obj, //format: {method:{cat:"",act:""},data:{}}
             stamp:new Date().getTime(),
         }
         if(group) row.group=group;
