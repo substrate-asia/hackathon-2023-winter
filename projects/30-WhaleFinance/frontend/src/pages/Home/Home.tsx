@@ -1,4 +1,4 @@
-import LogoApp from '../../assets/whale_app_logo.png';
+//import LogoApp from '../../assets/whale_app_logo.png';
 
 export default function Home() {
 

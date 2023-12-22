@@ -48,6 +48,13 @@ export default function DashboardId({ account, signer }:
     const [tokenA, setTokenA] = useState("DREX");
     const [tokenB, setTokenB] = useState("DREX");
 
+    const [networkA, setNetworkA] = useState("A");
+    const [networkB, setNetworkB] = useState("B");
+
+    async function makeBridge(){
+        console.log("Bridge");
+    }
+
     // const apiKey = import.meta.env.COINMARKET_API_KEY;
     // const [ethPrice, setEthPrice] = useState(null);
 
@@ -127,6 +134,7 @@ export default function DashboardId({ account, signer }:
             setFund({id: "0", name: "Fund 1", description: "Fund 1 description"} as FundData)
         }
 
+
         // const fetchData = async () => {
         //     try {
         //       const response = await axios.get('/v1/cryptocurrency/quotes/latest', {
@@ -190,15 +198,88 @@ export default function DashboardId({ account, signer }:
                     <p>Loading...</p>
                 )} */}
             </div>
-            {/* <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
                 <h3 className='font-bold text-xl ml-8 mt-8'>
-                    Trade Section
+                    Bridge Section
                 </h3>
                 <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
-                <div className='w-[80%] md:w-[95%] lg:w-[95%] h-[500px] p-6 flex flex-col items-center justify-center'>
-                    <LineChartComponent data={data} />
+                <div className="mb-4 text-secondary-color">
+                    <label className="block font-medium italic text-sm text-gray-400 ml-8" htmlFor="invest">
+                        Choose the networks to bridge Whale tokens
+                    </label>
+                    <div className="mx-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
+                        <div className="flex flex-row border-[2px] border-secondary-color text-center text-xl text-black dark:text-white mt-4 shadow-lg rounded-[15px]">
+                            <p className="font-medium italic text-sm text-gray-400 ml-8 flex flex-col justify-center">
+                                From
+                            </p>
+                            <select 
+                                className="w-full bg-transparent text-center lg:text-xl font-bold text-black dark:text-white p-2 outline-0 rounded-r-[15px] hover:bg-light-color hover:dark:bg-dark-color transition duration-1000 ease-in-out"
+                                id="networks"
+                                name="networks"
+                                placeholder='Networks'
+                                value={networkA}
+                                onChange={(e) => setNetworkA(e.target.value)}
+                            >
+                                {/* {Object.keys(allowedTokens).map((key) => { 
+                                    return (
+                                        <option 
+                                            key={key}
+                                            value={key}
+                                            className="bg-light-color dark:bg-dark-color lg:text-xl text-center text-black dark:text-white p-2 mt-4 rounded-[10px] border-secondary-color border-2 outline-0 shadow-lg transition duration-1000 ease-in-out"
+                                        >{key}</option>
+                                    )
+                                })} */}
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                        <div className="flex flex-row border-[2px] border-secondary-color text-center text-xl text-black dark:text-white mt-4 shadow-lg rounded-[15px]">
+                            <p className="font-medium italic text-sm text-gray-400 ml-8 flex flex-col justify-center">
+                                To
+                            </p>
+                            <select 
+                                className="w-full bg-transparent text-center lg:text-xl font-bold text-black dark:text-white p-2 outline-0 rounded-r-[15px] hover:bg-light-color hover:dark:bg-dark-color transition duration-1000 ease-in-out"
+                                id="networks"
+                                name="networks"
+                                placeholder='Networks'
+                                value={networkB}
+                                onChange={(e) => setNetworkB(e.target.value)}
+                            >
+                            {/* {Object.keys(allowedTokens).map((key) => { 
+                                    return (
+                                        <option 
+                                            key={key}
+                                            value={key}
+                                            className="bg-light-color dark:bg-dark-color lg:text-xl text-center text-black dark:text-white p-2 mt-4 rounded-[10px] border-secondary-color border-2 outline-0 shadow-lg transition duration-1000 ease-in-out"
+                                        >{key}</option>
+                                    )
+                                })} */}
+                                <option value="A">A</option>
+                                <option value="B">B</option>
+                                <option value="C">C</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div className='w-full flex flex-col justify-center'>
+                        <button
+                            className="mb-4 mt-12 self-center bg-secondary-color text-light-color dark:text-dark-color font-bold rounded-full border-2 border-transparent py-2 px-36 shadow-lg uppercase tracking-wider hover:bg-light-color hover:dark:bg-dark-color hover:text-secondary-color hover:dark:text-secondary-color hover:border-secondary-color transition duration-1000 ease-in-out"
+                            onClick={makeBridge}
+                            >
+                            Bridge
+                        </button>
+                    </div>
                 </div>
-            </div> */}
+            </div>
+            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                <h3 className='font-bold text-xl ml-8 mt-8'>
+                    Data Section
+                </h3>
+                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
+                <div className='w-[80%] md:w-[95%] lg:w-[95%] p-8 flex flex-col items-center justify-center'>
+                    <DataDiv fund={fund} />
+                </div>
+            </div>
             <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
                 <h3 className='font-bold text-xl ml-8 mt-8'>
                     Tokens Section
@@ -215,15 +296,6 @@ export default function DashboardId({ account, signer }:
                 <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
                 <div className='w-[80%] md:w-[95%] lg:w-[95%] h-[500px] p-6 flex flex-col items-center justify-center'>
                     <LineChartComponent data={data} />
-                </div>
-            </div>
-            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
-                <h3 className='font-bold text-xl ml-8 mt-8'>
-                    Data Section
-                </h3>
-                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
-                <div className='w-[80%] md:w-[95%] lg:w-[95%] p-8 flex flex-col items-center justify-center'>
-                    <DataDiv fund={fund} />
                 </div>
             </div>
         </div>
