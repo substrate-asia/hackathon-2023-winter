@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  webapp:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codes
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+      - run: cd webapp && npm install
+      - run: cd webapp && npm run lint && npm run build
+  contracts:
+    timeout-minutes: 15
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Codes
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
+          submodules: recursive
+      - uses: foundry-rs/foundry-toolchain@v1
+      - uses: oven-sh/setup-bun@v1
+      - run: cd contracts && bun install
+      - run: cd contracts && forge build && bun run test
