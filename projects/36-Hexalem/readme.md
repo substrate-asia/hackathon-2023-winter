@@ -60,6 +60,7 @@ Game Core Loop: Start, Place Tile, Gain Resources, Upgrade Tile, End Turn, and R
 - [Unity Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/ui/substrate.hexalem.unity)
 - [Headless Client (C#)](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Console)
 - [UI/UX FIGMA](https://www.figma.com/file/G2CPE1He0xMv0BgxbBpUFT/Untitled?type=design&node-id=0-1&mode=design&t=Hq3JXp0Fpl9CQ2d0-0)
+- [UI/UX initial brainstorming FIGMA](https://www.figma.com/file/OHrbkNOYqXLeBioz9zWpI2/Mobile-game?type=design&node-id=0-1&mode=design&t=FEsSActwiqCtVhE6-0)
 
 5. Additional
 - (WIP)[AI Simulations](https://github.com/SubstrateGaming/hackathon-2023-winter/tree/main/projects/36-Hexalem/src/net/Substrate.Hexalem.NET/Substrate.Hexalem.Bot), for simulating opponents, and for load testing
