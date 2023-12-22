@@ -81,4 +81,4 @@ Pitch deck: https://drive.google.com/file/d/15GpYINg3rlTnSIkV9HLTTE8kbh8qSg4w/vi
 
 合约：[方吉良](https://github.com/ericfjl)、[Spring](https://github.com/fospring)、[智邦富国](https://github.com/DOGEOFDOGE/DDOGE)
 
-产品：[Jel](https://github.com/mryings) [尹于野]（https://github.com/DoraDong007/）
+产品：[Jel](https://github.com/mryings) [尹于野](https://github.com/DoraDong007/)
