@@ -26,16 +26,11 @@
 // IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 // DEALINGS IN THE SOFTWARE.
 
-use bls12_381::Scalar;
 use serde::{Deserialize, Deserializer};
 use sp_std::vec::Vec;
 
 construct_uint! {
 	pub struct U256(6);
-}
-
-construct_uint! {
-	pub struct U256True(4);
 }
 
 type Number = [u8; 48];
@@ -173,7 +168,6 @@ where
 #[derive(Debug)]
 pub enum PublicInputsDeserializationError {
 	SerdeError,
-	DecParseError,
 }
 
 /// Creates vector of `u64` representing public inputs
@@ -182,11 +176,11 @@ pub enum PublicInputsDeserializationError {
 /// * `inputs` - A byte array slice containing array of integers in json array form
 pub fn deserialize_public_inputs(
 	inputs: &[u8],
-) -> Result<Vec<Scalar>, PublicInputsDeserializationError> {
+) -> Result<Vec<u64>, PublicInputsDeserializationError> {
 	let inputs: Vec<&str> = serde_json::from_slice(inputs).unwrap();
-	let mut parsed_inputs: Vec<Scalar> = Vec::with_capacity(inputs.len());
+	let mut parsed_inputs: Vec<u64> = Vec::with_capacity(inputs.len());
 	for input in inputs {
-		match from_dec_string(input) {
+		match input.parse::<u64>() {
 			Ok(n) => parsed_inputs.push(n),
 			Err(_) => return Err(PublicInputsDeserializationError::SerdeError),
 		}
@@ -194,20 +188,9 @@ pub fn deserialize_public_inputs(
 	Ok(parsed_inputs)
 }
 
-pub fn from_dec_string(dec_str: &str) -> Result<Scalar, PublicInputsDeserializationError> {
-	let mut number = [0; 32];
-	match U256True::from_dec_str(dec_str) {
-		Ok(n) => n.to_little_endian(number.as_mut_slice()),
-		Err(_) => return Err(PublicInputsDeserializationError::DecParseError),
-	}
-	Ok(Scalar::from_bytes(&number).unwrap_or(Scalar::zero()))
-}
-
 #[cfg(test)]
 mod tests {
-	use bls12_381::Scalar;
-
-use crate::deserialization::{deserialize_public_inputs, Number, Proof, VKey, U256};
+	use crate::deserialization::{deserialize_public_inputs, Number, Proof, VKey, U256};
 
 	#[test]
 	fn test_vk_deserialization() {
@@ -405,7 +388,7 @@ use crate::deserialization::{deserialize_public_inputs, Number, Proof, VKey, U25
 		let public_inputs =
 			deserialize_public_inputs(public_inputs_json.as_bytes().into()).unwrap();
 		assert_eq!(public_inputs.len(), 1);
-		assert_eq!(public_inputs[0], Scalar::from(33));
+		assert_eq!(public_inputs[0], 33);
 	}
 
 	fn from_dec_string(dec_str: &str) -> Number {
