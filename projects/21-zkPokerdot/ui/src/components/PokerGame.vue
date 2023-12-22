@@ -10,14 +10,7 @@
         </el-card>
       </div>
       <!-- 玩家手牌 -->
-      <div class="player-pokers">
-        <el-card shadow="hover" :body-style="{ padding: '0px' }" class="player-card"
-          v-for="(poker, index) in playerMiddle.hands" :key="poker.id" :style="{ left: index * 20 + 'px' }"
-          :class="{ 'is-selected': poker.isSelected }">
-          <img :src="`/src/images/${poker.img}.png`" class="image" :style="{ width: '120px', height: 'auto' }"
-            @click="selectCard(poker)" />
-        </el-card>
-      </div>
+      <PlayerPokers :hands="playerMiddle.hands" />
       <!-- 左侧手牌 -->
       <div class="hands-card-left">
         <el-card shadow="hover" :body-style="{ padding: '0px' }">
@@ -69,7 +62,7 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-//import PokerCard from './PokerCard.vue';
+import PlayerPokers from './PokerCard.vue';
 import type { PokerCard } from '../constant/poker';
 import type { Player } from '../constant/roomState';
 import type { Ref } from 'vue';
@@ -333,23 +326,7 @@ const selectCard = (poker: PokerCard) => {
       }
     }
 
-    .player-pokers {
-      height: 31.5vh;
-      position: absolute;
-      left: 50%;
-      bottom: 0.5vw;
-      transform: translate(-50%, 0);
-      display: flex;
-      width: calc(16 * 20px + 120px);
 
-      .player-card {
-        position: absolute;
-      }
-
-      .player-card.is-selected {
-        top: -2vw;
-      }
-    }
 
 
     .hands-card-left {
