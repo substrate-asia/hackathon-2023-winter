@@ -1,0 +1,139 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF">
+
+    <!-- Back to Profile Button -->
+
+    <!-- Upload Image Section -->
+
+    <!-- Start Generating Button -->
+
+    <Button
+        android:id="@+id/btnStartGenerating"
+        style="@style/Widget.Material3.MaterialTimePicker.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:layout_below="@+id/etJobName"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="-120dp"
+        android:layout_marginEnd="71dp"
+        android:layout_marginBottom="61dp"
+        android:backgroundTint="#000000"
+        android:text="Start Generation"
+        android:textColor="#FDFBFB"
+        android:visibility="visible"
+        app:rippleColor="#C3C1C1"
+        tools:visibility="visible" />
+
+    <EditText
+        android:id="@+id/etJobName"
+        android:layout_width="258dp"
+        android:layout_height="65dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="67dp"
+        android:layout_marginEnd="65dp"
+        style="@style/AppTheme"
+        android:layout_marginBottom="129dp"
+        android:hint="Example: Mesh Face # 1"
+        android:inputType="text"
+        android:textColor="#292929" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="253dp"
+        android:layout_height="47dp"
+        android:layout_below="@+id/btnuploadimage"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="6dp"
+        style="@style/AppTheme"
+        android:layout_marginTop="22dp"
+        android:text="Provide a name for this job"
+        android:textColor="#434343"
+        android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="268dp"
+        android:layout_height="44dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="114dp"
+        style="@style/AppTheme"
+        android:text="Create New Face Mesh"
+        android:textColor="#2C2C2C"
+        android:textSize="22sp" />
+
+    <ImageButton
+        android:id="@+id/btnuploadimage"
+        android:layout_width="match_parent"
+        android:layout_height="190dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="245dp"
+        android:backgroundTint="#EDEDED"
+        android:contentDescription="Upload Image"
+        android:src="@drawable/icons8_upload_image_96" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="276dp"
+        android:layout_height="43dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="20dp"
+        style="@style/AppTheme"
+        android:layout_marginTop="184dp"
+        android:text="Upload your selfie image"
+        android:textColor="#494747"
+        android:textSize="20sp" />
+
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Large.Inverse"
+        android:layout_width="161dp"
+        android:layout_height="94dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="4dp"
+        android:layout_marginBottom="346dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.828" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="45dp"
+        android:backgroundTint="#FFFFFF"
+        android:gravity="center|start"
+        style="@style/AppTheme"
+        android:text="Back to profile"
+        android:textColor="#ACACAC"
+        android:textSize="12sp"
+        app:icon="@drawable/icons8_left_24"
+        app:iconGravity="textStart"
+        app:iconPadding="2dp"
+        app:iconSize="24dp"
+        app:iconTint="#838383" />
+
+</RelativeLayout>

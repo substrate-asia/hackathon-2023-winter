@@ -1,4 +1,4 @@
-use node_template_runtime::pallet_zk_snarks::{
+use node_template_runtime::pallet_zk_poker::{
 	common::{prepare_proof, prepare_verification_key},
 	deserialization::{deserialize_public_inputs, Proof, VKey},
 	verify::{prepare_public_inputs, verify},
@@ -57,10 +57,10 @@ pub enum Subcommand {
 	/// Db meta columns information.
 	ChainInfo(sc_cli::ChainInfoCmd),
 
-	ZkSnarksVerify(ZkSnarksVerifyCmd),
+	ZKPokerVerify(ZKPokerVerifyCmd),
 }
 #[derive(Debug, Clone, clap::Parser)]
-pub struct ZkSnarksVerifyCmd {
+pub struct ZKPokerVerifyCmd {
 	#[allow(missing_docs)]
 	pub vk_path: String,
 
@@ -71,7 +71,7 @@ pub struct ZkSnarksVerifyCmd {
 	pub inputs_path: String,
 }
 
-impl ZkSnarksVerifyCmd {
+impl ZKPokerVerifyCmd {
 	pub fn run(&self) -> sc_cli::Result<()> {
 		let mut vk_file = File::open(&self.vk_path)?;
 		let mut vk_contents = String::new();
@@ -92,7 +92,7 @@ impl ZkSnarksVerifyCmd {
 		match verify(
 			prepare_verification_key(vk).unwrap(),
 			prepare_proof(proof).unwrap(),
-			inputs,
+			prepare_public_inputs(inputs),
 		) {
 			Ok(true) => println!("Proof OK"),
 			Ok(false) => println!("Proof NOK"),

@@ -1,0 +1,68 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="#FFFFFF">
+
+        <!-- Sign In Button -->
+
+        <!-- Sign Up Button -->
+
+        <Button
+            android:id="@+id/btnSignIn"
+            style="@style/FirebaseUI.Button.AccountChooser.GoogleButton"
+            android:layout_width="285dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="68dp"
+            android:layout_marginEnd="58dp"
+            android:layout_marginBottom="284dp"
+            android:backgroundTint="#EAEAEA"
+            android:text="@string/account_prompt"
+            android:textColor="#0C0A0A"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/blendimg"
+            android:layout_width="229dp"
+            android:layout_height="170dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="95dp"
+            android:layout_marginTop="195dp"
+            android:layout_marginEnd="87dp"
+            android:layout_marginBottom="366dp"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/app_name"
+            android:cropToPadding="false"
+            android:src="@drawable/blend2"
+            android:translationZ="@dimen/cardview_default_radius"
+            android:visibility="visible"
+            app:srcCompat="@drawable/blend2" />
+
+        <Button
+            android:id="@+id/btnSignUp"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="43dp"
+            android:layout_marginEnd="26dp"
+            android:layout_marginBottom="230dp"
+            android:backgroundTint="#FFFEFE"
+            android:text="@string/new_account_prompt"
+            android:textColor="#8A8989"
+            android:textSize="12sp" />
+
+    </RelativeLayout>
+</layout>
