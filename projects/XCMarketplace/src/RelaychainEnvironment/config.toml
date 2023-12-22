@@ -1,0 +1,34 @@
+[relaychain]
+
+default_command = "./binaries/polkadot-v1.0.0"
+default_args = [ "-lparachain=debug" ]
+
+chain = "rococo-local"
+
+  [[relaychain.nodes]]
+  name = "indexer"
+  ws_port = 9944
+ 
+  [[relaychain.nodes]]
+  name = "alice"
+  validator = true
+
+  [[relaychain.nodes]]
+  name = "bob"
+  validator = true
+
+[[parachains]]
+id = 1000
+cumulus_based = true
+
+  [parachains.collator]
+  name = "parachain-NFT-1000-collator01"
+  command = "./substrate-parachain-template/target/release/parachain-template-node"
+
+[[parachains]]
+id = 1001
+cumulus_based = true
+
+  [parachains.collator]
+  name = "parachain-frontier-1001-collator01"
+  command = "./frontier-parachain-template/target/release/frontier-parachain-node"
