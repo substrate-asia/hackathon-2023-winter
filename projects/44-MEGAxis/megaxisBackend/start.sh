@@ -1,0 +1,1 @@
+nohup go run main.go > service.log 2>&1 &

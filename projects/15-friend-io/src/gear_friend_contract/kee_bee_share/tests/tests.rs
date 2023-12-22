@@ -28,7 +28,7 @@ fn buy_share() {
     let sys = System::new();
     init_with_mint(&sys);
     const ETH1: u128 = 10u128.pow(12);
-    let mut ft = sys.get_program(1);
+    let ft = sys.get_program(1);
     // buy first share by other people failed.
     let buy_share_res = ft.send(USERS[1], KBAction::BuyShare {
         shares_subject: USERS[2].into(),
@@ -86,6 +86,9 @@ fn buy_share() {
         }.encode()
     )));
 
+    let user_has_subject_share_amount:StateReply = ft.read_state(StateQuery::SubjectShareUser { subject: USERS[1].into(), user: USERS[1].into() }).expect("user have the subject share read error!");
+    println!("user_has_subject_share_amount is:{:?}",user_has_subject_share_amount);
+
     // buy share twice
     let buy_second_price:StateReply = ft.read_state(StateQuery::Price{supply: 1, amount: 1 }).expect("read buy price error!");
     let mut price:u128=0;
@@ -125,6 +128,16 @@ fn buy_share() {
             supply: 2
         }.encode()
     )));
+
+    // to check the user has the share
+    let user_has_subject_share_amount:StateReply = ft.read_state(StateQuery::SubjectShareUser { subject: USERS[1].into(), user: USERS[1].into() }).expect("user have the subject share read error!");
+    println!("user_has_subject_share_amount is:{:?}",user_has_subject_share_amount);
+    let mut user_share_amount = 0;
+    if let StateReply::ShareAmount(share_amount) = user_has_subject_share_amount{
+        user_share_amount = share_amount;
+    }
+    assert!(user_share_amount > 0,"user have no subject share!");
+
 
     // start to sell the share
     let sell_first_price:StateReply = ft.read_state(StateQuery::Price{supply: 2-1, amount: 1 }).expect("read price error!");

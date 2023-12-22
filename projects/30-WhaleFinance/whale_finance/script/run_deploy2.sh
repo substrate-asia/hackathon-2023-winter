@@ -1,0 +1,1 @@
+forge script ./Deploy2.s.sol --rpc-url https://smart.zeniq.network:9545  --broadcast --legacy

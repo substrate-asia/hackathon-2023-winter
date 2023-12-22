@@ -85,6 +85,8 @@ impl KeeBeeShare {
     pub fn buy_shares(&mut self, shares_subject: ActorId, amount: u128) {
         let supply = self.share_supply.get(&shares_subject).unwrap_or(&0).clone();
         let trader = msg::source();
+        
+        debug!("shares_subject:{shares_subject:?},trader is:{trader:?}");
         debug!("supply:{supply:?},amount is:{amount:?}");
         assert!(
             supply > 0 || shares_subject == trader,
@@ -262,6 +264,14 @@ extern "C" fn state() {
             StateReply::Price(price)
         }
         StateQuery::FullState => StateReply::FullState(common_state(kee_bee_share)),
+        StateQuery::SubjectShareUser { subject, user } => {
+            let share_amount = kee_bee_share.shares_balance
+                .get(&subject)
+                .expect("subject not exist")
+                .get(&user)
+                .expect("user not exist");
+            StateReply::ShareAmount(*share_amount)
+        },
     };
 
     reply(state_reply)
@@ -275,6 +285,7 @@ fn reply(payload: impl Encode) -> gstd::errors::Result<MessageId> {
 #[no_mangle]
 extern "C" fn handle() {
     let action: KBAction = msg::load().expect("Could not load Action");
+    debug!("action is-----------:{action:?}");
     let kee_bee_share: &mut KeeBeeShare =
         unsafe { KEE_BEE_SHARE.get_or_insert(Default::default()) };
     match action {
