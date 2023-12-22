@@ -177,7 +177,7 @@ front-end
 
 ### PPT等大文件链接地址
 
-https://docs.google.com/presentation/d/1YajFYiBXxBr2Q0o1F3PbKhmQ7hMsGFVRvAOra6DJ3pg/edit?usp=sharing
+https://drive.google.com/drive/folders/1sZ05Ev_UB0eY3YKhUNllGFWA6dP9efxk?usp=sharing
 
 ## 使用方法
 
@@ -199,7 +199,7 @@ WeChat ID: YanboAtWeb3
 
 ### nuttt
 #### Introduction
-SEU EEer, building hacking with me!
+SEU EEer, the Technical Lead responsible for Trable web extension development and serves as a researcher for the Acala Multichain Router. With a vast background in blockchain technology development, he brings a wealth of experience to the project. 
 #### GitHub
 RbRe145
 #### WeChat ID
@@ -215,14 +215,11 @@ zijin79
 #### WeChat ID
 ZZJZZJ9248
 
-
 ### HH Tsang
 #### Introduction
-
-#### Role
-
+HKU graduate and Customer Experience Officer at Trable. Leading tourism industry research with rich knowledge of travel products. Dedicated to enhancing customer satisfaction and delivering exceptional user experience.
 #### GitHub
-
+HH-Tsang
 #### WeChat ID
-
+paracheese
 
