@@ -30,7 +30,7 @@ impl Default for Opt {
             extrinsic_params: Vec::new(),
             // storage_pallet: storage::Type::Value(storage::Opt::default()),
             storage_pallet_name: "".to_string(),
-            storage_pallet_type: storage::StorageType::Value(storage::StorageValueProperty::default()),
+            storage_pallet_type: storage::StorageType::Value(storage::StorageProperty::default()),
         }
     }
 }
@@ -324,7 +324,7 @@ mod tests {
                 "delete".to_string(),
             ],
             storage_pallet_name: "MyMapStorage".to_string(),
-            storage_pallet_type: storage::StorageType::Map(storage::StorageValueProperty::default()),
+            storage_pallet_type: storage::StorageType::Map(storage::StorageProperty::default()),
             ..Default::default()
         };
         println!("{}", v.to_string());

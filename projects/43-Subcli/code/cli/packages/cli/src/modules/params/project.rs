@@ -1,25 +1,34 @@
 use clap::Args;
 
-use crate::utils::pallets::download_node_template::{create_project, update_project, Opt};
+use crate::utils::pallets::download_node_template::Opt;
 
 #[derive(Args, Default, Debug)]
 pub struct ProjectArg {
     #[clap(help = "Name of project")]
     project: String,
 
-    #[clap(short, long, default_value = ".", help = "Target dir to create new substrate node")]
+    #[clap(short, long, help = "Target dir to create new substrate node")]
     directory: Option<String>,
+
+    #[clap(long, help = "Token symbol")]
+    symbol: Option<String>,
+
+    #[clap(long, help = "Token decimal")]
+    decimal: Option<usize>,
 }
 
 impl ProjectArg {
     pub async fn exec(&self) -> Result<(), Box<dyn std::error::Error>> {
         let opt = Opt {
-            name: self.project.to_string().to_lowercase(),
-            directory: self.directory.clone().unwrap_or_default().to_string(),
+            project_name: self.project.to_lowercase(),
+            directory: self.directory.clone(),
+            token_symbol: self.symbol.clone(),
+            token_decimal: self.decimal.clone(),
         };
-        create_project(opt.name.clone(), opt.directory.clone()).await?;
-        update_project(opt.name.clone(), opt.directory.clone())?;
-        println!("create project {} successfully", opt.name);
+
+        opt.create_project().await?;
+        opt.update_project()?;
+        println!("create project {} successfully", opt.project_name);
         Ok(())
     }
 }

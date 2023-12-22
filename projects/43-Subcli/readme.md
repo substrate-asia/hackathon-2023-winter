@@ -50,6 +50,11 @@ In summary, Subcli is a powerful tool that automates the creation of comprehensi
 - [ ] Add pre-defined pallet to project
 - [ ] Create full stack project includes Substrate and Frontend
 
+## Install 
+
+```bash
+cargo install subcli
+```
 
 ## Team information
 - Le Quang Lien: Project Manager, Founder Subcli, least at 10 years experience in Web2 (Product Manager, Software developer) and least 2 years in Web3 developer.
