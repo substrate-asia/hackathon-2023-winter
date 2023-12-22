@@ -22,7 +22,6 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
   const [isLoading, setisLoading] = useState(false);
   const [isSent, setisSent] = useState(false);
   const { sendTransaction } = useContract();
-  const [showSwap, setshowSwap] = useState(false);
 
   let alertBox = null;
   const [transaction, setTransaction] = useState({
@@ -75,31 +74,27 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
     if (Number(window.ethereum.networkVersion) === 1287) {
       //If it is sending from Moonbase so it will use batch precompiles
       ShowAlert('pending', 'Sending Batch Transaction....');
-      await BatchDonate(amount.value, address, Number(ideasid), Coin);
+      await BatchDonate(Amount, address, Number(ideasid), Coin);
 
       ShowAlert('success', 'Donation success!');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+   
     } else {
-      let output = await sendTransfer(Number(window.ethereum.networkVersion), amount.value, address, ShowAlert);
+      let output = await sendTransfer(Number(window.ethereum.networkVersion), Amount, address, ShowAlert);
       setTransaction({
         link: output.transaction,
         token: output?.wrappedAsset
       });
       // Saving Donation count on smart contract
-      await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), ethers.utils.parseUnits(amount.value, 'gwei'), Number(window.userid)));
+      await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), ethers.utils.parseUnits(Amount, 'gwei'), Number(window.userid)));
     }
 
-    // if (Number(window.ethereum.networkVersion) === 1287) {
-    // 	setshowSwap(false);
-    // } else {
-    // 	setshowSwap(true);
-    // }
     LoadData();
     setisLoading(false);
     setisSent(true);
     onHide();
+    setTimeout(() => {
+      window.location.reload();
+    }, 1000);
   }
 
   async function LoadData() {
@@ -160,14 +155,14 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
                     <Dropdown.Option value="xcvGLMR">
                       <MenuItem>xcvGLMR</MenuItem>
                     </Dropdown.Option>
-                  </Dropdown.Options>{' '}
+                  </Dropdown.Options>
                 </Dropdown>
               </div>
 
               <div className="flex flex-col gap-2 p-6 pt-3">
                 <h6>Amount</h6>
                 {AmountInput}
-                <p className="text-moon-12">Your balance is {Balance} DEV</p>
+                <p className="text-moon-12">Your balance is {Balance} </p>
               </div>
 
               <div className="flex justify-between border-t border-beerus w-full p-6">

@@ -34,7 +34,7 @@ contract PlanetDAO {
     struct goal_ideas_votes_struct {
         uint256 goal_id;
         uint256 ideas_id;
-        string wallet;
+        uint256 user_id;
     }
     struct message_struct {
         uint256 message_id;
@@ -95,7 +95,7 @@ contract PlanetDAO {
     mapping(uint256 => uint256) public _donated; //uint256            => (Donated to ideas)                amount
     mapping(uint256 => donation_struct) public _donations; //uint256            => donation_struct
     mapping(uint256 => smart_contract_uri_struct) public _smart_contracts_uris; //_smart_contract_ids   => (Ideas Smart contract)   Goal ID + Ideas URI
-    mapping(uint256 => goal_ideas_votes_struct) public all_goal_ideas_votes; //_ideas_vote_ids       => (Vote)                   Goal ID + Ideas ID + Wallet
+    mapping(uint256 => goal_ideas_votes_struct) public all_goal_ideas_votes; //_ideas_vote_ids       => (Vote)                   Goal ID + Ideas ID + User Id
 
     mapping(uint256 => message_struct) public all_messages; // all_messages        => _message_ids + message_struct
 
@@ -285,21 +285,21 @@ contract PlanetDAO {
     }
 
     //Votes
-    function create_goal_ideas_vote(uint256 _goal_id, uint256 _ideas_id, string memory _wallet, uint256 _user_id) public returns (uint256) {
+    function create_goal_ideas_vote(uint256 _goal_id, uint256 _ideas_id, uint256 _user_id) public returns (uint256) {
          _user_badges[_user_id].vote = true;
         //Create votes into all_goal_ideas_votes
-        all_goal_ideas_votes[_ideas_vote_ids] = goal_ideas_votes_struct(_goal_id, _ideas_id, _wallet);
+        all_goal_ideas_votes[_ideas_vote_ids] = goal_ideas_votes_struct(_goal_id, _ideas_id, _user_id);
         _ideas_vote_ids++;
 
         return _ideas_vote_ids;
     }
 
-    function get_ideas_votes_from_goal(uint256 _goal_id, uint256 _ideas_id) public view returns (string[] memory) {
+    function get_ideas_votes_from_goal(uint256 _goal_id, uint256 _ideas_id) public view returns (uint256[] memory ) {
         //gets all ideas votes from goal
-        string[] memory _StoreInfo = new string[](_ideas_vote_ids);
+        uint256[] memory _StoreInfo = new uint256[](_ideas_vote_ids);
         uint256 _store_id;
         for (uint256 i = 0; i < _ideas_vote_ids; i++) {
-            if (all_goal_ideas_votes[i].goal_id == _goal_id && all_goal_ideas_votes[i].ideas_id == _ideas_id) _StoreInfo[_store_id] = all_goal_ideas_votes[i].wallet;
+            if (all_goal_ideas_votes[i].goal_id == _goal_id && all_goal_ideas_votes[i].ideas_id == _ideas_id) _StoreInfo[_store_id] = all_goal_ideas_votes[i].user_id;
             _store_id++;
         }
         return _StoreInfo;

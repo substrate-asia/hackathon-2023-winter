@@ -7,8 +7,10 @@ import DAOCard from '../../components/components/DaoCard';
 import EmptyState from '../../components/components/EmptyState';
 import CreateDaoModal from '../../features/CreateDaoModal';
 import useContract from '../../services/useContract';
-
+import { usePolkadotContext } from '../../contexts/PolkadotContext';
+declare let window;
 export const Joined = () => {
+  const { api, GetAllDaos } = usePolkadotContext();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDaoModal, setShowCreateDaoModal] = useState(false);
@@ -17,32 +19,27 @@ export const Joined = () => {
 
   useEffect(() => {
     fetchContractData();
-  }, [contract]);
+  }, [contract,api]);
 
   async function fetchContractData() {
     setLoading(true);
     //Fetching data from Smart contract
     try {
-      if (contract) {
-        const totalDao = await contract.get_all_daos();
+      if (contract && api) {
+        let allDaos = await GetAllDaos();
 
-        const arr = [];
-        for (let i = 0; i < Object.keys(totalDao).length; i++) {
-          const object = JSON.parse(totalDao[i]);
+        const totalJoined = await contract._join_ids();
 
-          if (object) {
-            arr.push({
-              //Pushing all data into array
-              daoId: i,
-              Title: object.properties.Title.description,
-              Start_Date: object.properties.Start_Date.description,
-              logo: object.properties.logo.description?.url,
-              wallet: object.properties.wallet.description,
-              SubsPrice: object.properties?.SubsPrice?.description
-            });
+        const arrList = [];
+        for (let i = 0; i < Number(totalJoined); i++) {
+          const joined_dao = await contract._joined_person(i)
+          let foundDao = (allDaos as any).filter(e => Number(e?.id) == Number( joined_dao.daoid));
+          if (joined_dao.user_id ==  Number((window).userid) && foundDao.length > 0){
+            arrList.push(foundDao[0]);
           }
+
         }
-        setList(arr);
+        setList(arrList);
       }
     } catch (error) {}
 

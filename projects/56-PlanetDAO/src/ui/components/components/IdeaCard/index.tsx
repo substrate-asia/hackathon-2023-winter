@@ -6,8 +6,9 @@ import { Button } from '@heathmont/moon-core-tw';
 import { ArrowsRightShort, GenericHeart, GenericIdea, ShopCryptoCoin } from '@heathmont/moon-icons-tw';
 import { useState } from 'react';
 
-const IdeaCard = ({ item, onClickVote, onClickDonate, preview, hideGoToButton }: { item: Idea; onClickVote?; onClickDonate?; preview?: boolean; hideGoToButton?: boolean }) => {
+const IdeaCard = ({ item,onClickVote, onClickDonate, preview, hideGoToButton }: { item: Idea;onClickVote?; onClickDonate?; preview?: boolean; hideGoToButton?: boolean }) => {
   const [showPlaceholder, setShowPlaceholder] = useState(false);
+
 
   return (
     <Card className={`max-w-[720px] ${preview && '!bg-goku'}`}>
@@ -19,21 +20,21 @@ const IdeaCard = ({ item, onClickVote, onClickDonate, preview, hideGoToButton }:
         <div className="flex flex-1 flex-col gap-2 relative px-5 text-moon-16">
           <p className="font-semibold text-moon-18">{item.Title}</p>
           <div>
-            <p className="font-semibold text-moon-20 text-hit">DEV {item.donation || 200}</p>
+            <p className="font-semibold text-moon-20 text-hit">DEV {item.donation}</p>
             <p>in donations</p>
           </div>
           <div>
-            <p className="font-semibold text-moon-20 text-hit">{item.votes || 4}</p>
+            <p className="font-semibold text-moon-20 text-hit">{item.votes}</p>
             <p>Votes</p>
           </div>
           <div className="absolute bottom-0 right-0 flex gap-2">
-            {!preview && (
+            {(!item.isVoted && !item.isOwner) && (
               <Button variant="secondary" iconLeft={<GenericHeart />} onClick={onClickVote}>
                 Vote
               </Button>
             )}
 
-            {!preview && (
+            {!item.isOwner && (
               <Button variant="secondary" iconLeft={<ShopCryptoCoin />} onClick={onClickDonate}>
                 Donate
               </Button>

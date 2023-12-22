@@ -5,7 +5,7 @@ import UseFormTextArea from '../UseFormTextArea';
 import { GenericUser } from '@heathmont/moon-icons-tw';
 import Link from 'next/link';
 
-const CommentBox = ({ address, date, message, replies = [], sendReply, MessageIndex, MessageID }) => {
+const CommentBox = ({ address, user_info, date, message, replies = [], sendReply, MessageIndex, MessageID }) => {
   const [reply, setreply] = useState(false);
   const [Reply, ReplyInput, setReply] = UseFormTextArea({
     defaultValue: '',
@@ -32,11 +32,17 @@ const CommentBox = ({ address, date, message, replies = [], sendReply, MessageIn
     <div className="flex flex-col gap-2" data-id={MessageID}>
       <div className="flex justify-between items-center">
         <div className="flex gap-1 items-center">
-          <Avatar size="sm" className="rounded-full border border-piccolo bg-gohan">
-            <GenericUser className="text-moon-24" />
-          </Avatar>
-          <Link className="text-piccolo max-w-[120px] truncate" href={`/Profile/${address}`} rel="noreferrer" target="_blank">
-            {address}
+          {user_info?.imgIpfs !== '' ? (
+            <img src={'https://' + user_info?.imgIpfs + '.ipfs.nftstorage.link'} alt="" className="rounded-full border-2 w-12 h-12 object-cover border-piccolo" />
+          ) : (
+            <Avatar size="sm" className="rounded-full border border-piccolo bg-gohan">
+
+              <GenericUser className="text-moon-24" />
+            </Avatar>
+          )}
+
+          <Link className="text-piccolo max-w-[120px] truncate" href={`/Profile/${user_info.id}`} rel="noreferrer" target="_blank">
+            {user_info.fullName.toString()}
           </Link>
         </div>
         <span className="whitespace-nowrap text-trunks text-moon-14">{formatDistance(new Date(date), new Date(), { addSuffix: true })}</span>

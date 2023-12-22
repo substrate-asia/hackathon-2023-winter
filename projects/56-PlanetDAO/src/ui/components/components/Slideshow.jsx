@@ -6,9 +6,7 @@ import "react-slideshow-image/dist/styles.css";
 const Slideshow = (images = []) => {
   function Slider(each, index) {
     if (each.type.includes("image") == true) {
-      return (
-        <>
-          <div
+      return (<div
             key={index}
             style={{
               display: "flex",
@@ -22,7 +20,7 @@ const Slideshow = (images = []) => {
           >
             <img style={{ width: "100%" }} src={each.url} />
           </div>
-        </>
+       
       );
     }
     if (each.type.includes("video") == true) {

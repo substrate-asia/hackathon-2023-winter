@@ -203,11 +203,11 @@ export default function DAO() {
                 </Button>
               )}
 
-              {isJoined && (
+              {/* {isJoined && (
                 <Button iconLeft={<GenericLogOut />} variant="secondary">
                   Leave
                 </Button>
-              )}
+              )} */}
               {isOwner && (
                 <Link href={`/DesignDao?[${daoIdTxt}]`}>
                   <Button iconLeft={<GenericEdit />} variant="secondary" className="w-full">
@@ -230,16 +230,16 @@ export default function DAO() {
           <div className="container">
             <Tabs selectedIndex={tabIndex} onChange={setTabIndex}>
               <Tabs.List>
-                <Tabs.Tab>Feed</Tabs.Tab>
+                {/* <Tabs.Tab>Feed</Tabs.Tab> */}
                 <Tabs.Tab>About</Tabs.Tab>
                 <Tabs.Tab>Goals ({list.length})</Tabs.Tab>
               </Tabs.List>
             </Tabs>
           </div>
         </div>
-        {tabIndex === 0 && <CommunityFeed />}
-        {tabIndex === 1 && <div className="container" dangerouslySetInnerHTML={{ __html: aboutTemplate }}></div>}
-        {tabIndex === 2 && (
+        {/* {tabIndex === 0 && <CommunityFeed />} */}
+        {tabIndex === 0 && <div className="container" dangerouslySetInnerHTML={{ __html: aboutTemplate }}></div>}
+        {tabIndex === 1 && (
           <div className="flex flex-col gap-8 container items-center pb-10">
             <Loader element={list.length > 0 ? list.map((listItem, index) => <GoalCard item={listItem} key={index} />) : <EmptyState icon={<SportDarts className="text-moon-48" />} label="This community doesn’t have any goals yet." />} width={768} height={236} many={3} loading={loading} />{' '}
           </div>

@@ -1,8 +1,5 @@
 export interface Idea {
-  ideasId: {
-    type: 'BigNumber';
-    hex: '0x00';
-  };
+  ideasId: number;
   Title: string;
   Description: string;
   wallet: string;
@@ -10,4 +7,6 @@ export interface Idea {
   allfiles: unknown;
   donation: number;
   votes: number;
+  isVoted?:boolean;
+  isOwner?:boolean;
 }

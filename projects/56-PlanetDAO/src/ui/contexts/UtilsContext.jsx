@@ -91,6 +91,8 @@ export function UtilsProvider({ children }) {
   }
 
   async function BatchDonate(amount, Recipient, ideas_id, Coin) {
+    let parsedAmount = ethers.utils.parseUnits(amount, 'gwei');
+
     if (Number(window.ethereum.networkVersion) === 1287 && Coin == 'DEV') {
       //If Coin is DEV then it will use normal batch
       let to = [];
@@ -100,7 +102,7 @@ export function UtilsProvider({ children }) {
 
       //Adding Sending amount to Batch paramaters:
       to.push(Recipient);
-      value.push(`${(amount * 1e18).toFixed(0)}`);
+      value.push(parsedAmount);
       callData.push('0x');
 
       //Adding save information into smart contract
@@ -109,7 +111,7 @@ export function UtilsProvider({ children }) {
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
 
-      let encodedCallData = PlanetDAOContract.add_donation(ideas_id, `${amount * 1e18}`, Number(window.userid)).encodeABI();
+      let encodedCallData = PlanetDAOContract.add_donation(ideas_id, parsedAmount, Number(window.userid)).encodeABI();
 
       callData.push(encodedCallData);
 
@@ -131,13 +133,13 @@ export function UtilsProvider({ children }) {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       //Approve the amount first
       const vTokenContract = new ethers.Contract(vTokenAbi.address, vTokenAbi.abi, provider);
-      let encodedCallData = await vTokenContract.populateTransaction.approve(MoonbeamSlpx.address, amount * 1e18);
+      let encodedCallData = await vTokenContract.populateTransaction.approve(MoonbeamSlpx.address, parsedAmount);
       to.push(vTokenAbi.address);
       callData.push(encodedCallData.data);
 
       //Transfer to recipient address
       const MoonbeamSlpxContract = new ethers.Contract(MoonbeamSlpx.address, MoonbeamSlpx.abi, provider);
-      let encodedCallData2 = await MoonbeamSlpxContract.populateTransaction.swapAssetsForExactNativeAssets(vTokenAbi.address, amount * 1e18, amount * 1e17, Recipient);
+      let encodedCallData2 = await MoonbeamSlpxContract.populateTransaction.swapAssetsForExactNativeAssets(vTokenAbi.address, parsedAmount, `${amount * 1e17}`, Recipient);
       to.push(MoonbeamSlpx.address);
       callData.push(encodedCallData2.data);
 
@@ -146,7 +148,7 @@ export function UtilsProvider({ children }) {
 
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
-      let encodedCallData3 = PlanetDAOContract.add_donation(ideas_id, `${amount * 1e18}`, Number(window.userid)).encodeABI();
+      let encodedCallData3 = PlanetDAOContract.add_donation(ideas_id, parsedAmount, Number(window.userid)).encodeABI();
       callData.push(encodedCallData3);
 
       //Sending Batch Transaction
@@ -177,7 +179,7 @@ export function UtilsProvider({ children }) {
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
 
-      let encodedCallData = PlanetDAOContract.join_community(dao_id, window?.ethereum?.selectedAddress?.toLocaleLowerCase()).encodeABI();
+      let encodedCallData = PlanetDAOContract.join_community(dao_id, Number(window.userid)).encodeABI();
 
       callData.push(encodedCallData);
 
@@ -206,7 +208,7 @@ export function UtilsProvider({ children }) {
       let gasLimit = [];
 
       //Create Goal Ideas into smart contract
-      let encodedCallData = PlanetDAOContract.create_goal_ideas_vote(Number(Goalid), Number(id), window?.ethereum?.selectedAddress?.toLocaleLowerCase()).encodeABI();
+      let encodedCallData = PlanetDAOContract.create_goal_ideas_vote(Number(Goalid), Number(id), Number(window.userid)).encodeABI();
 
       to.push(PlanetDAO.address);
       callData.push(encodedCallData);
@@ -245,7 +247,7 @@ export function UtilsProvider({ children }) {
       } else if (voteType == 'abstain') {
         await window.sendTransaction(await ConvictionVotingContract.populateTransaction.voteSplitAbstain(Number(PollIndex), Number(AbstainInfo[0]), Number(AbstainInfo[1], Number(AbstainInfo[2]))));
       }
-      await window.sendTransaction(await PlanetDAOContract.populateTransaction.create_goal_ideas_vote(Number(Goalid), Number(id), window?.ethereum?.selectedAddress?.toLocaleLowerCase(),Number(window.userid)));
+      await window.sendTransaction(await PlanetDAOContract.populateTransaction.create_goal_ideas_vote(Number(Goalid), Number(id), Number(window.userid)));
     }
   }
 

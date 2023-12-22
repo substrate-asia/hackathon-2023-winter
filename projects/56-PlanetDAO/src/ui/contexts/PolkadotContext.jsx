@@ -13,6 +13,7 @@ const AppContext = createContext({
   userWalletPolkadot: "",
   userSigner:null,
   PolkadotLoggedIn:false,
+  GetAllDaos:async ()=>{},
   getUserInfoById: ()=>{}
 });
 
@@ -91,8 +92,76 @@ export function PolkadotProvider({ children }) {
     })();
   },[])
 
+  async function InsertData(totalDAOCount, allDAOs, prefix) {
+    const arr = [];
+    for (let i = 0; i < totalDAOCount; i++) {
+      //total dao number Iteration
+      const object = JSON.parse(allDAOs[i]);
 
-  return <AppContext.Provider value={{api:api,deriveAcc:deriveAcc,showToast:showToast,getUserInfoById:getUserInfoById,userWalletPolkadot:userWalletPolkadot,userSigner:userSigner,PolkadotLoggedIn:PolkadotLoggedIn, userInfo:userInfo}}>{children}</AppContext.Provider>;
+      if (object) {
+        let user_info = await getUserInfoById(object.properties?.user_id?.description)
+        arr.push({
+          //Pushing all data into array
+          id : i,
+          daoId: prefix + i,
+          Title: object.properties.Title.description,
+          Start_Date: object.properties.Start_Date.description,
+          user_info: user_info,
+          user_id: object.properties?.user_id?.description,
+          logo: object.properties.logo.description?.url,
+          wallet: object.properties.wallet.description,
+          SubsPrice: object.properties?.SubsPrice?.description
+        });
+      }
+    }
+    return arr;
+  }
+
+  async function fetchPolkadotData() {
+   
+    //Fetching data from Parachain
+    try {
+      if (api) {
+        let totalDAOCount = Number(await api._query.daos.daoIds());
+        let totalDao = async () => {
+          let arr = [];
+          for (let i = 0; i < totalDAOCount; i++) {
+            const element = await api._query.daos.daoById(i);
+            let daoURI = element['__internal__raw'].daoUri.toString();
+
+            arr.push(daoURI);
+          }
+          return arr;
+        }
+
+        let arr = InsertData(totalDAOCount, await totalDao(), "p_");
+        return arr;
+      }
+    } catch (error) { }
+    return [];
+  }
+  async function fetchContractData() {
+   
+    //Fetching data from Smart contract
+    try {
+      if (window.contract) {
+        const totalDao = await window.contract.get_all_daos(); //Getting total dao (Number)
+        let totalDAOCount = Object.keys(totalDao).length;
+        let arr = InsertData(totalDAOCount, totalDao, "m_");
+        return arr;
+      }
+    } catch (error) { }
+
+    return [];
+  }
+  async function GetAllDaos(){
+    let arr = [];
+    arr= arr.concat(await fetchPolkadotData());
+    arr= arr.concat(await fetchContractData());
+     return (arr);
+  }
+
+  return <AppContext.Provider value={{api:api,deriveAcc:deriveAcc,GetAllDaos:GetAllDaos,showToast:showToast,getUserInfoById:getUserInfoById,userWalletPolkadot:userWalletPolkadot,userSigner:userSigner,PolkadotLoggedIn:PolkadotLoggedIn, userInfo:userInfo}}>{children}</AppContext.Provider>;
 }
 
 export const usePolkadotContext = () => useContext(AppContext);

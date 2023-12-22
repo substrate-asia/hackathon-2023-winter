@@ -2,7 +2,7 @@ import { Button, Checkbox, IconButton, Modal } from '@heathmont/moon-core-tw';
 import { ControlsClose, ControlsPlus, GenericPicture } from '@heathmont/moon-icons-tw';
 import { useRouter } from 'next/router';
 import { NFTStorage } from 'nft.storage';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import UseFormInput from '../../components/components/UseFormInput';
 import UseFormTextArea from '../../components/components/UseFormTextArea';
 import useContract from '../../services/useContract';
@@ -16,8 +16,8 @@ import { toast } from 'react-toastify';
 export default function CreateDaoModal({ open, onClose }) {
   const [DaoImage, setDaoImage] = useState([]);
   const { api, showToast, userWalletPolkadot, userSigner, PolkadotLoggedIn } = usePolkadotContext();
-  const { contract, sendTransaction, formatTemplate } = useContract();
-  const router = useRouter();
+  const { contract, sendTransaction, formatTemplate,signerAddress } = useContract();
+
   //Storage API for images and videos
   const NFT_STORAGE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJDMDBFOGEzZEEwNzA5ZkI5MUQ1MDVmNDVGNUUwY0Q4YUYyRTMwN0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NDQ3MTgxOTY2NSwibmFtZSI6IlplbmNvbiJ9.6znEiSkiLKZX-a9q-CKvr4x7HS675EDdaXP622VmYs8';
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
@@ -43,6 +43,12 @@ export default function CreateDaoModal({ open, onClose }) {
     placeholder: 'Start date',
     id: 'startdate'
   });
+const [RecieveWallet, RecieveWalletInput,setRecieveWallet] = UseFormInput({
+    defaultValue: '',
+    type: 'text',
+    placeholder: 'Wallet Address (EVM)',
+    id: 'recipient'
+  });
 
   const [SubsPrice, SubsPriceInput] = UseFormInput({
     defaultValue: '',
@@ -50,6 +56,12 @@ export default function CreateDaoModal({ open, onClose }) {
     placeholder: 'Subscription per month (in $)',
     id: 'subs_price'
   });
+
+  useEffect(()=>{
+    if (!PolkadotLoggedIn){
+      setRecieveWallet(signerAddress)
+    }
+  },[])
 
   //Downloading plugin function
   function downloadURI(uri, name) {
@@ -111,7 +123,7 @@ export default function CreateDaoModal({ open, onClose }) {
         },
         wallet: {
           type: 'string',
-          description: window.signerAddress
+          description: RecieveWallet
         },
         user_id: {
           type: 'string',
@@ -229,6 +241,10 @@ export default function CreateDaoModal({ open, onClose }) {
             <div className="flex flex-col gap-2">
               <h6>Description</h6>
               {DaoDescriptionInput}
+            </div> 
+            <div className="flex flex-col gap-2">
+              <h6>Recipeint</h6>
+              {RecieveWalletInput}
             </div>
             <div className="flex flex-col gap-2">
               <h6>Start Date</h6>
