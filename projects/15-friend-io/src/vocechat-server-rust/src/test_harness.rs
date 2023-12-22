@@ -106,6 +106,24 @@ impl TestServer {
             .await
             .unwrap();
 
+        state
+            .create_user(
+                CreateUser::new(
+                    "cloud",
+                    CreateUserBy::Password {
+                        email: "cloud@gmail.com",
+                        password: "123456",
+                    },
+                    false,
+                )
+                .gender(1)
+                .set_admin(false),
+            )
+            .await
+            .unwrap();
+
+        
+
         Self {
             _tempdir: tempdir,
             state,
