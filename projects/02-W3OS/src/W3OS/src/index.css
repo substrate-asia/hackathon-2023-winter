@@ -96,7 +96,7 @@ code {
 }
 
 .board {
-  background: #444444;
+  background: #5d5a5a;
   color: #ffffff;
   border-radius: 12px;
   padding: 15px 10px 15px 15px;
@@ -218,7 +218,6 @@ code {
 }
 
 .talking_container {
-  min-height:600px;
   width: 100%;
   margin: 0 auto;
   background: #ffffff;

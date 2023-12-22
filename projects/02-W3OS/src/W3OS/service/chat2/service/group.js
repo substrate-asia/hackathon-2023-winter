@@ -187,7 +187,10 @@ module.exports = {
         for (let i = 0; i < data.group.length; i++) {
             const to = data.group[i];
             const todo = task("notice");
-            todo.params.msg = `Members changed.`;
+            todo.params.msg ={
+                id:gid,
+                from:from
+            };
             todo.params.to = to;
             todo.params.from=from;
             todo.params.method = {
@@ -238,7 +241,10 @@ module.exports = {
         for (let i = 0; i < data.group.length; i++) {
             const to = data.group[i];
             const todo = task("notice");
-            todo.params.msg = `${input.account} join to chat`;
+            todo.params.msg = {
+                id:gid,
+                from:from,
+            };
             todo.params.to = to;
             todo.params.method = {
                 act: "join",
@@ -276,7 +282,7 @@ module.exports = {
             const todo = task("notice");
             todo.params.msg = {
                 from: from,
-                group: gid,
+                id: gid,
             };
             todo.params.to = to;
             todo.params.method = {
@@ -324,6 +330,7 @@ module.exports = {
             todo.params.msg ={
                 id:gid,
                 manager:input.manager,
+                from:from,
             };
             todo.params.to = to;
             todo.params.method = {
@@ -438,7 +445,10 @@ module.exports = {
         for (let i = 0; i < data.group.length; i++) {
             const to = data.group[i];
             const todo = task("notice");
-            todo.params.msg = `Group destoried`;
+            todo.params.msg ={
+                id:gid,
+                from:from,
+            };
             todo.params.to = to;
             todo.params.method = {
                 act: "destory",
@@ -591,6 +601,8 @@ module.exports = {
             todo.params.msg = {
                 key: input.key,
                 value: input.val,
+                id:gid,
+                from:from,
             };
             todo.params.to = to;
             todo.params.method = {
