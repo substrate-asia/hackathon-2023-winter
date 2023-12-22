@@ -13,10 +13,11 @@ targets = ["x86_64-unknown-linux-gnu"]
 [dependencies]
 anyhow = { version = "1.0.66", optional = true }
 rand = { version = "0.8.4", optional = true }
-# serde = { version = "1.0.163" }
+serde = { version = "1.0.163", optional = true }
 codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
-frost-ed25519 = { path = "../../frost/frost-ed25519", default-features = false}
+frost-ed25519 = { version="1.0.0-rc.0", default-features = false, optional = true }
 scale-info = { version = "2.2.0", default-features = false, features = ["derive"] }
+ed25519-consensus = { version = "2.1.0", default-features = false }
 
 # Substrate
 sp-api = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v1.0.0" }
@@ -32,9 +33,9 @@ std = [
 	"anyhow",
 	"codec/std",
 	"scale-info/std",
-	# "serde/std",
+	"serde/std",
 	"sp-api/std",
-	"frost-ed25519/serialization",
-	# "frost-ed25519/cheater-detection",
+	# "frost-ed25519/serialization",
+	"frost-ed25519",
 	"cumulus-primitives-core/std",
 ]

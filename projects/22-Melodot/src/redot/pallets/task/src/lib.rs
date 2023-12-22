@@ -30,7 +30,8 @@ pub mod pallet {
 
 	use frame_support::{dispatch::DispatchResultWithPostInfo, pallet_prelude::*, WeakBoundedVec};
 	use frame_system::pallet_prelude::*;
-	use redot_core_primitives::{DkgSignature, WrapVerifyingKey};
+	// use redot_core_primitives::{DkgSignature, WrapVerifyingKey};
+	use ed25519_consensus::{Signature, VerificationKey};
 
 	#[pallet::config]
 	pub trait Config: frame_system::Config {
@@ -60,7 +61,7 @@ pub mod pallet {
 	/// This key is used for various cryptographic operations within the pallet.
 	#[pallet::storage]
 	#[pallet::getter(fn verifying_key)]
-	pub type VerifyingKey<T> = StorageValue<_, WrapVerifyingKey>;
+	pub type VerifyingKey<T> = StorageValue<_, [u8; 32]>;
 
 	/// Storage for metadata, organized by task ID and a secondary nonce.
 	///
@@ -86,7 +87,7 @@ pub mod pallet {
 
 		/// Event emitted when a new verifying key is added.
 		/// Parameters: [Account ID, New Verifying Key]
-		NewKey(T::AccountId, WrapVerifyingKey),
+		NewKey(T::AccountId, [u8; 32]),
 
 		/// Event emitted when a new metadata is added.
 		/// Parameters: [Task ID, Metadata ID, Account ID]
@@ -94,7 +95,7 @@ pub mod pallet {
 
 		/// Event emitted when a new key is added.
 		/// Parameters: [Account ID, New Key]
-		KeyAdded(T::AccountId, WrapVerifyingKey),
+		KeyAdded(T::AccountId, [u8; 32]),
 	}
 
 	#[pallet::error]
@@ -126,6 +127,9 @@ pub mod pallet {
 		/// Metadata length exceeds the maximum limit.
 		/// This error occurs when the provided metadata exceeds the length limit set by `MaxMetadataLen`.
 		MetadataTooLong,
+
+		/// Invalid old verification key.
+		InvalidOldVerificationKey,
 	}
 
 	#[pallet::hooks]
@@ -152,19 +156,22 @@ pub mod pallet {
 		#[pallet::weight(Weight::from_parts(10_000, 0) + T::DbWeight::get().writes(1))]
 		pub fn rotate_key(
 			origin: OriginFor<T>,
-			new_key: WrapVerifyingKey,
+			new_key: [u8; 32],
 			signature_bytes: [u8; 64],
 		) -> DispatchResultWithPostInfo {
 			let from = ensure_signed(origin)?;
 
-			let signature = DkgSignature::deserialize(signature_bytes)
+			let signature = Signature::try_from(signature_bytes)
 				.map_err(|_| Error::<T>::InvalidNewSignature)?;
 
-			let old_key = <VerifyingKey<T>>::get().ok_or(Error::<T>::NoExistingKey)?;
+			let old_key_bytes = <VerifyingKey<T>>::get().ok_or(Error::<T>::NoExistingKey)?;
+
+			let old_key = VerificationKey::try_from(old_key_bytes)
+				.map_err(|_| Error::<T>::InvalidOldVerificationKey)?;
 
 			let msg = new_key.encode();
 
-			let is_valid = old_key.0.verify(&msg, &signature).is_ok();
+			let is_valid = old_key.verify(&signature, &msg).is_ok();
 			ensure!(is_valid, Error::<T>::InvalidSignature);
 
 			<VerifyingKey<T>>::put(new_key.clone());
@@ -215,10 +222,7 @@ pub mod pallet {
 		/// - `new_key`: The new verifying key to be stored.
 		#[pallet::call_index(2)]
 		#[pallet::weight(Weight::from_parts(10_000, 0) + T::DbWeight::get().writes(1))]
-		pub fn new_key(
-			origin: OriginFor<T>,
-			new_key: WrapVerifyingKey,
-		) -> DispatchResultWithPostInfo {
+		pub fn new_key(origin: OriginFor<T>, new_key: [u8; 32]) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
 			VerifyingKey::<T>::put(new_key.clone());

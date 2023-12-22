@@ -13,54 +13,17 @@
 // limitations under the License.
 #![cfg_attr(not(feature = "std"), no_std)]
 
-use codec::{Decode, Encode, MaxEncodedLen, EncodeLike};
-use scale_info::{build::Fields, Path, Type, TypeInfo};
+use codec::{Decode, Encode, MaxEncodedLen};
+use scale_info::{TypeInfo, prelude::vec::Vec};
 
-pub use frost_ed25519::{Identifier, Signature as DkgSignature, VerifyingKey as DkgVerifyingKey, SigningKey};
+#[cfg(feature = "std")]
+pub use frost_ed25519::Identifier;
+
+#[cfg(feature = "std")]
+pub use frost_ed25519::{Signature as DkgSignature, SigningKey, VerifyingKey as DkgVerifyingKey};
 
 #[cfg(feature = "std")]
 pub mod crypto;
-
-#[derive(Clone, PartialEq, Eq, Debug)]
-pub struct WrapVerifyingKey(pub DkgVerifyingKey);
-
-impl MaxEncodedLen for WrapVerifyingKey {
-    fn max_encoded_len() -> usize {
-        32
-    }
-}
-
-impl TypeInfo for WrapVerifyingKey {
-    type Identity = Self;
-
-    fn type_info() -> Type {
-        Type::builder()
-            .path(Path::new("DkgVerifyingKey", module_path!()))
-            .composite(Fields::unit())
-    }
-}
-
-impl Encode for WrapVerifyingKey {
-    fn encode_to<T: codec::Output + ?Sized>(&self, dest: &mut T) {
-        let serialized = self.0.serialize();
-        dest.write(&serialized);
-    }
-}
-
-impl Decode for WrapVerifyingKey {
-    fn decode<I: codec::Input>(input: &mut I) -> Result<Self, codec::Error> {
-        let bytes: Vec<u8> = Vec::decode(input)?;
-        let fixed_bytes: [u8; 32] = bytes
-            .try_into()
-            .map_err(|_| codec::Error::from("Length mismatch when decoding VerifyingKey"))?;
-        
-			DkgVerifyingKey::deserialize(fixed_bytes)
-            .map(WrapVerifyingKey) // Wrap the VerifyingKey in DkgVerifyingKey
-            .map_err(|_| codec::Error::from("Error decoding DkgVerifyingKey"))
-    }
-}
-
-impl EncodeLike for WrapVerifyingKey {}
 
 sp_api::decl_runtime_apis! {
 	pub trait GetValidatorsFromRuntime<ValidatorId>

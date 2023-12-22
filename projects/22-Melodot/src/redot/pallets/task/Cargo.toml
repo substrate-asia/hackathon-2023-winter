@@ -13,6 +13,7 @@ targets = ["x86_64-unknown-linux-gnu"]
 [dependencies]
 codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
 scale-info = { version = "2.2.0", default-features = false }
+ed25519-consensus = { version = "2.1.0", default-features = false }
 
 # Substrate
 frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true, branch = "polkadot-v1.0.0" }
@@ -20,7 +21,7 @@ frame-support = { git = "https://github.com/paritytech/substrate", default-featu
 frame-system = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v1.0.0" }
 
 # Redot
-redot-core-primitives = { path = "../../crates/core-primitives", default-features = false}
+# redot-core-primitives = { path = "../../crates/core-primitives", default-features = false}
 
 # [dev-dependencies]
 # serde = { version = "1.0.163" }
@@ -39,6 +40,7 @@ std = [
 	"frame-benchmarking/std",
 	"frame-support/std",
 	"frame-system/std",
-	"redot-core-primitives/std",
+	# "redot-core-primitives/std",
+	"ed25519-consensus/std",
 ]
 try-runtime = [ "frame-support/try-runtime" ]
