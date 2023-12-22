@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "baseUrl": "./",
+    "paths": {
+      "web3-plugin-polkadot/*": ["src/*"],
+      // here we replace the @polkadot/api augmentation with our own, generated from chain
+      "@polkadot/api/augment": [
+        "src/interfaces/polkadot/augment-api.ts",
+        "src/interfaces/kusama/augment-api.ts",
+        "src/interfaces/substrate/augment-api.ts"
+      ],
+      // replace the augmented types with our own, as generated from definitions
+      "@polkadot/types/augment": [
+        "src/interfaces/polkadot/augment-types.ts",
+        "src/interfaces/kusama/augment-types.ts",
+        "src/interfaces/substrate/augment-types.ts"
+      ]
+    },
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2020",
+    "module": "commonjs",
+    "declaration": true,
+    "moduleResolution": "node",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "outDir": "lib",
+    "esModuleInterop": true,
+    "typeRoots": ["./node_modules/@types"]
+  },
+  "include": ["src", "test", "jest.config.js"],
+  "exclude": ["build/**/*", "node_modules"]
+}

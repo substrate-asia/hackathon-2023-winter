@@ -1,0 +1,18 @@
+{
+    "server":{
+        "name":"W3OS chatting",
+        "port":7788,
+        "runner":"5CSTSUDaBdmET2n6ju9mmpEKwFVqaFtmB8YdB23GMYCJSgmw",
+        "max":300,
+        "polkadot":"wss://dev2.metanchor.net",
+        "vertification":"5EUFM4U2LUypvctxvqnEV2vb3hBABspWUYEjErwRpTbsYEaJ"
+    },
+    "backup":{
+        "level":2,
+        "interval":3000
+    },
+    "reg":{
+        "max":20000,
+        "level":"all"
+    }
+}

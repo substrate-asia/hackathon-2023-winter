@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ## 基本资料
 
 项目名称：
@@ -52,3 +53,65 @@
 在团队中担任的角色
 GitHub 帐号
 微信账号（如有请留下，方便及时联系）
+=======
+## Basic information
+
+project name: Inscribe
+
+Project establishment date 2023.11.11
+
+## Overall introduction to the project
+<!-- - Project background/original reasons/problems to be solved (If there are other attachments, they can be placed in the `docs` directory. Submit in English). -->
+  - I have an idea to create a business card platform based on blockchain. Because many individuals and organizations have many outstanding ideas, but they lack appropriate opportunities to showcase themselves, and they are unable to meet outstanding talents and realize these outstanding ideas together.
+
+  - Therefore, I plan to build a platform where everyone can showcase themselves.
+
+  - The platform's functions include creating business cards, sending business cards, destroying business cards, and exchanging business cards. In addition, the platform will also provide services for verifying information. I sincerely hope that everyone can communicate freely on this platform and at the same time find suitable partners to stimulate creativity.
+
+- Technology Architecture
+  Build Smart Contract On Gear / Vara Network && User Front End store on IPFS or Other decentralized platforms.
+
+
+## Things planned to be accomplished during the hackathon
+
+**Blockchain side**
+
+- `Smart Contracts`
+   - [x] card create
+   - [x] card update
+   - [x] card status verify
+   - [x] card send
+   - [x] card destroy
+   - [x] card exchange
+
+**Client**
+- `Web UI`
+   - [ ] home page of this project
+   - [ ] ui of card create
+   - [ ] ui of card update
+   - [ ] ui of card status verify
+   - [ ] ui of card send
+   - [ ] ui of card destroy
+   - [ ] ui of card exchange
+
+
+## Things accomplished during the hackathon (submitted before preliminary review at 11:59 am on December 22, 2023)
+
+## Team information
+
+differs
+  - Role: SmartContract Developer
+  - Github: `https://github.com/differs`
+
+baize336699
+  - Role: Web3 Frontend Developer
+  - Github: `https://github.com/baize336699`
+
+xgocn
+  - Role: Web3 Frontend Developer
+  - Github: `https://github.com/xgocn`
+
+DAO UI Design Studio:
+  - Role: UI / ARTIST
+  - WECHAT: web3-crypto-designer
+>>>>>>> c998fbf85441692071300271007b883bb41317b3

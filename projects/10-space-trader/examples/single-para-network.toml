@@ -1,0 +1,23 @@
+[settings]
+timeout = 1000
+
+[relaychain]
+command = "polkadot"
+chain = "rococo-local"
+default_args = [ "-lparachain=debug" ]
+
+  [[relaychain.nodes]]
+  name = "alice"
+  validator = true
+
+  [[relaychain.nodes]]
+  name = "bob"
+  validator = true
+
+[[parachains]]
+id = 100
+
+  [parachains.collator]
+  name = "collator01"
+  command = "parachain-template-node"
+  args = ["-lparachain=debug"]

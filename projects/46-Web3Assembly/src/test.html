@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width">
+		<title>GraphVis基础-分组</title>
+		<!-- 界面引入GraphVis可视化核心组件库 -->
+		<script src="http://media.graphvis.cn/libs/graphvis.20220327.min.js"></script>
+	</head>
+	<body>
+		<!-- 定义画布展示元素,id将被用来设置可视化区域，需要指定width和height样式 -->
+		<div id="graph-panel" style="width:100%;height:calc(100vh - 16px);background-color:#fafafa;"></div>
+		
+		<script type="text/javascript">	
+			//GraphVis可视化对象通用配置项
+			var config = {
+				node: { //节点的默认配置
+					label: { //标签配置
+						show: true, //是否显示
+						color: '20,20,20', //字体颜色
+						font: 'normal 11px Arial', //字体大小及类型 
+						textPosition: 'Middle_Center', //文字位置 Top_Center,Bottom_Center,Middle_Right,Middle_Center
+					},
+					shape: 'rect',
+					width:130,
+					height:30,
+					color: '220,250,250', //节点颜色
+					selected: { //选中时的样式设置
+						borderColor: '80,120,255', //选中时边框颜色
+						borderAlpha: 1, //选中时的边框透明度
+						borderWidth: 2 //选中时的边框宽度
+					}
+				},
+				link: { //连线的默认配置
+					label: { //连线标签
+						show: false, //是否显示
+						color: '50,50,50', //字体颜色
+						font: 'normal 13px Arial', //字体大小及类型
+					},
+					lineType: 'hbezier',//direct,hbezier
+					color: '160,160,160', //连线颜色
+					showArrow: true //显示连线箭头
+				},
+				wheelZoom: 0.8, //开启鼠标滚轮缩放
+				highLightNeiber: false //相邻节点高亮开关
+			};
+
+			//1、创建GraphVis对象，进行方法调用
+			var visgraph = new VisGraph(document.getElementById('graph-panel'), config);
+			
+			//2、图示例数据结构
+			/* var graphData={
+				nodes:[
+					{id:'tableA-column1',label:'tablea_column1',type:'tableA',x:100,y:100},
+					{id:'tableB-column1',label:'tableb_column1',type:'tableB',x:350,y:100}
+				],
+				links:[
+					{source:'tableA-column1',target:'tableB-column1'}
+				]
+			}; */
+			
+			//模拟组织图示例数据
+			var tableColumnRelation={nodes:[],links:[]};
+			var tableName,cloumnObj,relateObj;
+			for(var i=1;i<=3;i++){
+				tableName = 'table'+i;
+				for(var j=1;j<=20;j++){
+					cloumnObj = {
+						id:tableName+'_column'+j,
+						type:tableName,
+						x: 280 * i,
+						y: 100 + (j*31)
+					};
+					tableColumnRelation.nodes.push(cloumnObj);
+					
+					if(i > 1){
+						relateObj = {
+							source:'table'+(i-1)+'_column'+j,
+							target:tableName+'_column'+j
+						};
+						tableColumnRelation.links.push(relateObj);
+					}
+				}
+			}
+			
+			//绘图
+			visgraph.drawData(tableColumnRelation);
+			//visgraph.setZoom('auto');//自动缩放
+			//visgraph.setZoom('zoomIn');//缩小一下
+			
+			//按照类型对可视化节点分组
+			var tableColumnGroup = {};
+			var columnGroup = null;
+			visgraph.nodes.forEach(node =>{				
+				columnGroup = tableColumnGroup[node.type];
+				if(columnGroup == null){
+					tableColumnGroup[node.type]=[node];
+				}else{
+					columnGroup.push(node);
+				}
+			});
+			
+			//将可视化节点对象添加到创建的分组内
+			var randomColor='120,100,240';
+			for(var tableName in tableColumnGroup){
+				var tableGroup = visgraph.addNodesInGroup({
+					label:tableName,
+					color:'230,230,230',
+					alpha:1
+				},tableColumnGroup[tableName]);
+				
+				randomColor = visgraph.randomColor();
+				tableGroup.headerColor=randomColor;//头部颜色
+				tableGroup.borderWidth=0;//默认边框宽度
+				tableGroup.borderColor=randomColor;//边框颜色
+				tableGroup.selectedBorderWidth=2;//选中时的边框宽度
+				tableGroup.selectedBorderColor=randomColor;//选中颜色
+				tableGroup.childDragable=false;//内部元素是否可拖动
+				//tableGroup.dragable=false;//分组是否可拖动
+				tableGroup.headerHeight=36;//头部高度
+				tableGroup.padding=15; //内边距
+				tableGroup.textAlign = 'center';//left,center,right
+			}
+			
+			visgraph.setZoom('auto');//自动缩放
+			
+			//重新设置连线样式
+			visgraph.links.forEach(link =>{
+				link.arrowType='triangle'; //arrow 箭头样式
+				link.lineWidth = 2;
+			});
+			
+		</script>
+	</body>
+</html>

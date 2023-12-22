@@ -1,0 +1,92 @@
+// this file is auto-generated from a modified template file
+// the original template file is '@polkadot/typegen/templates/rpc.hbs'
+// and the modification template file is at 'static/type-generation/rpc.hbs'
+
+{{> header }}
+
+// import type lookup before we augment - in some environments
+// this is required to allow for ambient/previous definitions
+import '@polkadot/rpc-core/types/jsonrpc';
+
+{{{ importsAll }}}
+
+export type __AugmentedRpc = AugmentedRpc<() => unknown>;
+
+declare module '@polkadot/rpc-core/types/jsonrpc' {
+  interface RpcInterface {
+    {{#each modules}}
+    {{{name}}}: {
+      {{#each items}}
+      {{> docs}}
+      {{{name}}}: AugmentedRpc<{{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}) => Observable<{{{type}}}>>;
+      {{/each}}
+    };
+    {{/each}}
+  } // RpcInterface
+} // declare module
+
+// -----------------
+// Added types
+// -----------------
+
+/**
+ * This interface is used to generate the rpc methods that is compatible with web3.js types.
+ * @remarks 
+ * This interface in not inside a module augmentation because it causes confusion to TypeScript compiler, when used inside another project, tricking it to see every property as `any`.
+ */
+export interface SimpleRpcInterface {
+  {{#each modules}}
+  {{{name}}}: {
+    {{#each items}}
+    {{> docs}}
+    {{{name}}}: {{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}) => Promise<{{{type}}}>;
+    {{/each}}
+  };
+  {{/each}}
+} // SimpleRpcInterface
+
+/**
+ * @description
+ * Contains a nested list of all the rpc methods exposed. However, this const is not used. Because it turns out that it is identical for all networks as no information about the network is included in the edgeware.json file.
+ * For that, a list of rpc methods is saved for each network after calling rpc_methods endpoint to get the list.
+ * @remarks
+ * This const is not used. But it is kept as it could be used later because this project is a PoC and in the process of seeking the best approach.
+ * This const in not inside a module augmentation because the compiler does not allow.
+ * Additionally, this module augmentation causes confusion to TypeScript compiler, when used inside another project, tricking it to see every property as `any`.
+ */
+/*
+export const RpcList = {
+  {{#each modules}}
+  {{{name}}} : [
+  {{#each items}}
+    '{{{name}}}',
+  {{/each}}
+  ],
+  {{/each}}
+} as const;
+*/
+
+/**
+ * @description
+ * 
+ * @remarks
+ * This class is not used. But it is kept as it could be used later because this project is a PoC and in the process of seeking the best approach.
+ * This class in not inside a module augmentation because the compiler does not allow.
+ * Additionally, this module augmentation causes confusion to TypeScript Intellisense, when used inside another project.
+ */ 
+/*
+import { SimpleRpcInterface} from '@polkadot/rpc-core/types/jsonrpc';
+export class RpcBaseClass implements SimpleRpcInterface {
+  {{#each modules}}
+  public get {{{name}}}() {
+    return {
+      {{#each items}}
+      {{{name}}}: {{#if generic}}<{{{generic}}}>{{/if}}({{{args}}}): Observable<{{{type}}}> => {
+        throw new Error('Function not implemented.');
+      },
+      {{/each}}
+    }
+  };
+  {{/each}}
+} // RpcBaseClass
+*/

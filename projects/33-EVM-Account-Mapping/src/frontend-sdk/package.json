@@ -1,0 +1,41 @@
+{
+  "name": "evm_account_mapping_sdk",
+  "version": "1.0.0",
+  "license": "Apache License",
+  "main": "dist/index",
+  "browser": "dist/index",
+  "exports": {
+    ".": {
+      "import": {
+        "node": "./dist/index.mjs",
+        "default": "./dist/index.mjs"
+      },
+      "require": {
+        "node": "./dist/index.js",
+        "default": "./dist/index.js"
+      }
+    }
+  },
+  "engines": {
+    "node": ">=16"
+  },
+  "packageManager": "yarn@1.22.19",
+  "scripts": {
+    "prebuild": "tsc --noEmit",
+    "build": "tsup"
+  },
+  "dependencies": {
+    "@polkadot/api": "^10.11.2",
+    "@polkadot/util": "^12.3.2",
+    "@polkadot/util-crypto": "^12.3.2",
+    "viem": "^1.20.1",
+    "browserify-cipher": "^1.0.1",
+    "randombytes": "^2.1.0"
+  },
+  "devDependencies": {
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2"
+  }
+}

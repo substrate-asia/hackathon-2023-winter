@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context="Model.blend.PreviewActivity">
+
+
+    <TextView
+        android:id="@+id/textView5"
+        style="@style/AppTheme"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="135dp"
+        android:layout_marginEnd="0dp"
+        android:gravity="center"
+        android:text="Click to open 3D viewer"
+        android:textColor="#504E4E"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/creationDateTextView2"
+        android:layout_width="166dp"
+        android:layout_height="30dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="97dp"
+        android:gravity="start|top"
+        android:paddingStart="10dp"
+        android:textColor="#595757"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/titleTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="2dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="-3dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        style="@style/AppTheme"
+        android:text="Face Mesh Preview"
+        android:textSize="18sp" />
+
+    <ImageButton
+        android:id="@+id/viewButton"
+        android:layout_width="104dp"
+        android:layout_height="89dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="301dp"
+        android:layout_marginEnd="6dp"
+        android:layout_marginBottom="147dp"
+        android:backgroundTint="@color/white"
+        android:contentDescription="CLick to view"
+        android:src="@drawable/icons8_sketchfab_50"
+        tools:src="@drawable/icons8_sketchfab_50" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/downloadButton"
+        style="@style/AppTheme"
+        android:layout_width="319dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="29dp"
+        android:background="@drawable/border"
+        android:backgroundTint="#757575"
+        android:contentDescription="click to download"
+        android:gravity="start|fill"
+        android:text="Face Mesh Object File  "
+        android:textColor="#878686"
+        android:textSize="12sp"
+        app:icon="@drawable/cloud_download_1"
+        app:iconGravity="textEnd"
+        app:iconPadding="110dp"
+        app:iconSize="24dp"
+        app:iconTint="#0E8F04"
+        app:strokeColor="#676666" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="13dp"
+        android:layout_marginTop="80dp"
+        android:backgroundTint="@color/white"
+        style="@style/AppTheme"
+        android:text="Back to profile"
+        android:textColor="#9A9999"
+        app:icon="@drawable/icons8_left_24"
+        app:iconPadding="1dp"
+        app:iconSize="24dp"
+        app:iconTint="#636363" />
+
+    <TextView
+        android:id="@+id/jobname"
+        android:layout_width="217dp"
+        android:layout_height="58dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="6dp"
+        android:layout_marginBottom="128dp"
+        android:gravity="center|start"
+        style="@style/AppTheme"
+        android:paddingStart="10dp"
+        android:textColor="#333333"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="411dp"
+        android:layout_height="253dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="-1dp"
+        android:layout_marginTop="189dp"
+        android:layout_marginEnd="1dp"
+        style="@style/AppTheme"
+        android:contentDescription="Sample"
+        android:src="@drawable/image_28"
+        app:srcCompat="@drawable/image_28" />
+
+    <ProgressBar
+        android:id="@+id/loadingProgressBar"
+        style="@android:style/Widget.Holo.Light.ProgressBar.Large"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.424"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+
+</RelativeLayout>
