@@ -1,0 +1,11 @@
+[workspace]
+members = [
+    "node",
+    "pallets/xcavate-staking",
+    "runtime",
+    "pallets/community-loan-pool",
+]
+resolver = "2"
+
+[profile.release]
+panic = "unwind"

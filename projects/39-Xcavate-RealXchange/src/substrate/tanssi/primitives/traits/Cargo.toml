@@ -1,0 +1,19 @@
+[package]
+name = "tp-traits"
+authors = { workspace = true }
+description = "Tanssi primitive traits"
+edition = "2021"
+license = "GPL-3.0-only"
+version = "0.1.0"
+[dependencies]
+sp-std = { workspace = true }
+
+# Cumulus
+cumulus-primitives-core = { workspace = true }
+
+[features]
+default = [ "std" ]
+std = [
+	"cumulus-primitives-core/std",
+]
+runtime-benchmarks = []

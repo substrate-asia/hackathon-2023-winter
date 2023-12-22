@@ -1,0 +1,16 @@
+body {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+#trable-button {
+  padding: 10px 20px;
+  border: 1px solid #ccc;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+#trable-label {
+  margin-top: 10px;
+  font-weight: bold;
+}
