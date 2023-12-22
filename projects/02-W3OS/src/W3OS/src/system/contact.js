@@ -12,17 +12,14 @@ import RUNTIME from "../lib/runtime";
 import CHAT from "../lib/chat";
 
 import { IoMdCloseCircleOutline } from "react-icons/io";
+import { RiLinkUnlink } from "react-icons/ri";
 
 let selected = { contact: null, stranger: null };
 
-let websocket = null;
-let spam = "";
-//let chats = {};       //mailer, need to add to RUNTIME
-let active = false; //account reg to server status
+
 let friend = false;
 let fresh_contact = 0;
 let fresh_stranger = 0;
-let checker = null;
 
 function Contact(props) {
   const size = {
@@ -33,7 +30,6 @@ function Contact(props) {
   let [editing, setEditing] = useState(false);
   let [count, setCount] = useState(0);
   let [stranger, setStranger] = useState(0);
-  let [hidelink, setHidelink] = useState(false);
   let [animation, setAnimation] = useState("ani_scale_in");
   let [reg, setReg] = useState("");
 
@@ -76,132 +72,6 @@ function Contact(props) {
         );
       }
     },
-    send: (obj) => {
-      //console.log(websocket.readyState,spam)
-      if (!spam || websocket === null || websocket.readyState !== 1)
-        return setTimeout(() => {
-          self.send(obj);
-        }, 500);
-      obj.spam = spam;
-      websocket.send(JSON.stringify(obj));
-    },
-    linkChatting: (ev) => {
-      if (checker !== null) {
-        clearInterval(checker);
-        checker = null;
-      }
-      if (websocket !== null) websocket = null;
-
-      RUNTIME.getSetting((cfg) => {
-        const config = cfg.apps.contact,
-          uri = config.node[0];
-        const agent = {
-          open: (res) => {},
-          message: (res) => {
-            const str = res.data;
-            try {
-              const input = JSON.parse(str);
-              const postman = RUNTIME.getMailer(input.from);
-              console.log(input);
-              switch (input.act) {
-                case "init": //websocket init, use is not active yet.
-                  spam = input.spam;
-                  RUNTIME.setSpam(uri, input.spam);
-                  break;
-
-                case "history":
-                  RUNTIME.getAccount((acc) => {
-                    CHAT.save(
-                      acc.address,
-                      input.from,
-                      input.msg,
-                      "from",
-                      (res) => {
-                        self.fresh();
-                        if (res !== true) {
-                          RUNTIME.addContact(res, () => {}, true);
-                        }
-                      },
-                    );
-                  });
-                  break;
-
-                case "chat":
-                  if (postman) postman(input);
-                  RUNTIME.getAccount((acc) => {
-                    CHAT.save(
-                      acc.address,
-                      input.from,
-                      input.msg,
-                      "from",
-                      (res) => {
-                        self.fresh();
-                        if (res !== true) {
-                          RUNTIME.addContact(res, () => {}, true);
-                        }
-                      },
-                    );
-                  });
-                  break;
-                case "reg":
-                  break;
-                case "active":
-                  if (input.success) {
-                    active = true;
-                    setHidelink(true);
-                    self.fresh();
-                  }
-                  break;
-                case "notice":
-                  if (postman) postman(input);
-                  break;
-                default:
-                  break;
-              }
-            } catch (error) {}
-          },
-          close: (res) => {
-            websocket = null; //remove websocket link
-            active = false;
-          },
-          error: (res) => {
-            console.log(res);
-          },
-        };
-
-        RUNTIME.getAccount((acc) => {
-          if (acc === null || !acc.address) {
-            setHidelink(true);
-            return false;
-          }
-          RUNTIME.websocket(
-            uri,
-            (ws) => {
-              websocket = ws;
-              setHidelink(true);
-              checker = setInterval(() => {
-                const status = RUNTIME.wsCheck(uri);
-                //console.log(`Websocket status:${status}, checker: ${checker}`);
-                if (status === 3) {
-                  setHidelink(false);
-                  RUNTIME.wsRemove(uri);
-                  setTimeout(() => {
-                    self.linkChatting(ev);
-                  }, 1000);
-                }
-              }, 5000);
-
-              const data = {
-                act: "active",
-                acc: acc.address,
-              };
-              self.send(data);
-            },
-            agent,
-          );
-        });
-      });
-    },
     fresh: () => {
       //console.log(`Fresh page, new chat,${fresh_contact},${fresh_stranger}`);
       fresh_contact++;
@@ -224,6 +94,7 @@ function Contact(props) {
     },
   };
 
+  // set the friends list;
   if (!friend) {
     RUNTIME.getContact((fs) => {
       CHAT.friends(fs);
@@ -232,10 +103,6 @@ function Contact(props) {
   }
 
   useEffect(() => {
-    // if (!active) {
-    //   self.linkChatting();
-    // }
-
     RUNTIME.getAccount((acc) => {
       if (acc === null || !acc.address) {
         setReg(
@@ -305,40 +172,15 @@ function Contact(props) {
       <Container>
         <ContactAdd fresh={self.fresh} count={count} />
         {reg}
-        <ContactList
-          fresh={self.fresh}
-          select={self.select}
-          edit={editing}
-          count={count}
-        />
-        <StrangerList
-          fresh={self.fresh}
-          select={self.select}
-          edit={editing}
-          count={stranger}
-        />
+        <ContactList fresh={self.fresh} select={self.select} edit={editing} count={count} />
+        <StrangerList fresh={self.fresh} select={self.select} edit={editing} count={stranger} />
       </Container>
       <div className="opts">
         <IoMdCloseCircleOutline color={editing?"#F3A433":"grey"} onClick={(ev) => {
             self.clickEdit(ev);
         }}/>
-        {/* <img
-          src="icons/setting.svg"
-          hidden={editing}
-          className="opt_button"
-          alt=""
-          onClick={(ev) => {
-            self.clickSetting(ev);
-          }}
-        /> */}
-        {/* <img
-          src="icons/link.svg"
-          hidden={hidelink || active || editing}
-          className="opt_button"
-          alt=""
-          onClick={(ev) => {
-            self.linkChatting(ev);
-          }}
+        {/* <RiLinkUnlink color="grey" style={{marginLeft:"10px"}}
+          hidden={hidelink}
         /> */}
       </div>
     </div>

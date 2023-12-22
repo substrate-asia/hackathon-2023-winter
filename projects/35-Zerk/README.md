@@ -2,7 +2,7 @@
 
 Zerk is a project focusing on Crowfunding Donations for Legal Cases.
 
-### PROJECT GITBOOK -- Zerk Legal Action Crowfunding:
+### PROJECT DOCS -- Zerk Legal Action Crowfunding:
 
 https://zerk-legal-action-crowfunding.gitbook.io/untitled/~/changes/qoMpGugpv4Uj58uznddH/what-next-legal-funds-and-pallets
 
@@ -20,7 +20,7 @@ https://zerk-alpha.vercel.app/
 
 ### TEAM
 
-GANESH. -
+GANESH. - https://www.linkedin.com/in/ganesh-9285a4163/
 NAGRA. -https://www.linkedin.com/in/nagrarohit/
 IVAN. - https://www.linkedin.com/in/ivan-avila-4b5689202/
 MARIO. - https://www.linkedin.com/in/mario-andrade-311675144/

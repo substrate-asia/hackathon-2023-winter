@@ -7,6 +7,8 @@ import { shallowEqual } from "react-redux";
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady, mnemonicGenerate } from "@polkadot/util-crypto";
+import { KeyringPair } from "@polkadot/keyring/types";
+import { GearKeyring } from "@gear-js/api";
 
 const NETWORK = "arbitrum-sepolia";
 //在infura中申请的key
@@ -16,24 +18,33 @@ const contractAddress = "0x6c50E3C83d7710DE9a993dac8bBC990e459e3865";
 
 //创建一个新的钱包账户
 export const createNewWallet = async () => {
-  const keyring = new Keyring({ type: "sr25519" });
-  const mnemonic = mnemonicGenerate();
-  const normalWallet = keyring.addFromUri(mnemonic, { name: "User Default" });
-  const password = "password";
-  const encodedPrivateKey = normalWallet.encodePkcs8(password);
+  alert("create default wallet for user");
+  await cryptoWaitReady();
+  const provider = new WsProvider("wss://testnet.vara-network.io");
 
-  // 解锁私钥（需要提供正确的密码）
-  // normalWallet.decodePkcs8(password, encodedPrivateKey);
+  const mnemonic = GearKeyring.generateMnemonic();
+  const { seed } = GearKeyring.generateSeed(mnemonic);
+  localStorage.setItem(KEY_WALLET_PRIVATE_KEY, mnemonic);
+  const keyring: KeyringPair = await GearKeyring.fromSeed(seed, "name");
 
-  // 存储私钥和地址到本地存储
-  localStorage.setItem(KEY_WALLET_PRIVATE_KEY, JSON.stringify(encodedPrivateKey));
-  localStorage.setItem(KEY_WALLET_ADDRESS, normalWallet.address);
+  localStorage.setItem(KEY_WALLET_ADDRESS, keyring.address);
 
-  console.log("privateKey key:", encodedPrivateKey);
-  console.log("address key:", normalWallet.address);
-  console.log("memo word:", mnemonic);
+  console.log("keyring.address:", keyring.address);
+  console.log("seed:", mnemonic);
 
-  return normalWallet;
+  let walletAddress = keyring.address;
+  return walletAddress;
+};
+
+export const getGearWallet = async (): Promise<KeyringPair | null> => {
+  const mnemonic = localStorage.getItem(KEY_WALLET_PRIVATE_KEY);
+  let wallet = null;
+  if (mnemonic) {
+    const keyring = await GearKeyring.fromMnemonic(mnemonic, "name");
+    console.log("keyring.address", keyring.address);
+    wallet = keyring;
+  }
+  return wallet;
 };
 
 const getWallet = (): Wallet | null => {
@@ -92,7 +103,7 @@ function myWallet() {
     // 检查用户钱包地址是否存在.
     const uid = loginUser?.uid;
     if (uid) {
-      let shareWallet = await getWalletByUid(2);
+      let shareWallet = await getWalletByUid(uid);
       console.log("shareWallet is" + JSON.stringify(shareWallet.data));
       // console.log("shareWallet is:" + shareWallet);
       if (shareWallet.data) {

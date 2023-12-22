@@ -126,26 +126,10 @@ function Bill(props) {
       </Col>
 
       <div id="bill_container">
-        <Col
-          xs={size.row[0]}
-          sm={size.row[0]}
-          md={size.row[0]}
-          lg={size.row[0]}
-          xl={size.row[0]}
-          xxl={size.row[0]}
-        >
+        <Col xs={size.row[0]} sm={size.row[0]} md={size.row[0]} lg={size.row[0]} xl={size.row[0]} xxl={size.row[0]} >
           <Row style={{ height: "100%", overflow: "hidden" }}>
             {history.map((row, index) => (
-              <Col
-                key={index}
-                className="pb-4"
-                xs={size.row[0]}
-                sm={size.row[0]}
-                md={size.row[0]}
-                lg={size.row[0]}
-                xl={size.row[0]}
-                xxl={size.row[0]}
-              >
+              <Col key={index} className="pb-4" xs={size.row[0]} sm={size.row[0]} md={size.row[0]} lg={size.row[0]} xl={size.row[0]} xxl={size.row[0]} >
                 <Row>
                   <Col
                     className="text-center"
@@ -158,7 +142,7 @@ function Bill(props) {
                   >
                     <img
                       className="pb-2"
-                      style={{ width: "60px" }}
+                      style={{ width:"60px",minHeight:"72px" }}
                       src={RUNTIME.getAvatar(row.to)}
                       alt="user logo"
                       onClick={(ev) => {

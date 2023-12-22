@@ -16,6 +16,7 @@ The paid consulting advisor is a long-standing business model, but due to its la
 
 DeQ aims to address these issues by combining a tokenomics model and De-Fi.
 
+DEMO: [https://deq.lol/](https://deq.lol/)
 
 ## Objectives in Hackathon
 
@@ -26,25 +27,24 @@ During this Hackathon, our goal is to create a Proof-of-concept version by imple
 - Community members can support answerers they approve of by buying shares. Answerers receive an initial share when submitting their answers, which they can further profit from by selling shares or through transaction fees.
 - Both questions and answers are converted into on-chain assets by NFTs.
 
-
 ## Checklist
 
 Based on the above objectives, we have accomplished the following in this submission.
 
 We aim to create smart contracts that can:
 
-- [ ] Convert questions and answers into on-chain assets through contracts.
-- [ ] Provide continuous income to answerers through shares trading.
+- [x] Convert questions and answers into on-chain assets through contracts.
+- [x] Provide continuous income to answerers through shares trading.
 
 Develop a simple dApp to showcase relevant concepts:
 
-- [ ] List top answers by tokenomics flavors ranking.
-- [ ] List of questions that have not been answered yet and are eligible for rewards.
-- [ ] Create question and staking corresponding tokens.
-- [ ] Answer questions and claim rewards.
-- [ ] Allow question creators to choose the best answer for rewards.
-- [ ] Shares Trading for answers.
-- [ ] Learn more about a dedicated user by viewing their personal pages. You can ask them questions and offer rewards if applicable.
+- [x] List top answers by tokenomics flavors ranking.
+- [x] List of questions that have not been answered yet and are eligible for rewards.
+- [x] Create question and staking corresponding tokens.
+- [x] Answer questions and claim rewards.
+- [x] Allow question creators to choose the best answer for rewards.
+- [x] Shares Trading for answers.
+- [x] Learn more about a dedicated user by viewing their personal pages. You can ask them questions and offer rewards if applicable.
 
 ## Roadmap
 

@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 
 import { useAppSelector } from "@/app/store";
+import BuyShares from "@/components/BuyShare";
 import ManageMembers from "@/components/ManageMembers";
 import Version from "@/components/Version";
 import APIConfig from "./APIConfig";
@@ -38,6 +39,10 @@ const navs = [
         name: "members",
         component: <ManageMembers />,
         admin: true
+      },
+      {
+        name: "buy_share",
+        component: <BuyShares />
       }
     ]
   },

@@ -149,9 +149,9 @@ self.link(config.url,config.account,()=>{
             const ts=[
                 test_group_create,
                 test_group_join_free,
-                test_group_join_free,
+                //test_group_join_free,
                 //test_group_leave,
-                //test_group_details,
+                test_group_details,
                 //test_manager_divert,
                 //test_manager_deport,
                 //test_manager_recover,

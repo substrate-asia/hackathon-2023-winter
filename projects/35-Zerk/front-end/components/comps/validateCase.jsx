@@ -21,9 +21,9 @@ const contractABIrotam = require("../../utils/contractABIrotam.json");
 
 export default function ValidateCase() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [casse, setCasseNumber] = useState("");
+  const [casseNumber, setCasseNumber] = useState("");
 
-  const validateCase = async (casse) => {
+  const validateCase = async (casseNumber) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -33,7 +33,7 @@ export default function ValidateCase() {
         contractABIrotam,
         signer
       );
-      const transaction = await contract.validateCase(casse);
+      const transaction = await contract.validateCase(casseNumber);
       console.log("transaction", transaction);
       const receipt = await transaction.wait();
       const transactionHash = receipt.transactionHash;
@@ -44,8 +44,8 @@ export default function ValidateCase() {
   };
 
   const handleValidateCase = async () => {
-    if (casse) {
-      createJuster(casse);
+    if (casseNumber) {
+      validateCase(casseNumber);
     } else {
       console.log("Please full fill all requirement fields.");
     }
@@ -98,9 +98,9 @@ export default function ValidateCase() {
                 <FormControl p="1rem" pb="0" isRequired>
                   <FormLabel textAlign="center">Case Number</FormLabel>
                   <Input
-                    placeholder="Location"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
+                    placeholder="case Number"
+                    value={casseNumber}
+                    onChange={(e) => setCasseNumber(e.target.value)}
                   />
                 </FormControl>
                 <Stack spacing={6} direction={["column", "row"]}></Stack>

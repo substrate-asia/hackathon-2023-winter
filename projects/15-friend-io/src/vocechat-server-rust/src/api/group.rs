@@ -16,6 +16,7 @@ use poem_openapi::{
     payload::{Json, PlainText},
     Object, OpenApi,
 };
+use tokio_stream::StreamExt;
 
 use crate::{
     api::{
@@ -34,6 +35,8 @@ use crate::{
     state::{BroadcastEvent, Cache, CacheGroup, GroupType},
     State,
 };
+
+use super::serivce::group_service;
 
 /// Update group request
 #[derive(Debug, Object)]
@@ -118,9 +121,9 @@ struct UnpinMessageRequest {
 
 /// Create group response
 #[derive(Debug, Object)]
-struct CreateGroupResponse {
-    gid: i64,
-    created_at: DateTime,
+pub struct CreateGroupResponse {
+    pub gid: i64,
+    pub created_at: DateTime,
 }
 
 pub struct ApiGroup;
@@ -240,6 +243,29 @@ impl ApiGroup {
             gid,
             created_at: now,
         }))
+    }
+
+
+    /// Create a new group
+    #[oai(path = "/init_self_group", method = "post", transform = "guest_forbidden")]
+    async fn init_self_group(
+        &self,
+        state: Data<&State>,
+        token: Token,
+    ) -> Result<Json<CreateGroupResponse>> {
+        
+        let group = Group {
+            gid: 0,
+            owner: Some(token.uid),
+            name: format!("user {} share group",token.uid),
+            description: Some(format!("user {} share group",token.uid)),
+            members: Default::default(),
+            is_public: false,
+            avatar_updated_at: DateTime::now(),
+            pinned_messages: Default::default(),
+        };
+        
+        return group_service::create(state, group, token.uid).await;
     }
 
     /// Upload group avatar
@@ -678,6 +704,40 @@ impl ApiGroup {
         Ok(())
     }
 
+
+    /// Get a group by owner id
+    #[oai(path = "/getGroupByOwner", method = "get")]
+    async fn get_group_by_owner(&self, state: Data<&State>,token: Token) -> Result<Json<Option<Group>>> {
+        let db_pool = &state.db_pool;
+        let sql = "SELECT gid,name,owner,is_public,description,created_at,updated_at,avatar_updated_at from `group` where owner = ?";
+
+        let result = sqlx::query_as::<_, (i64,String,i64,bool,String,DateTime,DateTime,DateTime)>(sql)
+            .bind(token.uid)
+            .fetch_one(db_pool)
+            .await;
+
+        match result {
+            Ok((gid,name,owner,is_public,description,created_at,updated_at,avatar_updated_at))=>{
+                let group = Group{ 
+                    gid, 
+                    owner:Some(owner), 
+                    name, 
+                    description:Some(description), 
+                    members: vec![], 
+                    is_public, 
+                    avatar_updated_at, 
+                    pinned_messages: vec![],
+                };
+                return Ok(Json(Some(group)));
+            }
+            Err(_)=>{
+                return Ok(Json(None));
+            }
+        }
+        
+    }
+    
+
     /// Get a group by id
     #[oai(path = "/:gid", method = "get")]
     async fn get(&self, state: Data<&State>, gid: Path<i64>) -> Result<Json<Group>> {
@@ -777,6 +837,103 @@ impl ApiGroup {
                 targets: original_members,
                 gid: gid.0,
                 uid: members.0.clone(),
+            }));
+
+        Ok(())
+    }
+
+    /// Add some new members to the specified group
+    // check the user have the owner's share.
+    #[oai(path = "/:subject_id/attend", method = "post")]
+    async fn attend_subject_group(
+        &self,
+        state: Data<&State>,
+        token: Token,
+        subject_id: Path<i64>,
+    ) -> Result<()> {
+        let mut cache = state.cache.write().await;
+        let db_pool = &state.db_pool;
+
+        let user_id = token.uid;
+        let user_wallet_query_sql = "SELECT address from wallet w where uid=?";
+        let user_wallet = sqlx::query_as::<_,(String,)>(user_wallet_query_sql)
+            .bind(user_id)
+            .fetch_one(db_pool)
+            .await
+            .map(|(wallet,)|wallet)
+            .map_err(InternalServerError)?;
+
+        //从Group中获取ownerId.
+        let subject_id = subject_id.0;
+        let subject_wallet_query_sql = "SELECT address from wallet where uid = ?";
+        let subject_wallet = sqlx::query_as::<_,(String,)>(subject_wallet_query_sql)
+            .bind(subject_id)
+            .fetch_one(db_pool)
+            .await
+            .map(|(wallet,)|wallet)
+            .map_err(InternalServerError)?;
+
+        let query_group_by_owner_sql = "SELECT gid FROM `group` g WHERE g.owner = 6";
+        let gid = sqlx::query_as::<_,(i64,)>(query_group_by_owner_sql)
+        .bind(subject_id)
+        .fetch_one(db_pool)
+        .await
+        .map(|(gid,)|gid)
+        .map_err(InternalServerError)?;
+        
+        
+
+        // TODO check the user has the share of owner.
+        let user_have_subject_share = gear_contract_api::user_have_subject_share(&subject_wallet,&user_wallet).await.map_err(InternalServerError)?;
+        if !user_have_subject_share {
+            return Err(Error::from_string("user have no subject",StatusCode::OK));
+        }
+
+        // if !members.iter().all(|uid| cache.users.contains_key(uid)) {
+        //     // invalid uid
+        //     return Err(Error::from_status(StatusCode::BAD_REQUEST));
+        // }
+
+        let group = cache
+            .groups
+            .get_mut(&gid)
+            .ok_or_else(|| Error::from_status(StatusCode::NOT_FOUND))?;
+
+        match group.ty {
+            GroupType::Public => return Err(Error::from_status(StatusCode::FORBIDDEN)),
+            GroupType::Private { .. } if !group.members.contains(&token.uid) && !token.is_admin => {
+                return Err(Error::from_status(StatusCode::FORBIDDEN));
+            }
+            _ => {}
+        }
+        // update sqlite
+        let mut tx = state.db_pool.begin().await.map_err(InternalServerError)?;
+        sqlx::query("insert into group_user (gid, uid) values (?, ?)")
+            .bind(gid)
+            .bind(user_id)
+            .execute(&mut tx)
+            .await
+            .map_err(InternalServerError)?;
+        tx.commit().await.map_err(InternalServerError)?;
+
+        // update cache
+        let original_members = group.members.clone();
+        group.members.insert(user_id);
+
+        // broadcast event
+        let _ = state
+            .event_sender
+            .send(Arc::new(BroadcastEvent::JoinedGroup {
+                targets: vec![user_id].into_iter().collect(),
+                group: group.api_group(gid),
+            }));
+
+        let _ = state
+            .event_sender
+            .send(Arc::new(BroadcastEvent::UserJoinedGroup {
+                targets: original_members,
+                gid: gid,
+                uid: vec![user_id],
             }));
 
         Ok(())
@@ -1150,6 +1307,85 @@ mod tests {
 
     use super::*;
     use crate::test_harness::TestServer;
+
+    #[tokio::test]
+    async fn test_init_self_group() {
+        let server = TestServer::new().await;
+        let cloud_token: String = server.login("cloud@gmail.com").await;
+        println!("cloud_token is:{}", cloud_token);
+        let admin_token = server.login_admin_with_device("web").await;
+        // body is Group.
+        let resp = server
+            .put("/api/token/device_token")
+            .header("X-API-Key", &admin_token)
+            .body_json(&json!({
+                "device_token": "abc"
+            }))
+            .send()
+            .await;
+        resp.assert_status_is_ok();
+
+        assert_eq!(
+            server
+                .state()
+                .cache
+                .read()
+                .await
+                .users
+                .get(&1)
+                .unwrap()
+                .devices
+                .get("web")
+                .unwrap()
+                .device_token
+                .as_deref(),
+            Some("abc")
+        );
+
+        let device_token2 = sqlx::query_as::<_, (Option<String>,)>(
+            "select device_token from device where uid = ? and device = ?",
+        )
+        .bind(1)
+        .bind("web")
+        .fetch_one(&server.state().db_pool)
+        .await
+        .map(|(t,)| t)
+        .unwrap();
+        assert_eq!(device_token2.as_deref(), Some("abc"));
+
+        let resp = server
+            .put("/api/token/device_token")
+            .header("X-API-Key", &admin_token)
+            .body_json(&json!({ "device_token": null }))
+            .send()
+            .await;
+        resp.assert_status_is_ok();
+
+        assert!(server
+            .state()
+            .cache
+            .read()
+            .await
+            .users
+            .get(&1)
+            .unwrap()
+            .devices
+            .get("web")
+            .unwrap()
+            .device_token
+            .is_none());
+
+        let device_token2 = sqlx::query_as::<_, (Option<String>,)>(
+            "select device_token from device where uid = ? and device = ?",
+        )
+        .bind(1)
+        .bind("web")
+        .fetch_one(&server.state().db_pool)
+        .await
+        .map(|(t,)| t)
+        .unwrap();
+        assert_eq!(device_token2, None);
+    }
 
     #[tokio::test]
     async fn test_crud() {
