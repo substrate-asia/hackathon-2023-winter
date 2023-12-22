@@ -1,0 +1,93 @@
+.tabbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 15%;
+    height: 100%;
+    background-color: black;
+    display: flex;
+    flex-direction: column;
+}
+
+.logo {
+    cursor: pointer;
+    width: 100%;
+    height: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.logo-img {
+    width: 180px;
+    height: 24px;
+}
+
+.menu {
+    height: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+.menu-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 8px;
+    width: 50%;
+    height: 77px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+}
+
+.menu-item:hover,
+.menu-item.selected {
+    
+    background: linear-gradient(to bottom, #E1FFF4, #055e3f);
+    color: #373938;
+    font: bold;
+    
+}
+.icon10 {
+    height: 30px;
+    width: 30px;
+    margin-right: 8px;
+}
+.menu-item-icon {
+    height: 40px;
+    width: 40px;
+    color: #ffffff;
+    margin-right: 8px;
+    margin-bottom: 10px;
+}
+
+.menu-item-text {
+    color: white;
+
+}
+
+.right-side {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 85%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.upper {
+    height: 13%;
+}
+
+/*.lower {*/
+/*    height: 87%;*/
+/*    display: flex;*/
+/*    flex-direction: row;*/
+/*    padding: 10px;*/
+/*}*/

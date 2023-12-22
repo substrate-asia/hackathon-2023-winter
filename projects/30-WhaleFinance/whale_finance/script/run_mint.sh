@@ -1,0 +1,1 @@
+forge script ./Mint.s.sol --rpc-url $SEPOLIA_RPC_URL  --broadcast --legacy

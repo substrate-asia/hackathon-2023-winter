@@ -24,7 +24,7 @@ describe('test some RPC methods at web3.polka.substrate', () => {
 
   it('should call chain.getBlock method', async () => {
     // const hash = "0x6277848db56df4936213f3c82d4b7181291674a9376deb22339dc504d33b8851";
-    const response = await web3.polka.substrate.chain.getBlock(/*hash*/);
+    const response = await web3.polka.substrate.rpc.chain.getBlock(/*hash*/);
     expect(response).toBeDefined();
     expect(response.block).toBeDefined();
     expect(typeof response.block.header.stateRoot).toBe('string');
@@ -48,16 +48,18 @@ describe('test some RPC methods at web3.polka.substrate', () => {
   });
 
   it('should chain.getBlock() equals chain.getBlock(chain.getBlockHash(latestBlocHash))', async () => {
-    const latestBlock = await web3.polka.substrate.chain.getBlock();
-    const latestBlocHash = await web3.polka.substrate.chain.getBlockHash(latestBlock.block.header.number.toString());
-    const blockByLatestBlocHash = await web3.polka.substrate.chain.getBlock(latestBlocHash);
+    const latestBlock = await web3.polka.substrate.rpc.chain.getBlock();
+    const latestBlocHash = await web3.polka.substrate.rpc.chain.getBlockHash(
+      latestBlock.block.header.number.toString()
+    );
+    const blockByLatestBlocHash = await web3.polka.substrate.rpc.chain.getBlock(latestBlocHash);
 
     expect(blockByLatestBlocHash).toBeDefined();
     expect(blockByLatestBlocHash).toEqual(latestBlock);
   });
 
   it('should get the rpc methods', async () => {
-    const response = await web3.polka.substrate.rpc.methods();
+    const response = await web3.polka.substrate.rpc.rpc.methods();
 
     expect(response).toBeDefined();
 

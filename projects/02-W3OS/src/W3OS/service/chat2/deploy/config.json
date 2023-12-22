@@ -4,7 +4,7 @@
         "port":7788,
         "runner":"5CSTSUDaBdmET2n6ju9mmpEKwFVqaFtmB8YdB23GMYCJSgmw",
         "max":300,
-        "polkadot":"ws://127.0.0.1:9944",
+        "polkadot":"wss://dev2.metanchor.net",
         "vertification":"5EUFM4U2LUypvctxvqnEV2vb3hBABspWUYEjErwRpTbsYEaJ"
     },
     "backup":{

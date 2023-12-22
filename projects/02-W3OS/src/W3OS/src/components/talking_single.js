@@ -1,8 +1,10 @@
 import { Row, Col } from "react-bootstrap";
+import { useState, useEffect } from "react";
 
 import Chat from "./chat";
 import Thumbnail from "./thumbnail";
 import tools from "../lib/tools";
+import RUNTIME from "../lib/runtime";
 
 function TalkingSingle(props) {
   const size = {
@@ -10,9 +12,12 @@ function TalkingSingle(props) {
     title: [7, 5],
     row: 12,
   };
-
   const to = props.to;
   const details = props.details;
+
+  let [nick,setNick]=useState(tools.shorten(to,8));
+
+  
   const self={
     click:(ev)=>{
       setTimeout(()=>{
@@ -43,6 +48,13 @@ function TalkingSingle(props) {
     },
   }
 
+  useEffect(() => {
+    RUNTIME.singleContact(to,(res)=>{
+      //console.log(res);
+      if(res.short) setNick(`${res.short}, ${tools.shorten(to,4)}`);
+    });
+  }, []);
+
   return (
     <Row className="pt-2 pb-2" onClick={(ev)=>{
       self.click();
@@ -57,7 +69,7 @@ function TalkingSingle(props) {
         <Row>
           <Col xs={size.title[0]} sm={size.title[0]} md={size.title[0]}
             lg={size.title[0]} xl={size.title[0]} xxl={size.title[0]}>
-            <strong>{self.getNick(details.nick,to)}</strong>
+            <strong>{nick}</strong>
           </Col>
           <Col className="text-end" xs={size.title[1]} sm={size.title[1]} md={size.title[1]}
             lg={size.title[1]} xl={size.title[1]} xxl={size.title[1]}>
