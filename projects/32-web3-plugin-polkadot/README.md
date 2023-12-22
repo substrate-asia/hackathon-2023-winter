@@ -10,8 +10,11 @@ Project creation date: **29 Nov 2023**
 
 Applying for **Category 1: Polkadot ecosystem developer tools**
 
+
 > npm package: https://www.npmjs.com/package/@conx3/web3-plugin-polkadot/
+> 
 >  playground at: https://github.com/conx3/web3-plugin-polkadot-playground
+> 
 >  Project website: www.web3polka.com
 
 
