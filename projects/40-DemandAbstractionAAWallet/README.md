@@ -45,14 +45,12 @@ Zero-knowledege Proofs: Users can easily and quickly verify the correctness and 
 
 **区块链端**
   - 在波卡上开发和实现AA钱包
-  - 在波卡上开发和实现跨链
-  - 在Moonbeam上开发和实现EVM兼容
+  - 在Moonbeam上开发和实现EVM AA钱包
 
 **客户端**
   - 注册登录
   - 账户抽象
   - 需求抽象
-  - 跨链转账
 
 
 ## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
@@ -63,8 +61,7 @@ Zero-knowledege Proofs: Users can easily and quickly verify the correctness and 
 
 **区块链端**
   - 在波卡上开发和实现AA钱包
-  - 在波卡上开发和实现跨链
-  - 在Moonbeam上开发和实现EVM兼容
+  - 在Moonbeam上开发和实现AA钱包
 
 **客户端**
   - 注册登录
@@ -80,10 +77,10 @@ Pitch deck: https://drive.google.com/file/d/15GpYINg3rlTnSIkV9HLTTE8kbh8qSg4w/vi
 
 ## 队员信息
 
-前端：Gray (https://github.com/GrayJyy)、 Frank (https://github.com/frankda)
+前端：[Gray](https://github.com/GrayJyy)、[Frank](https://github.com/frankda)
 
-后端：Myron (https://github.com/zhangzhishun)、 晨曦 (https://github.com/ShadowDawnme)、 Freeman (https://github.com/StrFreeman?tab=repositories)
+后端：[Myron](https://github.com/zhangzhishun)、[晨曦](https://github.com/ShadowDawnme)、[Freeman](https://github.com/StrFreeman)
 
-合约：方吉良 (https://github.com/ericfjl)、 Spring (https://github.com/fospring)、 智邦富国 (https://github.com/DOGEOFDOGE/DDOGE)
+合约：[方吉良](https://github.com/ericfjl)、[Spring](https://github.com/fospring)、[智邦富国](https://github.com/DOGEOFDOGE/DDOGE)
 
-产品：Jel (https://github.com/mryings)
+产品：[Jel](https://github.com/mryings)
