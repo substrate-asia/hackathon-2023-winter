@@ -45,8 +45,8 @@ use pallet_transaction_payment::{ConstFeeMultiplier, CurrencyAdapter, Multiplier
 pub use sp_runtime::BuildStorage;
 pub use sp_runtime::{Perbill, Permill};
 
-/// Import the zk-snarks pallet.
-pub use pallet_zk_snarks;
+/// Import the zk-poker pallet.
+pub use pallet_zk_poker;
 
 /// An index to a block.
 pub type BlockNumber = u32;
@@ -273,17 +273,13 @@ impl pallet_sudo::Config for Runtime {
 	type RuntimeCall = RuntimeCall;
 }
 
-/// Configure the pallet-template in pallets/zk-snarks.
-impl pallet_zk_snarks::Config for Runtime {
-	type MaxPublicInputsLength = ConstU32<10000>;
-	type MaxProofLength = ConstU32<111500>;
-	type MaxVerificationKeyLength = ConstU32<407900>;
-	type RuntimeEvent = RuntimeEvent;
-	type WeightInfo = pallet_zk_snarks::weights::SubstrateWeight<Runtime>;
-}
-
+/// Configure the pallet-template in pallets/zk-poker.
 impl pallet_zk_poker::Config for Runtime {
+	type MaxPublicInputsLength = ConstU32<9>;
+	type MaxProofLength = ConstU32<1115>;
+	type MaxVerificationKeyLength = ConstU32<4079>;
 	type RuntimeEvent = RuntimeEvent;
+	type WeightInfo = pallet_zk_poker::weights::SubstrateWeight<Runtime>;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -302,8 +298,7 @@ construct_runtime!(
 		Balances: pallet_balances,
 		TransactionPayment: pallet_transaction_payment,
 		Sudo: pallet_sudo,
-		ZKSnarks: pallet_zk_snarks,
-		ZkPoker: pallet_zk_poker,
+		ZKPoker: pallet_zk_poker,
 	}
 );
 
@@ -350,7 +345,7 @@ mod benches {
 		[frame_system, SystemBench::<Runtime>]
 		[pallet_balances, Balances]
 		[pallet_timestamp, Timestamp]
-		[pallet_zk_snarks, ZKSnarks]
+		[pallet_zk_poker, ZKPoker]
 	);
 }
 

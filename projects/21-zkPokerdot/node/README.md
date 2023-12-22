@@ -40,10 +40,10 @@ cargo build --release
 
 ### Verifying proof
 
-The `zk-snarks-verify` subcommand will perform given proof verification with given key and public inputs
+The `zk-poker-verify` subcommand will perform given proof verification with given key and public inputs
 
 ```sh
-cargo run --release -- zk-snarks-verify <path-to-verification-key-file> <path-to-proof-file> <path-to-public-inputs-file>
+cargo run --release -- zk-poker-verify <path-to-verification-key-file> <path-to-proof-file> <path-to-public-inputs-file>
 ```
 
 ### Embedded Docs
