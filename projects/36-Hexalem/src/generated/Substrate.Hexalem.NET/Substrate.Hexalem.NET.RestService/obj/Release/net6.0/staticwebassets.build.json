@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "AA4HuiqJWFRRMo/LrM8jhid9W+9fYfPfsYl5blkN/Qs=",
+  "Source": "Substrate.Hexalem.NET.RestService",
+  "BasePath": "_content/Substrate.Hexalem.NET.RestService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}

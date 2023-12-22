@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.NET.RestService", "Substrate.Hexalem.NET.RestService\Substrate.Hexalem.NET.RestService.csproj", "{3D778DBE-1D71-406F-99BE-396EF39F3306}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.NET.NetApiExt", "Substrate.Hexalem.NET.NetApiExt\Substrate.Hexalem.NET.NetApiExt.csproj", "{20B5DC67-7B23-42F6-B0EB-79DBB98B64A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.NET.RestClient", "Substrate.Hexalem.NET.RestClient\Substrate.Hexalem.NET.RestClient.csproj", "{270027DC-FC0F-4504-9329-8BF526D1977C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.NET.RestClient.Mockup", "Substrate.Hexalem.NET.RestClient.Mockup\Substrate.Hexalem.NET.RestClient.Mockup.csproj", "{A5A9FAF6-47BC-45C0-819F-8BA44FBA93F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Substrate.Hexalem.NET.RestClient.Test", "Substrate.Hexalem.NET.RestClient.Test\Substrate.Hexalem.NET.RestClient.Test.csproj", "{1D8AC1DC-F567-4C4C-87BF-EC4E8DE6CB01}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3D778DBE-1D71-406F-99BE-396EF39F3306}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D778DBE-1D71-406F-99BE-396EF39F3306}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D778DBE-1D71-406F-99BE-396EF39F3306}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D778DBE-1D71-406F-99BE-396EF39F3306}.Release|Any CPU.Build.0 = Release|Any CPU
+		{20B5DC67-7B23-42F6-B0EB-79DBB98B64A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{20B5DC67-7B23-42F6-B0EB-79DBB98B64A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{20B5DC67-7B23-42F6-B0EB-79DBB98B64A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{20B5DC67-7B23-42F6-B0EB-79DBB98B64A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{270027DC-FC0F-4504-9329-8BF526D1977C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{270027DC-FC0F-4504-9329-8BF526D1977C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{270027DC-FC0F-4504-9329-8BF526D1977C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{270027DC-FC0F-4504-9329-8BF526D1977C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A5A9FAF6-47BC-45C0-819F-8BA44FBA93F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A5A9FAF6-47BC-45C0-819F-8BA44FBA93F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A5A9FAF6-47BC-45C0-819F-8BA44FBA93F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A5A9FAF6-47BC-45C0-819F-8BA44FBA93F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D8AC1DC-F567-4C4C-87BF-EC4E8DE6CB01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D8AC1DC-F567-4C4C-87BF-EC4E8DE6CB01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D8AC1DC-F567-4C4C-87BF-EC4E8DE6CB01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D8AC1DC-F567-4C4C-87BF-EC4E8DE6CB01}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

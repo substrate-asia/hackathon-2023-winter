@@ -1,0 +1,10 @@
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\bin\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.deps.json
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\bin\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\bin\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.pdb
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.csproj.AssemblyReference.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.GeneratedMSBuildEditorConfig.editorconfig
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.AssemblyInfoInputs.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.AssemblyInfo.cs
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.csproj.CoreCompileInputs.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.NetApiExt\obj\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.pdb

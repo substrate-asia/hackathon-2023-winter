@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.3" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.3" />
+	  <PackageReference Include="Serilog" Version="3.1.1" />
+	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Substrate.Hexalem.Bot\Substrate.Hexalem.Game.csproj" />
+    <ProjectReference Include="..\Substrate.Hexalem.NET\Substrate.Hexalem.Engine.csproj" />
+  </ItemGroup>
+
+</Project>
