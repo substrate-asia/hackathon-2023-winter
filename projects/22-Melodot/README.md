@@ -8,69 +8,19 @@ Date of project initiation: 2023/6/11
 
 ### Project Background
 
-Melodot is a domain-specific blockchain data availability layer. We have introduced the role of the "farmer," liberating validators and enabling the system to become more decentralized. This approach allows for distributed generation, higher throughput, and enhanced security.
+Melodot 是一个独立数据可用性层，与当前主流的数据可用性层不同的是，它是从领域化区块链的角度设计，它具备很多独特之处：
 
-**Scalability Bottleneck of Monolithic Blockchains**
+- 采用多项式承诺而非默克尔承诺
+- 分布式生成数据，系统中没有一个节点完整地计算数据
+- 数据单独网络，解耦共识层，非常易于分片
+- 引入农民来解决棘手的最小诚实采样者数量假设，并采用基于 TMTO 的 PoSpace 来抵御女巫攻击
+- 由农民存储数据而非验证者，使得共识层更加轻巧
 
-In recent years, numerous methods have been employed to scale blockchains, ranging from larger blocks and sharding to modular blockchains. These solutions, including modular blockchains, inherently seek diminishing marginal utility in scalability on a monolithic blockchain platform.
-
-Our proposed domain-specific blockchain represents a radical restructuring of blockchain technology. It demands that after modules are decoupled, the overall system's security remains unaffected. Moreover, it requires that these decoupled modules prevent knowledge leakage to ensure the scalability of each module and the security of their interactions. The data availability layer is the most fundamental domain, but existing solutions still face many challenges.
-
-**The Gentle Trap: Minimum Honest Sampler Assumption**
-
-Unlike centralized servers, the data in the data availability layer is distributed across a sampling network. This presents a gentle trap: the system's data throughput increases with the number of samplers. Implicitly, this assumes the presence of sufficient sampler nodes in the system to ensure that the data stored during sampling is enough to reconstruct the original data. However, we cannot determine the number of samplers, especially since samplers may only be interested in blocks relevant to them. If a block contains no data of interest to a sampler, they might choose not to sample it for efficiency, leading to significant variability in the number of samplers per block. This can become a bottleneck for the DA layer, impacting the system's security.
-
-**Excessive Centralization**
-
-The data availability layer requires encoding and rapidly propagating a large volume of data in a very short time, necessitating nodes with substantial computational power and bandwidth. This leads to excessive centralization of the network. Existing DA layer solutions, whether based on Merkle trees or KZG commitments, cannot avoid this issue. While Polynomial-based Sampling (PBS) can alleviate this, it also increases the cost of data transactions. More importantly, this becomes another bottleneck for the system's data throughput.
-
-**Highly Coupled Validators**
-
-Furthermore, the DA layer faces several issues: who downloads the data, who stores it, who reconstructs it, etc. In current solutions, all these tasks are assigned to validators, including encoding and disseminating data blocks. This not only increases the centralization of the system but also complicates sharding.
-
-### Technical Architecture
-
-**Domain-Specific Blockchain**
-
-![](https://pic.tom24h.com/melo/1.png)
-
-This is a typical architecture of a domain-specific blockchain, which is actually a very common architectural pattern. It's important to note that this is not about the design of frameworks like Substrate themselves, but rather the architecture from the perspective of the ecosystem. The message queue includes common cross-chain message chains and cross-chain protocols, as well as the often-overlooked monolithic blockchain itself. For instance, the Bitcoin ecosystem's inscriptions utilize the Bitcoin network as a reliable message layer, similar to Polkadot's RMRK, Arweave's SmartWeave, and so on.
-
-While blockchains are usually viewed as finite state machines, we can also decouple the state machine itself and the consensus layer that forms consensus for all state machines. The application layer, by various means, calls upon the consensus layer, state machine, and data availability layer to form secure, rich product mechanisms. Modular blockchains can be seen as the rudimentary form of domain-specific blockchains, but the lack of deeper architectural design leads to various bottlenecks and limitations in products.
-
-**Melodot Network Architecture**
-
-![](https://pic.tom24h.com/melo/2.png)
-
-The Melodot data availability layer mainly comprises three parts: full nodes, light clients, and farmer clients. Full nodes are primarily used to form consensus and provide services to other roles. Light nodes, mainly sampling clients, obtain block headers from the network and perform sampling. Farmer clients are used for data availability sampling, distributed generation, and data storage. Data is propagated through a separate network, isolated from the consensus layer, to ensure the security of the consensus layer's network and to facilitate future network sharding.
-
-The challenge here is how to make data availability usable on other monolithic blockchains, especially those blockchains where validators lack third-party sampling capabilities. We use a Restake mechanism, essentially an interface of the consensus layer. Its security depends on the cost incurred by validators. In our design, the cost of performing light client sampling is very low, so the security can be approximated to the security of the monolithic blockchain itself.
-
-As shown in the diagram, we design a special parachain using Polkadot relay chain validators' Restake to validate Melodot sampling data availability, saving the results on-chain. This allows all Polkadot parachains to obtain data availability layer capabilities. We can apply the same approach to Ethereum and other monolithic blockchains to obtain a secure third-party data availability layer. In this scenario, Polkadot and Ethereum become the consensus layers in the domain-specific blockchain, and we don't need to make any modifications to the consensus layer. In fact, the consensus layer might not even be aware of the existence of the data availability layer, which represents a very clean decoupling.
+以上特性使得系统吞吐量达到 GB 级别
 
 ### Overview
 
-Melodot is a gigabyte-scale data availability layer where you can fit a 90-minute 1080P movie into a block. Melodot draws from past successes in data availability layers and decentralized storage, adopting special designs to solve many tricky problems.
-
-**Polynomial Commitment**
-
-Melodot uses polynomial commitments to ensure data is correctly encoded. The original data availability layer scheme used Merkle coding, requiring a powerful full node to obtain all data and generate and spread fraud proofs. We avoided this, which not only reduced efficiency but also introduced additional assumptions. Specifically, we generate KZG commitments in the row direction included in the block header, allowing nodes to verify the validity of sampled data in real time with just the block header.
-
-**Distributed Generation**
-
-In the original data availability layer proposal, the proposer alone performed expensive polynomial commitments and RS coding on all data, requiring very high bandwidth and performance. Imagine a node capable of encoding 500MB of data in two seconds. This not only deepens the system’s centralization but also becomes a bottleneck for system throughput.
-
-In Melodot, validators are more like light clients. They don’t need to perform expensive coding, and no single node encodes all data. This is all distributedly done by farmers, with the task of expanding data in the column direction assigned to different farmers, and they don’t need to calculate expensive polynomial commitments, just direct data expansion. It’s important to note that in the worst case, if all farmers go offline, it will lead to sampling failure and data unavailability, but farmers do not affect system security.
-
-Distributed generation is crucial for system throughput. We’ve achieved a system throughput that increases with the number of farmers without sacrificing decentralization.
-
-**PoSpace**
-
-Melodot uses Chia-style PoSpace to ensure farmers store data honestly. It requires farmers to complete a one-time step called “Plotting” to commit a certain size of hard disk space. After this, farmers can farm on this disk for a considerable time with very little resource consumption, allowing consumer-grade PCs to join the network, a highly decentralized incentive mechanism.
-
-### Demo
-
-https://github.com/ZeroDAO/melodot
+这次黑客松我们在数据可用性层的基础上，完成了波卡的再质押平行链 Redot，它利用波卡验证者的闲置资源来运行任务。Redot 是一个中立的共识层接口，它允许其他数据可用性层加入，同样也运行运行其他类型的任务，但条件是需要相当轻，它的设计目标是作为领域化区块链共识层的接口。你可以在[这篇文章](https://medium.com/p/aefe6d6836ef)中详细了解领域化区块链的概念和 Melodot 、Redot 的设计思路。
 
 ### Logo
 
@@ -84,33 +34,49 @@ https://github.com/ZeroDAO/melodot
 
 ### Initial Commit
 
-https://github.com/ZeroDAO/melodot/tree/winter
+src 中全部为新实现
 
 ## Tasks Planned for the Hackathon
 
 ### Farmer Client
 
-- [ ] Connects to the sampling network and full nodes.
-- [ ] Distributed generation.
-- [ ] Saves data.
-- [ ] Submits PoSpace proofs.
+- [x] Connects to the sampling network and full nodes.
+- [x] Distributed generation.
+- [x] Saves data.
+- [x] Submits PoSpace proofs.
 
 ### PoSpace
 
 A Proof of Capacity (PoC) level crate using Hellman's Time-Memory Trade-Off (TMTO) for space proofs.
 
-- [ ] Finds solutions.
-- [ ] Verifies solutions.
+- [x] Finds solutions.
+- [x] Verifies solutions.
 
 ### Farmers Fortune Pallet
 
-- [ ] Interface for claiming rewards.
+- [x] Interface for claiming rewards.
 
-## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
+## 黑客松期间所完成的事项
 
-- 2023年12月22日上午11:59前，在本栏列出黑客松期间最终完成的功能点。
-- 把相关代码放在 `src` 目录里，并在本栏列出在黑客松期间完成的开发工作及代码结构。我们将对这些目录/档案作重点技术评审。
-- Demo 视频，ppt等大文件不要提交。可以在readme中存放它们的链接地址
+我们在规定时间期限内实现了计划中的全部功能，但由于 Melodot 的数据可用性层是在 W3F 的资助下完成的，在中途了解到这违反了某个规则。我们全新实现了 Redot ，以上计划中的内容将不作为本次黑客松的任务。
+
+在 Melodot 数据可用性层的基础上，我们完成了作为波卡再质押层的平行链的核心部分，从而形成从数据可用性层到共识层接口的全流程垂直切片。简单来说，我们在 Redot 中完成了：
+
+1. 分布式密钥生成： 验证者注册后需要生成用于阈值签名的分布式密钥
+2. 阈值签名： 用于 task 的结果进行阈值签名，并提交到链上
+3. 验证器网络： 一个独立的验证者网络，用于密钥生成和阈值签名以及验证者的其他沟通
+4. 验证器轻客户端： 这使得验证者只需要消耗少量的资源既可运行，且不需要加入共识网络
+5. 链上验证者管理：允许波卡验证者加入到 Redot 网络并进行验证 
+6. 验证器 Task 管理： 验证阈值签名的结果，允许验证者提交达成共识的结果
+
+你可以在这里看到[技术评估文档](./docs/README.md)
+
+受限于黑客松时间资源限制，我们在一些方面非核心能力方面进行了简化，包括
+
+1. 客户端部分简化了部分指标监控
+2. 故意忽略了部分安全问题
+3. 部分流程进行了简化，例如 task 结果的提交、验证者队列。
+4. 忽略了很多测试
 
 ## 队员信息
 
