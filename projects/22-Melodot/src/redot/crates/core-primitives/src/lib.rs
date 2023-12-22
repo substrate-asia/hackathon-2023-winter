@@ -14,9 +14,12 @@
 #![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode, MaxEncodedLen, EncodeLike};
-pub use frost_ed25519::{Identifier, Signature as DkgSignature, VerifyingKey as DkgVerifyingKey, SigningKey};
-pub mod crypto;
 use scale_info::{build::Fields, Path, Type, TypeInfo};
+
+pub use frost_ed25519::{Identifier, Signature as DkgSignature, VerifyingKey as DkgVerifyingKey, SigningKey};
+
+#[cfg(feature = "std")]
+pub mod crypto;
 
 #[derive(Clone, PartialEq, Eq, Debug)]
 pub struct WrapVerifyingKey(pub DkgVerifyingKey);

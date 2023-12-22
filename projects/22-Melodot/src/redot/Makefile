@@ -3,11 +3,14 @@
 run-dev:
 	./target/release/redot-node --dev --ws-external
 
-build-release:
+build:
 	cargo build --release
 
 build-default:
 	cargo build --release -p redot-node -p redot-runtime
+
+build-runtime:
+	cargo build --release -p redot-runtime
 
 purge-dev:
 	./target/release/redot-node purge-chain --dev
