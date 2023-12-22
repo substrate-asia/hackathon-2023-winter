@@ -10,19 +10,19 @@ use super::share::{self, EMPTY_TEMPLATE};
 
 #[derive(Debug, Clone)]
 pub enum StorageType {
-    Value(StorageValueProperty),
-    Map(StorageValueProperty),
+    Value(StorageProperty),
+    Map(StorageProperty),
     DoubleKeyMap(OptMap),
     Nmap(OptMap),
 }
 impl Default for StorageType {
     fn default() -> Self {
-        StorageType::Value(StorageValueProperty::default())
+        StorageType::Value(StorageProperty::default())
     }
 }
 
 #[derive(Debug, Clone)]
-pub struct StorageValueProperty {
+pub struct StorageProperty {
     pub name: String,
     pub getter: bool,
     pub hash: String,
@@ -35,9 +35,9 @@ pub struct StorageValueProperty {
     // pub fn_gen_type: Vec<String>,
 }
 
-impl Default for StorageValueProperty {
+impl Default for StorageProperty {
     fn default() -> Self {
-        StorageValueProperty {
+        StorageProperty {
             name: String::from(""),
             value: String::from(""),
             getter: false,
@@ -89,12 +89,13 @@ impl StorageType {
                         }
                     }
 
-                    let item_use = quote!(use sp_std::prelude::*;);
-                    let new_item_use: ItemUse = 
-                    syn::parse_str(&item_use.to_string()).unwrap();
+                    let item_use = quote!(
+                        pub use scale_info::prelude::vec::Vec;
+                    );
+                    let new_item_use: ItemUse = syn::parse_str(&item_use.to_string()).unwrap();
                     module_content
-                    .1
-                    .insert(last_idx.unwrap(), Item::Use(new_item_use));
+                        .1
+                        .insert(last_idx.unwrap(), Item::Use(new_item_use));
                     let new_item_type: Result<ItemType, syn::Error> =
                         syn::parse_str(&self.to_string());
                     match new_item_type {
@@ -104,9 +105,7 @@ impl StorageType {
                             self.to_string().trim()
                         ),
                         Ok(new_struct_item) => {
-
                             if let Some(idx) = last_idx {
-
                                 module_content
                                     .1
                                     .insert(idx + 1, Item::Type(new_struct_item));
@@ -158,7 +157,7 @@ impl Default for OptMap {
     }
 }
 
-fn generate_storage_value(params: &StorageValueProperty) -> String {
+fn generate_storage_value(params: &StorageProperty) -> String {
     use string_builder::Builder;
     let mut builder = Builder::default();
     builder.append("#[pallet::storage]\r\n");
@@ -183,7 +182,7 @@ fn generate_storage_value(params: &StorageValueProperty) -> String {
     }
 }
 
-fn generate_storage_map(v: &StorageValueProperty) -> String {
+fn generate_storage_map(v: &StorageProperty) -> String {
     let opt = v.clone();
     use string_builder::Builder;
     let mut builder = Builder::default();
@@ -354,11 +353,11 @@ mod tests {
 
     #[test]
     fn test_generate_storage_value() {
-        let data = generate_storage_value(&&StorageValueProperty {
+        let data = generate_storage_value(&&StorageProperty {
             name: "Machine".to_string(),
             value: "u32".to_string(),
             getter: true,
-            ..StorageValueProperty::default()
+            ..StorageProperty::default()
         });
         // println!("{}", data);
 
@@ -372,7 +371,7 @@ mod tests {
 
     #[test]
     fn test_generate_storage_map() {
-        let data = generate_storage_map(&&StorageValueProperty {
+        let data = generate_storage_map(&&StorageProperty {
             name: "Students".to_string(),
             key: "AccountId".to_string(),
             value: "Student".to_string(),
@@ -381,7 +380,7 @@ mod tests {
             query_kind: "ValueQuery".to_string(),
             on_empty: "OnEmpty".to_string(),
             max_values: "MaxValues".to_string(),
-            ..StorageValueProperty::default()
+            ..StorageProperty::default()
         });
         println!("{}", data);
     }

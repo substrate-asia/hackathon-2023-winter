@@ -46,7 +46,11 @@ pub enum StorageCmd {
         #[clap(short = 'p', long = "pallet", help = "Pallet name")]
         pallet_name: Option<String>,
 
-        #[clap(long = "hash", help = "Type of hash", default_value = "Blake2_128Concat")]
+        #[clap(
+            long = "hash",
+            help = "Type of hash",
+            default_value = "Blake2_128Concat"
+        )]
         type_hash: String,
 
         #[clap(
@@ -79,7 +83,13 @@ impl StorageCmd {
                 // unwrap lib file based on pallet name
                 let path_lib = find_lib_pallet_unwrap(pallet)?;
 
-                let opt = storage::StorageValueProperty(name_storage.clone(), true, type_value.clone(), query_kind.clone());
+                let opt = storage::StorageProperty {
+                    name: name_storage.clone(),
+                    getter: true,
+                    value: type_value.clone(),
+                    query_kind: query_kind.clone(),
+                    ..Default::default()
+                };
                 let v = storage::StorageType::Value(opt);
                 v.insert_storage_into_pallet(&path_lib)?;
                 let mut fn_gen_type: Vec<String> = Vec::new();
@@ -92,7 +102,7 @@ impl StorageCmd {
                     extrinsic_params: params,
                     storage_pallet_name: name_storage.clone(),
                     storage_pallet_type: storage::StorageType::Value(
-                        storage::StorageValueProperty::default(),
+                        storage::StorageProperty::default(),
                     ),
                     ..Default::default()
                 };
@@ -121,11 +131,18 @@ impl StorageCmd {
                 method,
                 query_kind,
             } => {
-                let mut opt = storage::StorageValueProperty(name_storage.to_owned(), true, type_value.clone(), type_key.clone(), query_kind.clone());
+                let mut opt = storage::StorageProperty {
+                    name: name_storage.to_owned(),
+                    getter: true,
+                    value: type_value.clone(),
+                    key: type_key.clone(),
+                    query_kind: query_kind.clone(),
+                    ..Default::default()
+                };
                 // if have --hash flag, otherwise default type of hash
 
-                opt.2 = type_hash.clone();
-                
+                opt.hash = type_hash.clone();
+
                 let v = storage::StorageType::Map(opt);
 
                 let path_lib = find_lib_pallet_unwrap(pallet_name)?;
@@ -139,7 +156,7 @@ impl StorageCmd {
                     struct_name: type_value.to_string(),
                     storage_pallet_name: name_storage.clone(),
                     storage_pallet_type: storage::StorageType::Map(
-                        storage::StorageValueProperty::default(),
+                        storage::StorageProperty::default(),
                     ),
                     ..Default::default()
                 };

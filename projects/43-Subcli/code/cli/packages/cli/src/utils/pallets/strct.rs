@@ -16,9 +16,7 @@ impl ToString for Opt {
     fn to_string(&self) -> String {
         use string_builder::Builder;
         let mut builder = Builder::default();
-        builder.append(format!(
-            "#[derive(Encode, Decode, TypeInfo)]"
-        ));
+        builder.append(format!("#[derive(Encode, Decode, TypeInfo)]"));
         builder.append("\r\n");
         builder.append(format!("pub struct {} {}\r\n", self.name, "{"));
 
@@ -43,7 +41,7 @@ impl ToString for Opt {
             Ok(data) => {
                 if is_generic {
                     let mut updated_generics = generic_values.join(", ");
-                    println!("Updated generic:{}",updated_generics);
+                    println!("Updated generic:{}", updated_generics);
                     if updated_generics.contains("T::AccountId") {
                         updated_generics = "T".to_string()
                     }
