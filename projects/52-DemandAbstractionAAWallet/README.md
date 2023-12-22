@@ -36,9 +36,6 @@ Zero-knowledege Proofs: Users can easily and quickly verify the correctness and 
 ![wallet](https://github.com/smarterwallet/hackathon-2023-winter/assets/110052573/d491ff3b-2a5c-41ac-ac27-60332f6448c2)
 
 
-- 项目的启始的commit，对于全新的项目可以是一个开源框架的clone，比如区块链clone自substrate-node-template, react
-框架等，请给出说明。对于成熟项目可以是一个branch，要求在2023年11月1号之后生成，说明有哪些功能是已经有了的
-
 ## 黑客松期间计划完成的事项
 
 - 请团队在报名那一周 git clone 这个代码库并创建团队目录，在 readme 里列出黑客松期间内打算完成的代码功能点。并提交 PR 到本代码库。例子如下 (这只是一个 nft 项目的例子，请根据团队项目自身定义具体工作)：
@@ -51,6 +48,7 @@ Zero-knowledege Proofs: Users can easily and quickly verify the correctness and 
   - 注册登录
   - 账户抽象
   - 需求抽象
+  - 转账汇款
 
 
 ## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
@@ -67,6 +65,7 @@ Zero-knowledege Proofs: Users can easily and quickly verify the correctness and 
   - 注册登录
   - 账户抽象
   - 需求抽象
+  - 转账汇款
 
 Prototype: https://www.figma.com/file/79vQtcOkQeVd0s6g9Ykonr/Demand-abstraction-AA-Wallet?type=design&node-id=0-1&mode=design
 
@@ -82,4 +81,4 @@ Pitch deck: https://drive.google.com/file/d/15GpYINg3rlTnSIkV9HLTTE8kbh8qSg4w/vi
 
 合约：[方吉良](https://github.com/ericfjl)、[Spring](https://github.com/fospring)、[智邦富国](https://github.com/DOGEOFDOGE/DDOGE)
 
-产品：[Jel](https://github.com/mryings)
+产品：[Jel](https://github.com/mryings) [尹于野]（https://github.com/DoraDong007/）
