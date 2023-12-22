@@ -434,6 +434,44 @@ public class FileUtil {
     }
 
 
+    /**
+     * read File.
+     *
+     * @param filePath filePath
+     * @return
+     */
+    public static void saveFile(String filePath,String fileContent) {
+
+        try {
+            // 创建File对象
+            File file = new File(filePath);
+
+            // 如果文件路径不存在，则创建路径
+            if (!file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+
+            // 如果文件存在，先删除
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+
+            // 创建FileWriter对象，并指定写入文件
+            FileWriter writer = new FileWriter(file);
+
+            // 写入文件内容
+            writer.write(fileContent);
+
+            // 关闭FileWriter
+            writer.close();
+
+            System.out.println("文件已创建，路径：" + filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static void main(String[] args) {
         System.out.println(FileUtil.joinFiles("test", "TestLoader.java"));
     }

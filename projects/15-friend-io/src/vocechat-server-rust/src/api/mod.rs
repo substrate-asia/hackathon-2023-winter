@@ -23,6 +23,7 @@ mod user;
 mod user_log_action;
 mod client;
 mod share;
+mod serivce;
 
 pub use admin_agora::AgoraConfig;
 pub use admin_fcm::FcmConfig;

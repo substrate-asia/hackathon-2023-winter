@@ -1,7 +1,7 @@
 {  
     "name":"w3os",
     "framework":"frame_react.js",
-    "version":"1.0.1",
+    "version":"1.0.8",
     "related":{
         "js":"w3_js",
         "css":"w3_css",
@@ -10,7 +10,13 @@
     },
     "directory":"package/w3os",
     "asset":"asset-manifest.json",
-    "globalVars":["polkadot","anchorJS","easy"],
+    "globalExsist":true,
+    "globalLibs":{
+        "AnchorJS":"anchor.min.js",
+        "Polkadot":"polkadot.min.js",
+        "Easy":"easy.min.js"
+    },
+    "globalVars":["Polkadot","AnchorJS","Easy"],
     "blockmax":1500000,
     "ignor":{
         "files":{
@@ -23,11 +29,13 @@
             "robots.txt":true,
             ".DS_Store":true,
             "anchor.min.js":true,
-            "polkadot.min.js":true
+            "polkadot.min.js":true,
+            "easy.min.js":true
         },
         "folder":{
             "js":true,
             "css":true,
+            "package":true,
             ".DS_Store":true
         },
         "system":{

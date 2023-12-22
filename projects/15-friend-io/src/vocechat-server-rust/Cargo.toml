@@ -7,6 +7,7 @@ license = "MIT"
 [dependencies]
 rc-msgdb = { path = "./crates/msgdb" }
 rc-token = { path = "./crates/token" }
+gear-contract-api={path="./crates/gear-contract-api"}
 rc-fcm = { path = "./crates/fcm" }
 rc-magic-link = { path = "./crates/magic-link" }
 vc-license = { path = "./crates/vc-license" }

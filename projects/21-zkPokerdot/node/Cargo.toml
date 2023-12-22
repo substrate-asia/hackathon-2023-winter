@@ -1,7 +1,7 @@
 [workspace]
 members = [
     "node",
-    "pallets/zk-snarks",
+    "pallets/zk-poker",
     "runtime",
 ]
 [profile.release]

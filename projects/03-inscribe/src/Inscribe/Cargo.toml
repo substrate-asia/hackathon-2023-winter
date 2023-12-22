@@ -1,0 +1,30 @@
+[workspace]
+resolver = "2"
+members = [
+    "inscribe",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+authors = ["Gear Technologies"]
+license = "MIT"
+
+[workspace.dependencies]
+ft-logic = { git = "https://github.com/gear-foundation/dapps-sharded-fungible-token.git", tag = "2.1.4" }
+ft-main = { git = "https://github.com/gear-foundation/dapps-sharded-fungible-token.git", tag = "2.1.4" }
+ft-main-io = { git = "https://github.com/gear-foundation/dapps-sharded-fungible-token.git", tag = "2.1.4" }
+ft-storage = { git = "https://github.com/gear-foundation/dapps-sharded-fungible-token.git", tag = "2.1.4" }
+gclient = { git = "https://github.com/gear-tech/gear.git", version = "1.0.1"}
+gear-core = { git = "https://github.com/gear-tech/gear.git"}
+gear-wasm-builder = { git = "https://github.com/gear-tech/gear.git", version = "1.0.2"}
+gmeta = { git = "https://github.com/gear-tech/gear.git", version = "1.0.1"}
+gsdk = { git = "https://github.com/gear-tech/gear.git", version = "1.0.1"}
+gstd = { git = "https://github.com/gear-tech/gear.git", version = "1.0.1"}
+gtest = { git = "https://github.com/gear-tech/gear.git", version = "0.1.0"}
+parity-scale-codec = { version = "3", default-features = false }
+scale-info = { version = "2", default-features = false }
+tokio = { version = "1.33.0", features = ["rt-multi-thread"] }
+
+inscribe = { path = "inscribe"}
+inscribe-io = { path = "inscribe-io"}

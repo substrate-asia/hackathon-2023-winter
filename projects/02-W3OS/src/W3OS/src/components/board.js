@@ -9,13 +9,15 @@ import RUNTIME from "../lib/runtime";
 function Board(props) {
   const size = [6, 6];
 
-  let [btc, setBTC] = useState(40000);
-  let [eth, setETH] = useState(2200);
-  let [ksm, setKSM] = useState(0);
+  let [btc, setBTC] = useState(40000.01);
+  let [eth, setETH] = useState(2200.68);
+  let [dot, setDOT] =  useState(7.01);
+  let [ksm, setKSM] = useState(30.02);
 
   const router={
     bitcoin:setBTC,
     ethereum:setETH,
+    polkadot:setDOT,
     kusama:setKSM
   }
 
@@ -36,20 +38,17 @@ function Board(props) {
   }, []);
 
   return (
-    <div
-      className="board"
-      onClick={(ev) => {
+    <div className="board" onClick={(ev) => {
         self.click(ev);
-      }}
-    >
+      }}>
       <Row>
         <Col xs={size[0]} sm={size[0]}  md={size[0]} lg={size[0]} xl={size[0]} xxl={size[0]}>
-          BTC/USDT <strong>{parseFloat(btc).toLocaleString()}</strong> <br/>
+          BTC/USDT <strong>{parseFloat(btc).toLocaleString()}</strong><br/>
           ETH/USDT <strong>{parseFloat(eth).toLocaleString()}</strong>
         </Col>
         <Col xs={size[1]} sm={size[1]}  md={size[1]} lg={size[1]} xl={size[1]} xxl={size[1]}>
-          {/* <FaAnchor/>
-          <span className="status green"></span> */}
+          DOT/USDT <strong>{parseFloat(dot).toLocaleString()}</strong><br/>
+          KSM/USDT <strong>{parseFloat(ksm).toLocaleString()}</strong>
         </Col>
       </Row>
     </div>

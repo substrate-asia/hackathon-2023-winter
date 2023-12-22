@@ -7,9 +7,7 @@ import LogoutConfirmModal from "@/routes/setting/LogoutConfirmModal";
 import { NavLink, Outlet, useLocation, useMatch } from "react-router-dom";
 import { useSetState } from "rooks";
 import { HDNodeWallet, Wallet, ethers } from "ethers";
-import { ApiPromise, WsProvider } from "@polkadot/api";
-import { Keyring } from "@polkadot/keyring";
-import { cryptoWaitReady, mnemonicGenerate } from "@polkadot/util-crypto";
+import { createNewWallet } from "@/routes/wallet/index";
 import { KEY_WALLET_ADDRESS, KEY_WALLET_PRIVATE_KEY } from "@/app/config";
 import { useBindWallet2UserMutation, useLazyCheckWalletExistQuery } from "@/app/services/auth";
 import StreamStatus from "@/components/StreamStatus";
@@ -23,6 +21,7 @@ import UserIcon from "@/assets/icons/user.svg";
 import FavIcon from "@/assets/icons/bookmark.svg";
 import FolderIcon from "@/assets/icons/folder.svg";
 import Menu from "./Menu";
+import { useCreateSelfChannelMutation, useLazyQuerySelfChannelQuery } from "@/app/services/channel";
 
 function HomePage() {
   console.log("in home page!!!");
@@ -33,29 +32,6 @@ function HomePage() {
   // if (!success) {
   //   return <Loading reload={true} fullscreen={true} context="home-route" />;
   //
-  const createNewWallet = async () => {
-    debugger;
-    alert("create default wallet for user");
-    const provider = new WsProvider("wss://testnet.vara-network.io");
-    const api = await ApiPromise.create({ provider: provider });
-
-    const keyring = new Keyring({ type: "sr25519" });
-    const mnemonic = mnemonicGenerate();
-    const normalWallet = keyring.addFromUri(mnemonic, { name: "User Default" });
-    const password = "password";
-    const encodedPrivateKey = normalWallet.encodePkcs8(password);
-    localStorage.setItem(KEY_WALLET_PRIVATE_KEY, JSON.stringify(encodedPrivateKey));
-    localStorage.setItem(KEY_WALLET_ADDRESS, normalWallet.address);
-
-    console.log("privateKey key:", encodedPrivateKey);
-    console.log("address key:", normalWallet.address);
-    console.log("memo word:", mnemonic);
-
-    api.disconnect();
-
-    let normalWalletAddress = normalWallet.address;
-    return normalWalletAddress;
-  };
 
   const [logoutConfirm, setLogoutConfirm] = useState(false);
   const loginUid = useAppSelector((store) => store.authData.user?.uid ?? 0, shallowEqual);
@@ -82,7 +58,9 @@ function HomePage() {
 
   //检查用户是否有钱包,如果没有钱包,则生成一个钱包给用户.
   const [checkWalletExist, { isLoading }] = useLazyCheckWalletExistQuery();
+  const [checkSelfGroupExist] = useLazyQuerySelfChannelQuery();
   const [bindWallet2User] = useBindWallet2UserMutation();
+  const [createSelfChannel] = useCreateSelfChannelMutation();
   useEffect(() => {
     const fetchData = async () => {
       const result = await checkWalletExist(localStorage.getItem(KEY_WALLET_ADDRESS) || "");
@@ -93,6 +71,12 @@ function HomePage() {
         let wallet = await createNewWallet();
         bindWallet2User(wallet);
       }
+      const selfGroup = await checkSelfGroupExist();
+      if (selfGroup.data === "null") {
+        // create group
+        createSelfChannel();
+      }
+      console.log("selfGroup is:", selfGroup);
     };
     fetchData();
   }, []);
