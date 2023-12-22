@@ -52,7 +52,6 @@ frame-benchmarking = { version = "4.0.0-dev", default-features = false, git = "h
 frame-system-benchmarking = { version = "4.0.0-dev", default-features = false, git = "https://github.com/paritytech/substrate.git", optional = true, branch = "polkadot-v0.9.31" }
 
 # Local Dependencies
-pallet-zk-snarks = { version = "4.0.0-dev", default-features = false, path = "../pallets/zk-snarks" }
 pallet-zk-poker = { version = "4.0.0-dev", default-features = false, path = "../pallets/zk-poker" }
 
 [build-dependencies]
@@ -77,7 +76,6 @@ std = [
 	"pallet-randomness-collective-flip/std",
 	"pallet-sudo/std",
 	"pallet-timestamp/std",
-	"pallet-zk-snarks/std",
 	"pallet-zk-poker/std",
 	"pallet-transaction-payment-rpc-runtime-api/std",
 	"pallet-transaction-payment/std",
@@ -101,7 +99,7 @@ runtime-benchmarks = [
 	"pallet-balances/runtime-benchmarks",
 	"pallet-grandpa/runtime-benchmarks",
 	"pallet-timestamp/runtime-benchmarks",
-	"pallet-zk-snarks/runtime-benchmarks",
+	"pallet-zk-poker/runtime-benchmarks",
 	"sp-runtime/runtime-benchmarks",
 ]
 try-runtime = [
@@ -114,7 +112,7 @@ try-runtime = [
 	"pallet-grandpa/try-runtime",
 	"pallet-randomness-collective-flip/try-runtime",
 	"pallet-sudo/try-runtime",
-	"pallet-zk-snarks/try-runtime",
+	"pallet-zk-poker/try-runtime",
 	"pallet-timestamp/try-runtime",
 	"pallet-transaction-payment/try-runtime",
 ]
