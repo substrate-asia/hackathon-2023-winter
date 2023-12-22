@@ -67,7 +67,6 @@ Zero-knowledege Proofs: Users can easily and quickly verify the correctness and 
   - 注册登录
   - 账户抽象
   - 需求抽象
-  - 跨链转账
 
 Prototype: https://www.figma.com/file/79vQtcOkQeVd0s6g9Ykonr/Demand-abstraction-AA-Wallet?type=design&node-id=0-1&mode=design
 
