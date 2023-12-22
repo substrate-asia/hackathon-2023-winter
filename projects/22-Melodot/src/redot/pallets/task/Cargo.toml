@@ -1,0 +1,44 @@
+[package]
+name = "pallet-task"
+description = ""
+version = "0.1.0"
+authors = ["DKLee <xiuerdwy@gmail.com>"]
+edition = "2021"
+repository = "https://github.com/ZeroDAO/redot"
+keywords = ["substrate", "pallet", "macro", "configuration"]
+
+[package.metadata.docs.rs]
+targets = ["x86_64-unknown-linux-gnu"]
+
+[dependencies]
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false }
+scale-info = { version = "2.2.0", default-features = false }
+
+# Substrate
+frame-benchmarking = { git = "https://github.com/paritytech/substrate", default-features = false, optional = true, branch = "polkadot-v1.0.0" }
+frame-support = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v1.0.0" }
+frame-system = { git = "https://github.com/paritytech/substrate", default-features = false, branch = "polkadot-v1.0.0" }
+
+# Redot
+redot-core-primitives = { path = "../../crates/core-primitives", default-features = false}
+
+# [dev-dependencies]
+# serde = { version = "1.0.163" }
+
+# # Substrate
+# sp-core = { git = "https://github.com/paritytech/substrate",  branch = "polkadot-v1.0.0" }
+# sp-io = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v1.0.0" }
+# sp-runtime = { git = "https://github.com/paritytech/substrate", branch = "polkadot-v1.0.0" }
+
+[features]
+default = ["std"]
+runtime-benchmarks = ["frame-benchmarking/runtime-benchmarks"]
+std = [
+	"codec/std",
+	"scale-info/std",
+	"frame-benchmarking/std",
+	"frame-support/std",
+	"frame-system/std",
+	"redot-core-primitives/std",
+]
+try-runtime = [ "frame-support/try-runtime" ]
