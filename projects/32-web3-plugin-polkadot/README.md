@@ -11,6 +11,8 @@ Project creation date: **29 Nov 2023**
 Applying for **Category 1: Polkadot ecosystem developer tools**
 
 
+<img src="./docs/images/logo.png">
+
 > npm package: https://www.npmjs.com/package/@conx3/web3-plugin-polkadot/
 > 
 >  playground at: https://github.com/conx3/web3-plugin-polkadot-playground
@@ -67,7 +69,7 @@ And, here are the RPC methods listed inside `substrate` network namespace:
 Note that the `substrate` methods above are not the same as for `polkadot`.
 
 And here is how a custom network that contains all the Rpcs would look like:
-<img src="./docs/images/intellisense-custom-network-with-all-rpcs.png" width=520p>
+<img src="./docs/images/intellisense-custom-network-with-all-rpcs.png" width=520>
 
 So, as shown above, because some RPC methods are not supported on all networks. This plugin takes this into consideration and does not show them to the developer to avoid confusion, especially for those new in this space.
 
@@ -296,3 +298,5 @@ License
 -------
 
 [MIT](https://choosealicense.com/licenses/mit/)
+
+
