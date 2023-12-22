@@ -8,6 +8,8 @@ The `net` folder contains:
 - `Integration`, that combines `Engine` and `NetApiExt`.
 - `Bot`, that implements a simple AI to play against
 
+Basically, you can find a bunch logic here, that is hidden from the end-user. This logic is then used in the **Unity UI**.
+
 # Prerequisites
 - Ensure **Visual Studio 2022** is installed. If not, it can be downloaded from https://visualstudio.microsoft.com/downloads/.
 
