@@ -12,9 +12,9 @@ import {
   SubstrateRpcInterfaceFlatFiltered,
 } from './types/web3.js-friendly/simple-rpc-interfaces-flat-filtered';
 
-import { PolkadotSupportedRpcMethods } from './types/polkadot/supported-rpc-methods';
-import { KusamaSupportedRpcMethods } from './types/kusama/supported-rpc-methods';
-import { SubstrateSupportedRpcMethods } from './types/substrate/supported-rpc-methods';
+import { PolkadotSupportedRpcMethods } from './types/constants/polkadot-supported-rpc-methods';
+import { KusamaSupportedRpcMethods } from './types/constants/kusama-supported-rpc-methods';
+import { SubstrateSupportedRpcMethods } from './types/constants/substrate-supported-rpc-methods';
 import { Filter } from './types/web3.js-friendly/filter-transformers';
 import { SubstrateSimpleRpcInterface } from './interfaces/substrate/augment-api-rpc';
 
@@ -60,7 +60,7 @@ export class PolkaPlugin extends Web3PluginBase<
       ...
    * ```
    */
-  private createRpcMethods(supportedRpcs: readonly string[]) {
+  private createRpcMethods<T>(supportedRpcs: readonly string[]) {
     const returnedRpcMethods: Record<string, any> = {};
     const objectKeys = supportedRpcs.map((rpc) => rpc.split('_', 2)[0]);
     for (let rpcNamespace of objectKeys) {
@@ -78,7 +78,7 @@ export class PolkaPlugin extends Web3PluginBase<
       }
       returnedRpcMethods[rpcNamespace] = endPoints;
     }
-    return returnedRpcMethods;
+    return returnedRpcMethods as T;
   }
 
   // The following commented code contains experiments with using index signature instead of using the method `createRpcMethods`.
@@ -110,15 +110,21 @@ export class PolkaPlugin extends Web3PluginBase<
   //   }
   // };
 
-  public polkadot: PolkadotSimpleRpcInterfaceFiltered;
-  public kusama: KusamaSimpleRpcInterfaceFiltered;
-  public substrate: SubstrateSimpleRpcInterfaceFiltered;
+  public polkadot: { rpc: PolkadotSimpleRpcInterfaceFiltered };
+  public kusama: { rpc: KusamaSimpleRpcInterfaceFiltered };
+  public substrate: { rpc: SubstrateSimpleRpcInterfaceFiltered };
 
   constructor() {
     super();
-    this.polkadot = this.createRpcMethods(PolkadotSupportedRpcMethods) as PolkadotSimpleRpcInterfaceFiltered;
-    this.kusama = this.createRpcMethods(KusamaSupportedRpcMethods) as KusamaSimpleRpcInterfaceFiltered;
-    this.substrate = this.createRpcMethods(SubstrateSupportedRpcMethods) as SubstrateSimpleRpcInterfaceFiltered;
+    this.polkadot = {
+      rpc: this.createRpcMethods(PolkadotSupportedRpcMethods),
+    };
+    this.kusama = {
+      rpc: this.createRpcMethods(KusamaSupportedRpcMethods),
+    };
+    this.substrate = {
+      rpc: this.createRpcMethods(SubstrateSupportedRpcMethods),
+    };
   }
 
   /**
@@ -139,11 +145,11 @@ export class PolkaPlugin extends Web3PluginBase<
     web3: Web3,
     pluginNamespace: NameSpace,
     supportedRpcs: TypeOfSupportedRpcs
-  ): Web3 & { polka: Record<NameSpace, Filter<T, typeof supportedRpcs>> } {
-    (this as any)[pluginNamespace] = this.createRpcMethods(supportedRpcs) as any;
+  ): Web3 & { polka: Record<NameSpace, { rpc: Filter<T, typeof supportedRpcs> }> } {
+    (this as any)[pluginNamespace] = { rpc: this.createRpcMethods(supportedRpcs) };
 
     web3.registerPlugin(this);
-    return web3 as Web3 & { polka: Record<NameSpace, Filter<T, typeof supportedRpcs>> };
+    return web3 as Web3 & { polka: Record<NameSpace, { rpc: Filter<T, typeof supportedRpcs> }> };
   }
 }
 
@@ -151,9 +157,15 @@ export class PolkaPlugin extends Web3PluginBase<
 declare module 'web3' {
   interface Web3 {
     polka: {
-      polkadot: PolkadotSimpleRpcInterfaceFiltered;
-      kusama: KusamaSimpleRpcInterfaceFiltered;
-      substrate: SubstrateSimpleRpcInterfaceFiltered;
+      polkadot: {
+        rpc: PolkadotSimpleRpcInterfaceFiltered;
+      };
+      kusama: {
+        rpc: KusamaSimpleRpcInterfaceFiltered;
+      };
+      substrate: {
+        rpc: SubstrateSimpleRpcInterfaceFiltered;
+      };
     };
   }
 }
