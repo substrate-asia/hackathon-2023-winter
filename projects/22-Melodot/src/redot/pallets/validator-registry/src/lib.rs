@@ -111,6 +111,7 @@ pub mod pallet {
 		// type WeightInfo: WeightInfo;
 
 		/// Defines the upper limit for the number of keys that can be stored.
+		#[pallet::constant]
 		type MaxKeys: Get<u32>;
 
 		/// This type defines the unique identifier for an authority or a trusted node in the
@@ -123,15 +124,12 @@ pub mod pallet {
 			+ MaxEncodedLen;
 
 		/// Defines the upper limit for the number of keys that can be stored.
+		#[pallet::constant]
 		type MaxPending: Get<u32>;
 
 		/// The maximum number of blobs that can be handled.
 		#[pallet::constant]
-		type MaxBlobNum: Get<u32>;
-
-		/// The maximum number of commitments that can be extended.
-		#[pallet::constant]
-		type MaxExtedLen: Get<u32>;
+		type MaxVoteNum: Get<u32>;
 
 		/// This defines the priority for unsigned transactions in the Melo context.
 		#[pallet::constant]
@@ -174,7 +172,7 @@ pub mod pallet {
 		_,
 		Twox64Concat,
 		BlockNumberFor<T>,
-		WeakBoundedVec<AuthIndex, T::MaxBlobNum>,
+		WeakBoundedVec<AuthIndex, T::MaxVoteNum>,
 		ValueQuery,
 	>;
 

@@ -57,8 +57,8 @@ use weights::{BlockExecutionWeight, ExtrinsicBaseWeight, RocksDbWeight};
 use xcm::latest::prelude::BodyId;
 use xcm_executor::XcmExecutor;
 
-/// Import the template pallet.
-pub use pallet_parachain_template;
+pub use pallet_task;
+pub use pallet_validator_registry;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
@@ -458,9 +458,18 @@ impl pallet_collator_selection::Config for Runtime {
 	type WeightInfo = ();
 }
 
-/// Configure the pallet template in pallets/template.
-impl pallet_parachain_template::Config for Runtime {
+impl pallet_task::Config for Runtime {
 	type RuntimeEvent = RuntimeEvent;
+	type MaxMetadataLen = ConstU32<1024>;
+}
+
+impl pallet_validator_registry::Config for Runtime {
+	type RuntimeEvent = RuntimeEvent;
+	type AuthorityId = AuraId;
+	type MaxKeys = ConstU32<100>;
+	type MaxPending = ConstU32<100>;
+	type MaxVoteNum = ConstU32<100>;
+	type MeloUnsignedPriority = ();
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.
@@ -493,8 +502,9 @@ construct_runtime!(
 		CumulusXcm: cumulus_pallet_xcm = 32,
 		DmpQueue: cumulus_pallet_dmp_queue = 33,
 
-		// Template
-		TemplatePallet: pallet_parachain_template = 50,
+		// Redot
+		Task: pallet_task = 80,
+		ValidatorRegistry: pallet_validator_registry = 81,
 	}
 );
 
