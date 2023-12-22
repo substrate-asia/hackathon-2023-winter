@@ -6,8 +6,14 @@
     "@emoji-mart/react": "^1.1.1",
     "@gear-js/api": "^0.35.2",
     "@metamask/onboarding": "^1.0.1",
+    "@openzeppelin/contracts": "^5.0.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@polkadot/api": "^10.11.1",
+    "@polkadot/keyring": "^12.6.1",
+    "@polkadot/util": "^12.6.2",
+    "@polkadot/util-crypto": "^12.6.1",
+    "@polkadot/wasm-crypto": "^7.3.2",
+    "@polkadot/x-randomvalues": "^12.6.2",
     "@react-oauth/google": "^0.11.1",
     "@reduxjs/toolkit": "^1.9.5",
     "@svgr/webpack": "^8.1.0",
@@ -86,9 +92,9 @@
     "workbox-webpack-plugin": "^7.0.0"
   },
   "scripts": {
-    "start": "REACT_APP_BUILD_TIME=$(date +%s) node scripts/start.js",
-    "build": "rm -rf build && REACT_APP_BUILD_TIME=$(date +%s) GENERATE_SOURCEMAP=false node scripts/build.js",
-    "build:release": "rm -rf build && REACT_APP_BUILD_TIME=$(date +%s) REACT_APP_RELEASE=true GENERATE_SOURCEMAP=false node scripts/build.js",
+    "start": "REACT_APP_BUILD_TIME=$(date +%s) REACT_APP_CONTRACT_ADDRESS=0xc87e3c70da3745ddef654869da9ae6fda550e7cc01338a3765e438696363a7af node scripts/start.js",
+    "build": "rm -rf build && REACT_APP_BUILD_TIME=$(date +%s) REACT_APP_CONTRACT_ADDRESS=0xc87e3c70da3745ddef654869da9ae6fda550e7cc01338a3765e438696363a7af GENERATE_SOURCEMAP=false node scripts/build.js",
+    "build:release": "rm -rf build && REACT_APP_BUILD_TIME=$(date +%s) REACT_APP_CONTRACT_ADDRESS=0xc87e3c70da3745ddef654869da9ae6fda550e7cc01338a3765e438696363a7af REACT_APP_RELEASE=true GENERATE_SOURCEMAP=false node scripts/build.js",
     "deploy:demo": "REACT_APP_OFFICIAL_DEMO=true yarn build && gh-pages -d build",
     "startwin": "node scripts/start.js"
   },

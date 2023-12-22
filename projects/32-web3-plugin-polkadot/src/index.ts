@@ -1,4 +1,8 @@
 
-export { PolkadotPlugin } from './polkadot-plugin';
+export { PolkaPlugin } from './polka-plugin';
 
-export * from '@polkadot/rpc-core/types/jsonrpc';
+export {
+  PolkadotSimpleRpcInterfaceFiltered,
+  KusamaSimpleRpcInterfaceFiltered,
+  SubstrateSimpleRpcInterfaceFiltered,
+} from './types/web3.js-friendly/simple-rpc-interfaces-filtered';

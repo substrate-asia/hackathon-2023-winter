@@ -1,0 +1,51 @@
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="65dp"
+    android:background="@color/white"
+    android:backgroundTint="@color/white">
+    <!-- Your item content goes here -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/textView"
+        android:layout_width="316dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="5dp"
+        android:background="@drawable/border"
+        android:gravity="start|top|center_vertical"
+        android:paddingStart="15dp"
+        android:text="Item Text"
+        android:textColor="#000000"
+        android:textSize="17sp"
+        app:backgroundTint="#8C8C8C"
+        app:icon="@drawable/icons8_next_64"
+        app:iconGravity="end"
+        app:iconPadding="100dp"
+        app:iconSize="20dp"
+        app:iconTint="#3E3E3E"
+        tools:iconPadding="30dp" />
+
+    <TextView
+        android:id="@+id/creationDateTextView"
+        style="@style/AppTheme"
+        android:layout_width="150dp"
+        android:layout_height="53dp"
+
+        android:layout_below="@id/textView"
+        android:layout_marginStart="120dp"
+        android:gravity="bottom|start"
+        android:paddingStart="1dp"
+        android:text="Creation Date" />
+
+    <TextView
+        android:id="@+id/textView7"
+        style="@style/AppTheme"
+        android:layout_width="wrap_content"
+        android:layout_height="53dp"
+        android:layout_marginStart="40dp"
+        android:gravity="bottom|start"
+        android:paddingStart="1dp"
+        android:text="Generated on" />
+</androidx.cardview.widget.CardView>

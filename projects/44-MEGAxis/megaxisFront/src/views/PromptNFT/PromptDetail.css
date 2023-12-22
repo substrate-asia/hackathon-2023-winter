@@ -1,0 +1,198 @@
+.lower {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 20px;
+}
+.detail-card {
+    height: 90%;
+    width: 90%;
+    margin: 0px 20px 20px 80px;
+    outline: solid 2px #777;
+    outline-offset: -2px;
+    border: 5px  #777777;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #1e1e1e 0%, rgba(55, 57, 56, 0) 82.27%);
+}
+.img-card {
+    width: 100%;
+    height: 220px;
+    border-radius: 10px 10px 0 0;
+    background-image: linear-gradient(180deg, #000b7bff 0%, #ff7676ff 100%);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: auto;
+}
+.close-icon {
+    float: left;
+    margin-left: 10px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+.file-icon {
+    margin-top: 40px;
+    text-align: center;
+    width: 150px;
+    height: 150px;
+}
+.title-card{
+    width: 100%;
+    height: 130px;
+}
+.prompt-title {
+    color: #fff;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+    text-transform: capitalize;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+    margin-top: 20px;
+}
+.first-info {
+    margin-top: 20px;
+    color: #ccc;
+    font-size: 16px;
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+}
+.check-box{
+    float: left;
+    margin-left: 15px;
+}
+
+.small-name {
+    margin-left: 12px;
+}
+
+.author-info {
+    padding-left: 370px;
+    float:left;
+}
+
+.tag-icon{
+    margin-left: 65px;
+}
+
+.second-info {
+    clear: both;
+    color: #ccc;
+    font-size: 16px;
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+}
+.likes-slot {
+    margin-left: 2px;
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+}
+
+.likes-square {
+    width: 25%;
+    height: 50px;
+    float: left;
+    outline: solid 2px #777;
+    margin-left: -2px;
+    outline-offset: -2px;
+    display: flex;
+    align-items: center;
+}
+.alert-square{
+    width: 12.9%;
+    height: 50px;
+    float: left;
+    outline: solid 2px #777;
+    outline-offset: -2px;
+    margin-left: -2px;
+}
+
+.icon1 {
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+
+}
+
+.likes-font {
+    color: #fff;
+    font-size: 16px;
+    white-space: nowrap;
+    flex-direction: column;
+
+    margin:0 8px; /* 调整间距大小 */
+}
+
+.prompt-desc {
+    padding-left: 20px;
+    padding-top: 20px;
+    width: 90%;
+    height: 110px;
+    text-align: left;
+    color: #fff;
+    font-size: 16px;
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+    overflow: auto;
+}
+.price-tag {
+    color: #ff7676;
+    font-size: 30px;
+    font-weight: bold;
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+    text-transform: capitalize;
+    width: 100%;
+    height: 32px;
+    text-align: center;
+    align-items: center;
+    text-shadow: 0px 4px 14px #000000d9;
+    flex-direction: column;
+}
+.buy-area{
+    margin-top: 20px;
+    width: 100%;
+
+}
+.buy-area {
+    width: 600px;
+    margin: 0 auto;
+}
+.buy-button{
+    float: left;
+    width: 200px;
+    height: 45px;
+    margin-top :20px;
+    margin-left: 50px;
+    border: 3px solid #FF7676;
+    border-radius: 10px;
+    /*border-image: linear-gradient(to right, #7C88FF, #FF7676);*/
+    color: #fff;
+    font-size: 18px;
+    font-family: Roboto, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans',
+    'Liberation Sans', sans-serif;
+    text-align: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.buy-button:hover {
+    background-image: linear-gradient(to bottom, #000B7B, #FF7676);
+    border: none;
+    cursor: pointer;
+}
+
+.buy-word {
+    line-height: 42px
+}
+
+.poyu{
+    width: 20px;
+    height: 20px;
+    color: #ffffff;
+    margin-top: 10px;
+}

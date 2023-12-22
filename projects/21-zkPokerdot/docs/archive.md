@@ -125,6 +125,10 @@ sequenceDiagram
     c->>p: unmask
 
     alt 
+        Note over a, c: Everyone peeks at their own cards secretly.
+    end
+
+    alt 
         a->>p: call
         Note over a, c: Can also be called by Bob/Carol
     end
@@ -132,6 +136,12 @@ sequenceDiagram
     a->>p: unmask
     b->>p: unmask
     c->>p: unmask
+
+    alt 
+        Note over a, c: Everyone can see the landlord cards.
+    end
+
+
 
     loop Turn
         a->>p: play
@@ -173,6 +183,7 @@ sequenceDiagram
     - https://www.bilibili.com/video/BV1RL411b7Nh/
     - https://github.com/Zkvers/substrate-zk
     - https://substrate-developer-hub.github.io/substrate-how-to-guides/docs/intro
+    - https://polkadot.js.org/
 - 密码学
     - https://www.youtube.com/watch?v=KGs3A3GMcuw
     - https://geometry.xyz/notebook/mental-poker-in-the-age-of-snarks-part-1

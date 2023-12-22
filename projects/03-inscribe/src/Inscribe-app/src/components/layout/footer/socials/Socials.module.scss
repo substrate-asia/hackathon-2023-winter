@@ -1,0 +1,12 @@
+.socials {
+  display: flex;
+
+  & > *:not(:last-child) {
+    margin-right: 24px;
+  }
+
+  /* 去除列表项的默认样式 */
+  li {
+    list-style: none;
+  }
+}
