@@ -1,0 +1,18 @@
+{
+    "moonbase": {
+        "type": "evm",
+        "name": "Moonbase Alpha",
+        "wormholeChainId": 16,
+        "chain": "MOON",
+        "chainId": 1287,
+        "hex": "0x507",
+        "networkId": 1287,
+        "nativeCurrency": {
+            "name": "Dev",
+            "symbol": "DEV",
+            "decimals": 18
+        },
+        "rpc": "https://rpc.api.moonbase.moonbeam.network"
+    },
+    "price_feed_address": "0x537879A0beA294c1ce04161Ae827919e92C23e92"
+}

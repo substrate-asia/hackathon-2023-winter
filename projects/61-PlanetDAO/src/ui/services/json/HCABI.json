@@ -1,0 +1,60 @@
+{
+    "abi":[
+        {
+            "inputs": [
+                {
+                    "internalType": "uint32",
+                    "name": "ethereumDomain",
+                    "type": "uint32"
+                },
+                {
+                    "internalType": "address",
+                    "name": "igpAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "gasAmount",
+                    "type": "uint256"
+                }
+            ],
+            "name": "processMessage",
+            "outputs": [],
+            "stateMutability": "payable",
+            "type": "function"
+        },
+        {
+            "inputs": [
+                {
+                    "internalType": "uint32",
+                    "name": "ethereumDomain",
+                    "type": "uint32"
+                },
+                {
+                    "internalType": "address",
+                    "name": "routerAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "address",
+                    "name": "toAddress",
+                    "type": "address"
+                },
+                {
+                    "internalType": "uint256",
+                    "name": "value",
+                    "type": "uint256"
+                },
+                {
+                    "internalType": "bytes",
+                    "name": "data",
+                    "type": "bytes"
+                }
+            ],
+            "name": "sendTransaction",
+            "outputs": [],
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }
+    ]
+}
