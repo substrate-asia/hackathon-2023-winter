@@ -109,7 +109,7 @@ export function UtilsProvider({ children }) {
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
 
-      let encodedCallData = PlanetDAOContract.add_donation(ideas_id, `${amount * 1e18}`, window?.ethereum?.selectedAddress?.toLocaleLowerCase()).encodeABI();
+      let encodedCallData = PlanetDAOContract.add_donation(ideas_id, `${amount * 1e18}`, Number(window.userid)).encodeABI();
 
       callData.push(encodedCallData);
 
@@ -146,7 +146,7 @@ export function UtilsProvider({ children }) {
 
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
-      let encodedCallData3 = PlanetDAOContract.add_donation(ideas_id, `${amount * 1e18}`, window?.ethereum?.selectedAddress?.toLocaleLowerCase()).encodeABI();
+      let encodedCallData3 = PlanetDAOContract.add_donation(ideas_id, `${amount * 1e18}`, Number(window.userid)).encodeABI();
       callData.push(encodedCallData3);
 
       //Sending Batch Transaction
@@ -245,7 +245,7 @@ export function UtilsProvider({ children }) {
       } else if (voteType == 'abstain') {
         await window.sendTransaction(await ConvictionVotingContract.populateTransaction.voteSplitAbstain(Number(PollIndex), Number(AbstainInfo[0]), Number(AbstainInfo[1], Number(AbstainInfo[2]))));
       }
-      await window.sendTransaction(await PlanetDAOContract.populateTransaction.create_goal_ideas_vote(Number(Goalid), Number(id), window?.ethereum?.selectedAddress?.toLocaleLowerCase()));
+      await window.sendTransaction(await PlanetDAOContract.populateTransaction.create_goal_ideas_vote(Number(Goalid), Number(id), window?.ethereum?.selectedAddress?.toLocaleLowerCase(),Number(window.userid)));
     }
   }
 

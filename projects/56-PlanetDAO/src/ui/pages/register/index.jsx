@@ -48,8 +48,11 @@ export default function Register() {
   }
 
   async function registerAccount() {
-    const id = toast.loading('Registering User ...');
+    const id = toast.loading('Uploading IPFS ...');
     const metadata = image.type ? await client.storeBlob(image) : '';
+ 
+    toast.update(id, { render: "Registering User...", isLoading: true });
+
     const doAfter = () => {
       setTimeout(() => {
         window.location.href = '/login';

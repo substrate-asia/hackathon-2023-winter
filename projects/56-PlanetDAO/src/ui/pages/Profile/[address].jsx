@@ -10,9 +10,14 @@ import Link from 'next/link';
 import Card from '../../components/components/Card';
 import Badge from '../../components/components/Badge';
 
+import { usePolkadotContext } from '../../contexts/PolkadotContext';
+
+
 export default function Profile() {
   //Variables
   const { contract, signerAddress } = useContract();
+
+  const { api, getUserInfoById, PolkadotLoggedIn } = usePolkadotContext();
   const [Donated, setDonated] = useState([]);
   const [UserBadges, setUserBadges] = useState({
     dao: false,
@@ -24,14 +29,16 @@ export default function Profile() {
     comment: false,
     reply: false
   });
+  
   const [TotalRead, setTotalRead] = useState(0);
   const [Replied, setReplied] = useState(0);
+  const [UserInfo, setUserInfo] = useState({});
   const [Daos, setDaos] = useState([]);
   const [Ideas, setIdeas] = useState([]);
   const [DontatedIdeas, setDontatedIdeas] = useState([]);
   const [RepliesIdeas, setRepliesIdeas] = useState([]);
   const [AllMessages, setAllMessages] = useState([]);
-  const [address, setAddress] = useState('');
+  const [userid, setUserid] = useState('');
   const [tabIndex, setTabIndex] = useState(0);
   const [loading, setLoading] = useState(true);
 
@@ -41,21 +48,22 @@ export default function Profile() {
 
   async function fetchContractData() {
     setLoading(true);
-    setAddress(window.location.pathname.replace('/Profile/', ''));
-
+    let user_id = Number(window.location.pathname.replace('/Profile/', ''));
+    setUserid(user_id);
+    setUserInfo(await getUserInfoById(user_id));
     if (!contract) return false;
     //Fetching data from Smart contract
     let allDaos = await contract.get_all_daos();
     let allIdeas = await contract.get_all_ideas();
-    let donated = Number(await contract._donated(address.toLocaleLowerCase())) / 1e18;
-
-    setUserBadges(await contract._user_badges(address.toLocaleLowerCase()));
+    let donated = Number(await contract._donated(Number(user_id))) / 1e18;
+    let allBadges = await contract._user_badges(user_id);
+   
 
     let total_read = 0;
     let _message_read_ids = await contract._message_read_ids();
     for (let i = 0; i < _message_read_ids; i++) {
       let ReadURI = await contract.all_read_messages(i);
-      if (ReadURI.wallet.toLocaleLowerCase() == address.toLocaleLowerCase()) {
+      if (ReadURI.wallet == user_id) {
         total_read += 1;
       }
     }
@@ -63,7 +71,8 @@ export default function Profile() {
     let founddao = [];
     for (let i = 0; i < allDaos.length; i++) {
       let dao_info = JSON.parse(allDaos[i]);
-      if (dao_info.properties.wallet.description.toLocaleLowerCase() == address.toLocaleLowerCase()) {
+      if (dao_info.properties.user_id.description == user_id) {
+        allBadges.dao = true;
         dao_info.id = i;
         let goal = await contract.get_all_goals_by_dao_id(i);
         dao_info.goals = goal.filter((e) => {
@@ -85,7 +94,7 @@ export default function Profile() {
       let idea_uri = JSON.parse(idea_uri_json);
       idea_uri.id = i;
 
-      if (idea_uri.properties.wallet.description.toLocaleLowerCase() == address.toLocaleLowerCase()) {
+      if (idea_uri.properties.user_id.description == user_id) {
         let votes = await contract.get_ideas_votes_from_goal(goalid, i);
         idea_uri.votes = votes;
 
@@ -101,7 +110,7 @@ export default function Profile() {
     let ideasURIS = [];
     for (let i = 0; i < _donations_ids; i++) {
       let donationURI = await contract._donations(i);
-      if (donationURI.wallet.toLocaleLowerCase() == address.toLocaleLowerCase()) {
+      if (donationURI.userid == user_id) {
         let existsIdea = ideasURIS.findIndex((e) => e.id == Number(donationURI.ideas_id));
         if (existsIdea != -1) {
           ideasURIS[existsIdea].donation += Number(donationURI.donation) / 1e18;
@@ -125,6 +134,7 @@ export default function Profile() {
     setIdeas(foundidea);
     setDontatedIdeas(ideasURIS);
     setRepliesIdeas(MessagesIdeasURIS);
+    setUserBadges(allBadges);
 
     setAllMessages(allMessages);
 
@@ -133,7 +143,6 @@ export default function Profile() {
 
   function logout() {
     window.localStorage.setItem('loggedin', '');
-    window.localStorage.setItem('loggedin2', '');
     window.localStorage.setItem('login-type', '');
     window.location.href = '/';
   }
@@ -450,12 +459,16 @@ export default function Profile() {
       <div className={`gap-8 flex flex-col w-full bg-gohan pt-10 border-beerus border`}>
         <div className="container flex w-full justify-between relative">
           <div className="flex gap-2 items-center">
-            <Avatar size="2xl" className="rounded-full border-2 border-piccolo bg-goku">
-              <GenericUser className="text-moon-32" />
-            </Avatar>
-            <Link href={`https://moonbase.moonscan.io/address/${address}`} rel="noreferrer" target="_blank">
-              <h1 className="font-bold">{address}</h1>
-            </Link>
+            {UserInfo?.imgIpfs?.toString() !== '' ? (
+              <img src={'https://' + UserInfo?.imgIpfs?.toString()  + '.ipfs.nftstorage.link'} alt="" className="rounded-full border-2 w-12 h-12 object-cover border-piccolo" />
+            ) : (
+              <Avatar size="lg" className="rounded-full border-2 border-piccolo bg-goku">
+                <GenericUser className="text-moon-32" />
+              </Avatar>
+            )}
+
+            <h1 className="font-bold">{UserInfo?.fullName?.toString()}</h1>
+
           </div>
           <div className="flex flex-col gap-2">
             <Button variant="secondary" iconLeft={<SoftwareLogOut />} onClick={logout}>

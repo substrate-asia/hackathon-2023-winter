@@ -10,7 +10,7 @@ contract PlanetDAO {
         string finished;
     }
     struct goal_uri_struct {
-        uint256 dao_id;
+        string dao_id;
         string goal_uri;
     }
 
@@ -22,7 +22,7 @@ contract PlanetDAO {
 
     struct donation_struct {
         uint256 ideas_id;
-        string wallet;
+        uint256 userid;
         uint256 donation;
     }
 
@@ -45,7 +45,7 @@ contract PlanetDAO {
     struct message_read_struct {
         uint256 message_id;
         uint256 ideas_id;
-        string wallet;
+        uint256 user_id;
         string msg_type;
     }
     struct reply_struct {
@@ -62,11 +62,11 @@ contract PlanetDAO {
 
     struct join_struct {
         uint256 daoid;
-        string wallet;
+        uint256 user_id;
     }
 
     struct user_badge_struct {
-        string wallet;
+        uint256 user_id;
         bool dao;
         bool joined;
         bool goal;
@@ -92,7 +92,7 @@ contract PlanetDAO {
 
     mapping(uint256 => goal_uri_struct) public _goal_uris; //_goal_ids             => (Goal)                   Dao ID + Goal URI
     mapping(uint256 => ideas_uri_struct) public _ideas_uris; //_ideas_ids            => (Ideas)                  Goal ID + Ideas URI
-    mapping(string => uint256) public _donated; //string            => (Donated to ideas)                amount
+    mapping(uint256 => uint256) public _donated; //uint256            => (Donated to ideas)                amount
     mapping(uint256 => donation_struct) public _donations; //uint256            => donation_struct
     mapping(uint256 => smart_contract_uri_struct) public _smart_contracts_uris; //_smart_contract_ids   => (Ideas Smart contract)   Goal ID + Ideas URI
     mapping(uint256 => goal_ideas_votes_struct) public all_goal_ideas_votes; //_ideas_vote_ids       => (Vote)                   Goal ID + Ideas ID + Wallet
@@ -102,14 +102,14 @@ contract PlanetDAO {
     mapping(uint256 => message_read_struct) public all_read_messages; // all_read_messages        => _message_read_ids + message_read_struct
 
     mapping(uint256 => reply_struct) public all_replies; // all_messages        => _reply_ids + reply_struct
-    mapping(string => user_badge_struct) public _user_badges; //string            => user_badge_struct
+    mapping(uint256 => user_badge_struct) public _user_badges; //user_id            => user_badge_struct
 
     //Daos
-    function create_dao(string memory _dao_wallet, string memory _dao_uri, string memory _template) public returns (uint256) {
+    function create_dao(string memory _dao_wallet, string memory _dao_uri, string memory _template,uint256 user_id) public returns (uint256) {
         //Create Dao into _dao_uris
         _dao_uris[_dao_ids] = dao_uri_struct(_dao_wallet, _dao_uri, 'False');
         _template_uris[_dao_ids] = _template;
-        _user_badges[_dao_wallet].dao = true;
+        _user_badges[user_id].dao = true;
         _dao_ids++;
 
         return _dao_ids;
@@ -141,10 +141,10 @@ contract PlanetDAO {
     }
 
     //Goals
-    function create_goal(string memory _goal_uri, uint256 _dao_id,string memory _wallet) public returns (uint256) {
+    function create_goal(string memory _goal_uri, string memory  _dao_id,uint256 _user_id) public returns (uint256) {
         //Create goal into _goal_uris
         _goal_uris[_goal_ids] = goal_uri_struct(_dao_id, _goal_uri);
-        _user_badges[_wallet].goal = true;
+        _user_badges[_user_id].goal = true;
         _goal_ids++;
 
         return _goal_ids;
@@ -165,12 +165,12 @@ contract PlanetDAO {
         return _StoreInfo;
     }
 
-    function get_all_goals_by_dao_id(uint256 _dao_id) public view returns (string[] memory) {
+    function get_all_goals_by_dao_id(string memory _dao_id) public view returns (string[] memory) {
         //Getting all goals by dao id
         string[] memory _StoreInfo = new string[](_goal_ids);
         uint256 _store_id;
         for (uint256 i = 0; i < _goal_ids; i++) {
-            if (_goal_uris[i].dao_id == _dao_id) {
+            if (keccak256(bytes(_goal_uris[i].dao_id)) == keccak256(bytes(_dao_id))) {
                 _StoreInfo[_store_id] = _goal_uris[i].goal_uri;
                 _store_id++;
             }
@@ -194,10 +194,10 @@ contract PlanetDAO {
     }
 
     //Ideas
-    function create_ideas(string memory _ideas_uri, uint256 _goal_id, string[] memory _smart_contracts,string memory _wallet) public returns (uint256) {
+    function create_ideas(string memory _ideas_uri, uint256 _goal_id, string[] memory _smart_contracts,uint256 _user_id) public returns (uint256) {
         //Create ideas into _ideas_uris
         _ideas_uris[_ideas_ids] = ideas_uri_struct(_goal_id, _ideas_uri, 0);
-        _user_badges[_wallet].ideas = true;
+        _user_badges[_user_id].ideas = true;
         _ideas_ids++;
 
         for (uint256 i = 0; i < _smart_contracts.length; i++) {
@@ -216,24 +216,24 @@ contract PlanetDAO {
         _ideas_uris[_ideas_id].ideas_uri = _ideas_uri;
     }
 
-    function add_donation(uint256 _ideas_id, uint256 _doantion, string memory _donator) public {
-        _user_badges[_donator].donation = true;
+    function add_donation(uint256 _ideas_id, uint256 _doantion,  uint256 _userid) public {
+        _user_badges[_userid].donation = true;
         _ideas_uris[_ideas_id].donation += _doantion;
-        _donated[_donator] += _doantion;
-        _donations[_donations_ids] = donation_struct(_ideas_id, _donator, _doantion);
+        _donated[_userid] += _doantion;
+        _donations[_donations_ids] = donation_struct(_ideas_id, _userid, _doantion);
         _donations_ids++;
     }
 
-    function join_community(uint256 dao_id, string memory person) public {
+    function join_community(uint256 dao_id, uint256 person) public {
         _user_badges[person].joined = true;
-        _joined_person[_join_ids] = join_struct({daoid: dao_id, wallet: person});
+        _joined_person[_join_ids] = join_struct({daoid: dao_id, user_id: person});
         _join_ids++;
     }
 
-    function is_person_joined(string memory wallet) public view returns (bool) {
-        //Getting goal id by uri
+    function is_person_joined( uint256 person) public view returns (bool) {
+ 
         for (uint256 i = 0; i < _join_ids; i++) {
-            if (keccak256(bytes(_joined_person[i].wallet)) == keccak256(bytes(wallet))) return true;
+            if (_joined_person[i].user_id == person) return true;
         }
 
         return false;
@@ -285,8 +285,8 @@ contract PlanetDAO {
     }
 
     //Votes
-    function create_goal_ideas_vote(uint256 _goal_id, uint256 _ideas_id, string memory _wallet) public returns (uint256) {
-         _user_badges[_wallet].vote = true;
+    function create_goal_ideas_vote(uint256 _goal_id, uint256 _ideas_id, string memory _wallet, uint256 _user_id) public returns (uint256) {
+         _user_badges[_user_id].vote = true;
         //Create votes into all_goal_ideas_votes
         all_goal_ideas_votes[_ideas_vote_ids] = goal_ideas_votes_struct(_goal_id, _ideas_id, _wallet);
         _ideas_vote_ids++;
@@ -306,8 +306,8 @@ contract PlanetDAO {
     }
 
     //Messages
-    function sendMsg(uint256 _ideas_id, string memory _message, string memory _sender) public returns (uint256) {
-            _user_badges[_sender].comment = true;
+    function sendMsg(uint256 _ideas_id, string memory _message, string memory _sender, uint256 _user_id) public returns (uint256) {
+            _user_badges[_user_id].comment = true;
         //Create messsage into all_messages
         all_messages[_message_ids] = message_struct(_message_ids, _ideas_id, _message, _sender);
         _message_ids++;
@@ -329,8 +329,8 @@ contract PlanetDAO {
         return _All_Ideas_Messages;
     }
 
-    function sendReply(uint256 _message_id, string memory _reply,uint256 ideas_id,string memory _wallet) public returns (uint256) {
-          _user_badges[_wallet].reply = true;
+    function sendReply(uint256 _message_id, string memory _reply,uint256 ideas_id,uint256 _userid) public returns (uint256) {
+          _user_badges[_userid].reply = true;
         //Create reply into all_replies
         all_replies[_reply_ids] = reply_struct(_reply_ids, _message_id,ideas_id, _reply);
         _reply_ids++;
@@ -352,7 +352,7 @@ contract PlanetDAO {
         return _All_Messages_Replys;
     }
 
-    function sendReadMsg(uint256 _message_id, uint256 _ideas_id,string memory _wallet, string memory msg_type) public returns (uint256) {
+    function sendReadMsg(uint256 _message_id, uint256 _ideas_id,uint256 _wallet, string memory msg_type) public returns (uint256) {
         //Create messsage into all_messages
         all_read_messages[_message_read_ids] = message_read_struct(_message_id, _ideas_id, _wallet,msg_type);
         _message_read_ids++;
@@ -392,14 +392,5 @@ contract PlanetDAO {
         _ideas_vote_ids = 0;
     }
 
-    function addTempData() public {
-        create_dao(
-            '0x86bb6d6e18c5eeaca1e83c1e6162cc433dcc70a4',
-            '{"title":"Asset Metadata","type":"object","properties":{"Title":{"type":"string","description":"Lake Nona, Orlando US"},"Description":{"type":"string","description":""},"Start_Date":{"type":"string","description":"2023-08-16T11:14"},"logo":{"type":"string","description":{"url":"https://bafybeicb5yy36ocs4yulph6zpx7ggsyeginsjwnft7ml7cxojywpbsjuq4.ipfs.nftstorage.link","type":"image/png"}},"wallet":{"type":"string","description":"0x86bb6d6e18c5eeaca1e83c1e6162cc433dcc70a4"},"SubsPrice":{"type":"number","description":"0.05"},"typeimg":{"type":"string","description":"Dao"},"allFiles":[{"url":"https://bafybeicb5yy36ocs4yulph6zpx7ggsyeginsjwnft7ml7cxojywpbsjuq4.ipfs.nftstorage.link","type":"image/png"}]}}',
-            '<body><div id="dao-container"> <div class="flex flex-col gap-8"><img id="dao-image" src="https://bafybeicb5yy36ocs4yulph6zpx7ggsyeginsjwnft7ml7cxojywpbsjuq4.ipfs.nftstorage.link"/></div><div id="goal-container" class="flex flex-col gap-8">\n\n  </div></div></div></body><style>* { box-sizing: border-box; } body {margin: 0;}#dao-title{width:78%;}#iqokj{flex-direction:row-reverse;display:flex;}.py-2.px-4.gap-2.text-moon-14.rounded-moon-i-sm.relative.z-0.flex.justify-center.items-center.font-medium.no-underline.overflow-hidden.select-none.outline-none.transition.duration-200.active\\:scale-90.focus-visible\\:shadow-focus.btn-primary.create-goal-block.{position:relative;right:0px;}.py-2.px-4.gap-2.text-moon-14.rounded-moon-i-sm.z-0.flex.justify-center.items-center.font-medium.no-underline.overflow-hidden.select-none.outline-none.transition.duration-200.active\\:scale-90.focus-visible\\:shadow-focus.btn-primary.create-goal-block.{right:10px;position:absolute;}</style>'
-        );
-        create_goal('{"title":"Asset Metadata","type":"object","properties":{"Title":{"type":"string","description":"Renewable energy"},"Description":{"type":"string","description":"Our DAO is starting it\'s own renewable energy company that delivers energy for the whole community"},"Budget":{"type":"string","description":"$1,000,000"},"End_Date":{"type":"string","description":"2023-08-31T22:40"},"wallet":{"type":"string","description":"0x86bb6d6e18c5eeaca1e83c1e6162cc433dcc70a4"},"logo":{"type":"string","description":{"url":"https://bafybeic5g4xvj7myrgkb62lenld7orpl2hrspmzlzcdbzpyotc33tqygpe.ipfs.nftstorage.link","type":"image/jpeg"}},"allFiles":[{"url":"https://bafybeic5g4xvj7myrgkb62lenld7orpl2hrspmzlzcdbzpyotc33tqygpe.ipfs.nftstorage.link","type":"image/jpeg"}]}}', 0, '0x86bb6d6e18c5eeaca1e83c1e6162cc433dcc70a4');
-        string[] memory row;
-        create_ideas('{"title":"Asset Metadata","type":"object","properties":{"Title":{"type":"string","description":"Solar panels on the Consequences Nona community center "},"Description":{"type":"string","description":"We can ins\\n"},"StructureLeft":{"type":"string","description":["Representatives Berlin","Community","Children"]},"StructureRight":{"type":"string","description":["20%","70%","10%"]},"Qoutation":{"link":"https://uploadify.net/5273d350dfd001d1/quotation_Consequences_Nona_community_center.pdf","prize":"$48,071.55"},"wallet":{"type":"string","description":"0xD60bC0b00c1D8a718FB6fDeDc4466c7A1180868c"},"logo":{"type":"string","description":{"url":"https://bafybeif4fk6twikkcyopglhppdo7dd3l34bm6qedje3mxftec5e7b4he54.ipfs.nftstorage.link","type":"image/png"}},"allFiles":[{"url":"https://bafybeif4fk6twikkcyopglhppdo7dd3l34bm6qedje3mxftec5e7b4he54.ipfs.nftstorage.link","type":"image/png"}]}}', 0, row, '0x86bb6d6e18c5eeaca1e83c1e6162cc433dcc70a4');
-    }
+   
 }

@@ -7,6 +7,7 @@ import Loader from '../../../../components/components/Loader';
 import useContract from '../../../../services/useContract';
 import CreateIdeaModal from '../../../../features/CreateIdeaModal';
 import EmptyState from '../../../../components/components/EmptyState';
+import Image from 'next/image';
 
 export default function Goal() {
   //Variables
@@ -83,7 +84,7 @@ export default function Goal() {
           End_Date: goalURI.properties.End_Date?.description,
           wallet: goalURI.properties.wallet.description,
           logo: goalURI.properties.logo.description?.url,
-          isOwner: goalURI.properties.wallet.description.toString().toLocaleLowerCase() === signerAddress.toString().toLocaleLowerCase() ? true : false
+          isOwner: goalURI.properties.user_id.description === Number(window.userid) ? true : false
         });
 
         setLoading(false);
@@ -115,7 +116,7 @@ export default function Goal() {
         <div className="gap-8 flex flex-col w-full bg-gohan pt-10 border-beerus border">
           <div className="container flex w-full justify-between">
             <div className="flex flex-col gap-1 overflow-hidden">
-              <h5 className="font-semibold">Harvard University &gt; Goals</h5>
+              <h5 className="font-semibold">Community &gt; Goals</h5>
               <h1 className="text-moon-32 font-bold">{GoalURI.Title}</h1>
               <h3 className="flex gap-2 whitespace-nowrap">
                 <div>
@@ -133,9 +134,9 @@ export default function Goal() {
               <Button iconLeft={<ControlsPlus />} onClick={openCreateIdeaModal}>
                 Create idea
               </Button>
-              <Button iconLeft={<GenericEdit />} variant="secondary">
+              {/* <Button iconLeft={<GenericEdit />} variant="secondary">
                 Edit
-              </Button>
+              </Button> */}
             </div>
           </div>
           <div className="container">
@@ -147,7 +148,16 @@ export default function Goal() {
             </Tabs>
           </div>
         </div>
-        {tabIndex === 0 && <div className="container">{GoalURI.Description}</div>}
+        {tabIndex === 0 && (
+          <div className="container flex flex-col gap-6">
+            <p>{GoalURI.Description}</p>
+            {GoalURI.logo && (
+              <div className="relative w-auto max-[w-720px] h-[480px] object-contain">
+                <Image src={GoalURI.logo} alt="" fill className="object-contain" />
+              </div>
+            )}
+          </div>
+        )}
         {tabIndex === 1 && (
           <div className="flex flex-col gap-8 container items-center">
             <Loader element={list.length > 0 ? list.map((listItem, index) => <IdeaCard item={listItem} key={index} />) : <EmptyState icon={<GenericIdea className="text-moon-48" />} label="This goal doesn’t have any ideas yet." />} width={768} height={236} many={3} loading={loading} />{' '}

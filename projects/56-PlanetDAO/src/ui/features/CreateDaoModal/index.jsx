@@ -6,14 +6,17 @@ import React, { useState } from 'react';
 import UseFormInput from '../../components/components/UseFormInput';
 import UseFormTextArea from '../../components/components/UseFormTextArea';
 import useContract from '../../services/useContract';
+import { usePolkadotContext } from '../../contexts/PolkadotContext';
 
 import isServer from '../../components/isServer';
 import AddImageInput from '../../components/components/AddImageInput';
 import ImageListDisplay from '../../components/components/ImageListDisplay';
+import { toast } from 'react-toastify';
 
 export default function CreateDaoModal({ open, onClose }) {
   const [DaoImage, setDaoImage] = useState([]);
-  const { contract, signerAddress, sendTransaction, formatTemplate } = useContract();
+  const { api, showToast, userWalletPolkadot, userSigner, PolkadotLoggedIn } = usePolkadotContext();
+  const { contract, sendTransaction, formatTemplate } = useContract();
   const router = useRouter();
   //Storage API for images and videos
   const NFT_STORAGE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJDMDBFOGEzZEEwNzA5ZkI5MUQ1MDVmNDVGNUUwY0Q4YUYyRTMwN0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NDQ3MTgxOTY2NSwibmFtZSI6IlplbmNvbiJ9.6znEiSkiLKZX-a9q-CKvr4x7HS675EDdaXP622VmYs8';
@@ -44,7 +47,7 @@ export default function CreateDaoModal({ open, onClose }) {
   const [SubsPrice, SubsPriceInput] = UseFormInput({
     defaultValue: '',
     type: 'text',
-    placeholder: 'Subscription per month (in DEV)',
+    placeholder: 'Subscription per month (in $)',
     id: 'subs_price'
   });
 
@@ -61,16 +64,6 @@ export default function CreateDaoModal({ open, onClose }) {
     CheckTransaction();
   }
 
-  //Creating plugin function
-  async function CreatePlugin(src) {
-    const output = `<html><head></head><body><iframe src="${src}" style="width: 100%;height: 100%;" /></body></html>`;
-    // Download it
-    const blob = new Blob([output]);
-    const fileDownloadUrl = URL.createObjectURL(blob);
-    downloadURI(fileDownloadUrl, 'Generated Plugin.html');
-    console.log(output);
-  }
-
   async function CheckTransaction() {
     let params = new URL(window.location).searchParams;
     if (params.get('transactionHashes') !== null) {
@@ -79,6 +72,8 @@ export default function CreateDaoModal({ open, onClose }) {
   }
   //Function after clicking Create Dao Button
   async function createDao() {
+    const id = toast.loading('Uploading IPFS ...');
+
     var CreateDAOBTN = document.getElementById('CreateDAOBTN');
     CreateDAOBTN.disabled = true;
     let allFiles = [];
@@ -116,7 +111,11 @@ export default function CreateDaoModal({ open, onClose }) {
         },
         wallet: {
           type: 'string',
-          description: signerAddress
+          description: window.signerAddress
+        },
+        user_id: {
+          type: 'string',
+          description: window.userid
         },
         SubsPrice: {
           type: 'number',
@@ -130,37 +129,43 @@ export default function CreateDaoModal({ open, onClose }) {
       }
     };
     console.log('======================>Creating Dao');
-    try {
-      const valueAll = await contract.get_all_daos(); //Getting dao URI from smart contract
 
-      // //Getting the dao id of new one
-      let daoid = valueAll.length;
-      if (document.getElementById('plugin').checked) {
-        await CreatePlugin(`http://${window.location.host}/daos/dao?[${daoid}]`);
+    var template = await (await fetch(`/template/template.html`)).text();
+
+    let changings = [
+      {
+        key: 'dao-title',
+        value: DaoTitle
+      },
+      {
+        key: 'dao-image',
+        value: allFiles[0].url
       }
-      var template = await (await fetch(`/template/template.html`)).text();
+    ];
+    let formatted_template = formatTemplate(template, changings);
 
-      let changings = [
-        {
-          key: 'dao-title',
-          value: DaoTitle
-        },
-        {
-          key: 'dao-image',
-          value: allFiles[0].url
-        }
-      ];
-      let formatted_template = formatTemplate(template, changings);
+    toast.update(id, { render: 'Creating Dao...', isLoading: true });
 
-      // Creating Dao in Smart contract from metamask chain
-      await sendTransaction(await window.contract.populateTransaction.create_dao(signerAddress, JSON.stringify(createdObject), formatted_template));
-    } catch (error) {
-      console.error(error);
-      return;
-      // window.location.href = "/login?[/]"; //If found any error then it will let the user to login page
+    if (PolkadotLoggedIn) {
+      await api._extrinsics.daos.createDao(userWalletPolkadot, JSON.stringify(createdObject), formatted_template).signAndSend(userWalletPolkadot, { signer: userSigner }, (status) => {
+        showToast(status, id, 'Created Successfully!', onClose);
+      });
+    } else {
+      try {
+        // Creating Dao in Smart contract from metamask chain
+        await sendTransaction(await window.contract.populateTransaction.create_dao(window.signerAddress, JSON.stringify(createdObject), formatted_template,Number(window.userid)));
+        toast.update(id, {
+          render: 'Created Successfully!', type: "success", isLoading: false, autoClose: 1000,
+          closeButton: true,
+          closeOnClick: true,
+          draggable: true
+        });
+        onClose();
+      } catch (error) {
+        console.error(error);
+        return;
+      }
     }
-
-    onClose();
   }
 
   function FilehandleChange(dao) {
@@ -236,11 +241,11 @@ export default function CreateDaoModal({ open, onClose }) {
             </div>
 
             <div className="flex flex-col gap-2">
-              <h6>Images</h6>
+              <h6>Image</h6>
               <div className="flex gap-4">
-                <input className="file-input" hidden onChange={FilehandleChange} id="DaoImage" name="DaoImage" type="file" multiple="multiple" />
+                <input className="file-input" hidden onChange={FilehandleChange} accept="image/*" id="DaoImage" name="DaoImage" type="file" />
                 <div className="flex flex-col gap-4">
-                  <AddImageInput onClick={AddBTNClick} />
+                  {DaoImage.length < 1 && <AddImageInput onClick={AddBTNClick} />}
                   <ImageListDisplay images={DaoImage} onDeleteImage={DeleteSelectedImages} />
                 </div>
               </div>
