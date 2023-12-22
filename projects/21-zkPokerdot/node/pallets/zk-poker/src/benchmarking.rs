@@ -30,7 +30,7 @@ use super::*;
 use frame_benchmarking::benchmarks;
 use frame_system::RawOrigin;
 
-use crate::Pallet as ZKSnarks;
+use crate::Pallet as ZKPoker;
 
 benchmarks! {
 	setup_verification_benchmark {
@@ -42,7 +42,7 @@ benchmarks! {
 		let key: Vec<u8> = prepare_vk_json().as_bytes().into();
 		let proof: Vec<u8> = prepare_proof_json().as_bytes().into();
 		let public_inputs: Vec<u8> = prepare_public_inputs_json().as_bytes().into();
-		ZKSnarks::<T>::setup_verification(RawOrigin::None.into(), public_inputs, key).expect("This should work...");
+		ZKPoker::<T>::setup_verification(RawOrigin::None.into(), public_inputs, key).expect("This should work...");
 	}: verify(RawOrigin::None, proof)
 
 	impl_benchmark_test_suite!(Pallet, crate::mock::new_test_ext(), crate::mock::Test)
