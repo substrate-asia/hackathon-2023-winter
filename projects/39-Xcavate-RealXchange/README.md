@@ -36,5 +36,3 @@ We are also looking to build a frontend typescript dApp called "realXchange" so 
 The Project Manager would create the project by filling in the form and uploading relevant information and the required project fund total along with the expected timescale. Then the Project Manager would create NFTs (which are auto generated using an AI integration tool), specifying the number and cost of each NFT. Finally, the project and NFT collection is posted on the project marketplace so buyers can purchase NFTs to support a particular project.
 
 However, it is not a passive donation and the NFT holder can vote on the various stages on the specific project their NFT relates to. Only after a majority of NFT holders have accepted the evidence provided by the Project Manager, can the next tranche of funds be realesed to the Project Managers wallet. This voting happens at ever stage of the project. If the project receives a majority "no" vote then the remaining funds are returned to the NFT holders and the NFTs burned.
-
-![Xcavate Technical Diagram] (https://xcavate.io/hackathon/Xcavate_realXchange_technical.jpg)
