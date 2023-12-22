@@ -8,4 +8,5 @@ members = [
 	"pallets/*",
 	"runtime",
 	"crates/*",
+	"redoxt",
 ]

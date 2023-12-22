@@ -1,0 +1,50 @@
+[package]
+name = "redoxt"
+description = "A library for interfacing with Redot nodes."
+license = "Apache-2.0"
+version = "0.0.1"
+authors = ["DKLee <xiuerdwy@gmail.com>"]
+edition = "2021"
+repository = "https://github.com/ZeroDAO/redot"
+readme = "README.md"
+build = "build.rs"
+
+# [workspace]
+
+[lib]
+name = "meloxt"
+path = "src/lib.rs"
+
+[[bin]]
+name = "e2e"
+path = "src/run_examples.rs"
+
+[dependencies]
+
+rand = "0.8.4"
+derive_more = "0.99.17"
+structopt = "0.3.25"
+anyhow = "1.0.66"
+tokio = { version = "1.28", features = ["process","macros", "time", "rt-multi-thread"] }
+frost-ed25519 = { version="1.0.0-rc.0"}
+futures = { version = "0.3.27", default-features = false, features = ["std"] }
+log = "0.4"
+hex = "0.4"
+serde_json = "1.0"
+serde = { version = "1", features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.4.0", default-features = false }
+async-trait = "0.1.56"
+tracing-subscriber = { version = "0.2.25", features = ["json"] }
+
+subxt = { version = "0.31.0"}
+subxt-signer = { version = "0.31.0", features = ["subxt"] }
+primitive-types = { version = "0.12.1", default-features = false, features = ["codec", "scale-info", "serde"] }
+
+# melo-core-primitives = { path = "../core-primitives" }
+# melo-das-primitives = { version = "0.1.0", path = "../das-primitives"}
+# melo-das-rpc = { version = "0.0.1", path = "../das-rpc"}
+
+sp-runtime = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.42"}
+
+[build-dependencies]
+substrate-build-script-utils = { git = "https://github.com/paritytech/substrate.git", branch = "polkadot-v0.9.42" }
