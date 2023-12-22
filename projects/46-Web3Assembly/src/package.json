@@ -1,0 +1,36 @@
+{
+  "name": "web3assembly",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "@hellowuxin/mindmap": "^2.1.4",
+    "@polkadot/api": "^10.11.2",
+    "@polkadot/extension-dapp": "^0.46.6",
+    "@solana/wallet-adapter-wallets": "^0.19.23",
+    "codemirror": "5.54.0",
+    "echarts": "^5.4.3",
+    "element-tiptap": "^1.27.1",
+    "element-ui": "^2.15.14",
+    "ethers": "^5.7.2",
+    "flatted": "^3.2.7",
+    "https-browserify": "^1.0.0",
+    "solana-wallets-vue-2": "^0.1.6",
+    "url": "^0.11.3",
+    "vue": "^2.7.14",
+    "vue-router": "^3.5.1",
+    "vuex": "^3.6.2",
+    "zlib": "^1.0.5",
+    "zlib-browserify": "^0.0.3"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-router": "~5.0.0",
+    "@vue/cli-plugin-vuex": "~5.0.0",
+    "@vue/cli-service": "~5.0.0",
+    "vue-cli-plugin-element": "~1.0.1",
+    "vue-template-compiler": "^2.7.14"
+  }
+}

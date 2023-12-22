@@ -1,4 +1,5 @@
 package com.hackathon.framework;
+
 import com.hackathon.framework.bean.StrategyBean;
 import com.hackathon.framework.provider.GenerateEngine;
 import com.hackathon.framework.provider.impl.GenerateEngineImpl;
@@ -7,6 +8,7 @@ import com.hackathon.framework.utils.Result;
 import com.hackathon.framework.utils.StrategyConfigUtil;
 import com.hackathon.framework.utils.TemplateUtil;
 import com.jcraft.jsch.JSchException;
+import com.jcraft.jsch.SftpException;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -23,17 +25,17 @@ import java.util.Map;
 
 public class ThreeCat extends JFrame {
 
-    private static Map<String,String>commandMap = new HashMap<>();
+    private static Map<String, String> commandMap = new HashMap<>();
 
     private static String command;
 
     private static StrategyBean strategy;
 
-    private static Integer successCount =0;
-
+    private Integer successCount = 0;
 
     /**
      * 初始化选择框界面
+     *
      * @return
      * @throws FileNotFoundException
      * @throws InvocationTargetException
@@ -46,7 +48,7 @@ public class ThreeCat extends JFrame {
         setSize(400, 200);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         String[] s1 = commandMap.keySet().toArray(new String[0]);
-        String[] s2 = new String[s1.length+1];
+        String[] s2 = new String[s1.length + 1];
         s2[0] = "";
         if (s1.length - 1 >= 0) {
             System.arraycopy(s1, 0, s2, 1, s2.length - 1);
@@ -65,7 +67,7 @@ public class ThreeCat extends JFrame {
             @Override
             public void itemStateChanged(ItemEvent e) {
                 if (e.getStateChange() == ItemEvent.SELECTED) {
-                    String selected = (String)commandComboBox.getSelectedItem();
+                    String selected = (String) commandComboBox.getSelectedItem();
                     // 替换字符串模板
                     commandTextField.setText(commandMap.get(selected));
                 }
@@ -76,14 +78,17 @@ public class ThreeCat extends JFrame {
             public void insertUpdate(DocumentEvent e) {
                 onChange();
             }
+
             @Override
             public void removeUpdate(DocumentEvent e) {
                 onChange();
             }
+
             @Override
             public void changedUpdate(DocumentEvent e) {
                 onChange();
             }
+
             private void onChange() {
                 command = commandTextField.getText();
             }
@@ -97,27 +102,49 @@ public class ThreeCat extends JFrame {
                 System.out.println(command);
                 if (command.contains("init")) {
                     ReportUtil.clearReport();
-                    String parameter = command.replace("init","").trim();
+                    String parameter = command.replace("init", "").trim();
                     System.out.println(parameter);
                     try {
                         strategy = StrategyConfigUtil.getStrategy("generateEngine");
                     } catch (FileNotFoundException | InvocationTargetException | IllegalAccessException ex) {
                         throw new RuntimeException(ex);
                     }
-                    // command里面就代表了详细情况。
+                    // 初始化
                     Result initDirResult;
                     try {
                         initDirResult = generateEngine.initDirectoryForServer();
                     } catch (IOException | InvocationTargetException | IllegalAccessException | JSchException |
+                             InterruptedException | SftpException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if (initDirResult.getHasError().isEmpty()) {
+                        successCount += 1;
+                    }
+                    // 载入
+                    Result loadResult;
+                    try {
+                        loadResult = generateEngine.loadContract();
+                    } catch (IOException | InvocationTargetException | IllegalAccessException | JSchException |
                              InterruptedException ex) {
                         throw new RuntimeException(ex);
                     }
-                    if(initDirResult.getHasError().isEmpty()){
-                        successCount +=1;
+                    if (loadResult.getHasError().isEmpty()) {
+                        successCount += 1;
                     }
-                }else if (command.contains("compile --coverage")){
+                    // 编译
+                    Result compileResult;
+                    try {
+                        compileResult = generateEngine.compilationContract("EtherStore", "Attack");
+                    } catch (IOException | InvocationTargetException | IllegalAccessException | JSchException |
+                             InterruptedException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    if (compileResult.getHasError().isEmpty()) {
+                        successCount += 1;
+                    }
+                } else if (command.contains("compile --coverage")) {
                     // TODO 生成覆盖率，参数需要指定
-                }else if (command.contains("genTest")){
+                } else if (command.contains("genTest")) {
                     // 生成单测测试用例，需要添加断言
                     String[] commands = command.split(" ");
                     String solPath = commands[2];
@@ -125,14 +152,15 @@ public class ThreeCat extends JFrame {
                     String testFilePath = commands[3];
                     Result generateTestResult;
                     try {
+
                         generateTestResult = TemplateUtil.toTestTemplate(abiPath, solPath, testFilePath);
                     } catch (IOException ex) {
                         throw new RuntimeException(ex);
                     }
-                    if(generateTestResult.getHasError().isEmpty()){
-                        successCount +=1;
+                    if (generateTestResult.getHasError().isEmpty()) {
+                        successCount += 1;
                     }
-                }else{
+                } else {
                     errologs.setText("Unknown command: " + command);
                 }
             }
@@ -148,7 +176,6 @@ public class ThreeCat extends JFrame {
         mainPanel.add(runButton);
         add(mainPanel);
     }
-
 
 
     public static void main(String[] args) throws FileNotFoundException, InvocationTargetException, IllegalAccessException {

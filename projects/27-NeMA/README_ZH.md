@@ -2,7 +2,9 @@
     <img src="https://badgen.net/static/license/MIT/green" style="zoom:150%;" />
     <img src="https://img.shields.io/badge/truffle-v5.11.5-blue" style="zoom:150%;" />
     <img src="https://img.shields.io/badge/solidity-v0.5.16-red" style="zoom:150%;" />
+    <img src="https://img.shields.io/badge/last commit-December-orange" style="zoom:150%;" />
 </div>
+
 
 ## 基本资料	
 
@@ -37,7 +39,7 @@ NeMA
 
 ### 技术架构
 
-<img src="./static/Technical Architecture.svg" alt="技术架构" style="zoom:200%;" />
+<img src="./static/architecture.svg" alt="技术架构" style="zoom:200%;" />
 
 #### 哈希锁定
 
@@ -114,7 +116,7 @@ end
 
    
 
-#### **Pol-20现货交易与上述基本流程大同小异，值得一提的是，目前并没有支持pol-20现货交易的平台。**
+**Pol-20现货交易与上述基本流程大同小异，值得一提的是，目前还没出现支持pol-20现货交易的平台。**
 
 
 
@@ -185,10 +187,6 @@ end
 
 ```
 
-### 项目demo
-
-link here
-
 ## 黑客松期间计划完成的事项
 
 ### 前端开发
@@ -216,7 +214,7 @@ UI开发是项目中至关重要的一环，它直接关系到用户体验和整
 
 5. **Gas费用优化：** 考虑到交易的成本，优化合约以减少Gas费用，提高用户参与的吸引力。
 
-### OTC交易的合约支持
+### OTC交易的合约支持（包括基础代币交易、NFT白单以及pol-20铭文交易）
 
 OTC交易合约需要满足双方的交易需求，确保安全、透明和可执行。以下是合约编写的关键点：
 
@@ -225,7 +223,7 @@ OTC交易合约需要满足双方的交易需求，确保安全、透明和可�
 3. **交易状态：** 在合约中定义不同的交易状态，以确保交易的顺利进行，包括订单创建、付款、确认等状态。
 4. **前端集成：** 与前端开发人员密切合作，确保前端能够正确地与合约进行交互，实现交易的展示和操作。
 
-### Hashlock技术的引入
+### Hashlock技术引入
 
 主要步骤包括：
 
@@ -250,37 +248,43 @@ OTC交易合约需要满足双方的交易需求，确保安全、透明和可�
 
 ### PPT等大文件链接地址
 
-demo youtube展示：
+项目demo：
 
 https://www.youtube.com/watch?v=yNmXrcWoBhc
 
-## API介绍
+## API
 
-以下是项目.sol文件中的API介绍：
-
-| 函数名 | 描述 |
-| ------ | ---- |
-| `addNFTToWhitelist(address nftContract)` | 将指定的NFT合约地址添加到白名单中 |
-| `removeNFTFromWhitelist(address nftContract)` | 从白名单中移除指定的NFT合约地址 |
-| `depositTokens(uint256 amount)` | 存入指定数量的代币到合约中 |
-| `withdrawTokens(uint256 amount)` | 从合约中提取指定数量的代币 |
-| `lockTokens(uint256 amount, bytes32 hash)` | 使用指定数量的代币和哈希值进行锁定 |
-| `unlockTokens(uint256 amount, bytes32 originalData)` | 根据原始数据解锁并提取指定数量的代币 |
-
-## 使用方法
-
-
+| 函数名称                       | 参数                                                    | 返回值类型           | 描述                                                         |
+| ------------------------------ | ------------------------------------------------------- | -------------------- | ------------------------------------------------------------ |
+| `lock`                         | `_hash: string`                                         | `string`             | 锁定提案，返回结果字符串。如果提案不存在、已完成或已回滚，则返回相应的错误信息。 |
+| `unlock`                       | `_hash: string`, `_secret: string`                      | `string`             | 解锁提案，返回结果字符串。如果提案不存在、已完成、未锁定或已回滚，则返回相应的错误信息。 |
+| `rollback`                     | `_hash: string`                                         | `string`             | 回滚提案，返回结果字符串。如果提案不存在、已完成、未锁定、已解锁或已回滚，则返回相应的错误信息。 |
+| `newProposal`                  | `_hash: string`, `_role: string`, ...                   | `string`             | 创建新提案，返回结果字符串。如果提案已存在、时间锁设置不正确或角色不匹配，则返回相应的错误信息。 |
+| `setNewProposalTxInfo`         | `_hash: string`, `_txHash: string`, `_blockNum: string` | 无返回值             | 设置新提案的交易信息。                                       |
+| `getNewProposalTxInfo`         | `_hash: string`                                         | `string`             | 获取新提案的交易信息。如果交易信息不存在，则返回 "null"。    |
+| `getNegotiatedData`            | `_hash: string`                                         | `string`             | 获取已协商的数据，返回包含发起者和参与者信息的字符串。如果提案不存在，则返回相应的错误信息。 |
+| `getProposalInfo`              | `_hash: string`                                         | `string`             | 获取提案的详细信息，返回包含提案状态和相关标志的字符串。如果提案不存在，则返回 "null"。 |
+| `setSecret`                    | `_hash: string`, `_secret: string`                      | `string`             | 设置提案的密钥，返回结果字符串。如果提供的密钥不匹配哈希值，则返回相应的错误信息。 |
+| `getProposalIDs`               | 无                                                      | `string`             | 获取所有提案的哈希值，返回包含所有哈希值的字符串。           |
+| `deleteProposalID`             | `_id: string`                                           | `string`             | 删除指定哈希值的提案，返回结果字符串。如果提案不存在或删除失败，则返回相应的错误信息。 |
+| `getIndex`                     | `_hash: string`                                         | `(uint256, uint256)` | 获取提案在队列中的索引和深度。                               |
+| `setCounterpartyLockState`     | `_hash: string`                                         | 无返回值             | 设置对方的锁定状态。                                         |
+| `setCounterpartyUnlockState`   | `_hash: string`                                         | 无返回值             | 设置对方的解锁状态。                                         |
+| `setCounterpartyRollbackState` | `_hash: string`                                         | 无返回值             | 设置对方的回滚状态。                                         |
 
 ## 测试
 
-项目包含了针对合约功能的测试用例，确保了各项功能的正确性和安全性。
+src文件夹中包含了针对合约功能的测试用例，前期已经通过`truffle test`进行了部分的本地测试。
 
 ## 队员信息	
 
-|  名称  | 角色                  | GitHub账号       | 微信账号       |
-| :----: | --------------------- | ---------------- | -------------- |
-|   TK   | pm                    | Richard tsang202 | tk_nom         |
-|        |                       |                  |                |
-|  探姬  | CTFer                 | ProbiusOfficial  | ProbiusProtoss |
-| V1cent | builder, UI developer | L011apa100za     | SWS18312967544 |
+|  名称  |             角色             |    GitHub账号    |    微信账号    |
+| :----: | :--------------------------: | :--------------: | :------------: |
+|   TK   | pm, Business Logic Developer | Richard tsang202 |     tk_nom     |
+| S7iter |           rear-end           |      S7iter      |   shihuobiu    |
+|  探姬  |     Full Stack Developer     | ProbiusOfficial  | ProbiusProtoss |
+| V1cent |    front-end, UI Designer    |   L011apa100za   | SWS18312967544 |
 
+## License
+
+[License](./LICENSE)

@@ -36,6 +36,6 @@
     "esModuleInterop": true,
     "typeRoots": ["./node_modules/@types"]
   },
-  "include": ["src", "test"],
+  "include": ["src", "test", "jest.config.js"],
   "exclude": ["build/**/*", "node_modules"]
 }
