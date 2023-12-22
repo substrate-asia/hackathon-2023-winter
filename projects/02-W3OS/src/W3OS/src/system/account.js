@@ -35,7 +35,7 @@ function Account(props) {
   useEffect(() => {
     self.fresh();
     RUNTIME.networkStatus("anchor", (res) => {
-      console.log(res);
+      //console.log(res);
     });
   }, []);
 

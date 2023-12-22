@@ -38,7 +38,6 @@ const CHAT = {
     });
   },
   friends: (fs) => {
-    //set friend list
     for (var k in fs) map[k] = true;
   },
   setConfig: (name, pre) => {
@@ -86,7 +85,7 @@ const CHAT = {
       } else {
         INDEXED.insertRow(res, table, nlist, () => {
           lock = false;
-          console.log("Done, chat saved.");
+          //console.log("Done, chat saved.");
           if(queue.length!==0){
             console.log("Dealing with queue.");
             const rs = JSON.parse(JSON.stringify(queue));
@@ -99,7 +98,7 @@ const CHAT = {
     });
   },
   save: (mine, from, ctx, way, group, un, ck) => {
-    console.log(`My account: ${mine}, from: ${from}, way: ${way}, group:${group}, un: ${un}, content: ${ctx}`);
+    //console.log(`My account: ${mine}, from: ${from}, way: ${way}, group:${group}, un: ${un}, content: ${ctx}`);
     let row = null;
     const state = way === "to" ? status.NORMAL : (!un ? status.UNREAD : status.NORMAL);
     //console.log(state,from,un);
@@ -134,7 +133,7 @@ const CHAT = {
   page: (mine, from, step, page, ck) => {
     INDEXED.checkDB(DBname, (db) => {
       const target = `${prefix}${mine}`;
-      console.log(`here? target: ${target}`);
+      //console.log(`here? target: ${target}`);
       const tbs = db.objectStoreNames;
       if (!INDEXED.checkTable(tbs, target)) return ck && ck(false);
       INDEXED.searchRows(db, target, "address", from, ck);

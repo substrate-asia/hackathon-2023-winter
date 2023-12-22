@@ -1,4 +1,4 @@
-import { Container, Row, Col, Navbar,Toast,ToastContainer } from "react-bootstrap";
+import { Container, Row, Col, Navbar, Toast, ToastContainer } from "react-bootstrap";
 
 import { useState, useEffect } from "react";
 import TalkingSingle from "../components/talking_single";
@@ -6,6 +6,8 @@ import TalkingGroup from "../components/talking_group";
 import GroupAdd from "../components/group_add";
 import Paybill from "../components/paybill";
 import TalkingServer from "../components/talking_server";
+import Chat from "../components/chat";
+import Login from "../components/login";
 
 import RUNTIME from "../lib/runtime";
 import CHAT from "../lib/chat";
@@ -18,6 +20,7 @@ import IMGC from "../open/IMGC";
 import { RiSecurePaymentFill } from "react-icons/ri";
 import { FaUsers } from "react-icons/fa";
 import { FaServer } from "react-icons/fa6";
+import { RiLinkUnlink } from "react-icons/ri";
 
 let active = "";
 function Talking(props) {
@@ -27,45 +30,65 @@ function Talking(props) {
   };
   let [animation, setAnimation] = useState("ani_scale_in");
   let [framework, setFramework] = useState("");
-  let [count, setCount]=useState(0);
+  let [count, setCount] = useState(0);
   let [title, setTitle] = useState("Talking");
   let [hidden, setHidden] = useState(false);
-  let [toast, setToast]=useState("");
+  let [toast, setToast] = useState("");
+  let [hiddenLinking, setHiddenLinking] = useState(false);
+
+  let [reg, setReg] = useState("");
 
   //base on action to create notice recorder
   const decoder = {
     group_create: (mine, obj) => {
-      CHAT.save(mine, obj.msg.id, "New group created, enjoy talking", "notice", obj.msg.id, false, () => { });
+      const gid = obj.msg.id;
+      const msg = "New group created, enjoy talking";
+      CHAT.save(mine, gid, msg, "notice", obj.msg.id, false, () => { });
+      console.log(`[group_create] Details updated, ready to fresh`);
+      self.autoFresh(gid);
     },
     group_detail: (mine, obj) => {
-      const msg=obj.msg;
-      const ctx=`${msg.group.length} members, group details updated.`;
+      const msg = obj.msg;
+      const ctx = `${msg.group.length} members, group details updated.`;
       CHAT.save(mine, msg.id, ctx, "notice", msg.id, false, () => { });
     },
-    group_divert:(mine,obj)=>{
-      console.log(obj);
-      const msg=obj.msg;
+    group_divert: (mine, obj) => {
+      const msg = obj.msg;
+      const gid = obj.msg.id;
       CHAT.save(mine, msg.id, `Group manager is ${tools.shorten(msg.manager)} now`, "notice", msg.id, false, () => { });
+      console.log(`[group_divert] Details updated, ready to fresh`);
+      self.autoFresh(gid);
     },
-    group_update:(mine,obj)=>{
-
+    group_update: (mine, obj) => {
+      const gid = obj.msg.id;
+      //const from=obj.msg.from;
+      const msg = `Group ${obj.msg.key} updated.`;
+      CHAT.save(mine, gid, msg, "notice", gid, false, () => { });
+      console.log(`[group_update] Details updated, ready to fresh`);
+      self.autoFresh(gid);
     },
-    group_leave: (mine, obj)=>{
-      CHAT.save(mine, obj.msg.group, "Leave this group.", "notice", obj.msg.group, false, () => { });
-      //TODO, here to trigger fresh the page to list
+    group_leave: (mine, obj) => {
+      const gid=obj.msg.id;
+      CHAT.save(mine, gid, "Leave this group.", "notice", gid, false, () => { });
+      console.log(`[group_leave] Details updated, ready to fresh`);
+      self.autoFresh(gid);
     },
-    group_destory: (mine,obj)=>{
-      console.log(mine);
-      console.log(obj);
-      //CHAT.save(mine, obj.msg.group, "Leave this group.", "notice", obj.msg.group, false, () => { });
-
-      //TODO, here to trigger fresh the page to list
-      //TODO, remove the group from localstorage
+    group_members:(mine,obj)=>{
+      const gid=obj.msg.id;
+      CHAT.save(mine, gid, "Group members changed.", "notice", gid, false, () => { });
+      console.log(`[group_members] Details updated, ready to fresh`);
+      self.autoFresh(gid);
     },
-    vertify_reg:(mine,obj)=>{
+    group_destory: (mine, obj) => {
+      const gid=obj.msg.id;
+      CHAT.save(mine, gid, "Leave this group.", "notice", gid, false, () => { });
+      console.log(`[group_destory] Details updated, ready to fresh`);
+      self.autoFresh(gid);
+    },
+    vertify_reg: (mine, obj) => {
       //console.log(obj);
-      const msg=obj.msg;
-      if(!msg.done){
+      const msg = obj.msg;
+      if (!msg.done) {
         UI.dialog.show(
           <Paybill
             callback={(res) => {
@@ -78,29 +101,37 @@ function Talking(props) {
           />,
           "Payment Vertification",
         );
-      }else{
-        setToast(<ToastContainer position="middle-center" style={{paddingTop:"500px"}}>
-        <Toast bg={"info"}>
-          <Toast.Body>Already vertified.</Toast.Body>
-        </Toast></ToastContainer>);
-        setTimeout(()=>{
+      } else {
+        setToast(<ToastContainer position="middle-center" style={{ paddingTop: "500px" }}>
+          <Toast bg={"info"}>
+            <Toast.Body>Already vertified.</Toast.Body>
+          </Toast></ToastContainer>);
+        setTimeout(() => {
           setToast("");
-        },1500);
+        }, 1500);
       }
     },
-    vertify_done:(mine,obj)=>{
+    vertify_done: (mine, obj) => {
       console.log("Vertification done.");
       console.log(obj);
     },
-  
+
   }
 
-  const cmap={
-    height:"750px",
+  const cmap = {
+    height: `${window.innerHeight - 120}px`,
   }
 
-  const UI=RUNTIME.getUI();
+  const UI = RUNTIME.getUI();
   const self = {
+    autoFresh:(gid)=>{
+      IMGC.group.detail(gid,() => {
+        //console.log(`[group_members] Details updated, ready to fresh`);
+        if (!active) {
+          self.entry();
+        }
+      });
+    },
     page: (ctx, address, header) => {
       active = address;
       //setCount(n);
@@ -108,32 +139,33 @@ function Talking(props) {
       setHidden(true);
       if (header) setTitle(header);
     },
-    getPendingGroups:(list)=>{
-      const ps=[];
-      for(let i=0;i<list.length;i++){
-        const row=list[i];
-        if(row.type==="group" && row.group.length<2){
+    getPendingGroups: (list) => {
+      const ps = [];
+      for (let i = 0; i < list.length; i++) {
+        const row = list[i];
+        //console.log(row);
+        if (row.type === "group" && (!row.group || row.group.length < 2)) {
           ps.push(row.id);
         }
       }
       return ps;
     },
-    updateGroup:(ps,ck)=>{
-      if(ps.length===0) return ck && ck();
-      const id=ps.pop();
-      IMGC.group.detail(id,(res)=>{
+    updateGroup: (ps, ck) => {
+      if (ps.length === 0) return ck && ck();
+      const id = ps.pop();
+      IMGC.group.detail(id, (res) => {
         //console.log("Callback? ");
         //console.log(res);
-        self.updateGroup(ps,ck);
+        self.updateGroup(ps, ck);
       });
     },
-    render:(list)=>{
+    render: (list) => {
       setFramework(
         <div className="talking_container" style={cmap}>
           {list.map((row, index) => (
             row.type === "group" ?
               <TalkingGroup to={row.id} page={self.page} key={index} details={row} unread={row.un} back={self.back} /> :
-              <TalkingSingle to={row.id} page={self.page} key={index} details={row} unread={row.un} back={self.back}/>
+              <TalkingSingle to={row.id} page={self.page} key={index} details={row} unread={row.un} back={self.back} />
           ))}
         </div>
       );
@@ -141,31 +173,44 @@ function Talking(props) {
     },
     entry: () => {
       setTitle("Talking");
-      RUNTIME.getAccount((fa)=>{
-        if(!fa || !fa.address) return console.log(`Not login yet.`);
-        RUNTIME.getTalking(fa.address,(list) => {
-          const ps=self.getPendingGroups(list);
-          if(ps.length!==0){
-            self.updateGroup(ps,()=>{
+      RUNTIME.getAccount((fa) => {
+        if (!fa || !fa.address) {
+          return setReg(
+            <Col xs={size.row[0]} sm={size.row[0]} md={size.row[0]} lg={size.row[0]} xl={size.row[0]} xxl={size.row[0]}>
+              <Login fresh={self.fresh} />
+            </Col>,
+          );
+        }
+        setReg("");
+        RUNTIME.getTalking(fa.address, (list) => {
+          //console.log(list);
+          const ps = self.getPendingGroups(list);
+          if (ps.length !== 0) {
+            self.updateGroup(ps, () => {
 
             });
-          }else{
+          } else {
             self.render(list);
           }
         });
       });
     },
     newGroup: () => {
-      self.page(<GroupAdd back={self.back} />, "group_add", "Select contact");
+      RUNTIME.getContact((res) => {
+        console.log(res);
+        let count = 0;
+        for (let k in res) count++;
+        self.page(<GroupAdd back={self.back} amount={count} />, "group_add", "Select contact");
+      });
     },
     payToVertify: (ev) => {
       RUNTIME.getAccount((acc) => {
         IMGC.vertify.reg(acc.address);
       });
     },
-    serverSetting:(ev)=>{
-      const UI=RUNTIME.getUI();
-      UI.dialog.show(<TalkingServer />,"Server Management");
+    serverSetting: (ev) => {
+      const UI = RUNTIME.getUI();
+      UI.dialog.show(<TalkingServer />, "Server Management");
       //console.log(`Here to select server, or add server`);
       //self.page(<GroupAdd back={self.back} />, "server_select", "Select server");
     },
@@ -177,28 +222,30 @@ function Talking(props) {
       setTitle("Talking");
     },
     recorder: (input) => {
-      console.log(`Here to get all the messages.`);
-      console.log(input);
-      
+      //console.log(`Here to get all the messages.`);
+      //console.log(input);
+
       if (!input || !input.type) return false;
 
       const un = RUNTIME.exsistMailer(!input.group ? input.from : input.group);
       switch (input.type) {
         case "message":     //message recorder process
-          //1.update talking index
-          // if (input.group) {
-          //   RUNTIME.updateTalkingIndex(input.from, input.group, input.msg, () => {
-          //     if (!active) self.entry();
-          //   }, !un);
-          // } else {
-          //   RUNTIME.updateTalkingIndex(input.from, input.to, input.msg, () => {
-          //     if (!active) self.entry();
-          //   }, !un);
-          // }
-
-          RUNTIME.updateTalkingIndex(input.from, !input.group?input.to:input.group, input.msg, () => {
+          console.log(`Here check message and update index, data:${JSON.stringify(input)}`);
+          RUNTIME.updateTalkingIndex(input.from, !input.group ? input.to : input.group, input.msg, () => {
             if (!active) self.entry();
-          }, !un,"from");
+          }, !un, "from");
+
+          //2.add stranger if neccessary
+          console.log(`Checking address ${input.to} wether stranger.`);
+          if(!input.group){  
+            RUNTIME.getContact((tmap)=>{
+              if(!tmap[input.from]){
+                RUNTIME.addContact(input.from,()=>{
+
+                },true);
+              }
+            });
+          }
 
           //2.save the message record
           RUNTIME.getAccount((acc) => {
@@ -212,7 +259,7 @@ function Talking(props) {
           break;
 
         case "notice":     //notice recorder process
-          //console.log(`Write the notice recoder here.`);
+          console.log(`[Notice] Here check notice and update index, data:${JSON.stringify(input)}`);
           if (input.method) {
             const key = `${input.method.cat}_${input.method.act}`;
             if (decoder[key]) {
@@ -231,14 +278,33 @@ function Talking(props) {
           break;
       }
     },
+    chatSingle: (addr) => {
+      self.page(<Chat address={addr} fixed={true} />, addr, tools.shorten(addr));
+    },
+    chatGroup: (addr) => {
+
+    },
+    fresh: () => {
+      self.entry();
+      IMGC.init(self.recorder, (res) => {
+        setHiddenLinking(true);
+        if (props.address) {
+          console.log(`Ready to load chat`);
+          if (props.address.length === 48) {
+            self.chatSingle(props.address);
+          } else {
+            self.chatGroup(props.address);
+          }
+        }
+      });
+      setTimeout(() => {
+        if (!active) self.entry();
+      }, 2000);
+    }
   }
 
   useEffect(() => {
-    self.entry();
-    IMGC.init(self.recorder);
-    setTimeout(()=>{
-      if(!active) self.entry();
-    },2000);
+    self.fresh();
   }, []);
 
   return (
@@ -285,24 +351,30 @@ function Talking(props) {
         </Container>
       </Navbar>
       <Container>
+        {reg}
         {framework}
       </Container>
       <div className="opts" hidden={hidden}>
-        <FaUsers color="grey"  
+        <FaUsers color="grey"
           onClick={(ev) => {
             self.newGroup(ev);
           }}
         />
-        <FaServer color="grey" size={24} style={{marginLeft:"20px"}}
+        <FaServer color="grey" size={24} style={{ marginLeft: "20px" }}
           onClick={(ev) => {
             self.serverSetting(ev);
           }}
         />
-        <RiSecurePaymentFill color="grey" style={{marginLeft:"20px"}}
+        <RiSecurePaymentFill color="grey" style={{ marginLeft: "20px" }}
           onClick={(ev) => {
             self.payToVertify(ev);
           }}
         />
+        <RiLinkUnlink color="grey" style={{ marginLeft: "20px" }}
+          hidden={hiddenLinking}
+          onClick={(ev) => {
+            self.linkChatting(ev);
+          }} />
       </div>
       {toast}
     </div>

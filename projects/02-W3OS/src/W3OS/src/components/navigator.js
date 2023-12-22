@@ -21,11 +21,11 @@ function Navigator(props) {
 
           const napp = RUNTIME.formatApp();
           const type = self.checkType(res);
-          //console.log(type);
           napp.name = res.name;
           napp.short = res.name;
           napp.type = type;
           napp.src = `anchor://${res.name}/${res.block}`;
+          napp.icon=RUNTIME.getRandomICON();
           const page = 0;
           RUNTIME.installApp(napp, page, (done) => {
             if (done) {
