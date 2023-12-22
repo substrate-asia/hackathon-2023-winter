@@ -9,6 +9,7 @@
 <br>
 <hr>
 
+> Hey👋 Before reading the detail documentation of our work, watch a demo video about Blend! [Click here to watch~](https://youtu.be/eXH7SNKzU94)
 ### Understanding Blend: Solving Digital Identity Challenges in Polkadot and Substrate
 
 ![image](https://github.com/parity-asia/hackathon-2023-winter/assets/69501009/abe3f320-501d-4823-ab0a-69547bf71270)
@@ -76,6 +77,12 @@ We've built a demo web application to demonstrate how Blend can onboard Web3 use
 
 ![Frame 15](https://github.com/parity-asia/hackathon-2023-winter/assets/69501009/d6836a61-0ccd-4cf9-bfba-72aab1039017)
 
+> Hey👋 [Click here](https://blend-sooty.vercel.app/) to redirect to our demo web application. Note: as the demo web application required our AWS instance to run, please contact our team to run the instance for you before testing~ (Cost of running GPU instance is high, that's why our team will stop the instance when not used)
+
+```
+Smart Contract deployed on Shibuya Testnet: XxFZhk32yigWi8j4ZLEVBPzEEaGsEbrnggpd2LJWehAzPBs
+You can use the contract address to add the NFT collection in your wallet!
+```
 
 Our team developed two different games, utilizing only one NFT passport to transition between them. This single NFT passport is linked to all the associated 3D files stored on IPFS. Utilizing this passport, the blockchain game created with Blend can access all the relevant 3D files of a gamer's metaverse human. Essentially, Blend's NFT passport introduces the concept of interoperability to the Polkadot and Substrate ecosystem. Users need only create their NFT passport once to embark on adventures across various applications built using Blend. Interoperability plays a crucial role in enhancing users' overall metaverse experience, and Blend effectively facilitates this. Additionally, our streamlined digital replica reconstruction also enables the possibility of open-world applications, like the demo we have constructed below
 
@@ -105,6 +112,8 @@ Moreover, in this hackathon, we've expanded Blend's capabilities by introducing 
 
 ![Group 2 (2)](https://github.com/parity-asia/hackathon-2023-winter/assets/69501009/b5e9b43d-d733-4bc1-aa61-daa8480c303a)
 
+> Hey👋 [Click here](https://drive.google.com/file/d/1jkF3T3G16_ARll8Upeq8r9Nx_6lnleJx/view?usp=sharing) to download this Android demo application via APK. Note: as the demo Android application also required our AWS instance to run, please contact our team to run the instance for you before testing~ (Cost of running GPU instance is high, that's why our team will stop the instance when not used)
+
 
 ## Progressing Future Milestones (Post-Hackathon)
 
@@ -130,12 +139,13 @@ To further enhance the capabilities of our reconstructed head model, we have imp
 
 ### Things to be accomplished during the hackathon
 
-- [ ] Automated Post Mesh Fusion pipeline
+- [ ] Automated Post Mesh Fusion pipeline for application
 - [ ] Implement wallet connection in UE
 - [ ] All-day running flask application (server)
 - [ ] API key generation system (relate to usage control)
 - [ ] Complete documentation of API (using GitBook)
 - [ ] Developed a home page for our project (documenting our research progress and guide)
+- [ ] Correctly integrate WalletConnect modal
 
 ### Things accomplished during the hackathon
 
@@ -161,7 +171,6 @@ To further enhance the capabilities of our reconstructed head model, we have imp
   - [x] Frontend UI
   - [x] Model (Application Logic)
   - [x] Blend engine integration
-  - [x] WalletConnect Integration
   - [x] Firebase and Firestore setup
   - [x] Integration Testing (connect to SubWallet, record user wallet address in Firebase collection)
 
