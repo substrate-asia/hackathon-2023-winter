@@ -21,12 +21,12 @@ Project establishment date 2023.11.11
 **Blockchain side**
 
 - `Smart Contracts`
-   - [ ] card create
-   - [ ] card update
-   - [ ] card status verify
-   - [ ] card send
-   - [ ] card destroy
-   - [ ] card exchange
+   - [x] card create
+   - [x] card update
+   - [x] card status verify
+   - [x] card send
+   - [x] card destroy
+   - [x] card exchange
 
 **Client**
 - `Web UI`
@@ -47,7 +47,14 @@ differs
   - Role: SmartContract Developer
   - Github: `https://github.com/differs`
 
-XXXX
-  - Role: Web3 Developer
-  - Github: `xxxx`
-team members update this infomation self.
+baize336699
+  - Role: Web3 Frontend Developer
+  - Github: `https://github.com/baize336699`
+
+xgocn
+  - Role: Web3 Frontend Developer
+  - Github: `https://github.com/xgocn`
+
+DAO UI Design Studio:
+  - Role: UI / ARTIST
+  - WECHAT: web3-crypto-designer

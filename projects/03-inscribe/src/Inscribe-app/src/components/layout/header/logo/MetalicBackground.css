@@ -1,0 +1,13 @@
+.metaliccard {
+  background-color: #aeb1b0;
+  background-image: linear-gradient(#72f8c2 75%);
+  background-size: 10px 10px;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  transition: background 0.8s;
+}
+
+.metaliccard:hover {
+  background-image: linear-gradient(135deg, #18ff4e, #46f973, #0fff23);
+}
