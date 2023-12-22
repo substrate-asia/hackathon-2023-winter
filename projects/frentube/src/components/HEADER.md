@@ -1,1 +1,0 @@
-this  is  short  explaination for  the  header  components 
