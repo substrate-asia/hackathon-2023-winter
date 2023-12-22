@@ -9,7 +9,7 @@
   console.log(JSON.stringify(response.methods, null, 2));
   ```
  */
-export const MyCustomNetworkRpcMethods = [
+export const MyLimitedNodeRpcMethods = [
   'chain_getBlock',
   'chain_getBlockHash',
   'chain_getFinalisedHead',
