@@ -1,8 +1,8 @@
-## 基本资料
+## Basic Info
 
-项目名称：CreatorX
+Project Name：CreatorX
 
-项目立项日期 (哪年哪月)：2023/10
+Project created at：2023/10
 
 
 ## Background
