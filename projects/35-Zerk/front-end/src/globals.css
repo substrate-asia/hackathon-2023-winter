@@ -1,0 +1,24 @@
+:root {
+  --grey-network: #969696;
+  --yellow-green: #adff00;
+}
+
+* {
+  padding: 0%;
+  margin: 0%;
+  border: 0%;
+
+  color: var(--yellow-green);
+  font: "Raleway", sans-serif;
+}
+
+.index {
+
+  color:  var(--grey-network);
+}
+
+main {
+  align-items: center;
+  text-align: center;
+}
+
