@@ -6,6 +6,12 @@ Date of project initiation: 2023/11
 
 GitHub: https://github.com/ff13dfly/W3OS/
 
+Live on:
+- http://w3os.net/
+- http://os.metanchor.net
+- http://sayingfree.net
+
+Demo Video: https://www.bilibili.com/video/BV1He411r7QJ/
 ## Project Introduction
 W3OS: Web3.0 Operating System Based on Anchor Network
 
