@@ -15,7 +15,7 @@ function From(props) {
   const self={
     click:()=>{
       UI.dialog.show(
-        <ContactDetail address={address}/>,
+        <ContactDetail address={address} chatHidden={true}/>,
         "Contact Detail"
       );
     },

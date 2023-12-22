@@ -188,7 +188,7 @@ const INDEXED = {
     return true;
   },
   insertRow: (db, table, list, ck) => {
-    console.log(`Function[insertRow], table: ${table}, list:${JSON.stringify(list)}`);
+    //console.log(`Function[insertRow], table: ${table}, list:${JSON.stringify(list)}`);
     //if (lock) return INDEXED.cacheRows(db.name, table, list, "insert");
     //lock = true;
     const request = db.transaction([table], "readwrite").objectStore(table);
@@ -203,7 +203,7 @@ const INDEXED = {
     }
   },
   updateRow: (db, table, list, ck) => {
-    console.log(`Function[updateRow], table: ${table}, list:${JSON.stringify(list)}`);
+    //console.log(`Function[updateRow], table: ${table}, list:${JSON.stringify(list)}`);
 
     const store = db.transaction(table, "readwrite").objectStore(table);
     for (let i = 0; i < list.length; i++) {

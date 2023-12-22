@@ -22,12 +22,11 @@ function GroupDetail(props) {
     change: (ev) => {
 
     },
-    fresh:(ck)=>{
+    fresh:()=>{
       IMGC.group.detail(group,(res)=>{
         const UI=RUNTIME.getUI();
         UI.dialog.hide();
         props.fresh();
-        return ck && ck();
       });
     },
     render:(address)=>{
@@ -95,7 +94,7 @@ function GroupDetail(props) {
       </Col>
       <Col className="pt-4 text-end" xs={size.row[0]} sm={size.row[0]} md={size.row[0]} lg={size.row[0]} xl={size.row[0]} xxl={size.row[0]}>
         <button className="btn btn-md btn-primary" onClick={(ev)=>{
-          self.fresh(ev);
+          self.fresh();
         }}>Fresh</button>
       </Col>
     </Row>

@@ -1,0 +1,17 @@
+[workspace]
+resolver = "2"
+
+members = [
+    "parachain-template/node",
+    "parachain-template/runtime",
+    "libs/bundle-pool",
+    "libs/space-order",
+    "libs/auction",
+]
+
+exclude = [
+
+]
+
+[profile.release]
+panic = "unwind"

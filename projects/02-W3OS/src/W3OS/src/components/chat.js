@@ -36,8 +36,9 @@ function Chat(props) {
       if (!content) return false;
       self.append(content);
       CHAT.save(mine, to, content, "to", self.isGroup(to)?to:undefined, false, () => {
+        //1.update the talking index
         RUNTIME.updateTalkingIndex(mine, to, content, () => {
-          console.log("Talking index updated.");
+          //console.log("Talking index updated.");
         },false,"to");
       });
       if (self.isGroup(to)) {
@@ -193,6 +194,8 @@ function Chat(props) {
     });
 
     RUNTIME.setMailer(to, (res) => {
+      console.log(to);
+      console.log(res);
       self.live(res);
     });
 

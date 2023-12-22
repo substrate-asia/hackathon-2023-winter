@@ -1,42 +1,105 @@
-# W3OS Chat service
+# Instant Messaging & Group Chat Service
 
 ## Overview
 
-- W3OS Instant Messaging Service bases on Polkadot account, only with the account, you can start to join Web3.0 world.
+- The IMGC (Instant Messaging & Group Chat) service is based on NodeJS. It is the basic service of W3OS - this is the MVP version, including full IM and GC capabilities, but only Payment Verification in isolated nodes.
 
-- IMS and GCS are deployed on Anchor Network, anybody can run the services by sinlge command. The **nodejs.loader.js** is under the folder `chat2/support`, **nodejs.loader.js** is a single file application, no support needed.
+- IMGC is based on ss58 accounts - you can start joining the Web3.0 world without any coins. 
 
-    ```SHELL
-        # nodejs.loader.js is the loader for nodeJS
-        node nodejs.loader.js anchor://imgc
-    ```
+- The IMGC service source code is deployed on the Anchor Network. You can run it with a single command using the Loader for NodeJS:
 
-- IMS and GCS are basice service for W3OS, you can get in touch with other people just via Polkadot/Substrate account.
+```shell
+# nodejs.loader.js is the loader for NodeJS
+node nodejs.loader.js anchor://imgc  
+```
 
-## Instant Messaging Service & Group Chat Service
+## Technical Details
 
-- Language: Javascript
-- Framework: NodeJS
-- Link between server and client: Websocket
+- Basic functions are based on websocket.
 
-### Build and Put On Chain
+- Verification is based on @polkadot/api. 
 
-- Build the NodeJS project to a single file as follow. Please change the directory to **chat2** and run the command under it.
+- The link process is as follows:
 
-    ```SHELL
-        #please install the esbuild first
-        yarn add esbuild
+  1. The client (e.g. W3OS frontend) creates a websocket link to the IMGC server.
 
-        #package the application by esbuild
-        ./node_modules/esbuild/bin/esbuild index.js --bundle --minify --outfile=./chat_server.min.js --platform=node
-    ```
+  2. The IMGC server creates a unique string called **spam** and sends it to the client.
 
-### IMS
+  3. The client registers the account (SS58 account string) with **spam**. After this step, the IMGC server checks **spam** to retrieve the account.
 
-### GCS
+  4. The client sends a message to perform the desired action.
 
-### Vertification By Payment
+## Functions  
 
-### Deployment
+### Instant Messaging Service
 
-- Test server `45.63.84.74`
+- **active** function: Register SS58 account on IMGC server.
+
+- **to** function: Send message to target SS58 account.  
+
+- **online** function: Client declares online status, IMGC server checks chat history and sends to client.
+
+- **offline** function: Client declares offline status.
+
+### Group Chat Service
+
+- **create** function: Create group by members.
+
+- **detail** function: Get group details by ID.  
+
+- **join** function: Join target group with single account.
+
+- **members** function: Change group members, automatically add and remove accounts.
+
+- **leaver** function: Leave the group.  
+
+- **divert** function: Set new group manager.
+
+- **deport** function: [Not yet] Add account to block list.  
+
+- **recover** function: [Not yet] Remove accounts from block list.
+
+- **destory** function: Destroy the group.
+
+- **chat** function: Chat in the group.
+
+- **notice** function: Send notice to group. 
+
+- **update** function: Update group details like name and announcement.
+
+### Payment Verification 
+
+- **reg** function: Get amount and target account for verification.
+
+- **token** function: [Not yet], get token when payment is verified.
+
+### System Features
+
+- Autorecover: IMGC service backs up group list and cached messages at intervals. On start, it checks backups and recovers data.
+
+- IMGC monitors Anchor Network to confirm payment verification.
+
+## Code
+
+- GitHub: [https://github.com/ff13dfly/W3OS/tree/main/service](https://github.com/ff13dfly/W3OS/tree/main/service)
+
+- **chat2** folder has IMGC service code.  
+
+- **UI** folder has basic chat function, mocks 4 accounts.
+
+- **chat** folder has only IM service, abandoned.
+
+## Unit Testing  
+
+- Only unit tests for IMGC service in **chat2/test** folder. Isolated test cases for GC service.
+
+## Deployment
+
+- Target server address is [wss://chat.metanchor.net](wss://chat.metanchor.net). Nginx transports data from port to service port.  
+
+- When trying Anchor version of IMGC, only one command is needed:
+
+```shell
+# nodejs.loader.js is the NodeJS loader
+node nodejs.loader.js anchor://imgc
+```

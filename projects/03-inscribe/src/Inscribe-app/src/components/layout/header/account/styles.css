@@ -1,0 +1,37 @@
+/* styles.css */
+
+.home-button {
+  border: 0;
+  /* border-radius: 14px; */
+  width: 200px;
+  height: 45px;
+  font-size: 14px;
+  font-weight: 600;
+  background-color: #d7b5f9;
+}
+
+.home-button.active {
+  background-color: #3f1270;
+  color: white;
+}
+
+.home-button:hover {
+  border-color:#d7b5f9;
+}
+
+.wallet-button {
+  margin-left: 50px;
+  border: 2px solid #d7b5f9;
+  border-radius: 14px;
+  width: 200px;
+  height: 45px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* 鼠标移入 边框和字体变色 */
+.wallet-button:hover {  
+  border-color: #faf1a5;
+  color:#b19cd9;
+  font-size: 1.1em; 
+}
