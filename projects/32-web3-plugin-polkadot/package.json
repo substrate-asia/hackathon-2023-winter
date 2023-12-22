@@ -1,6 +1,6 @@
 {
   "name": "@conx3/web3-plugin-polkadot",
-  "version": "0.0.1-alpha.18",
+  "version": "0.0.1-alpha.19",
   "description": "web3.js plugin for polkadot, kusama and substrate nodes' custom RPC methods. This is an ethereum-like rpc api for polkadot. It is meant to be an alternative to @polkadot/api package.",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -25,7 +25,8 @@
     "lint": "eslint '{src,test}/**/*.ts'",
     "lint-fix": "eslint '{src,test}/**/*.ts' --fix",
     "build": "tsc --project tsconfig.build.json",
-    "test": "jest --config=./test/jest.config.js",
+    "test": "jest --config=./jest.config.js",
+    "test-coverage": "jest --config=./jest.config.js --collect-coverage --coverage",
     "generate:types": "yarn generate:types:polkadot && yarn generate:types:kusama && yarn generate:types:substrate",
     "generate:types:polkadot": "yarn generate:defs:polkadot && yarn generate:meta:polkadot",
     "generate:defs:polkadot": "ts-node --skip-project node_modules/.bin/polkadot-types-from-defs --package @conx3/web3-plugin-polkadot/polkadot/interfaces --input ./src/interfaces/polkadot --endpoint ./static/type-generation/edgeware-polkadot.json",
