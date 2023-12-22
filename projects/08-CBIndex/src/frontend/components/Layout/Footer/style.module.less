@@ -1,0 +1,72 @@
+.container {
+  width: 100%;
+  min-width: var(--width-min);
+}
+
+.footerArea {
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  max-width: var(--pc-width-max);
+  margin: auto;
+}
+
+.mobileHeaderTopArea {
+  display: none;
+}
+
+.cbiLogo {
+  margin-bottom: 12px;
+}
+
+.cbiSlogan {
+  font-size: 14px;
+  color: var(--text-second-color);
+  margin-bottom: 24px;
+}
+
+.socialMediaIconArea {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.socialMediaIcon {
+  width: 40px;
+  margin-right: 2px;
+}
+
+.companyInfo {
+  color: var(--text-third-color);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 4px;
+}
+
+.drawALine {
+  width: 100%;
+  border-top: 0.5px solid var(--border-fourth-color);
+}
+
+.disclaimerTitle {
+  color: var(--text-third-color);
+  font-weight: 600;
+  margin-top: 12px;
+  font-size: 12px;
+}
+
+.disclaimerContent {
+  margin-top: 12px;
+  text-align: justify;
+  color: var(--text-third-color);
+  font-size: 12px;
+}
+
+@media screen and (max-width: @--mobile-width-max-media) {
+  .footerArea {
+    padding: var(--padding-md);
+  }
+
+  .mobileHeaderTopArea {
+    display: block;
+  }
+}

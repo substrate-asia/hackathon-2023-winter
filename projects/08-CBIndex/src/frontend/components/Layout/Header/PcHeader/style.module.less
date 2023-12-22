@@ -1,0 +1,346 @@
+// contains the two layers of the header
+.container {
+  position: fixed;
+  justify-content: center;
+  width: 100%;
+  min-width: var(--width-min);
+  backdrop-filter: blur(10px);
+  background-color: rgba(
+    30,
+    32,
+    38,
+    0.8
+  ); // color variable does not work with backdrop-filter
+  z-index: 1000;
+}
+
+// the top layer of the header, contans notice, search, locale, notification, profile
+.headerTopLayer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--padding-lg);
+  max-width: var(--pc-width-max);
+  height: 60px;
+  margin: auto;
+}
+
+// the right section of the header's top layer, contains search, locale, notification, profile
+.headerTopLayerRight {
+  display: flex;
+}
+
+// search bar
+.searchBar {
+  background: var(--bg-main-color);
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 200px;
+  border-radius: var(--border-radius-lg);
+  border: 1px solid var(--bg-main-color);
+}
+
+.searchBar:hover {
+  border: 1px solid var(--primary-green);
+}
+
+.searchItemArea {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.web3BtnBox {
+  width: 500px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+// locale button
+.localeArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+// notification and profile area
+.notificationAndProfileArea {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+// notification icon
+.notificationIcon {
+  font-size: 20px;
+  margin: auto 12px;
+  color: var(--border-third-color);
+  cursor: pointer;
+}
+
+.notificationIcon:hover {
+  color: var(--primary-green);
+}
+
+// profile icon
+.profileInfo {
+  display: flex;
+  color: var(--text-third-color);
+  cursor: default;
+}
+
+.logoArea {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  margin: 0 12px 0 0;
+}
+
+.menuArea {
+  width: 90%;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+}
+
+.optionArea {
+  display: flex;
+  align-items: center;
+  margin-left: 20px;
+  color: var(--text-third-color);
+}
+
+.optionItem {
+  margin-left: 20px;
+  cursor: pointer;
+  color: var(--text-third-color);
+}
+
+.optionItem:hover {
+  color: white !important;
+}
+
+.menuMoreBtn {
+  rotate: 90deg;
+  font-size: 20px;
+  font-weight: 800 !important;
+  margin: auto;
+  color: var(--border-third-color);
+}
+
+.menuMoreBtn:hover {
+  color: var(--border-second-color);
+}
+
+.mobileHeaderTopArea {
+  display: none;
+}
+
+.drawALine {
+  width: 100%;
+  border-top: 0.5px solid var(--border-fourth-color);
+}
+
+.headerBottomLayer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--padding-lg);
+  max-width: var(--pc-width-max);
+  height: 60px;
+  margin: auto;
+}
+
+// mobile header
+.mobileHeaderBtn {
+  color: var(--text-third-color);
+}
+
+.switchNetworksBtn {
+  margin-right: var(--margin-sm);
+}
+
+@media screen and (max-width: @--mobile-width-max-media) {
+  // the top layer of the header, contans notice, search, locale, notification, profile
+  .headerTopLayer {
+    padding: 0 var(--padding-md);
+  }
+
+  .headerBottomLayer {
+    padding: 0 var(--padding-md);
+    justify-content: space-between;
+  }
+
+  .headerTopLayerRight {
+    display: none;
+  }
+
+  .profileInfo {
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    margin-left: 30px;
+  }
+
+  .avatar {
+    margin-bottom: 30px;
+  }
+
+  .mobileHeaderTopArea {
+    display: flex;
+    align-items: center;
+  }
+
+  .mobileHeaderBottomArea {
+    display: flex;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 10px;
+    left: 0;
+    right: 0;
+    border: 1px solid var(--border-fourth-color);
+    background-color: var(--bg-second-color);
+    padding: 4px;
+    border-radius: 30px;
+    margin: 0 10px;
+    z-index: 1000;
+    height: 60px;
+    min-width: var(--width-min);
+  }
+
+  /* mobile header at the bottom */
+
+  .mobileHeaderBottom {
+    display: flex;
+    justify-content: space-evenly;
+  }
+
+  .mobileHeaderBottom:hover {
+    background-color: var(--bg-main-color);
+    cursor: pointer;
+    border-radius: 30px;
+  }
+
+  .mobileHeaderBottom:active {
+    background-color: var(--bg-main-color);
+  }
+
+  .mobileHeaderBottom div {
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+  }
+
+  .mobileHeaderBottom:last-child {
+    padding: 0 10px;
+  }
+
+  .searchIcon {
+    margin-right: 12px;
+    cursor: pointer;
+    color: var(--text-third-color);
+    font-size: 18px;
+  }
+
+  .notificationIcon {
+    font-size: 18px;
+    margin-left: 0;
+    margin-right: 12px;
+    color: var(--text-third-color);
+    cursor: pointer;
+  }
+
+  .mobileMenuIcon {
+    font-size: 18px;
+    margin: 0;
+    color: var(--text-third-color);
+    cursor: pointer;
+  }
+
+  .localeBtnForSidebarMenu {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px 10px;
+    width: 90%;
+    border-radius: 20px;
+
+    .content {
+      color: rgb(118, 128, 143); // will replace by var(--text-third-color)
+      margin-left: 10px;
+    }
+  }
+
+  .loginBtnForSidebarMenu {
+    display: flex;
+    height: 50px;
+    justify-content: center;
+    align-items: center;
+    margin: 60px 10px 10px 10px;
+    background-color: var(--bg-main-color);
+    width: 90%;
+    border-radius: 30px;
+
+    .content {
+      color: rgb(118, 128, 143); // will replace by var(--text-third-color)
+      margin-left: 10px;
+    }
+  }
+
+  .menuArea {
+    display: none;
+  }
+
+  .faucetArea {
+    position: absolute;
+    width: fit-content;
+    padding: 4px 8px;
+    height: 28px;
+    top: 120px;
+    left: 10px;
+    display: flex;
+    background-color: #111;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+}
+
+.moreDot {
+  color: var(--text-third-color);
+
+  &:hover {
+    cursor: pointer;
+    color: white !important;
+  }
+
+  // .dot_drop_down {
+  //   .ant-dropdown-menu-item {
+  //     color: red !important;
+
+  //     &:hover {
+  //       color: green !important;
+  //     }
+  //   }
+  // }
+
+  // color: red;
+}
+
+// .dot_drop_down {
+//   .ant-dropdown-menu-title-content {
+//     a {
+//       color: red !important;
+
+//     }
+//   }
+// }
+.ant-dropdown .ant-dropdown-menu .ant-dropdown-menu-title-content > a {
+  color: aqua !important;
+}
