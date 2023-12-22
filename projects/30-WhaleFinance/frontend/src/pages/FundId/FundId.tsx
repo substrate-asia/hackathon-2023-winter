@@ -4,14 +4,14 @@ import { useNavigate } from 'react-router-dom';
 // import { get, ref } from "firebase/database";
 import FormInvestor from '../../components/FormInvestor/FormInvestor';
 import LineChartComponent from '../../components/LineChartComponent/LineChartComponent';
-import PieChartComponent from '../../components/PieChartComponent/PieChartComponent';
+//import PieChartComponent from '../../components/PieChartComponent/PieChartComponent';
 import { useParams } from 'react-router-dom';
 import DataDiv from '../../components/DataDiv/DataDiv';
 import { ethers } from 'ethers';
 import { WhaleFinanceAddress, DrexAddress, scanUrl } from '../../utils/addresses';
 import { QuotaTokenAbi } from '../../contracts/QuotaToken';
 import { WhaleFinanceAbi } from '../../contracts/WhaleFinance';
-import Zusd from '../../assets/zusd.png';
+//import Zusd from '../../assets/zusd.png';
 import Avatar from '../../assets/whale_avatar2.png';
 import WhaleToken from '../../assets/whale_avatar1.png';
 import TokensTable from '../../components/TokensTable/TokensTable';
@@ -62,7 +62,7 @@ export default function FundId({ account, provider, signer }: FundIdProps) {
 
     const [zusdBalance, setZusdBalance] = useState(0);
     const [quotaBalance, setQuotaBalance] = useState(0);
-    const [quotaPrice, setQuotaPrice] = useState(1);
+    const [quotaPrice, _] = useState(1);
     
     const [totalQuotas, setTotalQuotas] = useState(0);
     const [quotaAddress, setQuotaAddress] = useState("--");
@@ -146,7 +146,7 @@ export default function FundId({ account, provider, signer }: FundIdProps) {
             console.log(err);
         }
     }
-
+    //@ts-ignore
     async function makeInvestment(){
         try{
             if(invest <= 0 || invest > zusdBalance){
@@ -304,7 +304,7 @@ export default function FundId({ account, provider, signer }: FundIdProps) {
 
     // mockData();
 
-    function timesTampToString(timestamp: string){
+    function timesTampToString(timestamp: number){
         console.log(timestamp)
         const date = new Date(Number(timestamp)*1000);
 
@@ -395,6 +395,15 @@ export default function FundId({ account, provider, signer }: FundIdProps) {
             </div>
             <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
                 <h3 className='font-bold text-xl ml-8 mt-8'>
+                    Data Section
+                </h3>
+                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
+                <div className='w-[80%] md:w-[95%] lg:w-[95%] p-8 flex flex-col items-center justify-center'>
+                    <DataDiv fund={fund} />
+                </div>
+            </div>
+            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                <h3 className='font-bold text-xl ml-8 mt-8'>
                     Tokens Section
                 </h3>
                 <div className='w-[100%-8] h-[1px] mt-2 bg-gray-300 dark:bg-gray-700 mx-8'></div>
@@ -409,15 +418,6 @@ export default function FundId({ account, provider, signer }: FundIdProps) {
                 <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
                 <div className='w-[80%] md:w-[95%] lg:w-[95%] h-[500px] p-6 flex flex-col items-center justify-center'>
                     <LineChartComponent data={data} />
-                </div>
-            </div>
-            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
-                <h3 className='font-bold text-xl ml-8 mt-8'>
-                    Data Section
-                </h3>
-                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
-                <div className='w-[80%] md:w-[95%] lg:w-[95%] p-8 flex flex-col items-center justify-center'>
-                    <DataDiv fund={fund} />
                 </div>
             </div>
             {/* <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-700 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>

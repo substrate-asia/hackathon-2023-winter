@@ -87,7 +87,6 @@ function App() {
             <Route path="/successfund" element={<SuccessFund />} />
             <Route path="/proposals" element={
               <Proposals 
-              isMetamaskInstalled={isMetamaskInstalled}
               signer={signer}
               />} />
             <Route path="/create-proposal" element={

@@ -71,8 +71,6 @@ export default function FormSwap(props: any) {
             const rawAmount = ethers.utils.parseEther(String(amount));
             const hexAmount = ethers.BigNumber.from(rawAmount).toHexString();
 
-            const tokenAContract = new ethers.Contract(tokenAAddress, QuotaTokenAbi, props.signer);
-
 
 
             const fundContract = new ethers.Contract(fundAddress[0], SafeAccountAbi, props.signer);
@@ -82,19 +80,12 @@ export default function FormSwap(props: any) {
 
             await txApprove.wait();
 
-            // const txSwap = await fundContract.functions.executeSwapExactTokensForTokens(
-            //     hexAmount, 0, path, props.account, deadline);
-
-            // await txSwap.wait();
-            const routerAddress = "0xcbC9ce7898517049175280288f3838593Adcc660";
-            const routerContract = new ethers.Contract(routerAddress, ["function swapExactTokensForTokens(uint256 amountIn,uint256 amountOutMin,address[] calldata path, address to, uint deadline) external returns (uint[] memory amounts)"], props.signer);
-            
-            // const txApprove = await tokenAContract.functions.approve(routerAddress, ethers.utils.parseEther(String(amount)));
-            // await txApprove.wait();
-
             const txSwap = await fundContract.functions.executeSwapExactTokensForTokens(
                 hexAmount, 0, path, props.account, deadline);
-            console.log(txSwap);
+
+            await txSwap.wait();
+            
+            
 
         } catch(err){
             console.log(err);
