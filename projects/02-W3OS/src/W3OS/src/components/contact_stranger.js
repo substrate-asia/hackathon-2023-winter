@@ -1,8 +1,10 @@
 import { Row, Col, Image } from "react-bootstrap";
 import { useState, useEffect } from "react";
 
-import Chat from "./chat";
-import ContactTitle from "./contact_title";
+//import Chat from "./chat";
+//import ContactTitle from "./contact_title";
+import ContactDetail from "./contact_detail";
+import Talking from "../system/talking";
 
 import RUNTIME from "../lib/runtime";
 import CHAT from "../lib/chat";
@@ -20,13 +22,19 @@ function StrangerList(props) {
   let [select, setSelect] = useState({});
   let [hide, setHide] = useState(true);
 
-  const UI=RUNTIME.getUI();
+  const UI = RUNTIME.getUI();
   const self = {
-    click: (address, ev) => {
-      UI.dialog.show(
-        <Chat address={address} fresh={props.fresh} height={560} fixed={false}/>,
-        <ContactTitle address={address} />,
-      );
+    click: (address, unread) => {
+      if(unread===0){
+        UI.dialog.show(
+          <ContactDetail address={address} strange={true} fresh={props.fresh}/>,
+          `Contact details`//tools.shorten(address,6),
+        );
+      }else{
+        UI.page(
+          <Talking address={address}/>
+        );
+      }
     },
     select: (address) => {
       select[address] = !select[address];
@@ -101,65 +109,25 @@ function StrangerList(props) {
 
   return (
     <Row index={count}>
-      <Col
-        hidden={hide}
-        xs={size.divide[0]}
-        sm={size.divide[0]}
-        md={size.divide[0]}
-        lg={size.divide[0]}
-        xl={size.divide[0]}
-        xxl={size.divide[0]}
-        className="pt-4"
-      >
+      <Col className="pt-4" hidden={hide} xs={size.divide[0]} sm={size.divide[0]} md={size.divide[0]}
+        lg={size.divide[0]} xl={size.divide[0]} xxl={size.divide[0]}>
         <hr />
       </Col>
-      <Col
-        hidden={hide}
-        xs={size.divide[1]}
-        sm={size.divide[1]}
-        md={size.divide[1]}
-        lg={size.divide[1]}
-        xl={size.divide[1]}
-        xxl={size.divide[1]}
-        className="pt-4 text-center"
-      >
+      <Col className="pt-4 text-center" hidden={hide} xs={size.divide[1]} sm={size.divide[1]} md={size.divide[1]}
+        lg={size.divide[1]} xl={size.divide[1]} xxl={size.divide[1]}>
         <span style={{ color: "#BBBBBB", fontWeight: "500" }}>Stranger</span>
       </Col>
-      <Col
-        hidden={hide}
-        xs={size.divide[2]}
-        sm={size.divide[2]}
-        md={size.divide[2]}
-        lg={size.divide[2]}
-        xl={size.divide[2]}
-        xxl={size.divide[2]}
-        className="pt-4"
-      >
+      <Col className="pt-4" hidden={hide} xs={size.divide[2]} sm={size.divide[2]} md={size.divide[2]}
+        lg={size.divide[2]} xl={size.divide[2]} xxl={size.divide[2]}>
         <hr />
       </Col>
       {contact.map((row, index) => (
-        <Col
-          xs={dv.xs}
-          sm={dv.sm}
-          md={dv.md}
-          lg={dv.lg}
-          xl={dv.xl}
-          xxl={dv.xxl}
-          key={index}
+        <Col key={index} xs={dv.xs} sm={dv.sm} md={dv.md} lg={dv.lg} xl={dv.xl} xxl={dv.xxl}
           onClick={(ev) => {
-            props.edit ? self.select(row.address) : self.click(row.address, ev);
-          }}
-        >
+            props.edit ? self.select(row.address) : self.click(row.address,row.unread);
+          }}>
           <Row>
-            <Col
-              xs={size[0]}
-              sm={size[0]}
-              md={size[0]}
-              lg={size[0]}
-              xl={size[0]}
-              xxl={size[0]}
-              className="pt-2"
-            >
+            <Col className="pt-2" xs={size[0]} sm={size[0]} md={size[0]} lg={size[0]} xl={size[0]} xxl={size[0]}>
               <Image
                 src={RUNTIME.getAvatar(row.address)}
                 rounded
@@ -171,11 +139,10 @@ function StrangerList(props) {
               </span>
               <small>
                 <input
-                  hidden={!props.edit}
-                  type="checkbox"
+                  hidden={!props.edit} type="checkbox"
                   checked={!select[row.address] ? false : select[row.address]}
                   onChange={(ev) => {
-                    //self.change(ev,address);
+
                   }}
                   style={{ marginRight: "5px" }}
                 />

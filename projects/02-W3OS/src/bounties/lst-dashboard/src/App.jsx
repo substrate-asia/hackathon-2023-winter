@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AcalaTokenDashboard from './Acala';
 import BifrostTokenDashboard from './Bifrost';
-import AcalaLogo from './assets/acala.png';
+import AcalaLogo from './assets/acala.jpg';
 import BifrostLogo from './assets/bifrost.jpg';
 
 function App() {

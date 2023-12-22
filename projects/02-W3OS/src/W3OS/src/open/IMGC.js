@@ -190,6 +190,7 @@ const router={
     } 
   },
   group_detail:(res,callback)=>{
+    console.log(`Group details: ${JSON.stringify(res)}`);
     //1.check the group exsist
     const row={
       id:res.id,
@@ -206,7 +207,7 @@ const router={
     delete res.update;
 
     DB.update(mine,[row],()=>{
-      console.log(`Group[${row.id}] updated.`);
+      //console.log(`Group[${row.id}] updated.`);
       const odata={
         id:row.id,
         type:"group",
@@ -220,16 +221,14 @@ const router={
       }
 
       //update the localstorage index here
-      DB.groupList(mine,row.id,odata,(res)=>{
-        //console.log(`Group oreder index saved, data: ${JSON.stringify(res)}`);
+      DB.groupList(mine,row.id,odata,(rs)=>{
+        //2.callback if there is
+        if(callback!==undefined){
+          map[callback](res);
+          delete map[callback];
+        } 
       });
     });
-
-    //2.callback if there is
-    if(callback!==undefined){
-      map[callback](res);
-      delete map[callback];
-    } 
   },
   group_divert:(res,callback)=>{
     //1.
@@ -274,8 +273,7 @@ const router={
     }
   },
   group_update:(res,callback)=>{
-    console.log(res);
-    console.log(callback);
+
     //2.callback if there is
     if(callback!==undefined){
       map[callback](res);
@@ -287,11 +285,9 @@ const router={
 const decoder={
   try:(input)=>{
     if(recoder!==null) recoder(input);
-    console.log(`Here to check the input and call the method to deal with notice`);
-    console.log(input);
+    //console.log(`Here to check the input and call the method to deal with notice`);
     switch (input.type){
       case "notice":
-        //console.log("here to go");
         const name=`${input.method.cat}_${input.method.act}`;
         const callback=!input.method.callback?undefined:input.method.callback;
         
@@ -343,9 +339,10 @@ const agent={
   },
   close:(res)=>{
     SVC=null;   //set websocket
+    //console.log("closed")
   },
   error:(res)=>{
-    console.log(res);
+    //console.log(res);
   },
 };
 
@@ -362,7 +359,7 @@ const IMGC={
   setRecoder:(fun)=>{
     recoder=fun;
   },
-  init:(fun)=>{
+  init:(fun,ck,force,ignor)=>{
     if(fun) IMGC.setRecoder(fun); //set out recoder
 
     //Set IO decoder, get the parameters from URL
@@ -371,7 +368,7 @@ const IMGC={
       console.log(params);
     });
 
-    if(SVC!==null) return true;
+    if(SVC!==null) return ck && ck(true);
     RUNTIME.getAccount((fa)=>{
       if(!fa) return false;
       mine=fa.address;
@@ -379,7 +376,16 @@ const IMGC={
       const uri=cfg.basic.talking[0];
       RUNTIME.websocket(uri,(ws)=>{
         SVC=ws;
-      },agent)
+        return ck && ck(true);
+      },agent,force);
+
+      if(!ignor){
+        RUNTIME.wsClose(uri,(res)=>{
+          console.log(`Websocket link closed, ready to reconnect.`);
+          RUNTIME.wsRemove(uri);
+          IMGC.init(fun,ck,force,true);
+        });
+      }
     });
   },
   group:{

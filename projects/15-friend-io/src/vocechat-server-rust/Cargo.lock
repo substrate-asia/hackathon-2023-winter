@@ -1504,6 +1504,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "dlmalloc"
+version = "0.1.4"
+source = "git+https://github.com/gear-tech/dlmalloc-rust.git#15352f969112faa463302f2490bbb7f6e1cb904d"
+dependencies = [
+ "libc",
+ "libc-print",
+ "page_size",
+ "static_assertions",
+ "str-buf",
+]
+
+[[package]]
 name = "doc-comment"
 version = "0.3.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2158,6 +2170,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "galloc"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
+dependencies = [
+ "dlmalloc",
+]
+
+[[package]]
 name = "gclient"
 version = "1.0.3"
 source = "git+https://github.com/gear-tech/gear.git#621a0124110b9481f40e463cd7e4ad33ff21f3e8"
@@ -2166,7 +2186,7 @@ dependencies = [
  "async-trait",
  "futures",
  "gear-core",
- "gear-core-errors",
+ "gear-core-errors 1.0.3",
  "gear-utils",
  "gsdk",
  "hex",
@@ -2179,10 +2199,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "gcore"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
+dependencies = [
+ "gear-core-errors 1.0.1",
+ "gear-stack-buffer",
+ "gsys 1.0.1",
+ "parity-scale-codec 3.6.5",
+ "static_assertions",
+]
+
+[[package]]
 name = "gear-contract-api"
 version = "0.1.0"
 dependencies = [
  "gclient",
+ "gear-core",
+ "gstd",
+ "kee-bee-io",
+ "parity-scale-codec 3.6.5",
  "tokio",
 ]
 
@@ -2195,9 +2231,9 @@ dependencies = [
  "byteorder",
  "derive_more",
  "enum-iterator",
- "gear-core-errors",
+ "gear-core-errors 1.0.3",
  "gear-wasm-instrument",
- "gsys",
+ "gsys 1.0.3",
  "hashbrown 0.14.3",
  "hex",
  "log",
@@ -2212,6 +2248,16 @@ dependencies = [
 
 [[package]]
 name = "gear-core-errors"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
+dependencies = [
+ "derive_more",
+ "enum-iterator",
+ "scale-info",
+]
+
+[[package]]
+name = "gear-core-errors"
 version = "1.0.3"
 source = "git+https://github.com/gear-tech/gear.git#621a0124110b9481f40e463cd7e4ad33ff21f3e8"
 dependencies = [
@@ -2219,6 +2265,11 @@ dependencies = [
  "enum-iterator",
  "scale-info",
 ]
+
+[[package]]
+name = "gear-stack-buffer"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
 
 [[package]]
 name = "gear-utils"
@@ -2336,6 +2387,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8be18de09a56b60ed0edf84bc9df007e30040691af7acd1c41874faac5895bfb"
 
 [[package]]
+name = "gmeta"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
+dependencies = [
+ "blake2-rfc",
+ "derive_more",
+ "hex",
+ "scale-info",
+]
+
+[[package]]
 name = "gsdk"
 version = "1.0.3"
 source = "git+https://github.com/gear-tech/gear.git#621a0124110b9481f40e463cd7e4ad33ff21f3e8"
@@ -2345,7 +2407,7 @@ dependencies = [
  "futures",
  "futures-util",
  "gear-core",
- "gear-core-errors",
+ "gear-core-errors 1.0.3",
  "gsdk-codegen",
  "hex",
  "indexmap 2.1.0",
@@ -2373,6 +2435,40 @@ dependencies = [
  "quote 1.0.33",
  "syn 2.0.39",
 ]
+
+[[package]]
+name = "gstd"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
+dependencies = [
+ "bs58 0.4.0",
+ "futures",
+ "galloc",
+ "gcore",
+ "gear-core-errors 1.0.1",
+ "gstd-codegen",
+ "hashbrown 0.14.3",
+ "hex",
+ "parity-scale-codec 3.6.5",
+ "primitive-types 0.12.2",
+ "scale-info",
+ "static_assertions",
+]
+
+[[package]]
+name = "gstd-codegen"
+version = "0.1.0"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
+dependencies = [
+ "proc-macro2 1.0.70",
+ "quote 1.0.33",
+ "syn 2.0.39",
+]
+
+[[package]]
+name = "gsys"
+version = "1.0.1"
+source = "git+https://github.com/gear-tech/gear.git?tag=v1.0.1#a3fe307bd8e0bdef14b323c4e2361d7df824a5f2"
 
 [[package]]
 name = "gsys"
@@ -3222,6 +3318,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "kee-bee-io"
+version = "0.1.0"
+source = "git+https://github.com/kee-lab/gear_friend_contract.git?branch=workspace#c6ef181db00b75e14f84e8c7e22a75f25226e054"
+dependencies = [
+ "gmeta",
+ "gstd",
+]
+
+[[package]]
 name = "kstring"
 version = "1.0.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3278,6 +3383,15 @@ name = "libc"
 version = "0.2.150"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "89d92a4743f9a61002fae18374ed11e7973f530cb3a3255fb354818118b2203c"
+
+[[package]]
+name = "libc-print"
+version = "0.1.22"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c17f111e2175c779daaf5e89fe3a3b0776b0adec218bc1159c56e4d3f58032f5"
+dependencies = [
+ "libc",
+]
 
 [[package]]
 name = "libm"
@@ -3964,6 +4078,16 @@ name = "overload"
 version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b15813163c1d831bf4a13c3610c05c0d03b39feb07f7e09fa234dac9b15aaf39"
+
+[[package]]
+name = "page_size"
+version = "0.6.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "30d5b2194ed13191c1999ae0704b7839fb18384fa22e49b57eeaa97d79ce40da"
+dependencies = [
+ "libc",
+ "winapi",
+]
 
 [[package]]
 name = "parity-scale-codec"
@@ -6649,6 +6773,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a2eb9349b6444b326872e140eb1cf5e7c522154d69e7a0ffb0fb81c06b37543f"
 
 [[package]]
+name = "str-buf"
+version = "3.0.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e75b72ee54e2f93c3ea1354066162be893ee5e25773ab743de3e088cecbb4f31"
+
+[[package]]
 name = "string_cache"
 version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7685,6 +7815,7 @@ dependencies = [
  "fnv",
  "fs2",
  "futures-util",
+ "gear-contract-api",
  "hex",
  "hmac 0.11.0",
  "image",

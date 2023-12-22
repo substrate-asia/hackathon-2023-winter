@@ -32,7 +32,7 @@ function Cell(props) {
     contact: <Contact />,
     talking: <Talking />,
   };
-  const UI=RUNTIME.getUI();
+  const UI = RUNTIME.getUI();
   const self = {
     calcBlock: (index) => {
       const details = Device.details();
@@ -99,7 +99,7 @@ function Cell(props) {
       onSelect(props.index);
     },
     tail: (str) => {
-      if(!str) return '...';
+      if (!str) return '...';
       if (str.length <= 6) return str;
       return str.substr(0, 4) + "..";
     },
@@ -111,16 +111,13 @@ function Cell(props) {
       <span hidden={true} className="type">
         {!row.type ? "unknow" : row.type}
       </span>
-      <img
-        src={row.icon}
-        alt=""
-        onClick={(ev) => {
-          props.edit ? self.select() : self.click();
-        }}
-      />
+      <div onClick={(ev) => {
+        props.edit ? self.select() : self.click();
+      }}>{RUNTIME.getICON(row.icon)}</div>
+
       <h6 onClick={(ev) => {
-          props.edit ? self.select() : self.click();
-        }}>
+        props.edit ? self.select() : self.click();
+      }}>
         <span>
           <input
             hidden={props.edit ? (row.type === "system" ? true : false) : true}

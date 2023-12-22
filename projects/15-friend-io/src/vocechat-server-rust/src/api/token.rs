@@ -1,4 +1,4 @@
-use std::{collections::HashMap, ops::Deref, time::Duration, string, env::VarError};
+use std::{collections::HashMap, env::VarError, ops::Deref, string, time::Duration};
 
 use bytes::Bytes;
 use chrono::Utc;
@@ -29,22 +29,23 @@ use poem_openapi::{
 use rc_magic_link::MagicLinkToken;
 use rc_token::{parse_token, TokenType};
 use serde::{Deserialize, Serialize};
-use serde_json::{Value, Map};
+use serde_json::{Map, Value};
 use sha2::Sha256;
 use tracing::info;
 // lazy_static::lazy!{
-//     static PROXY_URL:String = std::env::var("PROXY").expect("env not set the PROXY!");
-// }
+//     static PROXY_URL:String = std::env::var("PROXY").expect("env not set the
+// PROXY!"); }
 
-pub static PROXY_URL: Lazy<Result<String,VarError>> = Lazy::new(|| std::env::var("PROXY"));
-
+pub static PROXY_URL: Lazy<Result<String, VarError>> = Lazy::new(|| std::env::var("PROXY"));
 
 use crate::{
     api::{
         admin_login::{LoginConfig, WhoCanSignUp},
+        client::get_client,
+        serivce::group_service,
         tags::ApiTags,
-        user::{UserInfo, TwitterUserInfo},
-        DateTime, KickReason, client::get_client,
+        user::{TwitterUserInfo, UserInfo},
+        DateTime, Group, KickReason,
     },
     create_user::{CreateUser, CreateUserBy, CreateUserError},
     middleware::guest_forbidden,
@@ -296,7 +297,6 @@ pub enum LoginApiResponse {
     AccountNotAssociated,
 }
 
-
 /// Bind credential
 #[derive(Debug, Union)]
 #[oai(discriminator_name = "type")]
@@ -321,13 +321,13 @@ struct BindRequest {
 /// twitter auth code
 #[derive(Debug, Object)]
 struct TwitterCodeRequest {
-    code:  String,
+    code: String,
 }
 
 /// twitter auth code
 #[derive(Debug, Object)]
 struct WalletAddressRequest {
-    address:  String,
+    address: String,
 }
 
 #[derive(ApiResponse)]
@@ -1087,10 +1087,14 @@ impl ApiToken {
         do_login(&state, uid, &req.0.device, req.0.device_token.as_deref()).await
     }
 
-    //twitterAuth
-    #[oai(path="/twitterAuth", method="post")]
-    async fn twitter_auth(&self,state:Data<&State>,token:Token,req:Json<TwitterCodeRequest>) ->Result<Json<TwitterUserInfo>>
-    {
+    // twitterAuth
+    #[oai(path = "/twitterAuth", method = "post")]
+    async fn twitter_auth(
+        &self,
+        state: Data<&State>,
+        token: Token,
+        req: Json<TwitterCodeRequest>,
+    ) -> Result<Json<TwitterUserInfo>> {
         let code = &req.code;
         let mut tx = state.db_pool.begin().await.map_err(InternalServerError)?;
         // fetch id_token by code
@@ -1112,41 +1116,56 @@ impl ApiToken {
             .bind(true)
             .bind(uid)
             .execute(&mut tx)
-            .await.map_err(InternalServerError)?;
+            .await
+            .map_err(InternalServerError)?;
         info!("finished update user set auth_twitter");
-        //check the user has oauth by twitter
-        // let select_twitter_uid_sql ="select twitter_id from twitter_user where twitter_id = ? and uid = ?";
-        // if let None = sqlx::query_as::<_, (i64,)>(select_twitter_uid_sql)
-        //             .bind(&twitter_userinfo.twitter_id)
-        //             .bind(&uid)
+        // check the user has oauth by twitter
+        // let select_twitter_uid_sql ="select twitter_id from twitter_user where
+        // twitter_id = ? and uid = ?"; if let None = sqlx::query_as::<_,
+        // (i64,)>(select_twitter_uid_sql)             
+        // .bind(&twitter_userinfo.twitter_id)             .bind(&uid)
         //             .fetch_optional(&state.db_pool)
         //             .await
         //             .map_err(InternalServerError)?
         // {
-            //create the twitter user.
-            let now = DateTime::now();
-            let sql = "insert into twitter_user (uid,twitter_id, username,profile_image_url,created_time,updated_time) values (?,?, ?,?,?,?)";
-            sqlx::query(sql)
-                .bind(uid)
-                .bind(twitter_userinfo.twitter_id)
-                .bind(twitter_userinfo.username)
-                .bind(twitter_userinfo.profile_image_url)
-                .bind(now)
-                .bind(now)
-                .execute(&mut tx)
-                .await
-                .map_err(InternalServerError)?;
-            info!("finished insert twitter_user!");
+        // create the twitter user.
+        let now = DateTime::now();
+        let sql = "insert into twitter_user (uid,twitter_id, username,profile_image_url,created_time,updated_time) values (?,?, ?,?,?,?)";
+        sqlx::query(sql)
+            .bind(uid)
+            .bind(twitter_userinfo.twitter_id)
+            .bind(twitter_userinfo.username)
+            .bind(twitter_userinfo.profile_image_url)
+            .bind(now)
+            .bind(now)
+            .execute(&mut tx)
+            .await
+            .map_err(InternalServerError)?;
+        info!("finished insert twitter_user!");
         // }
-
+        // let group = Group {
+        //     gid: 0,
+        //     owner: Some(token.uid),
+        //     name: format!("user {} share group",token.uid),
+        //     description: Some(format!("user {} share group",token.uid)),
+        //     members: Default::default(),
+        //     is_public: false,
+        //     avatar_updated_at: DateTime::now(),
+        //     pinned_messages: Default::default(),
+        // };
+        // group_service::create(state, group, token.uid).await?;
         tx.commit().await.map_err(InternalServerError)?;
-        
-        //update user info
+
+        // update user info
         Ok(twitter_response)
     }
 
     /// Bind wallet
-    #[oai(path = "/bindWallet2User", method = "post", transform = "guest_forbidden")]
+    #[oai(
+        path = "/bindWallet2User",
+        method = "post",
+        transform = "guest_forbidden"
+    )]
     async fn bind_wallet2_user(
         &self,
         state: Data<&State>,
@@ -1161,7 +1180,8 @@ impl ApiToken {
             .bind(address)
             .bind(uid)
             .execute(db_pool)
-            .await.map_err(InternalServerError)?;
+            .await
+            .map_err(InternalServerError)?;
         Ok(BindApiResponse::Ok)
     }
 
@@ -1624,13 +1644,15 @@ async fn twitter_fetch_token(code: &str, state: &State) -> anyhow::Result<String
         ("code", code.to_string()),
         ("grant_type", "authorization_code".to_string()),
         ("code_verifier", "challenge".to_string()),
-        ("redirect_uri", "http://127.0.0.1:3009/twitter/cb/webapp.html".to_string()),
+        (
+            "redirect_uri",
+            "http://127.0.0.1:3009/twitter/cb/webapp.html".to_string(),
+        ),
     ]; // , ("redirect_uri", "")
-    let client = if PROXY_URL.is_ok(){
-            get_client(Some(PROXY_URL.as_ref().unwrap()))?
-        }
-        else{
-            get_client(None)?
+    let client = if PROXY_URL.is_ok() {
+        get_client(Some(PROXY_URL.as_ref().unwrap()))?
+    } else {
+        get_client(None)?
     };
     let res = client
         .post("https://api.twitter.com/2/oauth2/token")
@@ -1648,16 +1670,16 @@ async fn twitter_fetch_token(code: &str, state: &State) -> anyhow::Result<String
     let parsed: Value = serde_json::from_str(&body)?;
     let access_token = parsed.get("access_token").unwrap().as_str().unwrap();
     // let pairs = serde_urlencoded::from_str::<HashMap<String, String>>(&body)?;
-    // let access_token = obj.get("access_token").cloned().unwrap_or_default().to_string();
+    // let access_token =
+    // obj.get("access_token").cloned().unwrap_or_default().to_string();
     tracing::debug!(access_token = access_token);
     Ok(access_token.to_string())
 }
 
 async fn twitter_fetch_user_info(token: &str) -> anyhow::Result<TwitterUserInfo> {
-    let client = if PROXY_URL.is_ok(){
+    let client = if PROXY_URL.is_ok() {
         get_client(Some(PROXY_URL.as_ref().unwrap()))?
-    }
-    else{
+    } else {
         get_client(None)?
     };
     let res = client
@@ -1666,7 +1688,8 @@ async fn twitter_fetch_user_info(token: &str) -> anyhow::Result<TwitterUserInfo>
         .header("Authorization", format!("Bearer {}", token))
         .send()
         .await?;
-    //Authorization: Bearer YUdCQnNBSHJQSU5TV0F0RG5zVDItek92SkowX3lwajhGRl9nN1RMd1UxSEdLOjE2OTU4NjcwMTkxOTY6MTowOmF0OjE
+    // Authorization: Bearer
+    // YUdCQnNBSHJQSU5TV0F0RG5zVDItek92SkowX3lwajhGRl9nN1RMd1UxSEdLOjE2OTU4NjcwMTkxOTY6MTowOmF0OjE
     let body = res.text().await?;
     tracing::debug!(body = body.as_str());
     let data = serde_json::from_str::<Value>(&body)?;
@@ -1676,23 +1699,20 @@ async fn twitter_fetch_user_info(token: &str) -> anyhow::Result<TwitterUserInfo>
         .and_then(|v| v.as_str())
         .unwrap()
         .to_string();
-    let id = pairs
-        .get("id")
-        .and_then(|v| v.as_str())
-        .unwrap();
+    let id = pairs.get("id").and_then(|v| v.as_str()).unwrap();
     let profile_image_url = pairs
         .get("profile_image_url")
         .and_then(|v| v.as_str())
         .map(ToString::to_string);
     Ok(TwitterUserInfo {
-        uid:0,
+        uid: 0,
         username,
-        twitter_id:id.to_string(),
+        twitter_id: id.to_string(),
         profile_image_url,
         created_time: None,
         updated_time: None,
         share_supply: 0,
-        price:0,
+        price: 0,
     })
 }
 
