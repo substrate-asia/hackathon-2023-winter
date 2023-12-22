@@ -23,6 +23,9 @@ It is a developer tool that uses fine-tuned model of OpenAI to write ink smart c
 https://youtube.com/watch?v=E_POXY5Gzhs
 
 
+# Code
+Opensourced at: https://github.com/tusharojha/SpeedInk
+
 ### Logo
 
 Inside the docs directory.
