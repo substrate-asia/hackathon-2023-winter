@@ -1,0 +1,25 @@
+.Table-head-font {
+    font-size: 25px;
+    font-weight: 500;
+    margin-bottom: 15px;
+}
+.About-us{
+  font-size: 25px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #ccaef5;
+}
+.Card-head{
+  margin-bottom: 15px;
+}
+.p-font{
+  color: rgb(96, 98, 102);
+  font-size: 16px;
+  font-weight:500;
+}
+.chakra-card__body{
+  /* background: brown; */
+}
