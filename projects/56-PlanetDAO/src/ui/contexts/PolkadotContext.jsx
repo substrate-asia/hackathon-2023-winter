@@ -9,13 +9,20 @@ const AppContext = createContext({
   api: null,
   deriveAcc:null,
   showToast:(status,id,FinalizedText,doAfter,callToastSuccess= true, events)=>{},
-  userInfo:{}
+  userInfo:{},
+  userWalletPolkadot: "",
+  userSigner:null,
+  PolkadotLoggedIn:false,
+  getUserInfoById: ()=>{}
 });
 
 export function PolkadotProvider({ children }) {
   const [api, setApi] = useState();
   const [deriveAcc, setDeriveAcc] = useState(null)
+  const [PolkadotLoggedIn, setPolkadotLoggedIn] = useState(false)
   const [userInfo, setUserInfo] = useState({})
+  const [userWalletPolkadot, setUserWalletPolkadot] = useState("")
+  const [userSigner, setUserSigner] = useState("")
 
   async function showToast(status,id,FinalizedText,doAfter,callToastSuccess= true, events){
  
@@ -24,8 +31,19 @@ export function PolkadotProvider({ children }) {
 
     }else if (status.isFinalized) {
       if (callToastSuccess)
-      toast.update(id, { render: FinalizedText, type: "success", isLoading: false });
+      toast.update(id, { render: FinalizedText, type: "success", isLoading: false,  autoClose: 1000,
+      closeButton: true,
+      closeOnClick: true,
+      draggable: true });
       doAfter(events);
+    }
+  }
+
+  async function getUserInfoById(userid){
+    if (api){
+      return await api.query.users.userById(userid);
+    }else{
+      return {};
     }
   }
 
@@ -45,13 +63,26 @@ export function PolkadotProvider({ children }) {
   
   
   
-        const {web3Enable} = require('@polkadot/extension-dapp');
+        const {web3Enable,web3Accounts, web3FromAddress} = require('@polkadot/extension-dapp');
       
-        if (window.localStorage.getItem('loggedin') == "true" && window.localStorage.getItem('login-type') == "polkadot" ){
-          await web3Enable('PlanetDAO');
+        if (window.localStorage.getItem('loggedin') == "true"  ){
+        
           let userid = window.localStorage.getItem('user_id');
+          window.userid = userid;
           const userInformation = await _api.query.users.userById(userid);
-          setUserInfo(userInformation);
+          setUserInfo(userInformation); 
+          
+          if (window.localStorage.getItem('login-type') == "polkadot"){
+            setPolkadotLoggedIn(true);
+            await web3Enable('PlanetDAO');
+            let wallet = (await web3Accounts())[0];
+            const injector = await web3FromAddress(wallet.address);
+  
+            setUserSigner(injector.signer);
+  
+            setUserWalletPolkadot(wallet.address)
+            window.signerAddress = wallet.address;
+          }
         }
       }catch(e){
 
@@ -61,7 +92,7 @@ export function PolkadotProvider({ children }) {
   },[])
 
 
-  return <AppContext.Provider value={{api:api,deriveAcc:deriveAcc,showToast:showToast, userInfo:userInfo}}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{api:api,deriveAcc:deriveAcc,showToast:showToast,getUserInfoById:getUserInfoById,userWalletPolkadot:userWalletPolkadot,userSigner:userSigner,PolkadotLoggedIn:PolkadotLoggedIn, userInfo:userInfo}}>{children}</AppContext.Provider>;
 }
 
 export const usePolkadotContext = () => useContext(AppContext);

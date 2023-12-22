@@ -263,8 +263,8 @@
       ]
     },
     "H:\\code\\Steve\\MoonDAO-Polkadot-Winter\\contracts\\contracts\\PlanetDAO.sol": {
-      "lastModificationDate": 1703160330242,
-      "contentHash": "3084202796de0f1415175e103febc2c0",
+      "lastModificationDate": 1703213737246,
+      "contentHash": "224f342deb5bfb5a809e71b1b2753a9e",
       "sourceName": "contracts/PlanetDAO.sol",
       "solcConfig": {
         "version": "0.8.17",

@@ -72,9 +72,6 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
     alertBox = e.target.querySelector('[name=alertbox]');
     setisLoading(true);
 
-    console.log('COIN', Coin);
-    return;
-
     if (Number(window.ethereum.networkVersion) === 1287) {
       //If it is sending from Moonbase so it will use batch precompiles
       ShowAlert('pending', 'Sending Batch Transaction....');
@@ -91,7 +88,7 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
         token: output?.wrappedAsset
       });
       // Saving Donation count on smart contract
-      await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), ethers.utils.parseUnits(amount.value, 'gwei'), CurrentAddress));
+      await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), ethers.utils.parseUnits(amount.value, 'gwei'), Number(window.userid)));
     }
 
     // if (Number(window.ethereum.networkVersion) === 1287) {
@@ -102,14 +99,8 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
     LoadData();
     setisLoading(false);
     setisSent(true);
+    onHide();
   }
-
-  const StyledPaper = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(2),
-    color: theme.palette.text.primary
-  }));
 
   async function LoadData() {
     const Web3 = require('web3');

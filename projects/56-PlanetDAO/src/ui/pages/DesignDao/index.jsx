@@ -19,16 +19,18 @@ import grapesjs_typed from 'grapesjs-typed';
 import 'grapesjs/dist/css/grapes.min.css';
 import isServer from '../../components/isServer';
 import { Button, Input } from '@heathmont/moon-core-tw';
+import { usePolkadotContext } from '../../contexts/PolkadotContext';
+import { toast } from 'react-toastify';
 
 let DaoURI = { Title: '', Description: '', SubsPrice: 0, Start_Date: '', End_Date: '', logo: '', wallet: '', typeimg: '', allFiles: [], isOwner: false };
-
+let rendered = false;
 export default function DesignDao() {
   const sleep = (milliseconds) => {
     return new Promise((resolve) => setTimeout(resolve, milliseconds));
   };
   const { contract, signerAddress, sendTransaction } = useContract();
-
-  const [list, setList] = useState([]);
+  const { api, showToast, userWalletPolkadot,userSigner, PolkadotLoggedIn } = usePolkadotContext();
+  const [dao_type, setDaoType] = useState("metamask");
 
   const [editor, setEditor] = useState(null);
   const regex = /\[(.*)\]/g;
@@ -36,30 +38,28 @@ export default function DesignDao() {
   let id = ''; //id from url
 
   useEffect(() => {
-    LoadEditor();
-  }, [contract]);
+    getDaoID();
+    fetchAll();
+  }, [contract, api]);
 
-  if (!isServer()) {
+
+  function getDaoID() {
     const str = decodeURIComponent(window.location.search);
 
     while ((m = regex.exec(str)) !== null) {
       if (m.index === regex.lastIndex) {
         regex.lastIndex++;
       }
-      id = m[1];
+      let dao_type = m[1].startsWith("m_") ? "metamask" : "polkadot";
+      setDaoType(dao_type);
+      let splitter = dao_type =="metamask"?"m_":"p_"
+      id =(Number(m[1].split(splitter)[1]));
     }
   }
 
-  async function LoadEditor() {
-    console.log('1');
 
-    if (typeof window == 'undefined' || contract === null || id === null) {
-      return null;
-    }
-    await fetchContractData();
-    console.log('2');
+  async function LoadEditor() {
     if (editor != null) return;
-    await sleep(500);
     var editor = grapesjs.init({
       container: '#editor',
       fromElement: true,
@@ -394,62 +394,76 @@ export default function DesignDao() {
     window.editorGJ = editor;
   }
 
+  async function fetchAll() {
+    if (typeof window == 'undefined' || contract === null || id === null) {
+      return null;
+    }
+    await fetchContractData();
+  }
   async function SaveHTML() {
-    let output = editor.getHtml() + '<style>' + editor.getCss() + '</style>';
+    const ToastId = toast.loading('Updating ...');
 
-    // Saving HTML in Smart contract from metamask chain
-    await sendTransaction(await window.contract.populateTransaction.update_template(id, output));
+    let output = editor.getHtml() + '<style>' + editor.getCss() + '</style>';
+    if (PolkadotLoggedIn) {
+      await api._extrinsics.daos.updateTemplate(Number(id), output).signAndSend(userWalletPolkadot, { signer: userSigner }, (status) => {
+        showToast(status, ToastId, 'Updated Successfully!', ()=>{});
+      });
+    } else {
+
+      // Saving HTML in Smart contract from metamask chain
+      await sendTransaction(await window.contract.populateTransaction.update_template(id, output));
+      toast.update(id, {
+        render: 'Updated Successfully!', type: "success", isLoading: false, autoClose: 1000,
+        closeButton: true,
+        closeOnClick: true,
+        draggable: true
+      });
+    }
+  }
+
+  async function UpdateDaoData(dao_uri, template_html) {
+    document.querySelector('#dao-container').innerHTML = template_html;
+    rendered = true;
+    const daoURI = JSON.parse(dao_uri); //Getting dao URI
+
+    DaoURI = {
+      Title: daoURI.properties.Title.description,
+      Description: daoURI.properties.Description.description,
+      Start_Date: daoURI.properties.Start_Date.description,
+      logo: daoURI.properties.logo.description,
+      wallet: daoURI.properties.wallet.description,
+      typeimg: daoURI.properties.typeimg.description,
+      allFiles: daoURI.properties.allFiles.description,
+    };
+    LoadEditor();
+
+
   }
 
   async function fetchContractData() {
-    //Fetching data from Smart contract
-    try {
-      if (contract && id != null) {
-        const daoURI = JSON.parse(await contract.dao_uri(Number(id))); //Getting dao URI
-        const template_html = await contract._template_uris(Number(id));
-        document.querySelector('#dao-container').innerHTML = template_html;
+    if (contract && id != null && !rendered) {
+      //Fetching data from Parachain
+      if (api && dao_type == 'polkadot') {
+        try {
+          const element = await api._query.daos.daoById(Number(id));
+          let daoURI = element['__internal__raw'].daoUri.toString();
+          let template_html = (await api._query.daos.templateById(id)).toString();
+          UpdateDaoData(daoURI, template_html);
+        } catch (e) { }
 
-        const totalGoals = await contract.get_all_goals_by_dao_id(Number(id)); //Getting all goals by dao id
-        const arr = [];
-        for (let i = 0; i < Object.keys(totalGoals).length; i++) {
-          //total dao number Iteration
-          const goalid = await contract.get_goal_id_by_goal_uri(totalGoals[i]);
-          let goal = totalGoals[i];
-          if (goal == '') continue;
-          const object = JSON.parse(goal);
-
-          if (object) {
-            arr.push({
-              //Pushing all data into array
-              goalId: goalid,
-              Title: object.properties.Title.description,
-              Description: object.properties.Description.description,
-              Budget: object.properties.Budget.description,
-              End_Date: object.properties.End_Date.description,
-              logo: object.properties.logo.description?.url
-            });
-          }
-        }
-        setList(arr);
-        DaoURI = {
-          Title: daoURI.properties.Title.description,
-          Description: daoURI.properties.Description.description,
-          Start_Date: daoURI.properties.Start_Date.description,
-          logo: daoURI.properties.logo.description,
-          wallet: daoURI.properties.wallet.description,
-          typeimg: daoURI.properties.typeimg.description,
-          allFiles: daoURI.properties.allFiles.description,
-          SubsPrice: daoURI.properties?.SubsPrice?.description,
-          isOwner: daoURI.properties.wallet.description.toString().toLocaleLowerCase() === signerAddress.toString().toLocaleLowerCase() ? true : false
-        };
-
-        // window.querySelector('#dao-title').innerHTML = DaoURI.Title;
-        // window.querySelector('#dao-image').setAttribute("src", DaoURI.logo);
       }
-    } catch (error) {
-      console.error(error);
+      if (contract && dao_type == 'metamask') {
+        //Load everything-----------
+        const daoURI = (await contract.dao_uri(Number(id))); //Getting dao URI
+        const template_html = await contract._template_uris(id);
+
+        UpdateDaoData(daoURI, template_html);
+
+      }
+
     }
   }
+
 
   return (
     <div>

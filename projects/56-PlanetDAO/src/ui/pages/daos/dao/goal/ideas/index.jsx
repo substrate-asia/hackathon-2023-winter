@@ -20,6 +20,7 @@ export default function GrantIdeas() {
   const [DonatemodalShow, setDonatemodalShow] = useState(false);
   const [VotingShow, setVotingShow] = useState(false);
   const [AccountAddress, setAccountAddress] = useState('');
+  const [loading, setLoading] = useState(false);
   const { contract, signerAddress, sendTransaction, saveReadMessage } = useContract();
 
   const [Comment, CommentInput, setComment] = UseFormTextArea({
@@ -89,6 +90,8 @@ export default function GrantIdeas() {
   });
 
   async function fetchContractData() {
+    setLoading(true);
+
     try {
       if (contract && id) {
         setIdeasId(id); //setting Ideas id
@@ -101,6 +104,7 @@ export default function GrantIdeas() {
         const goalURI = JSON.parse(await contract.goal_uri(Number(Goalid))); //Getting goal URI
         let isvoted = false;
         const Allvotes = await contract.get_ideas_votes_from_goal(Number(Goalid), Number(id)); //Getting all votes
+
         for (let i = 0; i < Allvotes.length; i++) {
           const element = Allvotes[i];
           if (element === signerAddress) isvoted = true;
@@ -119,11 +123,12 @@ export default function GrantIdeas() {
           votesAmount: Object.keys(Allvotes).length,
           donation: Number((await contract._ideas_uris(Number(id))).donation) / 1e18,
           isVoted: isvoted,
-          isOwner: object.properties.wallet.description.toString().toLocaleLowerCase() === signerAddress.toString().toLocaleLowerCase() ? true : false,
+          isOwner: object.properties.user_id.description === Number(window.userid) ? true : false,
           allfiles: object.properties.allFiles
         });
 
         setimageList(object.properties.allFiles);
+        setLoading(false);
 
         // Comments and Replies
         const totalComments = await contract.getMsgIDs(Number(id)); //Getting total comments (Number) of this idea
@@ -155,11 +160,10 @@ export default function GrantIdeas() {
               date: object.date
             };
             newComment.replies.push(newReply);
-            // console.log('LIST', CommentsList);
           });
 
           CommentsList.push(newComment);
-          console.log(CommentsList);
+          setCommentsList(CommentsList);
         });
         removeElementFromArrayBYID(emptydata, 0, setemptydata);
       }
@@ -186,12 +190,12 @@ export default function GrantIdeas() {
       return;
     }
     try {
-      await sendTransaction(await window.contract.populateTransaction.create_goal_ideas_vote(Number(Goalid), Number(id), signerAddress));
+      await sendTransaction(await window.contract.populateTransaction.create_goal_ideas_vote(Number(Goalid), Number(id), signerAddress,Number(window.userid)));
     } catch (error) {
       console.error(error);
       return;
     }
-    window.location.reload();
+    setIdeasURI({ ...IdeasURI, isVoted: !IdeasURI.isVoted });
   }
 
   async function DonateToAddress() {
@@ -224,15 +228,14 @@ export default function GrantIdeas() {
     };
     await saveMessage(newComment);
     newComment.replies = [];
-    CommentsList.push(newComment);
+    setCommentsList([...CommentsList, newComment]);
     setComment('');
     removeElementFromArrayBYID(emptydata, 0, setemptydata);
   }
 
   async function saveMessage(newComment) {
-    await sendTransaction(await window.contract.populateTransaction.sendMsg(Number(ideaId), JSON.stringify(newComment), window?.ethereum?.selectedAddress?.toLocaleLowerCase()));
+    await sendTransaction(await window.contract.populateTransaction.sendMsg(Number(ideaId), JSON.stringify(newComment), window?.ethereum?.selectedAddress?.toLocaleLowerCase(),Number(window.userid)));
     removeElementFromArrayBYID(emptydata, 0, setemptydata);
-    console.log('Saved Messages');
   }
 
   async function sendReply(replyText, MessageId, MessageIndex) {
@@ -244,9 +247,8 @@ export default function GrantIdeas() {
       date: new Date().toISOString()
     };
     CommentsList[MessageIndex].replies.push(newReply);
-    await sendTransaction(await window.contract.populateTransaction.sendReply(Number(MessageId), JSON.stringify(newReply), Number(ideaId), window?.ethereum?.selectedAddress?.toLocaleLowerCase()));
+    await sendTransaction(await window.contract.populateTransaction.sendReply(Number(MessageId), JSON.stringify(newReply), Number(ideaId), Number(window.userid)));
     removeElementFromArrayBYID(emptydata, 0, setemptydata);
-    console.log('Saved Reply');
   }
 
   const uniqueAndSort = (comments) => Array.from(new Map(comments.map((item) => [item.id, item])).values()).sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -262,7 +264,7 @@ export default function GrantIdeas() {
         <div className={`gap-8 flex flex-col w-full bg-gohan pt-10 pb-6 border-beerus border`}>
           <div className="container flex w-full justify-between relative">
             <div className="flex flex-col gap-1">
-              <h5 className="font-semibold">Harvard University &gt; Goals &gt; Ideas</h5>
+              <h5 className="font-semibold">Community &gt; Goals &gt; Ideas</h5>
               <h1 className="text-moon-32 font-bold">{IdeasURI.Title}</h1>
               <h3 className="flex gap-2 whitespace-nowrap">
                 <div>
@@ -286,11 +288,11 @@ export default function GrantIdeas() {
               <Button iconLeft={IdeasURI.isVoted ? <GenericHeart fill="red" color="red" /> : <GenericHeart />} variant="secondary" onClick={VoteIdea}>
                 Vote
               </Button>
-              {IdeasURI.isOwner && (
+              {/* {IdeasURI.isOwner && (
                 <Button iconLeft={<GenericEdit />} variant="secondary" className="w-full">
                   Edit
                 </Button>
-              )}
+              )} */}
             </div>
           </div>
         </div>
@@ -299,18 +301,26 @@ export default function GrantIdeas() {
           <p>{IdeasURI.Description}</p>
           <Loader
             element={
-              imageList.length > 1 ? (
-                <>
-                  <SlideShow images={imageList} />
-                </>
-              ) : (
-                <>
-                  <div className="flex-1 rounded-xl overflow-hidden flex" style={{ height: '500px' }}>
-                    <Image type={imageList[0]?.type} src={imageList[0]?.url} alt="" />
-                  </div>
-                </>
+              imageList[0] && (
+                <div className="relative w-auto max-[w-720px] h-[480px] object-contain">
+                  <Image src={imageList[0].url} alt="" fill className="object-contain" />
+                </div>
               )
+              // imageList.length > 1 ? (
+              //   <>
+              //     <SlideShow images={imageList} />
+              //   </>
+              // ) : (
+              //   <>
+              //     {imageList[0] && (
+              //       <div className="relative w-auto max-[w-720px] h-[480px] object-contain">
+              //         <Image src={imageList[0].url} fill className="object-contain" />
+              //       </div>
+              //     )}
+              //   </>
+              // )
             }
+            loading={loading}
             width={800}
             height={500}
           />{' '}
