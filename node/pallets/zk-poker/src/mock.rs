@@ -29,7 +29,7 @@
 #![cfg(test)]
 
 use super::*;
-use crate as pallet_zk_snarks;
+use crate as pallet_zk_poker;
 
 use frame_support::{
 	parameter_types,
@@ -52,7 +52,7 @@ frame_support::construct_runtime!(
 		UncheckedExtrinsic = UncheckedExtrinsic,
 	{
 		System: frame_system::{Pallet, Call, Config, Storage, Event<T>},
-		ZKSnarks: pallet_zk_snarks::{Pallet, Storage, Event<T>},
+		ZKPoker: pallet_zk_poker::{Pallet, Storage, Event<T>},
 	}
 );
 
@@ -89,7 +89,7 @@ parameter_types! {
 	pub const MaxProofLength: u32 = 1133;
 }
 
-impl pallet_zk_snarks::Config for Test {
+impl pallet_zk_poker::Config for Test {
 	type MaxPublicInputsLength = MaxPublicInputsLength;
 	type MaxProofLength = MaxProofLength;
 	type MaxVerificationKeyLength = MaxVerificationKeyLength;
@@ -108,6 +108,6 @@ pub fn zk_events() -> Vec<Event<Test>> {
 	System::events()
 		.into_iter()
 		.map(|r| r.event)
-		.filter_map(|e| if let RuntimeEvent::ZKSnarks(inner) = e { Some(inner) } else { None })
+		.filter_map(|e| if let RuntimeEvent::ZKPoker(inner) = e { Some(inner) } else { None })
 		.collect()
 }
