@@ -28,7 +28,7 @@ const LoginCard = ({ step, onConnectMetamask, onConnectPolkadot, setStep }: { st
     id: ''
   });
 
-  async function OnClickLoginStep1() {
+  async function OnClickLoginStep1Extrinsics() {
     const id = toast.loading("Logging in  ...")
 
     const doAfter = (events) => {
@@ -55,6 +55,29 @@ const LoginCard = ({ step, onConnectMetamask, onConnectPolkadot, setStep }: { st
     
     }
     await api._extrinsics.users.loginUser(Email, Password).signAndSend(deriveAcc, ({ status, events }) => { showToast(status, id, "Logged in Successfully!", doAfter, false, events); });
+
+  }
+
+  async function OnClickLoginStep1() {
+    const ToastId = toast.loading("Logging in  ...")
+    let totalUserCount = Number(await api._query.users.userIds());
+       
+    for (let i = 0; i < totalUserCount; i++) {
+      const element = await api._query.users.userById(i);
+      if (element.email.toString()==Email && element.password.toString() == Password ){
+        localStorage.setItem("user_id", (i).toString());
+        toast.update(ToastId, { 
+          render: "Logged in Successfully!", type: "success", isLoading: false ,  
+         autoClose: 1000,
+        closeButton: true,
+        closeOnClick: true,
+        draggable: true});
+        setStep(2); return;
+      }else{
+        toast.update(ToastId, { render: "Incorrect email or password!", type: "error", isLoading: false });
+      }
+    }
+
 
   }
 

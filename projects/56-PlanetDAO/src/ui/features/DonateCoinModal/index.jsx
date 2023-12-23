@@ -67,7 +67,6 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
     e.preventDefault();
     console.clear();
     setisSent(false);
-    const { amount } = e.target;
     alertBox = e.target.querySelector('[name=alertbox]');
     setisLoading(true);
 
@@ -85,16 +84,17 @@ export default function DonateCoin({ ideasid, show, onHide, address }) {
         token: output?.wrappedAsset
       });
       // Saving Donation count on smart contract
-      await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), ethers.utils.parseUnits(Amount, 'gwei'), Number(window.userid)));
+      await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), `${Amount * 1e18}`, Number(window.userid)));
     }
 
     LoadData();
     setisLoading(false);
     setisSent(true);
-    onHide();
     setTimeout(() => {
       window.location.reload();
     }, 1000);
+    onHide();
+    
   }
 
   async function LoadData() {

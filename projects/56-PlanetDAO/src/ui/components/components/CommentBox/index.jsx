@@ -41,8 +41,8 @@ const CommentBox = ({ address, user_info, date, message, replies = [], sendReply
             </Avatar>
           )}
 
-          <Link className="text-piccolo max-w-[120px] truncate" href={`/Profile/${user_info.id}`} rel="noreferrer" target="_blank">
-            {user_info.fullName.toString()}
+          <Link className="text-piccolo max-w-[120px] truncate" href={`/Profile/${user_info?.id}`} rel="noreferrer" target="_blank">
+            {user_info?.fullName?.toString()}
           </Link>
         </div>
         <span className="whitespace-nowrap text-trunks text-moon-14">{formatDistance(new Date(date), new Date(), { addSuffix: true })}</span>
