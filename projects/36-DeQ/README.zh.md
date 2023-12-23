@@ -15,13 +15,17 @@
 
 DeQ 希望通过引入货币经济模型和结合 De-Fi 的方式来尝试解决上述问题。
 
-DEMO 地址：[https://deq.lol/](https://deq.lol/)
+相关链接：
+
+- DEMO 地址：[https://deq.lol/](https://deq.lol/)
+- Question Contract Address: [0xC6C850C3455076da5726201a21593D537Ed58189](https://blockscout.mandala.aca-staging.network/address/0xC6C850C3455076da5726201a21593D537Ed58189)
+- Answer Contract Address: [0x3592D7BD047f069e17D708c31aa25d2c652323a2](https://blockscout.mandala.aca-staging.network/address/0x3592D7BD047f069e17D708c31aa25d2c652323a2)
 
 ## 黑客松期间计划完成的事项
 
 在这一次 Hackathon 期间，我们希望通过完成下述功能完成一个 Proof-of-concept 的版本：
 
-- 提问者通过悬赏的方式提问，而悬赏的奖金通过质押的方式，随着时间的推移出现一个产生收益的效果；
+- 提问者通过悬赏的方式提问，而悬赏的奖金通过质押的方式，随着时间的推移出现一个产生收益的效果，质押的功能通过 Acala Homa 合约实现；
 - 答题者可以在回答问题被得到提问者认可后获得悬赏的奖金，然后可以选择是否继续质押；
 - 社区成员可以通过 buy shares 的方式给自己认可的答案的答题者进行支持，而答题者在提交答案时获取到一个初始 shares，可以通过出售 shares 的方式进一步获取收益，也会在不同用户交易 shares 的时候获得分成；
 - 无论问题或是答案，都通过 NFT 的方式进行转为链上资产。
@@ -51,6 +55,7 @@ DEMO 地址：[https://deq.lol/](https://deq.lol/)
 1. **可升级的合约**。在 PoC 之中，我们仅考虑了整个规则的可行性，并且由于 Hackathon 时间有限，我们并没有很详细地对合约代码进行考量。我们希望在证明可行性后，通过大幅度改进合约代码让其得到一定的弹性，让整个经济模型可以在后续运作时得到更好的调整。
 2. **重新审视整个经济模型**。在这一次 PoC 中，我们通过引入 Homa Protocol 的方式来增加收益，而未来应该可以通过例如进一步接入 Acala Multichain Asset Router 增强跨链资产的流动性，通过平衡 De-Fi 比例来帮忙用户获得更持续的长期收益。
 3. **通过账户抽象的方式降低整体准入门槛**。包括目前需要多次签名才能完成问题发布和质押流程的问题，通过朴素版本 Intent-Centric 的方式，大大降低 De-Fi 操作的繁琐程度(例如，“每个月底把我质押的 token 总数限制在 X，多余部分转换为 DOT”)
+4. **内容版本化及上链**。考虑内容版本化以及链上储存的可行性，譬如 ArWeave 或者 ipfs。
 
 
 ## 队员信息
