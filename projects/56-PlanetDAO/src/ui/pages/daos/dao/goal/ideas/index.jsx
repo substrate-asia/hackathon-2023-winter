@@ -13,7 +13,7 @@ import Loader from '../../../../../components/components/Loader';
 import { usePolkadotContext } from '../../../../../contexts/PolkadotContext';
 
 export default function GrantIdeas() {
-  const { api, showToast, getUserInfoById, GetAllDaos, PolkadotLoggedIn } = usePolkadotContext();
+  const { api, showToast, getUserInfoById, userInfo, GetAllDaos, PolkadotLoggedIn } = usePolkadotContext();
   const [ideaId, setIdeasId] = useState(-1);
   const [Goal_id, setGoal_id] = useState(-1);
   const [PollIndex, setPollIndex] = useState(-1);
@@ -103,7 +103,7 @@ export default function GrantIdeas() {
         const object = JSON.parse(ideaURI); //Getting ideas uri
         Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
         setGoal_id(Goalid);
-        const goalURIFull = await contract._goal_uris(Number(id)); //Getting total goal (Number)
+        const goalURIFull = await contract._goal_uris(Number(Goalid)); //Getting total goal (Number)
         const goalURI = JSON.parse(goalURIFull.goal_uri);
         let allDaos = await GetAllDaos();
         let goalDAO = allDaos.filter(e => e.daoId = goalURIFull.dao_id)[0];
@@ -242,6 +242,7 @@ export default function GrantIdeas() {
     };
     await saveMessage(newComment);
     newComment.replies = [];
+    newComment.user_info = userInfo;
     setCommentsList([...CommentsList, newComment]);
     setComment('');
     removeElementFromArrayBYID(emptydata, 0, setemptydata);

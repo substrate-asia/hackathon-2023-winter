@@ -85,7 +85,7 @@ export default function useContract() {
 
 
 		const txs = [];
-		let gasAmount = 930000;
+		let gasAmount = 1852656;
 		var domain_id = 1287; //Moonbase alpha Domain ID where main contract is deployed
 
 		//HyperCall contract

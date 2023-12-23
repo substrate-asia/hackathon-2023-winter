@@ -91,7 +91,7 @@ export function UtilsProvider({ children }) {
   }
 
   async function BatchDonate(amount, Recipient, ideas_id, Coin) {
-    let parsedAmount = ethers.utils.parseUnits(amount, 'gwei');
+    let parsedAmount = `${amount * 1e18}`;
 
     if (Number(window.ethereum.networkVersion) === 1287 && Coin == 'DEV') {
       //If Coin is DEV then it will use normal batch

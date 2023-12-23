@@ -188,7 +188,7 @@ export default function DAO() {
               <h1 className="text-moon-32 font-bold">{DaoURI.Title}</h1>
               <h3 className="flex gap-2 whitespace-nowrap">
                 <div className="flex">
-                  Managed by &nbsp;<span className="truncate text-piccolo max-w-[120px]">{DaoURI?.user_info?.fullName.toString()}</span>
+                  Managed by &nbsp;<a href={'/Profile/'+DaoURI?.user_info?.id} className="truncate text-piccolo max-w-[120px]">@{DaoURI?.user_info?.fullName.toString()}</a>
                 </div>
                 <div>•</div>
                 <div>

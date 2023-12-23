@@ -490,8 +490,8 @@ export default function Profile() {
     <div className="badge-group-list">
       <Badge icon={<GenericUser />} label="Basic" description="All essential community functions" granted />
       {/* <Badge icon={<ChatChat />} label="First reply" description="Replied to a message" granted={UserBadges.reply} /> */}
-      <Badge icon={<GenericUsers />} label="First DAO" description="Joined a DAO community" granted={UserBadges.dao} />
-      <Badge icon={<GenericUsers />} label="First Community" description="Created a DAO community" granted={UserBadges.joined} />
+      <Badge icon={<GenericUsers />} label="First DAO" description="Created a DAO community" granted={UserBadges.dao} />
+      <Badge icon={<GenericUsers />} label="First Community" description="Joined a DAO community" granted={UserBadges.joined} />
       <Badge icon={<GenericIdea />} label="First Idea" description="Created an idea" granted={UserBadges.ideas} />
       <Badge icon={<GenericHeart />} label="First vote" description="Voted on an idea" granted={UserBadges.vote} />
       <Badge icon={<ShopCryptoCoin />} label="First donation" description="Donated to an idea" granted={UserBadges.donation} />
@@ -510,7 +510,7 @@ export default function Profile() {
       <div className={`gap-8 flex flex-col w-full bg-gohan pt-10 border-beerus border`}>
         <div className="container flex w-full justify-between relative">
           <div className="flex gap-2 items-center">
-            {UserInfo?.imgIpfs?.toString() !== '' ? (
+            {UserInfo?.imgIpfs?.toString() !== '' && UserInfo?.imgIpfs !== undefined ? (
               <img src={'https://' + UserInfo?.imgIpfs?.toString() + '.ipfs.nftstorage.link'} alt="" className="rounded-full border-2 w-12 h-12 object-cover border-piccolo" />
             ) : (
               <Avatar size="lg" className="rounded-full border-2 border-piccolo bg-goku">
