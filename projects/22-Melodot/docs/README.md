@@ -33,14 +33,13 @@ Melodot 获得过 W3F 的支持，但此次黑客松是完全另外一个生态�
 5. ValidatorClient： 验证者客户端的核心模块。
 6. ValidatorRegistry： 用于验证人注册的 Pallet。
 
-### 待完成模块
+### 截止时间之后完成的模块
 
-由于时间限制，仍有一些模块未能实现，但它们实际上非常简单，因为我们已经完成了核心模块。
+由于时间限制，我们在截止时间之后完成了以下计划中的模块：
 
 1. redoxt: 使用 subxt 搭建的节点交互和轻客户端组件
-2. Redlight: 验证人实际执行任务的轻客户端，它依赖于 redoxt 和 ValidatorClient
+2. Redlight: 验证人实际执行任务的轻客户端，它依赖于 redoxt 和 ValidatorClient，通过调用 DAS 轻客户端的 RPC 来获取数据可用性，并将结果更新到链上。同时它也负责密钥轮换等必要操作。
 
-注： 上游库可能仍存在 no-std 支持的问题，我们正在修复。
 
 ## 代码目录
 
@@ -85,4 +84,9 @@ make test
 以下命令将启动一个开发链
 ```
 make run-dev
+```
+
+通过以下命令编译 Redlight
+```
+make build-light
 ```
