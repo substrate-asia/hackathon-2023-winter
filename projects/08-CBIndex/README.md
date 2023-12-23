@@ -7,8 +7,9 @@
 **Track:** DApp & Smart Contract
 
 **Github Links:**
--[**Smart Contract**](https://github.com/DRGU0416/polkadot-2023-winter-contracts)
--[**Frontend**](https://github.com/CypherBabel-Lab/hackathon-frontend/tree/moonbase)
+
+- [**Smart Contract**](https://github.com/DRGU0416/polkadot-2023-winter-contracts)
+- [**Frontend**](https://github.com/CypherBabel-Lab/hackathon-frontend/tree/moonbase)
 
 **Useful Links:**
 
