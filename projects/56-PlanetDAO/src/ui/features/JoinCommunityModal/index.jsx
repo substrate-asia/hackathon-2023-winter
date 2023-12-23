@@ -1,17 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Dialog, { DialogProps } from '@mui/material/Dialog';
-import { RouterConfig, chainMetadata } from '@hyperlane-xyz/sdk';
-
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import { styled } from '@mui/material/styles';
-import Paper from '@mui/material/Paper';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
-
-import LoadingButton from '@mui/lab/LoadingButton';
 import { getChain } from '../../services/useContract';
 import Alert from '@mui/material/Alert';
 import useContract from '../../services/useContract';
@@ -86,7 +73,7 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
         token: output?.wrappedAsset
       });
       // Saving Joined Person on smart contract
-      await sendTransaction(await window.contract.populateTransaction.join_community(dao_id, window?.ethereum?.selectedAddress?.toLocaleLowerCase()));
+      await sendTransaction(await window.contract.populateTransaction.join_community(dao_id, Number(window.userid)));
     }
 
     LoadData();

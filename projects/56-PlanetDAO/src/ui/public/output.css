@@ -1177,6 +1177,10 @@ video {
   height: 2rem;
 }
 
+.h-\[120px\]{
+  height: 120px;
+}
+
 .h-\[32\%\]{
   height: 32%;
 }
@@ -1187,10 +1191,6 @@ video {
 
 .h-\[64\%\]{
   height: 64%;
-}
-
-.h-\[64px\]{
-  height: 64px;
 }
 
 .h-\[72px\]{
@@ -1308,10 +1308,6 @@ video {
 
 .w-8{
   width: 2rem;
-}
-
-.w-\[128px\]{
-  width: 128px;
 }
 
 .w-\[180px\]{

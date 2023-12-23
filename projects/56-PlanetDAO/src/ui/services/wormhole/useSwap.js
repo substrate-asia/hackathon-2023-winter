@@ -28,7 +28,7 @@ export async function sendTransfer(chainid, amount, Recipient, ShowAlert) {
 	let targetProvider = new ethers.providers.JsonRpcProvider(targetNetwork.rpc);
 	const targetTokenBridgeWithoutSigner = new ethers.Contract(targetNetwork.tokenBridgeAddress, TokenBridgeApi.abi, targetProvider);
 
-	const bridgeAmt = (amount * (10** 18)).toFixed(0);
+	const bridgeAmt =ethers.utils.parseUnits(amount, 'gwei');
 	const targetRecepient = Buffer.from(tryNativeToHexString(Recipient, "ethereum"), "hex");
 
 	let wrappedTokenAddress = await targetTokenBridgeWithoutSigner.wrappedAsset(FromNetwork.wormholeChainId, Buffer.from(tryNativeToHexString(FromNetwork.testToken, "ethereum"), "hex"));

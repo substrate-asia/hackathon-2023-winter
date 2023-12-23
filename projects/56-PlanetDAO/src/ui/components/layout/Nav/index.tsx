@@ -65,7 +65,7 @@ export function Nav(): JSX.Element {
       const { web3Accounts } = require('@polkadot/extension-dapp');
       try {
         let wallet = (await web3Accounts())[0];
-        if (wallet && api) {
+        if (wallet && api && userInfo) {
           const { nonce, data: balance } = await api.query.system.account(wallet.address);
           setBalance(Number(balance.free.toString()) / 1e18 + ' MUNIT');
           if (!isSigned) setSigned(true);
@@ -75,8 +75,8 @@ export function Nav(): JSX.Element {
             subbing = 20;
           }
 
-          setAcc(userInfo.fullName.toString());
-          setLogo(userInfo.imgIpfs.toString());
+          setAcc(userInfo?.fullName?.toString());
+          setLogo(userInfo?.imgIpfs?.toString());
           setUser_id(window.userid);
 
           window.document.getElementById('withoutSign').style.display = 'none';

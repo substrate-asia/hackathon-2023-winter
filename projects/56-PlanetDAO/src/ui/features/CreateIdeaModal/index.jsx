@@ -8,6 +8,7 @@ import isServer from '../../components/isServer';
 import useContract from '../../services/useContract';
 import AddImageInput from '../../components/components/AddImageInput';
 import ImageListDisplay from '../../components/components/ImageListDisplay';
+import { toast } from 'react-toastify';
 
 export default function CreateIdeaModal({ show, onClose }) {
   const [IdeasImage, setIdeasImage] = useState([]);
@@ -66,6 +67,7 @@ export default function CreateIdeaModal({ show, onClose }) {
 
   //Function after clicking Create Ideas Button
   async function createIdeas() {
+    const ToastId = toast.loading('Uploading IPFS ...');
     var CreateIdeasBTN = document.getElementById('CreateIdeasBTN');
     CreateIdeasBTN.disabled = true;
     let allFiles = [];
@@ -132,9 +134,17 @@ export default function CreateIdeaModal({ show, onClose }) {
       }
     };
     console.log('======================>Creating Ideas');
+    toast.update(ToastId, { render: "Creating Ideas...", isLoading: true });
     try {
       // Creating Ideas in Smart contract
       await sendTransaction(await window.contract.populateTransaction.create_ideas(JSON.stringify(createdObject), Number(id), smart_contracts, Number(window.userid)));
+      toast.update(ToastId, {
+        render: 'Created Successfully!', type: "success", isLoading: false, autoClose: 1000,
+        closeButton: true,
+        closeOnClick: true,
+        draggable: true
+      });
+      window.location.reload();
     } catch (error) {
       console.error(error);
       return;
@@ -235,9 +245,9 @@ export default function CreateIdeaModal({ show, onClose }) {
             <div className="flex flex-col gap-2">
               <h6>Image</h6>
               <div className="content-start flex flex-row flex-wrap gap-4 justify-start overflow-auto p-1 relative text-center text-white w-full">
-                <input className="file-input" hidden onChange={FilehandleChange} accept="image/*" id="IdeasImage" name="IdeasImage" type="file" />
+                <input className="file-input" hidden onChange={FilehandleChange} accept="image/*" id="IdeasImage" name="IdeasImage" type="file" multiple="multiple" />
                 <div className="flex flex-col gap-4">
-                  {IdeasImage.length < 1 && <AddImageInput onClick={AddBTNClick} />}
+                  <AddImageInput onClick={AddBTNClick} />
                   <ImageListDisplay images={IdeasImage} onDeleteImage={DeleteSelectedImages} />
                 </div>
               </div>
