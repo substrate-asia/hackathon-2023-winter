@@ -100,15 +100,19 @@ if (created.length > 0) {
     }
     const { id, creator } = log.args
     const addr = creator as string
-    await sql`
-      INSERT INTO trade_logs (
-        token_id, address, amount, tokens, creator_fee, block_hash, user_id, type
-      )
-      VALUES (${Number(id)}, ${addr}, ${1e18}, 0, 0, ${log.blockHash}, ${address_to_id[addr]}, 'CREATED');
-    `
-    holders.push([creator!, 1e18, Number(id)])
-    token_ids.push(id!)
-    console.log('indexed', log.blockHash)
+    try {
+      await sql`
+        INSERT INTO trade_logs (
+          token_id, address, amount, tokens, creator_fee, block_hash, user_id, type
+        )
+        VALUES (${Number(id)}, ${addr}, ${1e18}, 0, 0, ${log.blockHash}, ${address_to_id[addr]}, 'CREATED');
+      `
+      holders.push([creator!, 1e18, Number(id)])
+      token_ids.push(id!)
+      console.log('indexed', log.blockHash)
+    } catch (e) {
+      console.log('Token Not Found: ', id)
+    }
   }
 }
 

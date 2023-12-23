@@ -1,6 +1,8 @@
 'use client';
 
+import '@fontsource-variable/noto-sans-sc'
 import './globals.css'
+
 import { WagmiConfig, createConfig, configureChains } from 'wagmi'
 import { publicProvider } from 'wagmi/providers/public'
 import { InjectedConnector } from 'wagmi/connectors/injected'

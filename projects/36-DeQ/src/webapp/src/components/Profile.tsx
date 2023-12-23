@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { parseUnits } from 'viem'
-import { usePublicClient, useWalletClient, useBalance, useAccount, useConnect } from 'wagmi'
-import { InjectedConnector } from '@wagmi/connectors/injected'
+import { usePublicClient, useWalletClient, useBalance, useAccount } from 'wagmi'
 import {
   Card,
   CardBody,
@@ -20,15 +19,11 @@ import {
 import { LDOT, DOT } from '@acala-network/contracts/utils/MandalaTokens'
 import Homa from '@acala-network/contracts/build/contracts/Homa.json'
 import { HOMA } from '@acala-network/contracts/utils/Predeploy'
-import { useSession } from "next-auth/react"
 
 import { mandala } from '@/utils/chains'
-import { Holdings } from '@/components/UserHoldings'
 
 export function Profile() {
-  const { data: session } = useSession()
-  const { connect } = useConnect({ connector: new InjectedConnector() })
-  const { isConnected, address } = useAccount()
+  const { address } = useAccount()
   const { data: ldotData, isLoading: ldotIsLoading, refetch: ldotRefetch } = useBalance({
     address,
     token: LDOT,
@@ -41,12 +36,6 @@ export function Profile() {
   const [openAlert, setAlert] = useState(false)
   const [openSwap, setOpenSwap] = useState(false)
   const [openBridge, setOpenBridge] = useState(false)
-
-  useEffect(() => {
-    if (!isConnected) {
-      connect()
-    }
-  }, [isConnected, connect])
 
   return (
     <div className="m-x-auto">
@@ -112,13 +101,6 @@ export function Profile() {
           </CardBody>
         </Card>
       </div>
-      {
-        session && session.user ? (
-          <div className="mt-10">
-            <Holdings userId={session.user.id} />
-          </div>
-        ) : null
-      }
     </div>
   )
 }

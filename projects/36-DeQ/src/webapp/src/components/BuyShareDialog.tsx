@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 import {
   Typography,
   Spinner,
@@ -12,28 +12,21 @@ import {
   Input,
 } from '@material-tailwind/react'
 import { formatEther, parseAbi } from 'viem'
-import { usePublicClient, useAccount, useConnect, useContractWrite, usePrepareContractWrite, useNetwork, useSwitchNetwork } from 'wagmi'
+import { usePublicClient, useAccount, useConnect, useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { InjectedConnector } from '@wagmi/connectors/injected'
 import { getBuyPrice, type EstimatedPrice, ANSWER_CONTRACT_ADDRESS, abis } from '@/features/answers/requests'
-import { mandala } from '@/utils/chains'
 import { buyAnswerIdAtom } from './atoms';
 
 
 export function BuyShareDialog({ id }: { id: number }) {
   const [isEstimating, setIsEstimating] = useState(false)
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState(1)
   const [price, setPrice] = useState<EstimatedPrice | null>(null)
 
-  const [buyAnswerId, setBuyAnswerId] = useAtom(buyAnswerIdAtom)
+  const setBuyAnswerId = useSetAtom(buyAnswerIdAtom)
   const publicClient = usePublicClient()
   const { connect } = useConnect({ connector: new InjectedConnector() })
   const { isConnected } = useAccount()
-
-  const { chain } = useNetwork()
-  // const { switchNetwork } = useSwitchNetwork({ chainId: polygonMumbai.id })
-  // const needSwitchChain = chain?.id !== polygonMumbai.id
-  const { switchNetwork } = useSwitchNetwork({ chainId: mandala.id })
-  const needSwitchChain = chain?.id !== mandala.id
 
   const { config } = usePrepareContractWrite({
     address: ANSWER_CONTRACT_ADDRESS,
@@ -72,6 +65,7 @@ export function BuyShareDialog({ id }: { id: number }) {
             containerProps={{
               className: "min-w-0",
             }}
+            value={amount}
             onChange={e => {
               const parsed = Number(e.target.value)
               if (parsed && parsed > 0 && !isNaN(parsed)) {
@@ -89,6 +83,7 @@ export function BuyShareDialog({ id }: { id: number }) {
             color="gray"
             disabled={true}
             className="!absolute right-1 top-1 rounded"
+            variant="text"
           >
             Shares
           </Button>
@@ -103,32 +98,17 @@ export function BuyShareDialog({ id }: { id: number }) {
         >
           <span>Cancel</span>
         </Button>
-        {!isConnected ? (
-          <Button
-            variant="gradient"
-            color="amber"
-            onClick={() => connect()}
-          >
-            <span>Connect</span>
-          </Button>
-        ) : null}
-        {(isConnected && needSwitchChain) ? (
-          <Button
-            variant="gradient"
-            color="amber"
-            onClick={() => {
-              switchNetwork?.()
-            }}
-          >
-            <span>Switch Network</span>
-          </Button>
-        ) : null}
         <Button
           variant="gradient"
           color="amber"
           loading={isLoading}
-          disabled={isEstimating || !amount || !isConnected}
-          onClick={() => write?.()}
+          disabled={isEstimating || !amount}
+          onClick={() => {
+            if (!isConnected) {
+              connect()
+            }
+            write?.()
+          }}
         >
           <span>Confirm</span>
         </Button>

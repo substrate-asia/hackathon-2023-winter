@@ -3,10 +3,10 @@
 import { Spinner } from '@material-tailwind/react'
 
 import { trpcQuery } from '@/server/trpcProvider'
-import { AnswerCard } from '@/components/AnswerCard'
+import { QuestionCard } from '@/components/QuestionCard'
 
-export function UserHoldings({ handle }: { handle: string }) {
-  const { data, isLoading } = trpcQuery.users.holdings.useQuery({ handle })
+export function UserRewards({ handle }: { handle: string }) {
+  const { data, isLoading } = trpcQuery.users.rewards.useQuery({ handle })
   if (isLoading) {
     return (
       <div className="w-full flex items-center justify-center">
@@ -16,8 +16,8 @@ export function UserHoldings({ handle }: { handle: string }) {
   }
   return (
     <div className="flex flex-col gap-2.5">
-      {data?.items?.map(({ answer }) => (
-        <AnswerCard answer={answer} key={answer.id} />
+      {data?.items?.map((question) => (
+        <QuestionCard question={question} key={question.id} />
       ))}
       {data?.items?.length === 0 ? (
         <div className="text-center text-gray-500 py-4">Empty</div>
