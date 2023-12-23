@@ -116,6 +116,6 @@ export function extractImageUrls(imageList: any[]): string[] {
   return urls;
 }
 
-function stringToHex(value: string) {
+export function stringToHex(value: string) {
   return '0x' + Buffer.from(value, 'utf-8').toString('hex');
 }

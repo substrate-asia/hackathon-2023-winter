@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\Substrate.Hexalem.NET.RestService.props" />
+</Project>

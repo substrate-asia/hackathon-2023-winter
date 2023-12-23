@@ -23,6 +23,8 @@ pub struct Template {
     sub_folder: Option<String>,
 
     target_dir: PathBuf,
+
+    is_remote: bool,
 }
 
 impl Default for Template {
@@ -33,6 +35,7 @@ impl Default for Template {
             branch: "main".to_string(),
             sub_folder: Some("templates/pallet".to_string()),
             target_dir: Path::new("pallets").to_path_buf(),
+            is_remote: false,
         }
     }
 }
@@ -46,6 +49,27 @@ impl Template {
     pub fn with_target_dir(&self, target_dir: Option<PathBuf>) -> Template {
         Template {
             target_dir: target_dir.unwrap_or_else(|| self.target_dir.clone()),
+            ..self.clone()
+        }
+    }
+
+    pub fn with_repo(&self, repo: Option<String>) -> Template {
+        Template {
+            repo: repo.unwrap_or_else(|| self.repo.clone()),
+            ..self.clone()
+        }
+    }
+
+    pub fn with_branch(&self, branch: Option<String>) -> Template {
+        Template {
+            branch: branch.unwrap_or_else(|| self.branch.clone()),
+            ..self.clone()
+        }
+    }
+
+    pub fn with_remote(&self, is_remote: bool) -> Template {
+        Template {
+            is_remote,
             ..self.clone()
         }
     }
@@ -80,14 +104,27 @@ impl Template {
         }
     }
     // Add pallet directory to runtime Cargo.toml
-    pub fn import_pallet_package(&self, runtime_dir: &PathBuf) -> Result<(), anyhow::Error> {
+    pub fn import_pallet_package(
+        &self,
+        runtime_dir: &PathBuf,
+        is_remote: bool,
+    ) -> Result<(), anyhow::Error> {
         let runtime_cargo_dir = runtime_dir.join("Cargo.toml");
         let mut cargo_file = File::open(runtime_cargo_dir.clone())?;
 
         let mut cargo_file_contents = String::new();
         cargo_file.read_to_string(&mut cargo_file_contents)?;
 
-        let import_pallet = format!("pallet-{} = {{ version = \"4.0.0-dev\", default-features = false, path = \"../{}/{}\" }}",self.name, self.target_dir.display(), self.name);
+        //let mut path_pallet = String::new();
+        let path_pallet = if is_remote {
+            format!("git = \"{}\", branch = \"{}\"", self.repo, self.branch)
+        } else {
+            format!("path = \"../{}/{}\"", self.target_dir.display(), self.name)
+        };
+        let import_pallet = format!(
+            "pallet-{} = {{ version = \"4.0.0-dev\", default-features = false, {} }}",
+            self.name, path_pallet
+        );
         let import_std = format!("\t\"pallet-{}/std\",", self.name);
 
         let index_import_pallet = cargo_file_contents
@@ -197,40 +234,47 @@ impl Template {
 
         let joined = current_dir.join(self.target_dir.clone());
         // if pallets folder is not existing, create new pallets folder
-        if !joined.exists() {
+        if !joined.exists() && !self.is_remote {
             fs::create_dir_all(self.target_dir.as_path())
                 .with_context(|| format!("Unable to create directory: {target_dir_display}"))?;
+            env::set_current_dir(self.target_dir.as_path()).with_context(|| {
+                format!("Unable to set current directory to {target_dir_display}`.")
+            })?;
         }
-        env::set_current_dir(self.target_dir.as_path()).with_context(|| {
-            format!("Unable to set current directory to {target_dir_display}`.")
-        })?;
 
-        let argv = vec![
-            "cargo",
-            "generate",
-            "--name",
-            &self.name,
-            "--git",
-            &self.repo,
-            "--branch",
-            &self.branch,
-        ];
+        if !self.is_remote {
+            let argv = vec![
+                "cargo",
+                "generate",
+                "--name",
+                &self.name,
+                "--git",
+                &self.repo,
+                "--branch",
+                &self.branch,
+            ];
 
-        let argv = if let Some(subfolder) = &self.sub_folder {
-            [argv, vec!["--", subfolder]].concat()
-        } else {
-            argv
-        };
-        let CargoGen::Generate(args) = CargoGen::parse_from(argv.iter());
-        let name = &self.name;
-        let repo = &self.repo;
-        let new_pallet_dir = cargo_generate(args).with_context(|| {
-            format!("Unable to generate pallet `{name}` with template `{repo}`.")
-        })?;
-        self.import_pallet_package(&runtime_dir)?;
-        self.change_package_name(new_pallet_dir)?;
+            let argv = if let Some(subfolder) = &self.sub_folder {
+                [argv, vec!["--", subfolder]].concat()
+            } else {
+                argv
+            };
+            let CargoGen::Generate(args) = CargoGen::parse_from(argv.iter());
+            let name = &self.name;
+            let repo = &self.repo;
+            let new_pallet_dir = cargo_generate(args).with_context(|| {
+                format!("Unable to generate pallet `{name}` with template `{repo}`.")
+            })?;
+
+            // change pallet name
+            self.change_package_name(new_pallet_dir)?;
+        }
+
+        self.import_pallet_package(&runtime_dir, self.is_remote)?;
+
         self.import_construct_runtime(&runtime_dir)?;
         self.import_impl_runtime(&runtime_dir)?;
+
         Ok(())
     }
 }

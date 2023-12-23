@@ -2,7 +2,7 @@
 name = "subcli"
 description = "Component Generation Tool for FRAME Pallets in the Substrate Framework"
 authors = ["SubCli Team"]
-version = "1.0.2"
+version = "1.0.6"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/SubCli/cli"

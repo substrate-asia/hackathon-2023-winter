@@ -1,7 +1,6 @@
 import React from 'react';
 import { Player } from '@lottiefiles/react-lottie-player';
 import LoadingAnim from '../../assets/loading.json';
-import { useNavigate } from 'react-router-dom';
 import FormProposal from '../../components/FormProposal/FormProposal';
 import { ethers } from 'ethers';
 import { WhaleFinanceAbi } from '../../contracts/WhaleFinance';
@@ -15,7 +14,7 @@ export default function CreateProposal({ isMetamaskInstalled, signer }:
     const [loading, setLoading] = React.useState(false);
 
     const [id, setId] = React.useState("");
-    const [nameValue, setNameValue] = React.useState("a");
+    
     const [proposalType, setProposalType] = React.useState("");
     const [newtimestamp, setNewtimestamp] = React.useState("");
     const [deadline, setDeadline] = React.useState("");
@@ -45,7 +44,6 @@ export default function CreateProposal({ isMetamaskInstalled, signer }:
         const deadlineTimestamp = handleDateTimestamp(deadline);
         const idValue = Number(id);
 
-        console.log(nameValue);
         console.log(idValue);
         console.log(newtimestampTimestamp);
         console.log(deadlineTimestamp);
@@ -56,7 +54,7 @@ export default function CreateProposal({ isMetamaskInstalled, signer }:
                 idValue,
                 newtimestampTimestamp,
                 deadlineTimestamp,
-                nameValue
+                ""
             );
 
             await txNewProposal.wait();

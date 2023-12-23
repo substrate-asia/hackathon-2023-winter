@@ -1,0 +1,32 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="Screen" style="flex-grow: 0; height: 100%; width: 100%; flex-shrink: 0; min-width: auto; min-height: auto; background-color: rgba(0, 0, 0, 0); background-image: url(&apos;project://database/Assets/Images/background.png?fileID=2800000&amp;guid=7205e18bc5be0dc498b154981540627e&amp;type=3#background&apos;);">
+        <ui:VisualElement name="TopBound" style="flex-grow: 0; flex-shrink: 0; height: 100px; width: 100%; justify-content: center;" />
+        <ui:VisualElement name="FloatBody" style="flex-grow: 1; height: auto; width: 100%; flex-shrink: 1; background-color: rgba(255, 255, 255, 0); padding-top: 300px;">
+            <ui:Label tabindex="-1" text="HEXALEM" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblProductName" class="font-color" style="position: relative; justify-content: flex-start; align-items: center; width: 100%; height: 200px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-center; -unity-font-style: bold; font-size: 120px; -unity-font-definition: url(&apos;project://database/Assets/Resources/Fonts%20&amp;%20Materials/Happy%20Chicken%20SDF.asset?fileID=11400000&amp;guid=bdfb382889bf9a04a869a5c7d8d0eb28&amp;type=2#Happy Chicken SDF&apos;); -unity-font: initial; -unity-text-outline-width: 20px; -unity-text-outline-color: rgb(255, 255, 255);" />
+            <ui:Label tabindex="-1" text="Polkadot Hackathon&#10;Unity Demo Project" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblProductSubName" class="font-chicken font-color" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; height: 150px; width: 100%; font-size: 45px; -unity-text-align: middle-center; -unity-paragraph-spacing: -35px;" />
+            <ui:VisualElement style="flex-grow: 0; height: 700px; width: 100%; align-items: center; justify-content: center; flex-shrink: 0;">
+                <ui:VisualElement name="VelPortrait" style="flex-grow: 0; flex-shrink: 0; height: 600px; width: 600px; background-image: resource(&apos;Images/alice_portrait&apos;);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; height: 200px; width: 100%; flex-direction: row; flex-shrink: 0;">
+                <ui:Label tabindex="-1" text="ALICE" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblPlayerName" class="font-color" style="position: relative; justify-content: flex-start; align-items: center; width: 100%; height: 200px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: upper-center; -unity-font-style: bold; font-size: 100px; -unity-font-definition: url(&apos;project://database/Assets/Resources/Fonts%20&amp;%20Materials/Happy%20Chicken%20SDF.asset?fileID=11400000&amp;guid=bdfb382889bf9a04a869a5c7d8d0eb28&amp;type=2#Happy Chicken SDF&apos;); -unity-font: initial; -unity-text-outline-width: 20px; -unity-text-outline-color: rgb(51, 51, 51); color: rgb(255, 255, 255);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement name="BottomBound" style="flex-grow: 0; height: 250px; width: 100%; flex-shrink: 0; flex-direction: row;">
+            <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 30%; height: 100%;" />
+            <ui:VisualElement style="flex-grow: 1; width: 40%; height: 100%; flex-shrink: 0;">
+                <ui:VisualElement name="EnterButtonBox" style="flex-grow: 0; height: 250px; flex-shrink: 0; width: 100%; padding-right: 400px; padding-bottom: 75px; padding-left: 400px; padding-top: 75px; justify-content: center; align-items: center;">
+                    <ui:Button text="ENTER" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnEnter" class="button-basic font-color font-comic" style="width: 350px; height: 125px; -unity-font-style: normal; font-size: 50px; -unity-text-align: middle-center;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; width: 30%; height: 100%; flex-shrink: 0; flex-direction: row;">
+                <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 25%; height: 100%; justify-content: center;">
+                    <ui:VisualElement style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 25%; background-image: resource(&apos;Images/arrow_right&apos;); -unity-background-scale-mode: scale-and-crop;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 0; width: 75%; height: 100%; flex-shrink: 0; justify-content: center;">
+                    <ui:Label tabindex="-1" text="Local" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblNodeType" class="font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; width: 100%; height: 50%; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 50px; color: rgb(255, 255, 255); -unity-text-outline-width: 2px; -unity-text-outline-color: rgb(51, 51, 51); -unity-text-align: middle-left; -unity-font-style: normal;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

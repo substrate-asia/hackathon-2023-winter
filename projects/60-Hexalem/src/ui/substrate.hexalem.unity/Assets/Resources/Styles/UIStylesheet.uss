@@ -1,0 +1,115 @@
+.devbuild {
+    color: rgb(180, 180, 180);
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+}
+
+.custom-text-field {
+    flex-direction: column;
+    -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
+}
+
+.custom-text-field-label {
+    font-size: 30px;
+    color: rgb(144, 143, 141);
+    padding-left: 20px;
+    -unity-font-style: normal;
+    -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
+}
+
+.custom-text-field-element {
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+    font-size: 35px;
+    -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
+    color: rgb(36, 38, 40);
+}
+
+.border-color {
+    border-left-color: rgb(0, 0, 0);
+    border-right-color: rgb(0, 0, 0);
+    border-top-color: rgb(0, 0, 0);
+    border-bottom-color: rgb(0, 0, 0);
+}
+
+.font-regular {
+    -unity-font-definition: url('project://database/Assets/Fonts/Aeonik-Regular%20SDF.asset?fileID=11400000&guid=2f1d71530f6fe2946842a77c2e74fb8c&type=2#Aeonik-Regular SDF');
+    flex-shrink: 0;
+    -unity-font: url('project://database/Assets/UnityDefaultRuntimeTheme.tss?fileID=2230732570650464555&guid=732b7661055d7a24991f33ddb6cdbab2&type=3#NotInter-Regular');
+    -unity-font-style: bold;
+}
+
+.font-comic {
+    -unity-font-definition: resource('Fonts & Materials/Hey Comic SDF');
+    flex-shrink: 0;
+    -unity-font: url('project://database/Assets/Fonts/Hey%20Comic.ttf?fileID=12800000&guid=76b251ed5027e7347b294a930d467c67&type=3#Hey Comic');
+}
+
+.font-chicken {
+    -unity-font-definition: url('project://database/Assets/Resources/Fonts%20&%20Materials/Happy%20Chicken%20SDF.asset?fileID=11400000&guid=bdfb382889bf9a04a869a5c7d8d0eb28&type=2#Happy Chicken SDF');
+    flex-shrink: 0;
+    -unity-font: url('project://database/Assets/Fonts/Happy%20Chicken.ttf?fileID=12800000&guid=22f474d54f5886446be641bb7450ba36&type=3#Happy Chicken');
+}
+
+.font-color {
+    color: rgb(51, 51, 51);
+}
+
+.main-bg {
+    background-color: rgba(255, 255, 255, 0);
+}
+
+.button-basic {
+    border-top-width: 12px;
+    border-right-width: 12px;
+    border-bottom-width: 12px;
+    border-left-width: 12px;
+    border-left-color: rgb(51, 51, 51);
+    border-right-color: rgb(51, 51, 51);
+    border-top-color: rgb(51, 51, 51);
+    border-bottom-color: rgb(51, 51, 51);
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-top-left-radius: 25px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    border-bottom-left-radius: 25px;
+    background-color: rgb(255, 255, 255);
+}
+
+.button-select {
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-top: 0;
+    padding-right: 0;
+    padding-bottom: 0;
+    padding-left: 0;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    background-color: rgb(188, 188, 188);
+    flex-shrink: 0;
+    border-top-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+    border-left-width: 0;
+}
+
+.stats-bg {
+    background-color: rgb(237, 237, 237);
+}

@@ -1,1 +1,1 @@
-forge script ./DeployFull.s.sol --rpc-url $SEPOLIA_RPC_URL  --broadcast --etherscan-api-key  ethereum-sepolia --verify -vvvv
+forge script ./DeployFull.s.sol --rpc-url $ACALA_RPC_URL  --broadcast --verify -vvvv

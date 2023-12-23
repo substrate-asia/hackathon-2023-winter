@@ -250,7 +250,7 @@ mod tests {
                 ("grage".to_string(), "u8".to_string()),
             ],
             storage_pallet_name: "Students".to_string(),
-            storage_pallet_type: storage::StorageType::Value(storage::StorageValueProperty::default()),
+            storage_pallet_type: storage::StorageType::Value(storage::StorageProperty::default()),
         });
         println!("{}", template)
     }
@@ -267,7 +267,7 @@ mod tests {
                 ("grage".to_string(), "u8".to_string()),
             ],
             storage_pallet_name: "Students".to_string(),
-            storage_pallet_type: storage::StorageType::Value(storage::StorageValueProperty::default()),
+            storage_pallet_type: storage::StorageType::Value(storage::StorageProperty::default()),
         });
         println!("{}", template)
     }

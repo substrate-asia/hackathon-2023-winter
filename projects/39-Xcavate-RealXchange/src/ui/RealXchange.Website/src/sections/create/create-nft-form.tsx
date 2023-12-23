@@ -12,10 +12,14 @@ import { Fragment, useCallback, useState } from 'react';
 import { useFieldArray } from 'react-hook-form';
 import { PreviewArtLarge } from './preview-art-large';
 import { z } from 'zod';
+import generateImages from '@/lib/image_generation';
+import { uploadAndPinMultiple } from '@/app/actions';
+import { listProject } from '@/lib/extrinsics';
 
 export function CreateNftForm() {
   const context = usePageContext();
   const [isOpen, setIsOpen] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState<(string | undefined)[]>([]);
 
   console.log(context?.project); // get project info from context
 
@@ -50,8 +54,64 @@ export function CreateNftForm() {
     append({ keyword: '', color: '', description: '', supply: '', price: '' });
   }, [append]);
 
-  const onSubmit = (data: z.infer<typeof addNFTSchema>) => {
+  const onSubmit = async (data: z.infer<typeof addNFTSchema>) => {
+    if (!Object.keys(context?.project).length) {
+      // should redirect back to project upload page
+      return;
+    }
     console.log(data);
+    const imageResults = await generateImages(data.nfts);
+    if (!imageResults) {
+      // warn user the image generation failed
+      return;
+    }
+
+    const openAiUrls = imageResults.map(imgObj => {
+      return imgObj.data[0].url;
+    });
+
+    setGeneratedImages(openAiUrls);
+    openModal();
+
+    const crustIds = await uploadAndPinMultiple(
+      'c3ViLWNUSFNHRVRrd1pxa3VudHBCSnFpbkRNajh5YXFFUTVBR2g4WjZXazg5UGRzeGZYU0g6MHhkZWQ2NDc4YWUyMDQ5NjI1OTkwNmU2ZmYxOTFjZjM5YjQyNWMyNzE4Y2QwMTViZWEwNDEzNDEyN2JiNTliNDFkMDhhOWNiNmQ0ZTkwMDUyZTNlOTM1ZTBhMDJmMDQ3NDlhYjZlOWNhMzczYjhlMzMyOThkODAwOGRkNDI3MWY4Mw==',
+      imageResults
+    );
+    if (!crustIds) {
+      // warn user we were unable to store
+      return;
+    }
+    const sender = localStorage.getItem('selectedWalletAddress');
+    if (!sender) {
+      // warn user to connect wallet to send extrinsic
+      return;
+    }
+    const priceAndAmount = data.nfts.map(nft => {
+      return { price: nft.price, amount: nft.supply };
+    });
+    const nftMetadata = data.nfts.map((nft, index) => {
+      return JSON.stringify({
+        cid: crustIds[index],
+        typeTotalNo: nft.supply,
+        typePrice: nft.price
+      });
+    });
+    const projectDuration = context?.project.length;
+    const projectFundingTarget = context?.project.target;
+    const projectMetadata = {
+      projectName: context?.project.name,
+      projectDescription: context?.project.description,
+      projectLocation: context?.project.location,
+      projectCategory: context?.project.category
+    };
+    const projectData = {
+      priceAndAmount: priceAndAmount,
+      metadata: nftMetadata,
+      duration: projectDuration,
+      fundingTarget: projectFundingTarget,
+      projectMetadata: JSON.stringify(projectMetadata)
+    };
+    await listProject(sender, projectData);
   };
 
   return (
@@ -89,7 +149,7 @@ export function CreateNftForm() {
                   />
                 </div>
                 <Input
-                  label="Descriptiom"
+                  label="Description"
                   htmlFor="description"
                   type="text"
                   placeholder="e.g(text)"
@@ -130,14 +190,14 @@ export function CreateNftForm() {
               type="submit"
               className="my-5 w-full"
               // disabled={form.formState.isSubmitting}
-              // onClick={openModal}  // show preview modal
+              onClick={openModal} // show preview modal
             >
-              Preview artwork
+              Generate artwork
             </Button>
           </Form>
         </section>
       ) : null}
-      <PreviewArtLarge open={isOpen} close={closeModal} />
+      <PreviewArtLarge open={isOpen} close={closeModal} images={generatedImages} />
     </Fragment>
   );
 }
