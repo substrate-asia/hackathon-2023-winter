@@ -195,13 +195,31 @@ pub mod pallet {
 		pub fn new_metadata(
 			origin: OriginFor<T>,
 			id: u32,
-			metadata: WeakBoundedVec<u8, T::MaxMetadataLen>,
 			nonce: u32,
+			metadata: WeakBoundedVec<u8, T::MaxMetadataLen>,
+			signature_bytes: [u8; 64],
 		) -> DispatchResultWithPostInfo {
 			let who = ensure_signed(origin)?;
 
+			let signature = Signature::try_from(signature_bytes)
+				.map_err(|_| Error::<T>::InvalidNewSignature)?;
+
+			let mut msg = metadata.encode();
+			msg.extend_from_slice(&id.encode());
+			msg.extend_from_slice(&nonce.encode());
+
+			let key_bytes = <VerifyingKey<T>>::get().ok_or(Error::<T>::NoExistingKey)?;
+
+			let key = VerificationKey::try_from(key_bytes)
+				.map_err(|_| Error::<T>::InvalidOldVerificationKey)?;
+
+			let is_valid = key.verify(&signature, &msg).is_ok();
+			ensure!(is_valid, Error::<T>::InvalidSignature);
+
 			let current_id = LastTaskId::<T>::get().unwrap_or(0);
+
 			ensure!(id <= current_id + 1, Error::<T>::InvalidTaskId);
+
 			if id == current_id + 1 {
 				LastTaskId::<T>::put(id);
 			}

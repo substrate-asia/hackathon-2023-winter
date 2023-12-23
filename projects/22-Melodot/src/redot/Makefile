@@ -12,6 +12,9 @@ build-default:
 build-runtime:
 	cargo build --release -p redot-runtime
 
+build-light:
+	cargo build --release -p redlight
+
 purge-dev:
 	./target/release/redot-node purge-chain --dev
 

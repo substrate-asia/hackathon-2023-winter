@@ -16,10 +16,11 @@ use anyhow::Result;
 use codec::Encode;
 use frost_ed25519::{Signature as DkgSignature, VerifyingKey};
 use redot::runtime_types::bounded_collections::weak_bounded_vec::WeakBoundedVec;
+pub use subxt::PolkadotConfig as RedotConfig;
 use subxt::{
 	ext::scale_encode::EncodeAsType,
 	utils::{AccountId32, MultiAddress, MultiSignature},
-	OnlineClient, PolkadotConfig,
+	OnlineClient,
 };
 use subxt_signer::sr25519::{
 	dev::{self},
@@ -47,7 +48,7 @@ pub type Address = MultiAddress<AccountId, AccountIndex>;
 
 /// Client structure containing the API for blockchain interactions and a signer for transactions.
 pub struct Client {
-	pub api: OnlineClient<PolkadotConfig>,
+	pub api: OnlineClient<RedotConfig>,
 	pub signer: Keypair,
 }
 
@@ -58,7 +59,7 @@ impl Client {
 	}
 
 	/// Update the API client.
-	pub fn set_client(&mut self, api: OnlineClient<PolkadotConfig>) {
+	pub fn set_client(&mut self, api: OnlineClient<RedotConfig>) {
 		self.api = api;
 	}
 
@@ -84,6 +85,7 @@ pub trait ClientSync {
 		metadata: &T,
 		id: u32,
 		nonce: u32,
+		sign: &DkgSignature,
 	) -> Result<()>;
 
 	// 轮询密钥
@@ -108,12 +110,14 @@ impl ClientSync for Client {
 		metadata: &T,
 		id: u32,
 		nonce: u32,
+		sign: &DkgSignature,
 	) -> Result<()> {
 		let metadata_bytes = metadata.encode();
 
 		let metadata_bytes = WeakBoundedVec(metadata_bytes);
 
-		let submit_metadata_tx = redot::tx().task().new_metadata(id, metadata_bytes, nonce);
+		let submit_metadata_tx =
+			redot::tx().task().new_metadata(id, nonce, metadata_bytes, sign.serialize());
 
 		self.api
 			.tx()
@@ -152,7 +156,7 @@ impl ClientBuilder {
 
 	/// Asynchronously build and return a `Client` instance.
 	pub async fn build(&self) -> Result<Client> {
-		let api = OnlineClient::<PolkadotConfig>::from_url(&self.url).await?;
+		let api = OnlineClient::<RedotConfig>::from_url(&self.url).await?;
 		Ok(Client { api, signer: self.signer.clone() })
 	}
 

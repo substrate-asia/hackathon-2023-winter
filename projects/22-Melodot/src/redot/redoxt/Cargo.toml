@@ -12,12 +12,12 @@ build = "build.rs"
 # [workspace]
 
 [lib]
-name = "meloxt"
+name = "redoxt"
 path = "src/lib.rs"
 
-[[bin]]
-name = "e2e"
-path = "src/run_examples.rs"
+# [[bin]]
+# name = "e2e"
+# path = "src/run_examples.rs"
 
 [dependencies]
 

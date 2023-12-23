@@ -15,22 +15,22 @@ targets = ["x86_64-unknown-linux-gnu"]
 log = "0.4"
 anyhow = "1.0.66"
 # rand = "0.8.4"
-codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"], default-features = false }
-scale-info = { version = "2.2.0", default-features = false, features = ["derive"] }
+codec = { package = "parity-scale-codec", version = "3.0.0", features = ["derive"]}
+scale-info = { version = "2.2.0", features = ["derive"] }
 futures = "0.3.21"
 serde = { version = "1.0.163" }
 serde_json = "1.0.68"
 
-frost-ed25519 = { version="1.0.0-rc.0", default-features = false}
+frost-ed25519 = { version="1.0.0-rc.0"}
 
-redot-core-primitives = { path = "../core-primitives", default-features = false }
-rc-validator-network = { path = "../rc-validator-network", default-features = false }
+redot-core-primitives = { path = "../core-primitives"}
+rc-validator-network = { path = "../rc-validator-network"}
 
 # Melodot
-melo-das-db = { git = "https://github.com/ZeroDAO/melodot", default-features = false }
+melo-das-db = { git = "https://github.com/ZeroDAO/melodot", branch = "polkadot-v1.0.0" }
 
 # Substrate
-cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
+cumulus-primitives-core = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
 
 # cumulus-relay-chain-interface = { git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
 # cumulus-primitives-core = { default-features = false, git = "https://github.com/paritytech/cumulus.git", branch = "polkadot-v1.0.0" }
@@ -39,14 +39,14 @@ cumulus-primitives-core = { default-features = false, git = "https://github.com/
 serde = { version = "1.0.163" }
 
 [features]
-default = ["std"]
-std = [
-	"melo-das-db/std",
-	"codec/std",
-	"scale-info/std",
-	"serde/std",
-	# "redot-core-primitives/std",
-	# "frost-ed25519/std",
+# default = ["std"]
+# std = [
+# 	"melo-das-db/std",
+# 	"codec/std",
+# 	"scale-info/std",
+# 	"serde/std",
+# 	# "redot-core-primitives/std",
+# 	# "frost-ed25519/std",
 	
-	# "cumulus-primitives-core/std",
-]
+# 	# "cumulus-primitives-core/std",
+# ]

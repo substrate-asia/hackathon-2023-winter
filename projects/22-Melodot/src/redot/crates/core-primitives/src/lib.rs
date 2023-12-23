@@ -25,6 +25,7 @@ pub use frost_ed25519::{Signature as DkgSignature, SigningKey, VerifyingKey as D
 #[cfg(feature = "std")]
 pub mod crypto;
 
+#[cfg(feature = "std")]
 sp_api::decl_runtime_apis! {
 	pub trait GetValidatorsFromRuntime<ValidatorId>
 	where
