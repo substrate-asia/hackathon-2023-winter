@@ -21,7 +21,7 @@ pub const DEFAULT_RPC_LISTEN_ADDR: &str = "127.0.0.1:4177";
 const DEV_RPC_URL: &str = "ws://127.0.0.1:9944";
 const TEST_RPC_URL: &str = "wss://dev.melodot.io:9944";
 
-const DEFAULT_RPC_URL: &str = "ws://127.0.0.1:9944";
+const DEFAULT_RPC_URL: &str = "ws://127.0.0.1:36565";
 
 /// Command line interface configuration
 #[derive(Parser, Debug)]
