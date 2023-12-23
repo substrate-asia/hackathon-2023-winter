@@ -1,0 +1,36 @@
+name: Rust
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: macos-13
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Cargo Risc Zero installation
+      run: |
+        git clone https://github.com/justinfrevert/risc0.git
+        cd risc0
+        cargo run --bin cargo-risczero -- risczero install # Extra step to fulfill inital requirement of cargo risczero installation
+        cargo install --path ./risc0/cargo-risczero --features experimental
+
+    - name: Run tests
+      run: cargo risczero test
+
+    - name: Move Proofs
+      run: |
+        mkdir -p ./proofs
+        find ./target/riscv32im-risc0-zkvm-elf/debug/deps -name '*_proof.json' -exec mv {} ./node_client/proofs \;
+
+    - name: Send to blockchain node
+      run: |
+        cd node_client
+        cargo run -- --url "ws://bore.pub:10030"
