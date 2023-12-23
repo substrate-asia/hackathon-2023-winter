@@ -27,7 +27,7 @@ use libp2p::{
 	kad::{store::MemoryStore, Kademlia, KademliaConfig, KademliaEvent},
 	mdns::{tokio::Behaviour as TokioMdns, Config as MdnsConfig, Event as MdnsEvent},
 	ping::{Behaviour as Ping, Event as PingEvent},
-	swarm::NetworkBehaviour,
+	swarm::NetworkBehaviour, identity::Keypair,
 };
 
 pub struct BehaviorConfig {
@@ -60,14 +60,14 @@ pub struct Behavior {
 
 impl Behavior {
 	/// Creates a new [`Behavior`] instance.
-	pub fn new(config: BehaviorConfig) -> Result<Self> {
+	pub fn new(config: BehaviorConfig, keypair: &Keypair) -> Result<Self> {
 		let mdns = TokioMdns::new(MdnsConfig::default())?;
 
 		let kademlia = Kademlia::with_config(config.peer_id, config.kad_store, config.kademlia);
 
 		let gossipsub_config = GossipsubConfig::default();
 		let gossipsub =
-			Gossipsub::new(MessageAuthenticity::Author(config.peer_id), gossipsub_config)
+			Gossipsub::new(MessageAuthenticity::Signed(keypair.clone()), gossipsub_config)
 				.expect("Correct Gossipsub configuration");
 
 		Ok(Self {

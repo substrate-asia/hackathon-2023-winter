@@ -58,7 +58,7 @@ pub async fn run(config: &cli::Config) -> anyhow::Result<()> {
 		},
 	};
 
-	let das_client = DasClient::new("http://example.com/rpc".to_string());
+	let das_client = DasClient::new("http://127.0.0.1:4177".to_string());
 
 	tokio::spawn(network_worker.run());
 	tokio::spawn(async move {

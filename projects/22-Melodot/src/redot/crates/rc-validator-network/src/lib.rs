@@ -78,7 +78,7 @@ pub fn create(
 		identify,
 		kademlia: KademliaConfig::default(),
 		kad_store: MemoryStore::new(local_peer_id),
-	})?;
+	},&keypair)?;
 
 	let mut swarm = SwarmBuilder::with_tokio_executor(transport, behaviour, local_peer_id)
 		.max_negotiating_inbound_streams(SWARM_MAX_NEGOTIATING_INBOUND_STREAMS)
