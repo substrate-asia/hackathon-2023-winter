@@ -15,9 +15,10 @@
 			}
 		]
 	},
+	
 	"parachains": [
 		{
-			"bin": "../target/release/polkadot-parachain",
+			"bin": "../target/release/redot-node",
 			"id": "200",
 			"balance": "1000000000000000000000",
 			"nodes": [

@@ -11,7 +11,6 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-#![cfg_attr(not(feature = "std"), no_std)]
 
 use codec::{Decode, Encode};
 use cumulus_primitives_core::relay_chain::ValidatorId;
@@ -20,9 +19,11 @@ use cumulus_primitives_core::BlockT;
 #[cfg(feature = "std")]
 use cumulus_relay_chain_interface::RelayChainInterface;
 use melo_das_db::traits::DasKv;
+#[cfg(feature = "std")]
 use redot_core_primitives::GetValidatorsFromRuntime;
 #[cfg(feature = "std")]
 use std::sync::Arc;
+use melo_das_db::Vec;
 
 const STORE_KEY: &[u8] = b"redot_relay_validators";
 

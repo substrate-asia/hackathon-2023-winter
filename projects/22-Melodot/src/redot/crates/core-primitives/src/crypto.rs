@@ -21,6 +21,49 @@ use frost::round2::SignatureShare;
 use frost_ed25519::{self as frost, Identifier};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
+use codec::{Decode, Encode, EncodeLike, MaxEncodedLen};
+use scale_info::{build::Fields, Path, Type, TypeInfo};
+
+#[derive(Clone, PartialEq, Eq, Debug)]
+pub struct WrapVerifyingKey(pub DkgVerifyingKey);
+
+impl MaxEncodedLen for WrapVerifyingKey {
+    fn max_encoded_len() -> usize {
+        32
+    }
+}
+
+impl TypeInfo for WrapVerifyingKey {
+    type Identity = Self;
+
+    fn type_info() -> Type {
+        Type::builder()
+            .path(Path::new("DkgVerifyingKey", module_path!()))
+            .composite(Fields::unit())
+    }
+}
+
+impl Encode for WrapVerifyingKey {
+    fn encode_to<T: codec::Output + ?Sized>(&self, dest: &mut T) {
+        let serialized = self.0.serialize();
+        dest.write(&serialized);
+    }
+}
+
+impl Decode for WrapVerifyingKey {
+    fn decode<I: codec::Input>(input: &mut I) -> Result<Self, codec::Error> {
+        let bytes: Vec<u8> = Vec::decode(input)?;
+        let fixed_bytes: [u8; 32] = bytes
+            .try_into()
+            .map_err(|_| codec::Error::from("Length mismatch when decoding VerifyingKey"))?;
+
+			DkgVerifyingKey::deserialize(fixed_bytes)
+            .map(WrapVerifyingKey) // Wrap the VerifyingKey in DkgVerifyingKey
+            .map_err(|_| codec::Error::from("Error decoding DkgVerifyingKey"))
+    }
+}
+
+impl EncodeLike for WrapVerifyingKey {}
 
 #[derive(Serialize, Deserialize, Clone)]
 pub enum DkgMessage {
@@ -264,6 +307,7 @@ impl FrostDkg {
 mod tests {
 	use super::*;
 	use std::collections::HashMap;
+	use ed25519_consensus::{Signature, VerificationKey};
 
 	// Helper function to create a FrostDkg instance
 	fn create_frost_dkg(id: Identifier, t: u16, n: u16) -> FrostDkg {
@@ -386,10 +430,20 @@ mod tests {
 		let public_key_package =
 			participants.get(&ids[0]).unwrap().dkg_keypair.as_ref().unwrap().public.clone();
 
+		let vk_bytes = public_key_package.verifying_key().serialize();
+
 		// 实际上我们不需要验证，因为 Frost 已经验证过了
 		for sign in sing_vec {
 			let res = public_key_package.verifying_key().verify(sign_message.as_slice(), &sign);
 			assert!(res.is_ok());
+
+			let sign_bytes = sign.serialize();
+			let sign = Signature::try_from(sign_bytes).unwrap();
+
+			let vk = VerificationKey::try_from(vk_bytes).unwrap();
+
+			// Verify the signature
+			vk.verify(&sign, sign_message.as_slice()).unwrap();
 		}
 
 		Ok(())

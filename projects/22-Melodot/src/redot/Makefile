@@ -1,7 +1,7 @@
 .PHONY: run-dev build-release build-default purge-dev test
 
 run-dev:
-	./target/release/redot-node --dev --ws-external
+	./target/release/redot-node --dev --rpc-external
 
 build:
 	cargo build --release
@@ -11,6 +11,9 @@ build-default:
 
 build-runtime:
 	cargo build --release -p redot-runtime
+
+build-light:
+	cargo build --release -p redlight
 
 purge-dev:
 	./target/release/redot-node purge-chain --dev

@@ -19,6 +19,11 @@ use sp_runtime::{
 	transaction_validity::{TransactionSource, TransactionValidity},
 	ApplyExtrinsicResult, MultiSignature,
 };
+pub use frame_system::{
+	limits::{BlockLength, BlockWeights},
+	offchain::SendTransactionTypes,
+	EnsureRoot, EnsureSigned, EnsureSignedBy,
+};
 
 use sp_std::prelude::*;
 #[cfg(feature = "std")]
@@ -35,10 +40,6 @@ use frame_support::{
 		WeightToFeeCoefficients, WeightToFeePolynomial,
 	},
 	PalletId,
-};
-use frame_system::{
-	limits::{BlockLength, BlockWeights},
-	EnsureRoot,
 };
 use pallet_xcm::{EnsureXcm, IsVoiceOfBody};
 pub use sp_consensus_aura::sr25519::AuthorityId as AuraId;
@@ -58,7 +59,7 @@ use xcm::latest::prelude::BodyId;
 use xcm_executor::XcmExecutor;
 
 pub use pallet_task;
-pub use pallet_validator_registry;
+// pub use pallet_validator_registry;
 
 /// Alias to 512-bit hash when used in the context of a transaction signature on the chain.
 pub type Signature = MultiSignature;
@@ -470,6 +471,14 @@ impl pallet_validator_registry::Config for Runtime {
 	type MaxPending = ConstU32<100>;
 	type MaxVoteNum = ConstU32<100>;
 	type MeloUnsignedPriority = ();
+}
+
+impl<C> frame_system::offchain::SendTransactionTypes<C> for Runtime
+where
+	RuntimeCall: From<C>,
+{
+	type Extrinsic = UncheckedExtrinsic;
+	type OverarchingCall = RuntimeCall;
 }
 
 // Create the runtime by composing the FRAME pallets that were previously configured.

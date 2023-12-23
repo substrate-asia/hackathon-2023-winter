@@ -34,7 +34,7 @@ use frame_system::{
 	pallet_prelude::*,
 };
 use rc_validator_fetch::ValidatorsInfo;
-use redot_core_primitives::{AuthorityStatus, GetValidatorsFromRuntime};
+use redot_core_primitives::AuthorityStatus;
 use scale_info::TypeInfo;
 use sp_application_crypto::RuntimeAppPublic;
 use sp_runtime::RuntimeDebug;
@@ -179,9 +179,15 @@ pub mod pallet {
 	#[pallet::event]
 	#[pallet::generate_deposit(pub(super) fn deposit_event)]
 	pub enum Event<T: Config> {
-		VoteReceived { at_block: BlockNumberFor<T>, from: AuthIndex },
+		VoteReceived {
+			at_block: BlockNumberFor<T>,
+			from: AuthIndex,
+		},
 		/// Denotes the successful registration of a new validator ID.
-		Registered { validator_id: ValidatorId, from: T::AccountId },
+		Registered {
+			validator_id: ValidatorId,
+			from: T::AccountId,
+		},
 	}
 
 	/// Enumerates all possible errors that might occur while using this pallet.
@@ -292,17 +298,17 @@ pub mod pallet {
 
 	#[pallet::hooks]
 	impl<T: Config> Hooks<BlockNumberFor<T>> for Pallet<T> {
-		fn on_finalize(now: BlockNumberFor<T>) {
-			// // Deletion of expired polling data
-			// if T::BlockNumber::from(DELAY_CHECK_THRESHOLD + 1) >= now {
-			// 	return;
-			// }
-			// let _ = ValidatorVoteInfo::<T>::clear_prefix(
-			// 	now - (DELAY_CHECK_THRESHOLD + 1).into(),
-			// 	T::MaxBlobNum::get(),
-			// 	None,
-			// );
-		}
+		// fn on_finalize(now: BlockNumberFor<T>) {
+		// 	// // Deletion of expired polling data
+		// 	// if T::BlockNumber::from(DELAY_CHECK_THRESHOLD + 1) >= now {
+		// 	// 	return;
+		// 	// }
+		// 	// let _ = ValidatorVoteInfo::<T>::clear_prefix(
+		// 	// 	now - (DELAY_CHECK_THRESHOLD + 1).into(),
+		// 	// 	T::MaxBlobNum::get(),
+		// 	// 	None,
+		// 	// );
+		// }
 
 		fn offchain_worker(now: BlockNumberFor<T>) {
 			// Only send messages if we are a potential validator.
@@ -465,13 +471,13 @@ impl<T: Config> Pallet<T> {
 		}
 	}
 
-	// Set the authority keys (used for testing purposes).
-	#[cfg(test)]
-	fn set_keys(keys: Vec<T::AuthorityId>) {
-		let bounded_keys = WeakBoundedVec::<_, T::MaxKeys>::try_from(keys)
-			.expect("More than the maximum number of keys provided");
-		Keys::<T>::put(bounded_keys);
-	}
+	// // Set the authority keys (used for testing purposes).
+	// #[cfg(test)]
+	// fn set_keys(keys: Vec<T::AuthorityId>) {
+	// 	let bounded_keys = WeakBoundedVec::<_, T::MaxKeys>::try_from(keys)
+	// 		.expect("More than the maximum number of keys provided");
+	// 	Keys::<T>::put(bounded_keys);
+	// }
 }
 
 // impl<T: Config> GetValidatorsFromRuntime for Pallet<T> {
