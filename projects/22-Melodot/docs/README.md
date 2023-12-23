@@ -39,7 +39,9 @@ Melodot 为数据可用性层，它使得网络中的任何人都可以通过抽
 | Redlight | 1. 验证者实际运行的轻客户端，用于实际运行所有必须模块和功能。 | [redlight](../src/redot/redlight) | 1. 采用更好的轻客户端机制，以防止故障 |
 |      | 2. 用于从 melodot 采样轻客户端获取数据可用性的 RPC 客户端。 |      | 1. 时间原因未作解耦和优化，实际上无须从 RPC 获取，可以编译到一起。 |
 
-另外，在黑客松规定的期间内，我们完成了 Melodot 的很多功能，由于这处于 Grant 的第四个里程碑，应该不计入此次黑客松。但为了更好地展示我们的工作，同时也为更全面地展示项目，我们作简单的介绍：
+另外，在黑客松规定的期间内，我们完成了 Melodot 的很多功能，由于这处于 Grant 的第四个里程碑，应该不计入此次黑客松。但为了更好地展示我们的工作，同时也为更全面地展示项目，我们作简单的介绍，你可以在这里看到 Melodot 的起点： [Melodot 的起始仓库](https://github.com/ZeroDAO/melodot/commit/7aac19f8a8fd93d5efb26f6653c1d74b902f11dd)
+
+
 
 1. [farmer](https://github.com/ZeroDAO/melodot/tree/w3f/farmer) 农民实际运行的客户端，它连接到 melodot ，生成和存储的数据，并寻找 PoSapce 解决方案提交到链上
 2. [proof-of-space](https://github.com/ZeroDAO/melodot/tree/w3f/crates/proof-of-space) 手动实现的基于 Hellman TMTO 的容量证明，这是一个初始实现，并未嵌套 Table ，包括分布式数据生成、解决方案寻找、证明和验证机制等等。
