@@ -13,6 +13,7 @@ import { formatUnits } from 'viem'
 import { MarkdownView } from '@/components/MarkdownView'
 import { trpcQuery } from '@/server/trpcProvider'
 import { formatRelativeTime } from '@/utils/datetime'
+import { formatNumber } from '@/utils/number'
 
 export function QuestionView({ id }: { id: number }) {
   const { data, isLoading } = trpcQuery.questions.getById.useQuery({ id })
@@ -27,7 +28,9 @@ export function QuestionView({ id }: { id: number }) {
                 <Typography variant="h4">{data.title}</Typography>
               </Link>
               <div className="ml-2.5">
-                <span className="slashed-zero lining-nums font-medium text-2xl text-red-600">{formatUnits(data.totalDeposit, 10)}</span>
+                <span className="slashed-zero lining-nums font-medium text-2xl text-red-600">
+                  {formatNumber(formatUnits(data.totalDeposit, 10))}
+                </span>
                 <span className="text-gray-600 font-extralight text-sm ml-1">DOT</span>
               </div>
             </header>

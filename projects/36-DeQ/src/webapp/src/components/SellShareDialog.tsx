@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react'
-import { useAtom } from 'jotai'
+import { useAtom, useSetAtom } from 'jotai'
 import {
   Typography,
   Spinner,
@@ -12,28 +12,20 @@ import {
   Input,
 } from '@material-tailwind/react'
 import { formatEther, parseAbi } from 'viem'
-import { polygonMumbai } from 'viem/chains'
-import { usePublicClient, useAccount, useConnect, useContractWrite, usePrepareContractWrite, useNetwork, useSwitchNetwork } from 'wagmi'
-import { InjectedConnector } from '@wagmi/connectors/injected'
+import { usePublicClient, useAccount, useContractWrite, usePrepareContractWrite } from 'wagmi'
 import { getSellPrice, type EstimatedPrice, ANSWER_CONTRACT_ADDRESS, abis } from '@/features/answers/requests'
-import { mandala } from '@/utils/chains'
-import { sellAnswerIdAtom } from './atoms';
+
+import { sellAnswerIdAtom } from './atoms'
 
 
 export function SellShareDialog({ id }: { id: number }) {
   const [isEstimating, setIsEstimating] = useState(false)
-  const [amount, setAmount] = useState(0)
+  const [amount, setAmount] = useState(1)
   const [price, setPrice] = useState<EstimatedPrice | null>(null)
 
-  const [sellAnswerId, setSellAnswerId] = useAtom(sellAnswerIdAtom)
+  const setSellAnswerId = useSetAtom(sellAnswerIdAtom)
   const publicClient = usePublicClient()
-  const { connect } = useConnect({ connector: new InjectedConnector() })
   const { isConnected } = useAccount()
-
-  const { chain } = useNetwork()
-  const { switchNetwork } = useSwitchNetwork({ chainId: mandala.id })
-  // const { switchNetwork } = useSwitchNetwork({ chainId: polygonMumbai.id })
-  const needSwitchChain = chain?.id !== polygonMumbai.id
 
   const { config } = usePrepareContractWrite({
     address: ANSWER_CONTRACT_ADDRESS,
@@ -65,11 +57,12 @@ export function SellShareDialog({ id }: { id: number }) {
         </Typography>
         <div className="relative flex w-full">
           <Input
-            label="Shares"
+            label="Share"
             className="pr-20"
             containerProps={{
               className: "min-w-0",
             }}
+            value={amount}
             onChange={e => {
               const parsed = Number(e.target.value)
               if (parsed && parsed > 0 && !isNaN(parsed)) {
@@ -87,8 +80,9 @@ export function SellShareDialog({ id }: { id: number }) {
             color="gray"
             disabled={true}
             className="!absolute right-1 top-1 rounded"
+            variant="text"
           >
-            Shares
+            Share
           </Button>
         </div>
       </DialogBody>
@@ -101,26 +95,6 @@ export function SellShareDialog({ id }: { id: number }) {
         >
           <span>Cancel</span>
         </Button>
-        {!isConnected ? (
-          <Button
-            variant="gradient"
-            color="amber"
-            onClick={() => connect()}
-          >
-            <span>Connect</span>
-          </Button>
-        ) : null}
-        {(isConnected && needSwitchChain) ? (
-          <Button
-            variant="gradient"
-            color="amber"
-            onClick={() => {
-              switchNetwork?.()
-            }}
-          >
-            <span>Switch Network</span>
-          </Button>
-        ) : null}
         <Button
           variant="gradient"
           color="amber"

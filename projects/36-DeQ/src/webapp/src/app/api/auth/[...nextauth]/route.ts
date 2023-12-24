@@ -71,7 +71,6 @@ export const authOptions: AuthOptions = {
                 data: {
                   name: siwe.address,
                   address: siwe.address,
-                  image: 'https://effigy.im/',
                 }
               });
               return newUser

@@ -1,29 +1,29 @@
 "use client";
-import { useRouter } from 'next/navigation'
+
 import Link from 'next/link'
-import { useCallback, useEffect, useMemo, useState } from "react"
+import { useEffect, useMemo, useState } from "react"
 import { getCsrfToken, signIn, useSession, signOut } from "next-auth/react"
-import { Avatar, Button, Menu, MenuHandler, MenuList, MenuItem, DialogHeader, DialogBody, Dialog, DialogFooter, Input, Typography, Spinner } from '@/components/material-tailwind'
+import { Avatar, Button, ButtonGroup, DialogBody, Dialog, DialogFooter, Input, Typography, Spinner } from '@material-tailwind/react'
 
 
-import { useAccount, useConnect, useDisconnect, useNetwork, useSignMessage, useSwitchNetwork } from "wagmi"
+import { useAccount, useConnect, useNetwork, useSignMessage, useSwitchNetwork, useDisconnect } from "wagmi"
 import { mandala } from '@/utils/chains'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { SiweMessage } from "siwe"
 
 import { trpcQuery } from '@/server/trpcProvider'
 
+
+const connector = new InjectedConnector()
+
 const Login = () => {
-  const router = useRouter()
   const { data: session, status, update: updateSession } = useSession()
   const { address, isConnected } = useAccount()
   const { signMessageAsync } = useSignMessage()
   const { chain } = useNetwork()
-  const { connect, isLoading, error } = useConnect({
-    connector: new InjectedConnector(),
-  })
-  // const { disconnect } = useDisconnect()
-  const { switchNetwork, chains, status: switchStatus } = useSwitchNetwork({ chainId: mandala.id })
+  const { connect } = useConnect({ connector })
+  const { disconnect } = useDisconnect()
+  const { switchNetwork, status: switchStatus } = useSwitchNetwork({ chainId: mandala.id })
 
   const [openDia, setOpenDia] = useState(false)
   const [handleInput, setHandleInput] = useState('')
@@ -46,7 +46,7 @@ const Login = () => {
       const signature = await signMessageAsync({
         message: message.prepareMessage(),
       })
-      const res = await signIn("credentials", {
+      await signIn("credentials", {
         message: JSON.stringify(message),
         redirect: false,
         signature,
@@ -68,8 +68,7 @@ const Login = () => {
 
   useEffect(() => {
     if (isConnected && !session) {
-      // fuck
-      // onSignIn('credentials')
+      onSignIn('credentials')
     } else if (isConnected && session) {
       if (needSwitchChain) {
         if (switchStatus === 'idle') {
@@ -103,37 +102,39 @@ const Login = () => {
     return (
       <div className="flex flex-col">
         <div className="flex flex-row gap-2.5">
-          <Link href="/me" className="flex items-center gap-2">
-            <Avatar src={'https://effigy.im/a/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045.png'} size="sm" />
-            <Typography variant="h6">{session.user.name}</Typography>
+          <Link href="/questions/create">
+            <Button className="bg-[#d3f2a4] text-black">Create Question</Button>
           </Link>
-          <Button onClick={() => signOut()}>Sign Out</Button>
+          <Link href="/me">
+            <Button className="flex flex-row gap-1.5 items-center" size="sm" variant="text">
+              <Avatar src={'https://effigy.im/a/0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045.png'} size="xs" />
+              {session.user.name}
+            </Button>
+          </Link>
+          <Button onClick={() => signOut()} variant="text">Sign Out</Button>
         </div>
         {/* <Button onClick={() => setOpenDia(true)}>open</Button> */}
         <Dialog open={openDia} handler={() => setOpenDia(!openDia)} dismiss={{ enabled: false }}>
-          <DialogHeader>Last Step.</DialogHeader>
           <DialogBody>
-            <form className="mt-8 mb-2 flex flex-col gap-6 px-5">
-              We require you set your handle and name
-              <Typography variant="h6" color="blue-gray" className="-mb-3">
-                Your Name
-              </Typography>
+            <form className="flex flex-col gap-6">
+              <Typography variant="lead">Finishing your profile to continue.</Typography>
+              <div>
               <Input
+                label="Name"
                 variant="static"
                 value={nameInput}
                 onChange={e => { resetHandleNameSetError(); setNameInput(e.target.value) }}
                 size="lg"
-                placeholder="Name"
+                placeholder="Your nickname"
                 labelProps={{
                   className: "before:content-none after:content-none",
                 }}
                 icon={isSetHandleNameLoading ? <Spinner /> : null}
                 success={!!nameInput}
               />
-              <Typography variant="h6" color="blue-gray" className="-mb-3">
-                Your Handle
-              </Typography>
+              </div>
               <Input
+                label="Handle"
                 variant="static"
                 value={handleInput}
                 onChange={e => { resetHandleNameSetError(); setHandleInput(e.target.value) }}
@@ -156,26 +157,46 @@ const Login = () => {
             </form>
           </DialogBody>
           <DialogFooter>
-            <Button disabled={!nameInput || !handleInput} loading={isSetHandleNameLoading} variant="gradient" onClick={onCommitHandleName}>
-              <span>Confirm</span>
-            </Button>
+            <ButtonGroup>
+              <Button
+                onClick={() => {
+                  disconnect()
+                  setOpenDia(false)
+                  signOut()
+                }}
+              >
+                  Disconnect
+              </Button>
+              <Button disabled={!nameInput || !handleInput} loading={isSetHandleNameLoading} variant="gradient" onClick={onCommitHandleName}>
+                <span>Confirm</span>
+              </Button>
+            </ButtonGroup>
           </DialogFooter>
         </Dialog>
       </div>
     )
   }
   return (
-    <Menu>
-      <MenuHandler>
-        <Button loading={status === 'loading'}>Sign In</Button>
-      </MenuHandler>
-      <MenuList>
-        <MenuItem onClick={() => onSignIn('google')}>SIGN IN WITH GOOGLE</MenuItem>
-        <MenuItem onClick={() => onSignIn('github')}>SIGN IN WITH GITHUB</MenuItem>
-        <hr className="my-3" />
-        <MenuItem onClick={() => isConnected ? signIn('credentials') : connect()}>SIGN IN WITH METAMASK</MenuItem>
-      </MenuList>
-    </Menu>
+    <Button
+      onClick={() => isConnected ? signIn('credentials') : connect()}
+      loading={status === 'loading'}
+      variant="outlined"
+    >
+      Connect Wallet
+    </Button>
   )
+  // return (
+  //   <Menu>
+  //     <MenuHandler>
+  //       <Button loading={status === 'loading'} variant="outlined">Sign In</Button>
+  //     </MenuHandler>
+  //     <MenuList>
+  //       <MenuItem onClick={() => onSignIn('google')}>SIGN IN WITH GOOGLE</MenuItem>
+  //       <MenuItem onClick={() => onSignIn('github')}>SIGN IN WITH GITHUB</MenuItem>
+  //       <hr className="my-3" />
+  //       <Button onClick={() => isConnected ? signIn('credentials') : connect()}>Connect Wallet</Button>
+  //     </MenuList>
+  //   </Menu>
+  // )
 }
 export default Login
