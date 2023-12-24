@@ -16,16 +16,20 @@ The paid consulting advisor is a long-standing business model, but due to its la
 
 DeQ aims to address these issues by combining a tokenomics model and De-Fi.
 
+Links:
+
+- Online DEMO: [https://deq.lol/](https://deq.lol/)
+- Question Contract Address: [0xC6C850C3455076da5726201a21593D537Ed58189](https://blockscout.mandala.aca-staging.network/address/0xC6C850C3455076da5726201a21593D537Ed58189)
+- Answer Contract Address: [0x3592D7BD047f069e17D708c31aa25d2c652323a2](https://blockscout.mandala.aca-staging.network/address/0x3592D7BD047f069e17D708c31aa25d2c652323a2)
 
 ## Objectives in Hackathon
 
 During this Hackathon, our goal is to create a Proof-of-concept version by implementing the following features:
 
-- Questioners can ask questions by offering rewards, and these rewards will generate profits over time through staking.
+- Questioners can ask questions by offering rewards, and these rewards will generate profits over time through staking, the stacking feature is implemented through the Acala Homa contract.
 - Answerers can receive the reward after their answers are approved by questioners, and they have the option to continue staking.
 - Community members can support answerers they approve of by buying shares. Answerers receive an initial share when submitting their answers, which they can further profit from by selling shares or through transaction fees.
 - Both questions and answers are converted into on-chain assets by NFTs.
-
 
 ## Checklist
 
@@ -33,18 +37,18 @@ Based on the above objectives, we have accomplished the following in this submis
 
 We aim to create smart contracts that can:
 
-- [ ] Convert questions and answers into on-chain assets through contracts.
-- [ ] Provide continuous income to answerers through shares trading.
+- [x] Convert questions and answers into on-chain assets through contracts.
+- [x] Provide continuous income to answerers through shares trading.
 
 Develop a simple dApp to showcase relevant concepts:
 
-- [ ] List top answers by tokenomics flavors ranking.
-- [ ] List of questions that have not been answered yet and are eligible for rewards.
-- [ ] Create question and staking corresponding tokens.
-- [ ] Answer questions and claim rewards.
-- [ ] Allow question creators to choose the best answer for rewards.
-- [ ] Shares Trading for answers.
-- [ ] Learn more about a dedicated user by viewing their personal pages. You can ask them questions and offer rewards if applicable.
+- [x] List top answers by tokenomics flavors ranking.
+- [x] List of questions that have not been answered yet and are eligible for rewards.
+- [x] Create question and staking corresponding tokens.
+- [x] Answer questions and claim rewards.
+- [x] Allow question creators to choose the best answer for rewards.
+- [x] Shares Trading for answers.
+- [x] Learn more about a dedicated user by viewing their personal pages. You can ask them questions and offer rewards if applicable.
 
 ## Roadmap
 
@@ -53,6 +57,7 @@ If our idea is proven dealing the Hackathon, we plan to expand to several areas.
 1. **Upgradable contracts**. During the PoC, we focused on assessing the feasibility of the rules but did not have sufficient time during the Hackathon to consider smart contract implementation thoroughly. We plan to enhance the contract code quality in order to make the entire economic model more flexible.
 2. **Review the entire tokenomics model**. In this PoC, we increased revenue by introducing Homa Protocol without considering potential enhancements such as further integrating Acala Multichain Asset Router to enhance cross-chain asset liquidity and helping users obtain sustained long-term returns through balancing De-Fi ratios in future operations.
 3. **Reduce barriers through Account Abstraction**. By abstracting the account, the overall access threshold is reduced. This includes addressing the current need for multiple signing to complete the process. Through a simple version of Intent-Centric, we can significantly reduces the complexity of De-Fi operations (for example, "Keep the total number of staking tokens at the end of each month to X, with any excess converted to DOT").
+4. **Migrate data storage to a more decentralized solution**. Revisioning support for contents, and move the data storage into decentralized storage like ArWeave or IPFS.
 
 
 ## Teams

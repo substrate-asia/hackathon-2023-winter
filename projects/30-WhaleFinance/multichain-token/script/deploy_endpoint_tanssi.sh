@@ -1,0 +1,1 @@
+forge script ./DeployEndpoint.s.sol --rpc-url $DANCEBOX_RPC_URL  --broadcast --legacy

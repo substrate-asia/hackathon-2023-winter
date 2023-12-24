@@ -1,0 +1,64 @@
+.mobileHeaderTopArea {
+  display: none;
+}
+
+.searchIcon {
+  margin-right: 12px;
+  cursor: pointer;
+  color: var(--text-third-color);
+  font-size: 18px;
+}
+
+// notification icon
+.notificationIcon {
+  font-size: 20px;
+  margin: auto 12px;
+  color: var(--border-third-color);
+  cursor: pointer;
+}
+
+.notificationIcon:hover {
+  color: var(--primary-green);
+}
+
+// profile icon
+.profileInfo {
+  display: flex;
+  color: var(--text-third-color);
+  cursor: default;
+}
+
+@media screen and (max-width: @--mobile-width-max-media) {
+  .notificationIcon {
+    font-size: 18px;
+    margin-left: 0;
+    margin-right: 12px;
+    color: var(--text-third-color);
+    cursor: pointer;
+  }
+
+  .mobileMenuIcon {
+    font-size: 18px;
+    margin: 0;
+    color: var(--text-third-color);
+    cursor: pointer;
+  }
+
+  .profileInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: var(--margin-md);
+    height: 60px;
+  }
+
+  .loginBtnForSidebarMenu {
+    margin: var(--margin-md);
+    margin-top: 60px;
+  }
+
+  .mobileHeaderTopArea {
+    display: flex;
+    align-items: center;
+  }
+}

@@ -3,10 +3,16 @@ import { z } from 'zod'
 import { createServerSideHelpers } from '@trpc/react-query/server'
 import { Prisma } from '@prisma/client'
 import * as R from 'ramda'
+import { fetch, ProxyAgent, setGlobalDispatcher } from 'undici'
 
 import { publicProcedure, protectedProcedure, router } from './router'
 import { createInternalContext } from './context'
 import prisma from './db'
+
+if (process.env.http_proxy || process.env.https_proxy) {
+  const proxyAgent = new ProxyAgent((process.env.http_proxy || process.env.https_proxy)!)
+  setGlobalDispatcher(proxyAgent)
+}
 
 //
 // Output Schemas
@@ -20,7 +26,7 @@ const registeredUserSchema = z.object({
   address: z.string(),
 })
 
-type RegisteredUser = z.infer<typeof registeredUserSchema>
+export type RegisteredUser = z.infer<typeof registeredUserSchema>
 
 const AnswerSchema = z.object({
   id: z.number(),
@@ -34,6 +40,8 @@ const AnswerSchema = z.object({
   question_creator_id: z.number(),
 })
 
+export type Answer = z.infer<typeof AnswerSchema>
+
 const QuestionSchema = z.object({
   id: z.number(),
   title: z.string(),
@@ -43,6 +51,8 @@ const QuestionSchema = z.object({
   user: registeredUserSchema,
   answers: z.array(AnswerSchema.omit({ picked: true, question_creator_id: true })),
 })
+
+export type Question = z.infer<typeof QuestionSchema>
 
 
 function transformRegisteredUser({ address, ...user }: Prisma.UserGetPayload<{}>): RegisteredUser {
@@ -279,6 +289,27 @@ const getUserAnsweredQuestions = publicProcedure
     }
   })
 
+const deleteQuestion = protectedProcedure
+  .input(z.object({
+    questionId: z.number(),
+  }))
+  .mutation(async ({ input: { questionId }, ctx: { currentUser } }) => {
+    const where = { id: questionId }
+    const question = await prisma.question.findUnique({ where })
+    if (!question) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Question not found' })
+    }
+    if (question.userId !== currentUser.id) {
+      throw new TRPCError({ code: 'BAD_REQUEST' })
+    }
+    const result = await prisma.question.delete({
+      where: {
+        id: questionId,
+      }
+    })
+    return result
+  })
+
 const createAnswer = protectedProcedure
   .input(z.object({
     tokenId: z.number(),
@@ -328,16 +359,25 @@ const getAnswersByQuestionId = publicProcedure
     limit: z.number().default(100),
   }))
   .output(z.object({
-    items: z.array(AnswerSchema)
+    items: z.array(AnswerSchema.merge(z.object({
+      question: z.object({
+        id: z.number(),
+      })
+    })))
   }))
   .query(async ({ input: { id, page, limit } }) => {
     const items = await prisma.answer.findMany({
       where: {
         questionId: id,
       },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      orderBy: [
+        {
+          values: 'desc',
+        },
+        {
+          createdAt: 'desc',
+        }
+      ],
       skip: (page - 1) * limit,
       take: limit,
       include: {
@@ -408,7 +448,10 @@ const getUserInfo = publicProcedure
       throw new TRPCError({ code: 'NOT_FOUND', message: 'User not found' })
     }
     const unclaimedStaking = BigInt(0)
-    return { user, unclaimedStaking }
+    return {
+      user: transformRegisteredUser(user),
+      unclaimedStaking
+    }
   })
 
 const getAnswerTradeHistory = publicProcedure
@@ -474,35 +517,50 @@ const getAnswerHolders = publicProcedure
     }
   })
 
-
 const getUserHoldings = publicProcedure
   .input(z.object({
-    userId: z.number(),
+    userId: z.number().optional(),
+    handle: z.string().optional(),
     page: z.number().default(1),
     limit: z.number().default(10),
   }))
   .output(z.object({
     items: z.array(z.object({
       id: z.number(),
-      user: registeredUserSchema,
       shares: z.bigint(),
-      answer: z.object({
-        id: z.number(),
-        body: z.string()
-      }),
+      answer: AnswerSchema.merge(z.object({
+        question: QuestionSchema.omit({ answers: true }),
+      })).omit({ question_creator_id: true })
     }))
   }))
-  .query(async ({ input: { userId, page, limit } }) => {
+  .query(async ({ input: { userId, handle, page, limit } }) => {
+    if (!userId && !handle) {
+      throw new TRPCError({ code: 'BAD_REQUEST' })
+    }
     const items = await prisma.holder.findMany({
       where: {
-        userId,
+        user: {
+          OR: [
+            { id: userId },
+            { handle: handle },
+          ]
+        },
       },
       orderBy: {
         shares: 'desc',
       },
       include: {
         user: true,
-        answer: true,
+        answer: {
+          include: {
+            user: true,
+            question: {
+              include: {
+                user: true,
+              }
+            },
+          }
+        },
       },
       skip: (page - 1) * limit,
       take: limit,
@@ -510,14 +568,160 @@ const getUserHoldings = publicProcedure
     return {
       items: items.map((holder) => ({
         ...holder,
-        user: transformRegisteredUser(holder.user),
         answer: {
-          id: holder.answer.id,
-          body: holder.answer.body,
-        }
+          ...holder.answer,
+          user: transformRegisteredUser(holder.answer.user),
+          question: {
+            ...holder.answer.question,
+            user: transformRegisteredUser(holder.answer.question.user),
+          },
+        },
+      }
+      ))
+    }
+  })
+
+const getUserRewards = publicProcedure
+  .input(z.object({
+    userId: z.number().optional(),
+    handle: z.string().optional(),
+    page: z.number().default(1),
+    limit: z.number().default(10),
+  }))
+  .output(z.object({
+    items: z.array(QuestionSchema)
+  }))
+  .query(async ({ input: { userId, handle, page, limit } }) => {
+    if (!userId && !handle) {
+      throw new TRPCError({ code: 'BAD_REQUEST' })
+    }
+    const items = await prisma.answer.findMany({
+      where: {
+        user: {
+          OR: [
+            { id: userId },
+            { handle: handle },
+          ],
+        },
+        picked: true,
+      },
+      orderBy: [
+        {
+          question: {
+            totalDeposit: 'desc',
+          },
+        },
+        {
+          shares: 'desc',
+        },
+      ],
+      include: {
+        user: true,
+        question: {
+          include: {
+            user: true,
+          }
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    })
+    return {
+      items: items.map(({ question, ...answer }) => ({
+        ...question,
+        user: transformRegisteredUser(question.user),
+        answers: [
+          {
+            ...answer,
+            user: transformRegisteredUser(answer.user),
+          }
+        ]
       }))
     }
   })
+
+const getUserAnswers = publicProcedure
+  .input(z.object({
+    userId: z.number().optional(),
+    handle: z.string().optional(),
+    page: z.number().default(1),
+    limit: z.number().default(10),
+  }))
+  .output(z.object({
+    items: z.array(QuestionSchema)
+  }))
+  .query(async ({ input: { userId, handle, page, limit } }) => {
+    if (!userId && !handle) {
+      throw new TRPCError({ code: 'BAD_REQUEST' })
+    }
+    const items = await prisma.answer.findMany({
+      where: {
+        user: {
+          OR: [
+            { id: userId },
+            { handle: handle },
+          ],
+        },
+        picked: false,
+      },
+      orderBy: [
+        {
+          shares: 'desc',
+        },
+        {
+          createdAt: 'desc',
+        },
+      ],
+      include: {
+        user: true,
+        question: {
+          include: {
+            user: true,
+          }
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+    })
+    return {
+      items: items.map(({ question, ...answer }) => ({
+        ...question,
+        user: transformRegisteredUser(question.user),
+        answers: [
+          {
+            ...answer,
+            user: transformRegisteredUser(answer.user),
+          }
+        ]
+      }))
+    }
+  })
+
+const getTokenPairs = publicProcedure
+  .input(z.object({
+    token: z.string().default('aca'),
+  }))
+  .query(async ({ input: { token } }) => {
+    if (token !== 'aca' && token !== 'dot') {
+      throw new Error(`Unsupport token: ${token}`)
+    }
+    const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=acala&vs_currencies=dot')
+    const data = await res.json() as { acala: { dot: number } }
+    if (token === 'aca') {
+      return {
+        aca: {
+          dot: data.acala.dot
+        }
+      }
+    }
+    return {
+      dot: {
+        aca: 1 / data.acala.dot
+      }
+    }
+  })
+
+
 //
 // Final
 //
@@ -529,6 +733,7 @@ export const appRouter = router({
     getById: getQuestionById,
     getUserCreated: getUserCreatedQuestions,
     getUserAnswered: getUserAnsweredQuestions,
+    delete: deleteQuestion,
   }),
   answers: router({
     create: createAnswer,
@@ -541,9 +746,14 @@ export const appRouter = router({
   users: router({
     info: getUserInfo,
     setHandleName: setUserHandleName,
-    holdings: getUserHoldings
+    holdings: getUserHoldings,
+    rewards: getUserRewards,
+    answers: getUserAnswers,
     // TODO checker
   }),
+  utils: router({
+    tokenPairs: getTokenPairs,
+  })
 })
 
 export type AppRouter = typeof appRouter

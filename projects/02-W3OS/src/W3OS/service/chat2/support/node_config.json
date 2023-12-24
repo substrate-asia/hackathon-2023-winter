@@ -1,0 +1,17 @@
+{
+    "target":{
+        "single":"chat_server.min.js"
+    },
+    "anchor":"imgc",
+    "server":"ws://127.0.0.1:9944",
+    "version":"1.0.0",
+    "autowrite":true,
+    "libs":{},
+    "symbol":["%{{%","%}}%"],
+    "replace":"XxX",
+    "account":{
+        "seed":"Alice",
+        "file":"",
+        "password":""
+    }
+}

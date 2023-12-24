@@ -1,0 +1,18 @@
+manifestVersion: subsquid.io/v0.1
+name: nft-indexer-xcm
+version: 1
+description: Substrate squid template
+build: 
+deploy:
+  secrets:
+    - RPC_ENDPOINT
+  addons:
+    postgres: 
+  processor:
+    cmd:
+      - sqd
+      - process:prod
+  api:
+    cmd:
+      - sqd
+      - serve:prod

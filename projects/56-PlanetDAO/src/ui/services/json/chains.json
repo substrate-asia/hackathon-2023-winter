@@ -1,0 +1,70 @@
+{ 	"allchains": [
+    {
+        "name": "Moonbase Alpha",
+        "chain": "MOON",
+        "rpc": ["https://rpc.api.moonbase.moonbeam.network", "wss://wss.api.moonbase.moonbeam.network"],
+        "faucets": [],
+        "nativeCurrency": { "name": "Dev", "symbol": "DEV", "decimals": 18 },
+        "infoURL": "https://docs.moonbeam.network/networks/testnet/",
+        "shortName": "mbase",
+        "chainId": 1287,
+        "networkId": 1287,
+        "explorers": [{ "name": "moonscan", "url": "https://moonbase.moonscan.io", "standard": "none" }],
+        "ICA": "0x209Ccdbe13BB913104117B1D6f7801684e98FA1F",
+        "IGP": "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a"
+    },
+    {
+        "name": "Binance Smart Chain Testnet",
+        "chain": "BSC",
+        "rpc": [
+            "https://data-seed-prebsc-1-s1.binance.org:8545",
+            "https://data-seed-prebsc-2-s1.binance.org:8545",
+            "https://data-seed-prebsc-1-s2.binance.org:8545",
+            "https://data-seed-prebsc-2-s2.binance.org:8545",
+            "https://data-seed-prebsc-1-s3.binance.org:8545",
+            "https://data-seed-prebsc-2-s3.binance.org:8545"
+        ],
+        "faucets": ["https://testnet.binance.org/faucet-smart"],
+        "nativeCurrency": { "name": "Binance Chain Native Token", "symbol": "tBNB", "decimals": 18 },
+        "infoURL": "https://testnet.binance.org/",
+        "shortName": "bnbt",
+        "chainId": 97,
+        "networkId": 97,
+        "explorers": [{ "name": "bscscan-testnet", "url": "https://testnet.bscscan.com", "standard": "EIP3091" }],
+        "ICA":"0x951c74D83a85833b53A448caaB7397bd3fa6CFB2",
+        "IGP": "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a"
+    },
+    {
+        "name": "Goerli",
+        "title": "Ethereum Testnet Goerli",
+        "chain": "ETH",
+        "rpc": ["https://goerli.infura.io/v3/32f0f36f9fa64d1dabac0dbc2a768ba2", "wss://goerli.infura.io/v3/${INFURA_API_KEY}", "https://rpc.goerli.mudit.blog/"],
+        "faucets": ["http://fauceth.komputing.org?chain=5&address=${ADDRESS}", "https://goerli-faucet.slock.it?address=${ADDRESS}", "https://faucet.goerli.mudit.blog"],
+        "nativeCurrency": { "name": "Goerli Ether", "symbol": "GoerliETH", "decimals": 18 },
+        "infoURL": "https://goerli.net/#about",
+        "shortName": "gor",
+        "chainId": 5,
+        "networkId": 5,
+        "ens": { "registry": "0x112234455c3a32fd11230c42e7bccd4a84e02010" },
+        "explorers": [{ "name": "etherscan-goerli", "url": "https://goerli.etherscan.io", "standard": "EIP3091" }],
+        "ICA":"0xCb0ba89F564e31180A101Df54b7971206e03ee9b",
+        "IGP": "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a",
+        "HCA": "0xf6cDF212Ed20223219653a26dcE9961Bb2521BDb"
+    },
+    {
+        "name": "Celo Alfajores Testnet",
+        "chainId": 44787,
+        "shortName": "ALFA",
+        "chain": "CELO",
+        "networkId": 44787,
+        "nativeCurrency": { "name": "CELO", "symbol": "CELO", "decimals": 18 },
+        "rpc": ["https://alfajores-forno.celo-testnet.org", "wss://alfajores-forno.celo-testnet.org/ws"],
+        "faucets": ["https://celo.org/developers/faucet", "https://cauldron.pretoriaresearchlab.io/alfajores-faucet"],
+        "infoURL": "https://docs.celo.org/",
+        "explorers": [{ "name": "Celoscan", "url": "https://celoscan.io", "standard": "EIP3091" }],
+        "ICA":"0xDb91D575F17d8AAf1aFEC0eaDBD5Ac9e5Cef4ad0",
+        "IGP": "0x8f9C3888bFC8a5B25AED115A82eCbb788b196d2a",
+        "HCA": "0x2e6cC8035d79887DfA5Bace98a4Aeeabbfc302ab"
+    }
+]
+}

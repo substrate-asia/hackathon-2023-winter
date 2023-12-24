@@ -1,8 +1,8 @@
-## 基本资料
+## Basic Info
 
-项目名称：CreatorX
+Project Name：CreatorX
 
-项目立项日期 (哪年哪月)：2023/10
+Project created at：2023/10
 
 
 ## Background
@@ -21,9 +21,9 @@ We build a blockchain base of X.com, all the new tweets require user to pay gas 
 
 ## Links && only demo
 
-* [Website](https://RWA-Wallet.com), only the landing page, do not have function yet
-* [Pitch Deck TBD](#)
-* [Video Demo TBD](#)
+* [Website](https://RWA-Wallet.com)
+* [Pitch Deck](https://pitch.com/public/425a912f-2b85-4ed2-9114-c78e53375fa2)
+* [Video Demo](https://youtu.be/2z2bbhJd5hw)
 
 ## Github Repo
 
@@ -38,8 +38,6 @@ Our project is build with Hackathon, that we do a lot of new tech research and i
 * Solidity
 * Hardhat
 * Viem
-* CCIP
-* Programmable Wallets
 * Moonbeam EVM
 * JWT MPC Wallet
 
@@ -48,20 +46,23 @@ Our project is build with Hackathon, that we do a lot of new tech research and i
 ![Logo](./docs/logo.png)
 
 
-## 黑客松期间计划完成的事项
+## Plan to do during hackathon
 
-* [ ] 创建帖子 (`createSpot`)
-* [ ] 帖子列表 (`listSpot`)
-* [ ] 购买帖子 (`buySpot`)
-* [ ] 发布带有随机红包的帖子 (`issueRandomLottery`)
-* [ ] 分享到 X.com (`shareToX`)
-* [ ] 推荐奖励功能 (`refToEarn`)
+* [x] Creat Thread (`createSpot`)
+* [x] Thread List (`listSpot`)
+* [x] buy SBT (`buySpot`)
+* [x] unlock content (`unlockContent`)
 
-## 本次黑客松已完成事项
+## Done during hackathon
 
-TBD
+* [x] Creat Thread (`createSpot`)
+* [x] Thread List (`listSpot`)
+* [x] buy SBT (`buySpot`)
+* [x] unlock content (`unlockContent`)
+* [x] user onboard task guide
+* [x] uni-bridge
 
-## 团队成员
+## Team Members
 
 | Role | Name | Wechat | Github |
 | --- | --- | --- | --- |

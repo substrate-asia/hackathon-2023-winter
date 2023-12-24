@@ -1,7 +1,7 @@
 'use client';
 
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import * as R from 'ramda'
 import {
@@ -26,7 +26,6 @@ import {
   useContractRead,
 } from 'wagmi'
 import { parseUnits, parseAbi } from 'viem'
-import { getContract } from 'wagmi/actions'
 import { InjectedConnector } from '@wagmi/connectors/injected'
 import Homa from '@acala-network/contracts/build/contracts/Homa.json'
 import { HOMA } from '@acala-network/contracts/utils/Predeploy'
@@ -44,7 +43,11 @@ const question_nft_abis = [
   'function createReward(uint256 questionId, uint256 amount) public',
 ]
 
-export function QuestionCreateForm() {
+export function QuestionCreateForm({
+  actionButtonLabel = 'Submit'
+}: {
+  actionButtonLabel?: string
+}) {
   const queryClient = useQueryClient()
   const { data: walletClient, isLoading: walletIsLoading } = useWalletClient()
   const { isConnected } = useAccount()
@@ -75,6 +78,8 @@ export function QuestionCreateForm() {
     }
   })
 
+  const { mutate: deleteMutate } = trpcQuery.questions.delete.useMutation()
+
   const { data: rate, isLoading: rateIsLoading } = useContractRead({
     address: HOMA,
     abi: Homa.abi,
@@ -103,11 +108,7 @@ export function QuestionCreateForm() {
         args: [parseUnits(dot, 10)]
       })
       console.info(hash1)
-      await publicClient.waitForTransactionReceipt({
-        hash: hash1,
-        confirmations: 2,
-        timeout: 300_000,
-      })
+      await waitForTransactionReceipt(hash1)
       console.info(`https://blockscout.mandala.aca-staging.network/tx/${hash1}`)
       setHash1(hash1)
 
@@ -126,11 +127,7 @@ export function QuestionCreateForm() {
         args: [contractAddress, parseUnits(ldot, 10)]
       })
       console.info(hash2)
-      await publicClient.waitForTransactionReceipt({
-        hash: hash2,
-        confirmations: 2,
-        timeout: 300_000,
-      })
+      await waitForTransactionReceipt(hash2)
       console.info(`https://blockscout.mandala.aca-staging.network/tx/${hash2}`)
       setHash2(hash2)
 
@@ -144,11 +141,7 @@ export function QuestionCreateForm() {
         args: [questionId, parseUnits(ldot, 10)]
       })
       console.info(hash3)
-      await publicClient.waitForTransactionReceipt({
-        hash: hash3,
-        confirmations: 2,
-        timeout: 300_000,
-      })
+      await waitForTransactionReceipt(hash3)
       console.info(`https://blockscout.mandala.aca-staging.network/tx/${hash3}`)
       setHash3(hash3)
       setLoading(false)
@@ -161,8 +154,22 @@ export function QuestionCreateForm() {
       setLoading(false)
       setErrorMsg(R.pathOr('Fail to Submit', ['message'], error))
       console.error(error)
+      deleteMutate({
+        questionId,
+      })
     }
   }
+
+  const waitForTransactionReceipt = useCallback(async (hash: `0x${string}`) => {
+    try {
+      await publicClient.waitForTransactionReceipt({
+        hash,
+        timeout: 60_000,
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }, [publicClient])
 
   const handleSubmit= async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -178,41 +185,44 @@ export function QuestionCreateForm() {
       <Alert className="mb-4" color="green" open={open} onClose={() => setOpen(false)}>
         Created successfully, will jump to the question after 10s.
       </Alert>
-      <Card>
+      <Card shadow={false}>
         <CardBody>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
               <div className="flex flex-col gap-2">
-                <Typography variant="h6" color="blue-gray" className="">
-                  Title
-                </Typography>
                 <Input
                   name="title"
                   size="lg"
-                  label="Title"
+                  label='Question'
                   required
                 />
               </div>
               <Textarea
                 name="body"
                 size="lg"
-                label="Details"
+                placeholder="Optional describe your question in detail."
               />
-              <div className="flex flex-col gap-2">
-                <Typography variant="h6" color="blue-gray" className="">
-                  Price you offer
-                </Typography>
+              <div className="relative flex w-full">
                 <Input
-                  name="dot"
+                  label="Offer"
+                  className="pr-20"
+                  containerProps={{ className: "min-w-0" }}
+                  placeholder="The minimal offer to a question is 1 DOT"
                   value={dot}
                   onChange={(e) => setDot(e.target.value)}
-                  size="lg"
-                  label="Min Price is 1 DOT"
-                  required
                 />
+                <Button
+                  size="sm"
+                  color="gray"
+                  disabled={true}
+                  className="!absolute right-1 top-1 rounded"
+                  variant="text"
+                >
+                  DOT
+                </Button>
               </div>
               <div className="flex justify-end mt-4">
-                <Button loading={isLoading || walletIsLoading || loading} type="submit">Submit</Button>
+                <Button loading={isLoading || walletIsLoading || loading} type="submit">{actionButtonLabel}</Button>
               </div>
             </div>
           </form>

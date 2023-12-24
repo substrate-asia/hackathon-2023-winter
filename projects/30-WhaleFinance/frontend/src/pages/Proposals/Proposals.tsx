@@ -1,23 +1,24 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ethers } from 'ethers';
 import { WhaleFinanceAbi } from '../../contracts/WhaleFinance';
 import { WhaleFinanceAddress } from '../../utils/addresses';
 
-export default function Proposals({ isMetamaskInstalled, signer }: 
-    { isMetamaskInstalled: boolean; signer: any;}) {
+
+export default function Proposals({ signer }: 
+    { signer: any;}) {
         
     const history = useNavigate();
 
-    interface ProposalValues {
-        [key: number]: number;
-    }
+    // interface ProposalValues {
+    //     [key: number]: number;
+    // }
 
     const [proposalValues, setProposalValues] = useState<any>([]);
-    const [proposalIds, setProposalIds] = useState<any>([]);
+    const [_, setProposalIds] = useState<any>([]);
 
     const handleInputChange = (proposalId: number, newValue: string) => {
-        setProposalValues(prevValues => ({
+        setProposalValues((prevValues:any) => ({
             ...prevValues,
             [proposalId]: Number(newValue)
         }));
@@ -220,7 +221,7 @@ export default function Proposals({ isMetamaskInstalled, signer }:
                                 <div className="py-3 px-6 text-center flex-1">Action</div>
                             </div>
                             <div className="text-gray-700 dark:text-gray-100 text-[0.6rem] md:text-sm lg:text-sm font-light">
-                                {myproposals.map((proposal) => (
+                                {myproposals.map((proposal: any) => (
                                     <div key={proposal.proposal_id} className="border-b h-14 items-center  flex hover:bg-gray-100 hover:dark:bg-dark2-color hover:bg-opacity-50">
                                         <div className="py-3 px-6 text-center flex-1">{proposal.proposal_id}</div>
                                         <div className="py-3 px-6 text-center flex-1">{proposal.name}</div>

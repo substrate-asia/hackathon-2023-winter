@@ -11,22 +11,22 @@ import {
   Typography,
   Button,
   Avatar,
+  ButtonGroup,
 } from '@material-tailwind/react'
 import { useSession } from 'next-auth/react'
 import { useQueryClient } from '@tanstack/react-query'
-import { parseAbi } from 'viem'
+import { parseAbi, formatEther } from 'viem'
 import {
   usePublicClient,
   useWalletClient,
-  useConnect,
-  useAccount,
-  useContractRead,
 } from 'wagmi'
+import { useSetAtom } from 'jotai'
 
 import { MarkdownView } from '@/components/MarkdownView'
 import { formatRelativeTime } from '@/utils/datetime'
 import { mandala } from '@/utils/chains'
 import cn from '@/utils/cn'
+import { buyAnswerIdAtom, sellAnswerIdAtom } from './atoms'
 
 const question_nft_abis = [
   'function grantReward(uint256 questionId, address answerer) public',
@@ -38,6 +38,8 @@ export function AnswerList({ id }: { id: number }) {
   const publicClient = usePublicClient()
   const { data: session } = useSession()
   const { data, isLoading } = trpcQuery.answers.getByQuestionId.useQuery({ id })
+  const setBuyAnswerId = useSetAtom(buyAnswerIdAtom)
+  const setSellAnswerId = useSetAtom(sellAnswerIdAtom)
 
   const { mutate, isLoading: picking } = trpcQuery.answers.pick.useMutation({
     onSuccess: () => {
@@ -57,7 +59,7 @@ export function AnswerList({ id }: { id: number }) {
         address: '0xC6C850C3455076da5726201a21593D537Ed58189',
         abi: parseAbi(question_nft_abis),
         functionName: 'grantReward',
-        args: [answer.questionId, answer.user.address]
+        args: [answer.question.id, answer.user.address]
       })
       await publicClient.waitForTransactionReceipt({
         hash,
@@ -122,6 +124,20 @@ export function AnswerList({ id }: { id: number }) {
             <MarkdownView>
               {answer.body}
             </MarkdownView>
+            <div className="flex justify-between items-center mt-2 border-t border-gray-300 pt-2">
+              <div className="flex flex-col">
+                <Link href={`/answers/${answer.id}`}>
+                  <Typography variant="h3">
+                    {formatEther(answer.pricePerShare)}
+                    <span className="font-light text-sm ml-1.5">ACA / Share</span>
+                  </Typography>
+                </Link>
+              </div>
+              <ButtonGroup size="sm" variant="gradient" color="amber">
+                <Button onClick={() => setBuyAnswerId(answer.id)}>Buy</Button>
+                <Button onClick={() => setSellAnswerId(answer.id)}>Sell</Button>
+              </ButtonGroup>
+            </div>
           </CardBody>
           {
             session && session.user && session.user.id === answer.question_creator_id && sorted.length > 0 && !sorted[0].picked ? (

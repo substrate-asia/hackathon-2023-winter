@@ -1,0 +1,4 @@
+@openzeppelin/=lib/openzeppelin-contracts/
+@upgradeable/=lib/openzeppelin-contracts-upgradeable
+@upgradeable/safeAccount/=lib/openzeppelin-contracts-upgradeable
+@layerzerolabs/solidity-examples/=lib/solidity-examples

@@ -6,6 +6,7 @@ import FormInvestor from '../../components/FormInvestor/FormInvestor';
 import LineChartComponent from '../../components/LineChartComponent/LineChartComponent';
 import PieChartComponent from '../../components/PieChartComponent/PieChartComponent';
 import DataDiv from '../../components/DataDiv/DataDiv';
+import TokensTable from '../../components/TokensTable/TokensTable';
 
 // interface PerformanceItem {
 //     date: string;
@@ -138,75 +139,111 @@ export default function Investor() {
 
     if (!fund) {
         return (
-        <div className='w-[100vw] ml-6 mt-6 rounded-md bg-light-color dark:bg-dark-color min-h-[100vh] text-gray-700 overflow-y-auto'>
-                <section className="">
-                    <div className="container mx-auto px-6 text-center py-8 opacity-60">
-                        <h2 className="flex justify-center items-center bg-white h-[12vh] text-4xl font-bold text-center text-secondary-color rounded-[20px]">
-                        </h2>
-                        <div className='flex flex-row justify-center h-[70vh] my-10 mx-6 mb-12 shadow-lg bg-white text-secondary-color rounded-[20px]'>
-                        </div>
-                        <div className='flex flex-row justify-center h-[70vh] my-12 mb-24'>
-                            <div className='basis-1/2 mx-6 px-10 h-[70vh] shadow-lg bg-white text-secondary-color rounded-[20px]'>
-                            </div>
-                            <div className='basis-1/2 mx-6 px-10 h-[70vh] shadow-lg bg-white text-secondary-color rounded-[20px]'>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div> 
+            <div className='w-[100vw] h-[100vh] text-gray-700 px-12 py-12 overflow-y-auto'>
+                <h2 className="mb-2 text-2xl font-bold text-start ml-4 text-gray-500 dark:text-gray-100">
+                    Investor Dashboard
+                </h2>
+                <div className='h-[100vh] border-[1px] border-gray-300 dark:border-gray-700 text-gray-700 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                </div> 
+            </div>  
         )
     }
 
     return (
-        <>
-            <div className='w-[100vw] ml-6 mt-6 rounded-md bg-light-color dark:bg-dark-color h-screen text-gray-700 overflow-y-auto'>
-                <section className="">
-                    <div className="container mx-auto px-0 text-center py-8 md:px-6 lg:px-6">
-                        <h2 className="flex justify-center items-center bg-white h-[12vh] mx-6 text-4xl font-bold text-center text-secondary-color shadow-lg rounded-[20px]">
-                            <span style={{ fontStyle: 'italic'}}>Investor Access</span>
-                        </h2>
-                        <div className='flex flex-col md:flex-row lg:flex-row justify-center md:h-[70vh] lg:h-[70vh] my-10 mx-6 mb-12 shadow-lg bg-white text-secondary-color rounded-[20px]'>
-                            <div className='flex-1 md:basis-2/3 lg:basis-2/3 md:mx-2 md:px-10 lg:mx-2 lg:px-10'>
-                                <h1 className='font-bold text-2xl mt-6 mb-1 md:text-left md:ml-12 lg:text-left lg:ml-12'>Performance</h1>
-                                <div className='flex justify-center sm:block sm:justify-start lg:block lg:justify-start'>
-                                    <div className='h-[2px] w-36 mb-8 md:ml-12 lg:ml-12 bg-secondary-color'></div>
-                                </div>
-                                <div className='w-[90%] md:w-[100%] lg:w-[100%] h-[80%] flex items-center justify-center'>
-                                    <LineChartComponent data={data} />
-                                </div>
-                            </div>
-                            <div className='flex-1 md:basis-1/3 lg:basis-1/3 mx-2 px-10 '>
-                                <h1 className='font-bold text-2xl mt-6 mb-1 md:text-left lg:text-left'>Invest</h1>
-                                <div className='flex justify-center sm:block sm:justify-start lg:block lg:justify-start'>
-                                    <div className='h-[2px] w-16 md:mb-8 lg:mb-8 bg-secondary-color'></div>
-                                </div>
-                                <FormInvestor   invest={invest}
-                                                setInvest={setInvest}
-                                />
-                                <button
-                                className="my-4 bg-gradient-to-r from-secondary-color to-secondary-color text-white font-bold rounded-full border-2 border-transparent py-2 px-20 shadow-lg uppercase tracking-wider hover:from-white hover:to-white hover:text-secondary-color hover:border-secondary-color transition duration-1000 ease-in-out" onClick={handleClick}
-                                >
-                                Invest
-                                </button>
-                            </div>
-                        </div>
-                        <div className='flex flex-col md:flex-row lg:flex-row justify-center md:h-[70vh] lg:h-[70vh] my-12 mb-24'>
-                            <div className='md:basis-1/2 lg:basis-1/2 mx-6 md:px-10 lg:px-10 h-[70vh] shadow-lg bg-white text-secondary-color rounded-[20px]'>
-                                <h1 className='font-bold text-2xl mt-6 mb-1 mx-10 md:mx-0 lg:mx-0 text-left'>Tokens</h1>
-                                <div className='h-[2px] w-20 mb-8 mx-10 md:mx-0 lg:mx-0 bg-secondary-color'></div>
-                                <div className='w-[100%] h-[80%] flex items-center justify-center'>
-                                    <PieChartComponent />
-                                </div>
-                            </div>
-                            <div className='mt-12 md:mt-0 lg:mt-0 md:basis-1/2 lg:basis-1/2 mx-6 px-10 h-[70vh] shadow-lg bg-white text-secondary-color rounded-[20px]'>
-                                <h1 className='font-bold text-2xl mt-6 mb-1 text-left'>Data</h1>
-                                <div className='h-[2px] w-14 mb-8 bg-secondary-color'></div>
-                                <DataDiv fund={fund}/>
-                            </div>
+        <div className='w-[100vw] h-[100vh] text-gray-700 px-12 py-12 overflow-y-auto'>
+            <h2 className="mb-2 text-2xl font-bold text-start ml-4 text-gray-500 dark:text-gray-100">
+                Investor Dashboard
+            </h2>
+            {/* <h2 className="text-4xl text-secondary-color text-center font-bold py-6 border-[1px] border-gray-300 dark:border-gray-700 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50">
+                <img src={Avatar} alt="Avatar" className="w-10 h-10 inline-block mr-8 rounded-full" />
+                {fund.name}
+            </h2>
+            <div className='px-8 border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                <h3 className='font-bold text-xl mt-8'>
+                    Invest Section
+                </h3>
+                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700'></div>
+                <div className='flex flex-col mb-8 rounded-[10px] space-y-1'>
+                    <div className='grid grid-cols-2'>
+                        <h3 className='italic'>Your DREX Balance:</h3>
+                        <div className='flex flex-row items-center justify-start'>
+                            <p className='font-bold text-secondary-color'>{Number(zusdBalance).toFixed(2)}</p>
+                            <img src={WhaleToken} alt="whaletoken" className='w-6 h-6 ml-2' />
                         </div>
                     </div>
-                </section>
+                    <div className='grid grid-cols-2'>
+                        <h3 className='italic'>Your quotas Balance:</h3>
+                        <p className='font-bold text-secondary-color'>{Number(quotaBalance).toFixed(2)}</p>
+                    </div>
+                    <div className='grid grid-cols-2'>
+                        <h3 className='italic'>Quota Price:</h3>
+                        <p className='font-bold text-secondary-color'>{Number(quotaPrice).toFixed(2)} USD/quota</p>
+                    </div>
+                    
+                    <div className='grid grid-cols-2'>
+                        <h3 className='italic'>Total number of quotas:</h3>
+                        <p className='font-bold text-secondary-color'>{Number(totalQuotas).toFixed(2)}</p>
+                    </div>
+
+                    <div className='grid grid-cols-2'>
+                        <h3 className='italic'>Maturation Date</h3>
+                        <p className='font-bold text-secondary-color'>{timesTampToString(openRedeem)}</p>
+                    </div>
+                    
+                    <div className='grid grid-cols-2'>
+                        <h3
+                        className='italic'
+                        onClick={() => window.open(`${scanUrl}/address/${quotaAddress}`)}
+                        style={{
+                            cursor: "pointer"
+                        }}
+                        >See the quota on-chain:</h3>
+                        <p 
+                        style={{
+                            cursor: "pointer"
+                        }}
+                        className='font-bold text-secondary-color truncate'>{quotaAddress}</p>
+                    </div>
+                </div>
+                <div className='mb-8 items-end gap-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2'>
+                    <FormInvestor   
+                        invest={invest}
+                        setInvest={setInvest}
+                    />
+                    <button
+                    className="h-12 w-96 bg-secondary-color text-light-color dark:text-dark-color font-bold rounded-full border-2 border-transparent py-2 px-36 shadow-lg uppercase tracking-wider hover:bg-light-color hover:dark:bg-dark-color hover:text-secondary-color hover:dark:text-secondary-color hover:border-secondary-color transition duration-1000 ease-in-out"
+                    >
+                    {loading ? 'Loading...' : 'Invest'}
+                    </button>
+                </div>
+            </div> */}
+            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                <h3 className='font-bold text-xl ml-8 mt-8'>
+                    Tokens Section
+                </h3>
+                <div className='w-[100%-8] h-[1px] mt-2 bg-gray-300 dark:bg-gray-700 mx-8'></div>
+                <div className='p-6 flex flex-col items-center justify-center'>
+                    <TokensTable />
+                </div>
             </div>
-        </>
+            <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                <h3 className='font-bold text-xl ml-8 mt-8'>
+                    Performance Section
+                </h3>
+                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
+                <div className='w-[80%] md:w-[95%] lg:w-[95%] h-[500px] p-6 flex flex-col items-center justify-center'>
+                    <LineChartComponent data={data} />
+                </div>
+            </div>
+            {/* <div className='border-[1px] border-gray-300 dark:border-gray-700 text-gray-500 dark:text-gray-100 mt-6 rounded-md backdrop-blur-md bg-light-color/50 dark:bg-dark-color/50 '>
+                <h3 className='font-bold text-xl ml-8 mt-8'>
+                    Data Section
+                </h3>
+                <div className='w-[100%-8] h-[1px] mt-2 mb-8 bg-gray-300 dark:bg-gray-700 mx-8'></div>
+                <div className='w-[80%] md:w-[95%] lg:w-[95%] p-8 flex flex-col items-center justify-center'>
+                    <DataDiv fund={fund} />
+                </div>
+            </div> */}
+        </div>
     )
 }

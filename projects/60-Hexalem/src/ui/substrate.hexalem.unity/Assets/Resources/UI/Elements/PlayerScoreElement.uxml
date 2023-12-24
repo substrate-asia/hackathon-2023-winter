@@ -1,0 +1,79 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="VelPlayerScore" style="flex-grow: 0; height: 250px; flex-shrink: 0; width: 100%; flex-direction: row;">
+        <ui:VisualElement style="flex-grow: 0; width: 10%; height: 100%; flex-shrink: 0;">
+            <ui:Label tabindex="-1" text="1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblPlayerIndex" class="font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 80px; width: 100%; height: 100%; -unity-text-align: middle-center;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 0; width: 300px; height: 100%; flex-direction: row; flex-shrink: 0;">
+            <ui:VisualElement style="flex-grow: 0; position: absolute; width: 300px; height: 100%; align-items: center; justify-content: flex-end; padding-bottom: 30px; flex-shrink: 0;">
+                <ui:VisualElement name="VisualElement" style="flex-grow: 0; flex-shrink: 0; width: 220px; height: 220px; background-color: rgb(33, 76, 237); border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; justify-content: center; align-items: center;">
+                    <ui:VisualElement name="VelPlayerPort" style="flex-grow: 0; flex-shrink: 0; width: 200px; height: 200px; border-top-left-radius: 50%; border-top-right-radius: 50%; border-bottom-right-radius: 50%; border-bottom-left-radius: 50%; align-items: flex-end; background-image: none; -unity-background-scale-mode: scale-to-fit;" />
+                </ui:VisualElement>
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 120px; height: 70px; padding-top: 5px; padding-right: 5px; padding-bottom: 5px; padding-left: 5px; position: absolute; bottom: 0;">
+                    <ui:VisualElement name="VelStatManaBox" style="flex-grow: 0; width: 100%; height: 100%; flex-shrink: 0; flex-direction: row; background-color: rgb(255, 255, 255); border-top-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; border-bottom-left-radius: 15px; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; border-left-color: rgb(33, 76, 237); border-right-color: rgb(33, 76, 237); border-top-color: rgb(33, 76, 237); border-bottom-color: rgb(33, 76, 237); border-top-width: 7px; border-right-width: 7px; border-bottom-width: 7px; border-left-width: 7px;">
+                        <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 50%; height: 100%; align-items: center; justify-content: center; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 5px;">
+                            <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_mana.png?fileID=2800000&amp;guid=bc5adb251b8bcb547a4e0882dc8c6fb9&amp;type=3#icon_res_mana&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                        </ui:VisualElement>
+                        <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblManaValue" class="font-chicken font-color" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-center; width: 50%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 1px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 0; width: 360px; height: 100%; flex-shrink: 1;">
+            <ui:VisualElement style="flex-grow: 1;" />
+            <ui:VisualElement style="flex-grow: 0; height: 70px; width: 100%; flex-shrink: 0; flex-direction: row;">
+                <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 15px; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 100px; height: 100%;">
+                    <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblHumansValue" class="font-color font-chicken" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
+                        <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_human.png?fileID=2800000&amp;guid=9c74274619c09ac4b8fc3b452ef3a296&amp;type=3#icon_res_human&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Spacer1" style="flex-grow: 0; width: 20px; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 100px; height: 100%;">
+                    <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblWaterValue" class="font-color font-chicken" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
+                        <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_water.png?fileID=2800000&amp;guid=303f7f0f6fb18454ab9ac04ee42d0b17&amp;type=3#icon_res_water&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Spacer1" style="flex-grow: 0; width: 20px; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 100px; height: 100%;">
+                    <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblFoodValue" class="font-color font-chicken" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
+                        <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_food.png?fileID=2800000&amp;guid=96284503ddba62e4488b23339a7e9df2&amp;type=3#icon_res_food&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 5%; height: 100%; flex-shrink: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; height: 25px; flex-shrink: 0;" />
+            <ui:VisualElement style="flex-grow: 0; height: 70px; width: 100%; flex-shrink: 0; flex-direction: row;">
+                <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 15px; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 100px; height: 100%;">
+                    <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblWoodValue" class="font-color font-chicken" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
+                        <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_wood.png?fileID=2800000&amp;guid=22ef94c3ee7a4d448af6bcc99c126a04&amp;type=3#icon_res_wood&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Spacer1" style="flex-grow: 0; width: 20px; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 100px; height: 100%;">
+                    <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblStoneValue" class="font-color font-chicken" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
+                        <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_stone.png?fileID=2800000&amp;guid=48a26b603b2bcf04bbf635e790049f71&amp;type=3#icon_res_stone&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Spacer1" style="flex-grow: 0; width: 20px; height: 100%; flex-shrink: 0;" />
+                <ui:VisualElement name="VelStatsBox" style="flex-grow: 0; flex-direction: row; flex-shrink: 0; width: 100px; height: 100%;">
+                    <ui:Label tabindex="-1" text="10&#10;" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblGoldValue" class="font-color font-chicken" style="font-size: 30px; -unity-font-style: bold; -unity-text-align: upper-right; width: 40%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 10px; padding-right: 0; padding-bottom: 0; padding-left: 0; align-items: auto;" />
+                    <ui:VisualElement name="VelResIconBox" style="flex-grow: 0; flex-shrink: 0; width: 70%; height: 100%; align-items: center; justify-content: center; padding-top: 10px; padding-right: 15px; padding-bottom: 10px; padding-left: 5px;">
+                        <ui:VisualElement name="VelResIcon" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; background-image: url(&apos;project://database/Assets/Images/icon_res_gold.png?fileID=2800000&amp;guid=081ac6d2d42b8754a91893964cabb25b&amp;type=3#icon_res_gold&apos;); -unity-background-scale-mode: scale-to-fit;" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="Spacer5" style="flex-grow: 0; width: 15px; height: 100%; flex-shrink: 0;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="flex-grow: 1; padding-left: 20px;">
+            <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblTurn" class="font-chicken" style="width: 100%; height: 100%; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-text-align: middle-left; font-size: 50px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
