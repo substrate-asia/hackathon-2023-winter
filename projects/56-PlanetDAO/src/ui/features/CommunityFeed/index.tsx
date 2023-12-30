@@ -1,6 +1,8 @@
 import ActivityCard from '../../components/components/ActivityCard';
 import { Activity } from '../../data-model/activity';
-import { Idea } from '../../data-model/idea';
+import { useEffect, useState } from 'react';
+import useContract from '../../services/useContract';
+import { sortDateDesc } from '../../utils/sort-date';
 
 const mockItems = [
   {
@@ -65,10 +67,46 @@ const mockItems = [
 ] as Activity[];
 
 const CommunityFeed = () => {
+  const [loading, setLoading] = useState(false);
+  const [Items, setItems] = useState([]);
+  const { contract } = useContract();
+
+
+  async function fetchContractData() {
+    setLoading(true);
+
+    try {
+      if (contract ) {
+        const totalFeeds = await contract._feed_ids();
+        const arr = [];
+    
+        for (let i = 0; i < Number(totalFeeds); i++) {
+          const feed = await contract._feeds(i);
+          arr.push({
+            date: new Date(Number(feed.date) * 1000),
+            type: feed.Type,
+            data: JSON.parse( feed.data)
+          })         
+
+        }
+
+
+        setItems( sortDateDesc(arr, 'date'));
+       
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    
+  }
+
+  useEffect(()=>{fetchContractData()},[contract])
+  
   return (
-    <div className="container flex flex-col gap-2 w-full items-center pb-10">
-      {mockItems.map((item, index) => (
-        <ActivityCard key={index} date={item.date} type={item.type} data={item.data}></ActivityCard>
+    <div className="flex flex-col gap-2 w-full items-center pb-10 w-[540px] min-w-[540px]">
+      {Items.map((item, index) => (
+        <ActivityCard key={index} old_date={item.date} type={item.type} data={item.data} date={undefined}></ActivityCard>
       ))}
     </div>
   );

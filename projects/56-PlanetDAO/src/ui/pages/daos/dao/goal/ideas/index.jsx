@@ -1,5 +1,5 @@
 import { Button } from '@heathmont/moon-core-tw';
-import { GenericEdit, GenericHeart, ShopCryptoCoin } from '@heathmont/moon-icons-tw';
+import { GenericEdit, GenericHeart, ShopWallet } from '@heathmont/moon-icons-tw';
 import Head from 'next/head';
 import { useEffect, useState } from 'react';
 import CommentBox from '../../../../../components/components/CommentBox';
@@ -8,7 +8,7 @@ import UseFormTextArea from '../../../../../components/components/UseFormTextAre
 import DonateCoinModal from '../../../../../features/DonateCoinModal';
 import VoteConviction from '../../../../../components/components/modal/VoteConviction';
 import useContract from '../../../../../services/useContract';
-import Image from 'next/image';
+import Image from 'next/legacy/image';
 import Loader from '../../../../../components/components/Loader';
 import { usePolkadotContext } from '../../../../../contexts/PolkadotContext';
 
@@ -106,7 +106,7 @@ export default function GrantIdeas() {
         const goalURIFull = await contract._goal_uris(Number(Goalid)); //Getting total goal (Number)
         const goalURI = JSON.parse(goalURIFull.goal_uri);
         let allDaos = await GetAllDaos();
-        let goalDAO = allDaos.filter(e => e.daoId = goalURIFull.dao_id)[0];
+        let goalDAO = allDaos.filter((e) => (e.daoId = goalURIFull.dao_id))[0];
 
         let isvoted = false;
         const Allvotes = await contract.get_ideas_votes_from_goal(Number(Goalid), Number(id)); //Getting all votes
@@ -150,7 +150,7 @@ export default function GrantIdeas() {
           const object = JSON.parse(commentInfo.message);
           let newComment = {
             address: object.address,
-            user_info: object?.userid != undefined ? await getUserInfoById( object?.userid) : {fullName:object.address,imgIpfs:""},
+            user_info: object?.userid != undefined ? await getUserInfoById(object?.userid) : { fullName: object.address, imgIpfs: '' },
 
             message: object.message,
             date: object.date,
@@ -166,7 +166,7 @@ export default function GrantIdeas() {
             const object = JSON.parse(replyInfo.message);
             let newReply = {
               id: object.id,
-              user_info: object?.userid != undefined ? await getUserInfoById( object?.userid) : {fullName:object.address,imgIpfs:""},
+              user_info: object?.userid != undefined ? await getUserInfoById(object?.userid) : { fullName: object.address, imgIpfs: '' },
               message: object.message,
               address: object.address,
               date: object.date
@@ -234,7 +234,7 @@ export default function GrantIdeas() {
 
     let messLatestId = Number(await contract._message_ids());
     let newComment = {
-      userid:Number(window.userid),
+      userid: Number(window.userid),
       address: window?.ethereum?.selectedAddress?.toLocaleLowerCase().toString(),
       message: Comment,
       date: new Date().toISOString(),
@@ -258,7 +258,7 @@ export default function GrantIdeas() {
     let newReply = {
       id: replyLatestId,
       message: replyText,
-      userid:Number(window.userid),
+      userid: Number(window.userid),
       address: window?.ethereum?.selectedAddress?.toLocaleLowerCase().toString(),
       date: new Date().toISOString()
     };
@@ -280,65 +280,83 @@ export default function GrantIdeas() {
         <div className={`gap-8 flex flex-col w-full bg-gohan pt-10 pb-6 border-beerus border`}>
           <div className="container flex w-full justify-between relative">
             <div className="flex flex-col gap-1">
-              <Loader loading={loading} width={300} element={<h5 className="font-semibold">{IdeasURI?.daoURI?.Title} &gt; {IdeasURI?.goalURI?.properties?.Title?.description} &gt; {IdeasURI?.Title}</h5>} />
+              <Loader
+                loading={loading}
+                width={300}
+                element={
+                  <h5 className="font-semibold">
+                    {IdeasURI?.daoURI?.Title} &gt; {IdeasURI?.goalURI?.properties?.Title?.description} &gt; {IdeasURI?.Title}
+                  </h5>
+                }
+              />
               <Loader loading={loading} width={300} element={<h1 className="text-moon-32 font-bold">{IdeasURI.Title}</h1>} />
-              <Loader loading={loading} width={770} element={<h3 className="flex gap-2 whitespace-nowrap">
-                <div>
-                  Donated <span className="text-hit font-semibold">DEV {IdeasURI.donation}</span>
-                </div>
-                <div>•</div>
-                <div>
-                  <span className="text-hit font-semibold">{IdeasURI.votesAmount}</span> votes
-                </div>
-                <div>•</div>
-                <div className="flex">
-                  Created by &nbsp;<a href={'/Profile/' + IdeasURI?.user_info?.id} className="truncate text-piccolo max-w-[120px]">@{IdeasURI?.user_info?.fullName}</a>
-                </div>
-              </h3>} />
+              <Loader
+                loading={loading}
+                width={770}
+                element={
+                  <h3 className="flex gap-2 whitespace-nowrap">
+                    <div>
+                      Donated <span className="text-hit font-semibold">DEV {IdeasURI.donation}</span>
+                    </div>
+                    <div>•</div>
+                    <div>
+                      <span className="text-hit font-semibold">{IdeasURI.votesAmount}</span> votes
+                    </div>
+                    <div>•</div>
+                    <div className="flex">
+                      Created by &nbsp;
+                      <a href={'/Profile/' + IdeasURI?.user_info?.id} className="truncate text-piccolo max-w-[120px]">
+                        @{IdeasURI?.user_info?.fullName}
+                      </a>
+                    </div>
+                  </h3>
+                }
+              />
             </div>
             <div className="flex flex-col gap-2">
               {!IdeasURI.isOwner && (
-                <Button iconLeft={<ShopCryptoCoin />} onClick={onClickDonate}>
+                <Button iconLeft={<ShopWallet />} onClick={onClickDonate}>
                   Donate
                 </Button>
               )}
-              {(!IdeasURI.isOwner) && (
-                IdeasURI.isVoted ? (
+              {!IdeasURI.isOwner &&
+                (IdeasURI.isVoted ? (
                   <Button iconLeft={<GenericHeart fill="red" color="red" />} variant="secondary" disabled={true}>
                     Voted
                   </Button>
-                ) : (<Button iconLeft={<GenericHeart />} variant="secondary" onClick={VoteIdea}>
-                  Vote
-                </Button>)
-
-              )}
+                ) : (
+                  <Button iconLeft={<GenericHeart />} variant="secondary" onClick={VoteIdea}>
+                    Vote
+                  </Button>
+                ))}
             </div>
           </div>
         </div>
 
         <div className="container flex flex-col gap-6">
           <p>{IdeasURI.Description}</p>
-          <div className='flex justify-center'><Loader
-            element={
-
-              imageList.length > 1 ? (
-                <>
-                  <SlideShow images={imageList} />
-                </>
-              ) : (
-                <>
-                   {imageList[0] && (
-                     <div className="relative w-auto max-[w-720px] h-[480px] object-contain">
-                      <Image src={imageList[0].url} fill className="object-contain" />
-                    </div>
-                  )}
-                </>
-              )
-            }
-            loading={loading}
-            width={800}
-            height={500}
-          /></div>{' '}
+          <div className="flex justify-center">
+            <Loader
+              element={
+                imageList.length > 1 ? (
+                  <>
+                    <SlideShow images={imageList} />
+                  </>
+                ) : (
+                  <>
+                    {imageList[0] && (
+                      <div className="relative w-auto max-[w-720px] h-[480px] object-contain">
+                        <Image src={imageList[0].url} layout="fill" objectFit="cover" className="object-contain" />
+                      </div>
+                    )}
+                  </>
+                )
+              }
+              loading={loading}
+              width={800}
+              height={500}
+            />
+          </div>{' '}
           <div className="full-w">
             <form onSubmit={PostComment} className="full-w flex flex-col gap-2">
               {CommentInput}

@@ -76,6 +76,13 @@ contract PlanetDAO {
         bool comment;
         bool reply;
     }
+    
+    struct feed_struct {
+        uint256 feed_id;
+        uint256 date;
+        string Type;
+        string data;
+    }
     uint256 public _dao_ids;
     uint256 public _donations_ids;
     uint256 public _goal_ids;
@@ -86,6 +93,7 @@ contract PlanetDAO {
     uint256 public _message_ids;
     uint256 public _message_read_ids;
     uint256 public _reply_ids;
+    uint256 public _feed_ids;
     mapping(uint256 => dao_uri_struct) public _dao_uris; //_dao_ids              => (Dao)                    Dao Wallet + Dao URI   + Finished
     mapping(uint256 => string) public _template_uris; //_dao_ids              => (Dao)                   Template HTML Code
     mapping(uint256 => join_struct) public _joined_person; //_join_ids             => (Dao)                  join_struct
@@ -93,6 +101,7 @@ contract PlanetDAO {
     mapping(uint256 => goal_uri_struct) public _goal_uris; //_goal_ids             => (Goal)                   Dao ID + Goal URI
     mapping(uint256 => ideas_uri_struct) public _ideas_uris; //_ideas_ids            => (Ideas)                  Goal ID + Ideas URI
     mapping(uint256 => uint256) public _donated; //uint256            => (Donated to ideas)                amount
+    mapping(uint256 => feed_struct) public _feeds; //_feed_ids            => (feed_struct)
     mapping(uint256 => donation_struct) public _donations; //uint256            => donation_struct
     mapping(uint256 => smart_contract_uri_struct) public _smart_contracts_uris; //_smart_contract_ids   => (Ideas Smart contract)   Goal ID + Ideas URI
     mapping(uint256 => goal_ideas_votes_struct) public all_goal_ideas_votes; //_ideas_vote_ids       => (Vote)                   Goal ID + Ideas ID + User Id
@@ -140,12 +149,19 @@ contract PlanetDAO {
         return _dao_uris[_dao_id].dao_uri;
     }
 
+    function add_Feed(string memory feed_text,string memory _type) public {
+         _feeds[_feed_ids] = feed_struct(_feed_ids,block.timestamp,_type,feed_text);
+         _feed_ids++;
+    }
+
     //Goals
-    function create_goal(string memory _goal_uri, string memory  _dao_id,uint256 _user_id) public returns (uint256) {
+    function create_goal(string memory _goal_uri, string memory  _dao_id,uint256 _user_id, string memory _feed) public returns (uint256) {
         //Create goal into _goal_uris
         _goal_uris[_goal_ids] = goal_uri_struct(_dao_id, _goal_uri);
+       
         _user_badges[_user_id].goal = true;
         _goal_ids++;
+        add_Feed(_feed,"goal");
 
         return _goal_ids;
     }
@@ -194,7 +210,7 @@ contract PlanetDAO {
     }
 
     //Ideas
-    function create_ideas(string memory _ideas_uri, uint256 _goal_id, string[] memory _smart_contracts,uint256 _user_id) public returns (uint256) {
+    function create_ideas(string memory _ideas_uri, uint256 _goal_id, string[] memory _smart_contracts,uint256 _user_id, string memory _feed) public returns (uint256) {
         //Create ideas into _ideas_uris
         _ideas_uris[_ideas_ids] = ideas_uri_struct(_goal_id, _ideas_uri, 0);
         _user_badges[_user_id].ideas = true;
@@ -204,6 +220,7 @@ contract PlanetDAO {
             create_ideas_smart_contract(_ideas_ids, _smart_contract_ids, _smart_contracts[i]);
             _smart_contract_ids++;
         }
+        add_Feed(_feed,"idea");
 
         return _ideas_ids;
     }
@@ -216,18 +233,28 @@ contract PlanetDAO {
         _ideas_uris[_ideas_id].ideas_uri = _ideas_uri;
     }
 
-    function add_donation(uint256 _ideas_id, uint256 _doantion,  uint256 _userid) public {
-        _user_badges[_userid].donation = true;
+    function add_donation(uint256 _ideas_id, uint256 _doantion,  uint256 _userid, string memory _feed1, string memory _feed2) public {
+      if (_user_badges[_userid].donation == false){
+        add_Feed(_feed1,"badge");
+      }
+      add_Feed(_feed2,"donation");
+      
+      _user_badges[_userid].donation = true;
         _ideas_uris[_ideas_id].donation += _doantion;
         _donated[_userid] += _doantion;
         _donations[_donations_ids] = donation_struct(_ideas_id, _userid, _doantion);
         _donations_ids++;
+
+        
     }
 
-    function join_community(uint256 dao_id, uint256 person) public {
+    function join_community(uint256 dao_id, uint256 person, string memory _feed) public {
         _user_badges[person].joined = true;
         _joined_person[_join_ids] = join_struct({daoid: dao_id, user_id: person});
         _join_ids++;
+         add_Feed(_feed,"join");
+
+
     }
 
     function is_person_joined( uint256 person) public view returns (bool) {
@@ -285,11 +312,12 @@ contract PlanetDAO {
     }
 
     //Votes
-    function create_goal_ideas_vote(uint256 _goal_id, uint256 _ideas_id, uint256 _user_id) public returns (uint256) {
+    function create_goal_ideas_vote(uint256 _goal_id, uint256 _ideas_id, uint256 _user_id, string memory _feed) public returns (uint256) {
          _user_badges[_user_id].vote = true;
         //Create votes into all_goal_ideas_votes
         all_goal_ideas_votes[_ideas_vote_ids] = goal_ideas_votes_struct(_goal_id, _ideas_id, _user_id);
         _ideas_vote_ids++;
+        add_Feed(_feed,"vote");
 
         return _ideas_vote_ids;
     }
