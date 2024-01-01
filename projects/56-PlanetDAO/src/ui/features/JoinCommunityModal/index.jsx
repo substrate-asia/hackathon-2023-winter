@@ -61,7 +61,6 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
       let feed = JSON.stringify({
         name: userInfo?.fullName?.toString()
       })
-      console.log(feed);
     if (Number(window.ethereum.networkVersion) === 1287) {
       //If it is sending from Moonbase so it will use batch precompiles
       ShowAlert('pending', 'Sending Batch Transaction....');
@@ -69,9 +68,7 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
       await BatchJoin(Amount, address, Number(dao_id),feed);
 
       ShowAlert('success', 'Purchased Subscription successfully!');
-      setTimeout(() => {
-        window.location.reload();
-      }, 1000);
+      
     } else {
       let output = await sendTransfer(Number(window.ethereum.networkVersion),`${Number( Amount) }`, address, ShowAlert);
       setTransaction({
@@ -81,7 +78,7 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
       // Saving Joined Person on smart contract
       await sendTransaction(await window.contract.populateTransaction.join_community(dao_id, Number(window.userid),feed));
     }
-
+    window.location.reload();
     LoadData();
     setisLoading(false);
     setisSent(true);
@@ -139,7 +136,7 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
             <Button variant="ghost" onClick={onHide}>
               Cancel
             </Button>
-            <Button id="CreateGoalBTN" type="submit" onClick={JoinSubmission} disabled={Amount > Balance || isLoading}>
+            <Button id="CreateGoalBTN" type="submit" onClick={JoinSubmission} animation={isLoading && 'progress'} disabled={Amount > Balance || isLoading}>
               Join
             </Button>
           </div>

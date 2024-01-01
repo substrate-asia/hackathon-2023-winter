@@ -98,7 +98,8 @@ export default function Profile() {
 
       if (idea_uri.properties.user_id.description == user_id) {
         let votes = await contract.get_ideas_votes_from_goal(goalid, i);
-        idea_uri.votes = votes;
+        
+        idea_uri.votes = votes.filter((item, idx) => item !== '');
 
         foundidea.push(idea_uri);
       }

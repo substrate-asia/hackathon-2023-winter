@@ -78,8 +78,7 @@ export default function DonateCoin({ ideasid,show, onHide, address }) {
     })
 
     const ideaURI = await contract.ideas_uri(Number(ideasid)); //Getting ideas uri
-    const object = JSON.parse(ideaURI); //Getting ideas uri
-    Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
+    let Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
     const goalURIFull = await contract._goal_uris(Number(Goalid)); //Getting total goal (Number)
     const goalURI = JSON.parse(goalURIFull.goal_uri);
   
@@ -87,9 +86,7 @@ export default function DonateCoin({ ideasid,show, onHide, address }) {
     let feed2 = JSON.stringify( {
       donated: Amount,
       goalTitle: goalURI.properties.Title.description,
-      idea: {
-        Title: object.properties.Title.description
-      }
+      ideasid:  Number(ideasid)
     })
     if (Number(window.ethereum.networkVersion) === 1287) {
       //If it is sending from Moonbase so it will use batch precompiles
@@ -108,13 +105,11 @@ export default function DonateCoin({ ideasid,show, onHide, address }) {
       // Saving Donation count on smart contract
       await sendTransaction(await window.contract.populateTransaction.add_donation(Number(ideasid), `${Amount * 1e18}`, Number(window.userid),feed1,feed2));
     }
-
+    window.location.reload();
     LoadData();
     setisLoading(false);
     setisSent(true);
-    setTimeout(() => {
-      window.location.reload();
-    }, 1000);
+    
     onHide();
     
   }
@@ -191,7 +186,7 @@ export default function DonateCoin({ ideasid,show, onHide, address }) {
                 <Button variant="ghost" onClick={onHide}>
                   Cancel
                 </Button>
-                <Button type="submit" id="CreateGoalBTN">
+                <Button animation={isLoading && 'progress'} disabled={isLoading}  type="submit" id="CreateGoalBTN">
                   Donate
                 </Button>
               </div>

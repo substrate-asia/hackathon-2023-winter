@@ -185,6 +185,7 @@ export default function CreateDaoModal({ open, onClose }) {
 
         setCreating(false);
         onClose({ success: true });
+        window.setTimeout(()=>{window.location.reload()},1000)
       } catch (error) {
         console.error(error);
         setCreating(false);
@@ -192,6 +193,7 @@ export default function CreateDaoModal({ open, onClose }) {
         return;
       }
     }
+
   }
 
   function FilehandleChange(dao) {

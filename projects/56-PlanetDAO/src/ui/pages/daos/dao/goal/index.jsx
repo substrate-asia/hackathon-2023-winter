@@ -31,6 +31,8 @@ export default function Goal() {
   const { contract, signerAddress } = useContract();
   const [tabIndex, setTabIndex] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [isJoined, setIsJoined] = useState(false);
+
   const [showCreateIdeaModal, setShowCreateIdeaModal] = useState(false);
   const [DonatemodalShow, setDonatemodalShow] = useState(false);
   const [selectedIdeasId, setSelectedIdeasId] = useState(-1);
@@ -66,18 +68,21 @@ export default function Goal() {
         let goalDAO = allDaos.filter((e) => (e.daoId = goalURIFull.dao_id))[0];
 
         let user_info = await getUserInfoById(Number(goalURI.properties?.user_id?.description));
+        let isJoined = await contract.is_person_joined(Number( goalDAO.id),Number(window.userid));
+        setIsJoined(isJoined);
 
-        const totalIdeasWithEmpty = await contract.get_all_ideas_by_goal_id(Number(goalid)); //Getting total goal (Number)
+        const totalIdeasWithEmpty = await contract.get_all_ideas_by_goal_id(Number(id)); //Getting total goal (Number)
         let totalIdeas = totalIdeasWithEmpty.filter((e) => e !== '');
         const arr = [];
         let total_donated = 0;
         for (let i = 0; i < Object.keys(totalIdeas).length; i++) {
           //total goal number Iteration
           const ideasId = await contract.get_ideas_id_by_ideas_uri(totalIdeas[i]);
-          const Allvotes = await contract.get_ideas_votes_from_goal(Number(id), Number(id)); //Getting all votes
+          const AllvotesWithEmpty = await contract.get_ideas_votes_from_goal(Number(id), Number(id)); //Getting all votes
+          const Allvotes = AllvotesWithEmpty.filter((item, idx) => item !== '');
           let isvoted = false;
           for (let i = 0; i < Allvotes.length; i++) {
-            const element = Allvotes[i];
+            const element = Number(Allvotes[i]);
             if (element == Number(window.userid)) isvoted = true;
           }
           if (totalIdeas[i] == '') continue;
@@ -188,7 +193,7 @@ export default function Goal() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              {!GoalURI.isOwner ? (
+              {(GoalURI.isOwner || isJoined) ? (
                 <>
                   {' '}
                   <Button iconLeft={<ControlsPlus />} onClick={openCreateIdeaModal}>

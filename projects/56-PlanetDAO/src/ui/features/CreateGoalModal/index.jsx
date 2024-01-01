@@ -131,12 +131,11 @@ export default function CreateGoalModal({ open, onClose }) {
     };
     console.log('======================>Creating Goal');
     toast.update(ToastId, { render: 'Creating Goal...', isLoading: true });
+    const goalid = Number(await contract._goal_ids());
     let feed = JSON.stringify({
       name: userInfo?.fullName,
-      goal: {
-        Title: GoalTitle,
-        budget: Budget
-      }
+      goalid: goalid,
+      budget: Budget
     });
 
     try {

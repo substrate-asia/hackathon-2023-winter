@@ -24,6 +24,8 @@ export default function DAO() {
   const [JoinmodalShow, setJoinmodalShow] = useState(false);
   const [showCreateGoalModal, setShowCreateGoalModal] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
+  const [leaving, setLeaving] = useState(false);
+  const [JoinedID, setJoinedID] = useState(9999);
   const [isOwner, setIsOwner] = useState(false);
   const [loading, setLoading] = useState(true);
   const [aboutTemplate, setAboutTemplate] = useState('');
@@ -62,8 +64,26 @@ export default function DAO() {
     }
   }
 
-  function deleteDao() {
-    console.log('DELETE DAO');
+ async function leaveCommunity() {
+    setLeaving(true)
+    try {
+      // Leaving Community in Smart contract
+      await sendTransaction(await window.contract.populateTransaction.leave_community( Number(JoinedID)));
+      toast.update(ToastId, {
+        render: 'Successful!',
+        type: 'success',
+        isLoading: false,
+        autoClose: 1000,
+        closeButton: true,
+        closeOnClick: true,
+        draggable: true
+      });
+      window.setTimeout(()=>{window.location.reload()},1000)
+    } catch (error) {  
+    }
+    setLeaving(false)
+
+  
   }
 
   async function UpdateDaoData(dao_uri, template_html) {
@@ -71,7 +91,8 @@ export default function DAO() {
 
     setIsOwner(daoURI.properties?.user_id?.description.toString() === window?.userid?.toString() ? true : false);
     let user_info = await getUserInfoById(daoURI.properties?.user_id?.description);
-    let isJoined = await contract.is_person_joined(Number(window.userid));
+    let isJoined = await contract.is_person_joined(daoId,Number(window.userid));
+    setJoinedID(await contract.get_person_joinedID(daoId,Number(window.userid)));
     setIsJoined(isJoined);
 
     let daoURIShort = {
@@ -93,6 +114,7 @@ export default function DAO() {
 
   async function fetchDaoData() {
     setLoading(true);
+
 
     if (daoId !== undefined && daoId !== null && api && daoId != -1) {
       //Fetching data from Parachain
@@ -135,13 +157,24 @@ export default function DAO() {
           if (object) {
             const totalIdeasWithEmpty = await contract.get_all_ideas_by_goal_id(Number(goalid)); //Getting total goal (Number)
 
+            let total_reached = 0;
             let totalIdeas = totalIdeasWithEmpty.filter((e) => e !== '');
+            for (let i = 0; i < totalIdeas.length; i++) {
+              const element = totalIdeas[i];
+
+              const ideasId = await contract.get_ideas_id_by_ideas_uri(element);
+              let donation = Number((await contract._ideas_uris(Number(ideasId))).donation) / 1e18;
+              total_reached += donation;
+           
+            }
+
             arr.push({
               //Pushing all data into array
               goalId: goalid,
               Title: object.properties.Title.description,
               Description: object.properties.Description.description,
               Budget: object.properties.Budget.description,
+              reached: total_reached,
               End_Date: object.properties.End_Date.description,
               logo: object.properties.logo.description?.url,
               ideasCount: Object.keys(totalIdeas).filter((item, idx) => item !== '').length
@@ -199,11 +232,11 @@ export default function DAO() {
                 </Button>
               )}
 
-              {/* {isJoined && (
-                <Button iconLeft={<GenericLogOut />} variant="secondary">
+              {(isJoined  && !isOwner) && (
+                <Button onClick={leaveCommunity} iconLeft={<GenericLogOut />} variant="secondary">
                   Leave
                 </Button>
-              )} */}
+              )}
               {isOwner && (
                 <Link href={`/DesignDao?[${daoIdTxt}]`}>
                   <Button iconLeft={<GenericEdit />} variant="secondary" className="w-full">
@@ -221,6 +254,7 @@ export default function DAO() {
                   Join
                 </Button>
               )}
+
             </div>
           </div>
           <div className="container">
@@ -235,7 +269,7 @@ export default function DAO() {
         </div>
         {tabIndex === 0 && (
           <div className="container flex gap-6">
-            <CommunityFeed /> <TopCommunityMembers />
+            <CommunityFeed /> <TopCommunityMembers daoid={daoIdTxt} />
           </div>
         )}
         {tabIndex === 1 && <div className="container" dangerouslySetInnerHTML={{ __html: aboutTemplate }}></div>}

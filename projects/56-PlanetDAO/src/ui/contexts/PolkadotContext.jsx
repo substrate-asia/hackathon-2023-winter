@@ -15,7 +15,7 @@ const AppContext = createContext({
   PolkadotLoggedIn:false,
   EasyToast:  (message,type,UpdateType = false,ToastId =  "")=>{},
   GetAllDaos:async ()=>{},
-  getUserInfoById: ()=>{}
+  getUserInfoById: (userid)=>{}
 });
 
 export function PolkadotProvider({ children }) {

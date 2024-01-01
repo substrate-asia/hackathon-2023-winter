@@ -146,12 +146,11 @@ export default function CreateIdeaModal({ show, onClose }) {
     const goalURIFull = await contract._goal_uris(Number(id)); //Getting total goal (Number)
     const goalURI = JSON.parse(goalURIFull.goal_uri);
 
+    const ideasID = Number(await contract._ideas_ids());
     let feed = JSON.stringify({
       name: userInfo?.fullName,
       goalTitle: goalURI.properties.Title.description,
-      idea: {
-        Title: IdeasTitle
-      }
+      ideasid: ideasID
     });
     try {
       // Creating Ideas in Smart contract
