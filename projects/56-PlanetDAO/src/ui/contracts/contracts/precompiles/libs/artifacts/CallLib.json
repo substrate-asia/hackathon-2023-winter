@@ -1,0 +1,74 @@
+{
+	"deploy": {
+		"VM:-": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"main:1": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"ropsten:3": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"rinkeby:4": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"kovan:42": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"goerli:5": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		},
+		"Custom": {
+			"linkReferences": {},
+			"autoDeployLib": true
+		}
+	},
+	"data": {
+		"bytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"linkReferences": {},
+			"object": "60566050600b82828239805160001a6073146043577f4e487b7100000000000000000000000000000000000000000000000000000000600052600060045260246000fd5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122043b7161dda438adf73bd28a66f33bf6272312b32ba4e2a172d3fe88f52945d4164736f6c63430008120033",
+			"opcodes": "PUSH1 0x56 PUSH1 0x50 PUSH1 0xB DUP3 DUP3 DUP3 CODECOPY DUP1 MLOAD PUSH1 0x0 BYTE PUSH1 0x73 EQ PUSH1 0x43 JUMPI PUSH32 0x4E487B7100000000000000000000000000000000000000000000000000000000 PUSH1 0x0 MSTORE PUSH1 0x0 PUSH1 0x4 MSTORE PUSH1 0x24 PUSH1 0x0 REVERT JUMPDEST ADDRESS PUSH1 0x0 MSTORE PUSH1 0x73 DUP2 MSTORE8 DUP3 DUP2 RETURN INVALID PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 NUMBER 0xB7 AND SAR 0xDA NUMBER DUP11 0xDF PUSH20 0xBD28A66F33BF6272312B32BA4E2A172D3FE88F52 SWAP5 0x5D COINBASE PUSH5 0x736F6C6343 STOP ADDMOD SLT STOP CALLER ",
+			"sourceMap": "184:3417:1:-:0;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+		},
+		"deployedBytecode": {
+			"functionDebugData": {},
+			"generatedSources": [],
+			"immutableReferences": {},
+			"linkReferences": {},
+			"object": "73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122043b7161dda438adf73bd28a66f33bf6272312b32ba4e2a172d3fe88f52945d4164736f6c63430008120033",
+			"opcodes": "PUSH20 0x0 ADDRESS EQ PUSH1 0x80 PUSH1 0x40 MSTORE PUSH1 0x0 DUP1 REVERT INVALID LOG2 PUSH5 0x6970667358 0x22 SLT KECCAK256 NUMBER 0xB7 AND SAR 0xDA NUMBER DUP11 0xDF PUSH20 0xBD28A66F33BF6272312B32BA4E2A172D3FE88F52 SWAP5 0x5D COINBASE PUSH5 0x736F6C6343 STOP ADDMOD SLT STOP CALLER ",
+			"sourceMap": "184:3417:1:-:0;;;;;;;;"
+		},
+		"gasEstimates": {
+			"creation": {
+				"codeDepositCost": "17200",
+				"executionCost": "97",
+				"totalCost": "17297"
+			},
+			"internal": {
+				"build(address,bytes memory)": "infinite",
+				"build(address,bytes memory,bytes memory)": "infinite",
+				"build(address,uint256,bytes memory)": "infinite",
+				"build(bytes32,bytes memory)": "infinite",
+				"build(bytes32,bytes memory,bytes memory)": "infinite",
+				"build(bytes32,uint256,bytes memory)": "infinite",
+				"call(struct CallLib.Call memory)": "infinite",
+				"multicall(struct CallLib.Call memory[] memory)": "infinite",
+				"multicallto(address,bytes memory[] memory)": "infinite",
+				"multistaticcall(struct CallLib.StaticCallWithCallback memory[] memory)": "infinite",
+				"staticcall(struct CallLib.StaticCall memory)": "infinite",
+				"staticcall(struct CallLib.StaticCallWithCallback memory)": "infinite"
+			}
+		},
+		"methodIdentifiers": {}
+	},
+	"abi": []
+}

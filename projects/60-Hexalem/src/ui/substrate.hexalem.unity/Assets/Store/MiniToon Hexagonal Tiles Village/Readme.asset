@@ -1,0 +1,132 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fcf7219bab7fe46a1ad266029b2fee19, type: 3}
+  m_Name: Readme
+  m_EditorClassIdentifier: 
+  icon: {fileID: 2800000, guid: 407619c5c19a54982b3880b5a085c597, type: 3}
+  iconMaxWidth: 192
+  title: Mini Toon Hexagonal Tiles | Village
+  sections:
+  - heading: About
+    text: Thank you for purchasing the Mini Toon Hexagonal Tiles Village asset pack. This lowpoly
+      stylized modular pack is ideal to build your game or prototype.
+    linkText: 
+    url: 
+  - heading: ✓ Optimization
+    text: "These assets are extremely light and can be used in both pc and mobile games. All models share a single texture file, allowing you to customize the colors according to your needs just by duplicanting materials and adjusting the material offset. \n\n⚠*Many models have primary, secondary and even tertiary material slots, check the <Materials> option in the [ Inspector > Skinned Mesh Renderer ] to add secondary/tertiary materials and customize colors to fit your needs."
+    linkText: 
+    url: 
+  - heading: ✓ Textures
+    text: "Diffuse/Albedo:\n-256px (.png)\n-Additional 1024px (.png)"
+    linkText: 
+    url: 
+  - heading: ✓ Polycount
+    text: "
+- barn_01 | 2286 Tris\n
+- barrel | 1188 Tris\n
+- boat_01 | 596 Tris\n
+- boat_02 | 648 Tris\n
+- boat_03 | 768 Tris\n
+- bridge_01 | 1620 Tris\n
+- bridge_02 | 2716 Tris\n
+- bush_01 | 68 Tris\n
+- bush_02 | 68 Tris\n
+- bush_03 | 68 Tris\n
+- bush_formation_01 | 204 Tris\n
+- bush_formation_02 | 408 Tris\n
+- cactus_01 | 976 Tris\n
+- cactus_02 | 752 Tris\n
+- cactus_formation_01 | 2704 Tris\n
+- cactus_formation_02 | 3472 Tris\n
+- cart | 3212 Tris\n
+- cattails_01 | 832 Tris\n
+- cattails_02 | 2016 Tris\n
+- church | 2596 Tris\n
+- crate_01 | 2244 Tris\n
+- crate_pile_01 | 6732 Tris\n
+- deck | 852 Tris\n
+- farm_lot_carrots | 1926 Tris\n
+- farm_lot_empty | 198 Tris\n
+- farm_lot_fence | 1160 Tris\n
+- farm_lot_pumpkin | 8802 Tris\n
+- farm_lot_sprouts | 4590 Tris\n
+- farm_lot_tomatos | 20006 Tris\n
+- farm_lot_wheat | 4230 Tris\n
+- forest_palmtrees_01 | 10024 Tris\n
+- forest_pines_01 | 1096 Tris\n
+- forest_trees_01 | 1410 Tris\n
+- grass_01 | 168 Tris\n
+- grass_formation_01 | 448 Tris\n
+- grass_formation_02 | 1624 Tris\n
+- house_01 | 1798 Tris\n
+- house_02 | 2948 Tris\n
+- house_03 | 3976 Tris\n
+- market | 15748 Tris\n
+- palmtree_01 | 1432 Tris\n
+- palmtree_02 | 1432 Tris\n
+- pine_01 | 124 Tris\n
+- pine_02 | 176 Tris\n
+- pond | 868 Tris\n
+- pond_water | 48 Tris\n
+- rail_01 | 472 Tris\n
+- rail_02 | 816 Tris\n
+- rail_03 | 816 Tris\n
+- rail_04 | 688 Tris\n
+- rock_01 | 58 Tris\n
+- rock_02 | 124 Tris\n
+- rock_03 | 96 Tris\n
+- rock_formation_01 | 274 Tris\n
+- rock_formation_02 | 164 Tris\n
+- rock_formation_outer_01 | 126 Tris\n
+- rock_formation_outer_02 | 222 Tris\n
+- tile_grass_plain | 68 Tris\n
+- tile_sand_plain | 68 Tris\n
+- tile_soil_grass | 136 Tris\n
+- tile_soil_plain | 68 Tris\n
+- tile_water_plain | 68 Tris\n
+- tree_01 | 148 Tris\n
+- tree_02 | 270 Tris\n
+- tree_03 | 426 Tris\n
+- tree_04 | 282 Tris\n
+- tree_05 | 296 Tris\n
+- tree_trunk_01 | 66 Tris\n
+- tree_trunk_02 | 162 Tris\n
+- windmill | 634 Tris\n
+- windmill_blades | 920 Tris\n
+- wood_logs | 552 Tris\n"
+    linkText: 
+    url: 
+  - heading: ╳ Blendshapes
+    text:  "These assets doesn´t have any animations included."
+    linkText:
+    url:
+  - heading: ╳ Animations
+    text:  "These assets doesn´t have any animations included."
+    linkText:
+    url:
+  - heading: ✓ Modular Design
+    text:  "These assets are designed to be modular, making it easy to create a variety of combinations, allowing you to create unique models and scenes.\n\nUse snap function to build quick and easy.\n\n⚠*Increment Snapping Settings:\nMove: X 0.25 | Y 0.25 | Z 1.73\nRotate 60\nScale 1"
+    linkText:
+    url:
+  - heading:
+    text:  "Each asset has been carefully crafted to add a unique touch to your game project!"
+    linkText:
+    url:
+  - heading: ☎ Contact/Support
+    text: 
+    linkText: Asset Store Profile 
+    url: https://assetstore.unity.com/publishers/20594
+  - heading: 
+    text: 
+    linkText: 
+    url: 
+  loadedLayout: 1

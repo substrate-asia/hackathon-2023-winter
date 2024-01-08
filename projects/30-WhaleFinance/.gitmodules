@@ -1,0 +1,6 @@
+[submodule "whale_finance/lib/openzeppelin-contracts"]
+	path = whale_finance/lib/openzeppelin-contracts
+	url = https://github.com/Openzeppelin/openzeppelin-contracts
+[submodule "whale_finance/lib/openzeppelin-contracts-upgradeable"]
+	path = whale_finance/lib/openzeppelin-contracts-upgradeable
+	url = https://github.com/Openzeppelin/openzeppelin-contracts-upgradeable

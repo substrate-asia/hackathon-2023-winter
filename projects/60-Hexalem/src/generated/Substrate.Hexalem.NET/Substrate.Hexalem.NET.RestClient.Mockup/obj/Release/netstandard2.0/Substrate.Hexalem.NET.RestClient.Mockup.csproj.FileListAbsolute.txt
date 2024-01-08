@@ -1,0 +1,15 @@
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.deps.json
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.pdb
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.NetApiExt.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.pdb
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\bin\Release\netstandard2.0\Substrate.Hexalem.NET.NetApiExt.pdb
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.csproj.AssemblyReference.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.GeneratedMSBuildEditorConfig.editorconfig
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.AssemblyInfoInputs.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.AssemblyInfo.cs
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.csproj.CoreCompileInputs.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.csproj.CopyComplete
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient.Mockup\obj\Release\netstandard2.0\Substrate.Hexalem.NET.RestClient.Mockup.pdb

@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name" translatable="false">Blend</string>
+    <string name="hey" translatable="false">Hey hammad</string>
+    <string name="new_account_prompt" translatable="false">New here? Create a new account</string>
+    <string name="account_prompt" translatable="false">Login to existing account</string>
+    <string name="default_web_client_id">710735842130-u4ot4ieeeeg7edio2mkh8li8ia0qm5oo.apps.googleusercontent.com</string>
+    <string name="progress_info" translatable="false">Note: Please do not close the application while the face mesh is generating as it will affect the result.
+Redirect will occur upon completion.</string>
+    <string name="computation" translatable="false">Computation in progress...</string>
+
+
+</resources>

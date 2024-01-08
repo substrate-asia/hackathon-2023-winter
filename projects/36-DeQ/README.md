@@ -1,38 +1,79 @@
-## 基本资料
+## Basic Information
 
-项目名称：
+项目名称：DeQ
 
-项目立项日期 (哪年哪月)：
-
-## 项目整体简介
-
-### 中文介绍
-欢迎来到DeQ，一个融合了web3独有的经济学模型和互联网社交app模式的创新式问答平台。在这里，无论你是问题的提问者还是回答者，都能通过这个过程获取收益。我们的回答模式参照了知乎的高赞回答模式，通过这种方式，回答者可以获得更多的DOT收益。而作为提问者，在发布问题的同时，可以通过质押的方式投入acala的defi矿池，从而获取staking的收益。就让DeQ成为你提问与回答，思考与收获，挖矿与分享的理想之地。
-
-### English Introduction
-Welcome to DeQ, an innovative Q&A platform that combines the essence of web3 tokenomic and traditional social app models. Here, whether you are the questioner or the responder, you can earn profits through this process. Our answering mode references Zhihu's upvoted response method, and through this approach, responders can gain more DOT earnings. Simultaneously, as a questioner, you can achieve yields rewards from acala's defi staking pool while publishing your questions. Let DeQ be your ideal place for asking and answering, thinking and profiting, mining and sharing.
-
-## 黑客松期间计划完成的事项
-
-TBD
-
-**区块链端**
-
-TBD
-
-**客户端**
-
-TBD
+项目立项日期：2023/12
 
 
-## 黑客松期间所完成的事项 (2023年12月22日上午11:59初审前提交)
+## Introduction
 
-TBD
+The paid consulting advisor is a long-standing business model, but due to its labor-intensive nature and the inability to measure effectiveness effectively, the commercialization of this service is not well-developed, and it only has a small market share as a high-end offering. There are also many products that have carried out platform for paid knowledge services, and the results are all good, but they still have some footages:
 
-## 队员信息
+1. It is easy to create the illusion by pay ratings.
+2. Answer/knowledge creators cannot directly profit by sharing their own experiences.
+3. Some knowledge is time-sensitive, and certain highly liked answers need updating after a period of time. Without a continuous way for creators to profit from their work and be motivated to update it beyond interest alone, this becomes challenging.
+4. In the commercialization process, whether through a consulting model or Q&A platform model, there is no publicly auditable income data available to verify effectiveness. Evaluation can only rely on vote counts and good ratings, which are available as a paid service.
 
-### Carson Pan
+DeQ aims to address these issues by combining a tokenomics model and De-Fi.
 
-GitHub: https://github.com/qweasdzxcpkh
+Links:
 
-Frontend developer.
+- Online DEMO: [https://deq.lol/](https://deq.lol/)
+- Question Contract Address: [0xC6C850C3455076da5726201a21593D537Ed58189](https://blockscout.mandala.aca-staging.network/address/0xC6C850C3455076da5726201a21593D537Ed58189)
+- Answer Contract Address: [0x3592D7BD047f069e17D708c31aa25d2c652323a2](https://blockscout.mandala.aca-staging.network/address/0x3592D7BD047f069e17D708c31aa25d2c652323a2)
+
+## Objectives in Hackathon
+
+During this Hackathon, our goal is to create a Proof-of-concept version by implementing the following features:
+
+- Questioners can ask questions by offering rewards, and these rewards will generate profits over time through staking, the stacking feature is implemented through the Acala Homa contract.
+- Answerers can receive the reward after their answers are approved by questioners, and they have the option to continue staking.
+- Community members can support answerers they approve of by buying shares. Answerers receive an initial share when submitting their answers, which they can further profit from by selling shares or through transaction fees.
+- Both questions and answers are converted into on-chain assets by NFTs.
+
+## Checklist
+
+Based on the above objectives, we have accomplished the following in this submission.
+
+We aim to create smart contracts that can:
+
+- [x] Convert questions and answers into on-chain assets through contracts.
+- [x] Provide continuous income to answerers through shares trading.
+
+Develop a simple dApp to showcase relevant concepts:
+
+- [x] List top answers by tokenomics flavors ranking.
+- [x] List of questions that have not been answered yet and are eligible for rewards.
+- [x] Create question and staking corresponding tokens.
+- [x] Answer questions and claim rewards.
+- [x] Allow question creators to choose the best answer for rewards.
+- [x] Shares Trading for answers.
+- [x] Learn more about a dedicated user by viewing their personal pages. You can ask them questions and offer rewards if applicable.
+
+## Roadmap
+
+If our idea is proven dealing the Hackathon, we plan to expand to several areas.
+
+1. **Upgradable contracts**. During the PoC, we focused on assessing the feasibility of the rules but did not have sufficient time during the Hackathon to consider smart contract implementation thoroughly. We plan to enhance the contract code quality in order to make the entire economic model more flexible.
+2. **Review the entire tokenomics model**. In this PoC, we increased revenue by introducing Homa Protocol without considering potential enhancements such as further integrating Acala Multichain Asset Router to enhance cross-chain asset liquidity and helping users obtain sustained long-term returns through balancing De-Fi ratios in future operations.
+3. **Reduce barriers through Account Abstraction**. By abstracting the account, the overall access threshold is reduced. This includes addressing the current need for multiple signing to complete the process. Through a simple version of Intent-Centric, we can significantly reduces the complexity of De-Fi operations (for example, "Keep the total number of staking tokens at the end of each month to X, with any excess converted to DOT").
+4. **Migrate data storage to a more decentralized solution**. Revisioning support for contents, and move the data storage into decentralized storage like ArWeave or IPFS.
+
+
+## Teams
+
+### Ruby
+
+5+ years of crypto marketing experience. Used to work for media and public chains like Phala.
+
+### Charle
+
+Lead Engineer & Software Architect. Lead developer from leading Dropshipping B2C company in China previously, being technical consulting and growth support to various start-ups for years.
+
+### Parker
+
+Smart Contract developer. Product Engineer from one of the largest social networking companies in China, experienced growth hacking for high-end clothing industry.
+
+### Carson
+
+Senior Full-Stack developer. 7+ years of experience and previously worked as SRE at a top 10 international SaaS company.

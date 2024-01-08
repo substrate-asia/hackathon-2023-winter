@@ -1,0 +1,106 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.6.33927.249
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Engine", "Substrate.Hexalem.NET\Substrate.Hexalem.Engine.csproj", "{64D275F5-5B97-44FC-B372-C5611E3E89B9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Test", "Substrate.Hexalem.Test\Substrate.Hexalem.Test.csproj", "{57870F77-E108-4BE0-B906-2571F43321A9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.WebAPI", "Substrate.Hexalem.WebAPI\Substrate.Hexalem.WebAPI.csproj", "{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.WebAPI.Test", "Substrate.Hexalem.WebAPI.Test\Substrate.Hexalem.WebAPI.Test.csproj", "{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Console", "Substrate.Hexalem.Console\Substrate.Hexalem.Console.csproj", "{CD6F8095-337E-4012-B2D9-A12458E08775}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Integration", "Substrate.Hexalem.Integration\Substrate.Hexalem.Integration.csproj", "{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.NET.NetApiExt", "Substrate.Hexalem.NET.NetApiExt\Substrate.Hexalem.NET.NetApiExt.csproj", "{23FBA163-D771-4425-A192-168C0D012346}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Integration.Test", "Substrate.Hexalem.Integration.Test\Substrate.Hexalem.Integration.Test.csproj", "{1473BCA5-6956-4D84-B131-423EECCC3614}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Game", "Substrate.Hexalem.Bot\Substrate.Hexalem.Game.csproj", "{75F78C98-1379-4848-A80A-946CBF7520B5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.Game.Test", "Substrate.Hexalem.Bot.Test\Substrate.Hexalem.Game.Test.csproj", "{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Substrate.Hexalem.UnityIntegration", "Substrate.Hexalem.UnityIntegration\Substrate.Hexalem.UnityIntegration.csproj", "{5791D948-8F61-4A4F-BA7D-3A3BF4313855}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01.Applications", "01.Applications", "{F2808382-4A14-4E44-836A-55072DB54B45}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "03.Engine", "03.Engine", "{AC04E35F-C88A-4CA5-9ABC-2F228125BAA9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "04.Substrate", "04.Substrate", "{BD36005C-87A1-4EF8-883A-5D75E926BEC1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Integration", "02.Integration", "{8476B4C8-B87D-4EDB-A438-83918CBF801C}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64D275F5-5B97-44FC-B372-C5611E3E89B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64D275F5-5B97-44FC-B372-C5611E3E89B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64D275F5-5B97-44FC-B372-C5611E3E89B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64D275F5-5B97-44FC-B372-C5611E3E89B9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57870F77-E108-4BE0-B906-2571F43321A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57870F77-E108-4BE0-B906-2571F43321A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57870F77-E108-4BE0-B906-2571F43321A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57870F77-E108-4BE0-B906-2571F43321A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD6F8095-337E-4012-B2D9-A12458E08775}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23FBA163-D771-4425-A192-168C0D012346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1473BCA5-6956-4D84-B131-423EECCC3614}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F78C98-1379-4848-A80A-946CBF7520B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75F78C98-1379-4848-A80A-946CBF7520B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75F78C98-1379-4848-A80A-946CBF7520B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75F78C98-1379-4848-A80A-946CBF7520B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5791D948-8F61-4A4F-BA7D-3A3BF4313855}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5791D948-8F61-4A4F-BA7D-3A3BF4313855}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5791D948-8F61-4A4F-BA7D-3A3BF4313855}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5791D948-8F61-4A4F-BA7D-3A3BF4313855}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{64D275F5-5B97-44FC-B372-C5611E3E89B9} = {AC04E35F-C88A-4CA5-9ABC-2F228125BAA9}
+		{57870F77-E108-4BE0-B906-2571F43321A9} = {AC04E35F-C88A-4CA5-9ABC-2F228125BAA9}
+		{ADBC1069-338C-4E50-8A36-2D3E5E9B4F87} = {F2808382-4A14-4E44-836A-55072DB54B45}
+		{32AABC18-3CEE-4DF4-B9D1-E1A11F4DAE81} = {F2808382-4A14-4E44-836A-55072DB54B45}
+		{CD6F8095-337E-4012-B2D9-A12458E08775} = {F2808382-4A14-4E44-836A-55072DB54B45}
+		{50B2C9D0-61E8-4D88-BBD1-541A01EB8390} = {8476B4C8-B87D-4EDB-A438-83918CBF801C}
+		{23FBA163-D771-4425-A192-168C0D012346} = {BD36005C-87A1-4EF8-883A-5D75E926BEC1}
+		{1473BCA5-6956-4D84-B131-423EECCC3614} = {8476B4C8-B87D-4EDB-A438-83918CBF801C}
+		{75F78C98-1379-4848-A80A-946CBF7520B5} = {8476B4C8-B87D-4EDB-A438-83918CBF801C}
+		{78ED16BE-FB54-4CFA-819D-31B5EFCF5EAD} = {8476B4C8-B87D-4EDB-A438-83918CBF801C}
+		{5791D948-8F61-4A4F-BA7D-3A3BF4313855} = {8476B4C8-B87D-4EDB-A438-83918CBF801C}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {964F5CB3-556E-4F71-B2ED-ECA5BCBD0494}
+	EndGlobalSection
+EndGlobal

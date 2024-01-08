@@ -24,7 +24,31 @@ public class StrategyBean {
         this.contractType = contractType;
     }
 
+    public String getEnginePath() {
+        return enginePath;
+    }
+
+    public void setEnginePath(String enginePath) {
+        this.enginePath = enginePath;
+    }
+
+    /**
+     * 工程名称
+     */
+    private String enginePath;
+
     private String contractAddress;
+
+    public String getAssertionName() {
+        return assertionName;
+    }
+
+    public void setAssertionName(String assertionName) {
+        this.assertionName = assertionName;
+    }
+
+    private String assertionName;
+
 
     /**
      * 编译方式 会关联一个映射

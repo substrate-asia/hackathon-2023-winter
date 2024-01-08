@@ -1,0 +1,180 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: var(--width-min);
+}
+
+.headerContainer {
+  display: flex;
+  width: 100%;
+  padding: 0px var(--padding-md);
+}
+
+.mainContainer {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  max-width: var(--pc-width-max);
+  margin: auto;
+  margin-top: 140px;
+  padding: 0px var(--padding-lg);
+}
+
+.sidebarMenu {
+  position: relative;
+  width: 14%;
+  margin-bottom: 20px;
+  min-width: 180px;
+}
+
+.sidebarMenuHide {
+  display: none;
+}
+
+.mainPanelFull {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.mainPanel {
+  display: flex;
+  flex-direction: column;
+  width: 84%;
+  border-radius: var(--border-radius-sm);
+  margin-bottom: var(--margin-md);
+}
+
+.mainPanelTopContainer {
+  margin-bottom: var(--margin-md);
+  background-color: var(--bg-second-color);
+  padding: var(--padding-md);
+  border-radius: var(--border-radius-sm);
+}
+
+.footerBottom {
+  width: 100%;
+  background-color: var(--bg-second-color);
+}
+
+.footerRight {
+  width: 100%;
+  background-color: var(--bg-second-color);
+  border-radius: var(--border-radius-sm);
+}
+
+.footerHide {
+  display: none;
+}
+
+.faucetArea {
+  position: absolute;
+  width: fit-content;
+  padding: 4px 8px;
+  height: 28px;
+  top: 120px;
+  left: 10px;
+  display: flex;
+  background-color: #111;
+  font-size: 12px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.over {
+  overflow: hidden;
+  max-height: 100vh;
+}
+
+.claimFaucet {
+  position: fixed;
+  top: 140px;
+}
+
+.faucetBtn {
+  width: 100px;
+  opacity: 0.8;
+}
+
+.floatBtn {
+  right: 40px;
+}
+
+.feedback_box {
+  width: 300px;
+  height: 200px;
+  position: absolute;
+  top: -195px;
+  left: -260px;
+  background-color: var(--bg-main-color);
+  border-radius: 6px;
+  border: 1px solid #444;
+  padding: 8px 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 100;
+}
+
+.feedback_box_title {
+  text-align: center;
+  font-weight: 500;
+}
+
+.feedback_box_loading {
+  width: 100%;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.feedback_box_btn {
+  float: right;
+}
+
+@media screen and (max-width: @--mobile-width-max-media) {
+  .mainContainer {
+    padding: 0;
+  }
+
+  .floatBtn {
+    display: none;
+  }
+
+  .sidebarMenu {
+    display: none;
+  }
+
+  .mainPanel {
+    width: 100%;
+    margin: auto;
+    padding: var(--padding-sm);
+  }
+
+  .footerRight {
+    margin-bottom: 0;
+  }
+
+  .faucetArea {
+    position: absolute;
+    width: fit-content;
+    padding: 4px 8px;
+    height: 28px;
+    top: 120px;
+    left: 10px;
+    display: flex;
+    background-color: #111;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+  }
+
+  .mainPanelTopContainer {
+    padding: 0;
+  }
+}

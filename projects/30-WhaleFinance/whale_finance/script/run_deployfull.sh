@@ -1,0 +1,1 @@
+forge script ./DeployFull.s.sol --rpc-url $ACALA_RPC_URL  --broadcast --verify -vvvv

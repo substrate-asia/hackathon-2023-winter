@@ -1,0 +1,18 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="RankingFrame" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%;">
+        <ui:VisualElement name="VelFrameTitle" style="flex-grow: 0; flex-direction: row; height: 200px; flex-shrink: 0;">
+            <ui:VisualElement style="flex-grow: 1; width: 90%;">
+                <ui:VisualElement style="flex-grow: 1; width: 100%; height: 60%;">
+                    <ui:Label tabindex="-1" text="PLAYER SCORES" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: lower-center; font-size: 50px;" />
+                </ui:VisualElement>
+                <ui:VisualElement style="flex-grow: 1; width: 100%; height: 40%;">
+                    <ui:Label tabindex="-1" text="Tap on a player to explore his base" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: upper-center; font-size: 30px;" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="VelCancelBox" style="flex-grow: 0; width: 10%; height: 100%; padding-top: 60px; padding-bottom: 60px; flex-shrink: 0;">
+                <ui:VisualElement name="VelImgCancel" style="flex-grow: 0; background-image: url(&apos;project://database/Assets/Images/icon_cancel.png?fileID=2800000&amp;guid=9b7509219a59ec2409c7e5bdc923ee0c&amp;type=3#icon_cancel&apos;); -unity-background-scale-mode: scale-to-fit; flex-shrink: 0; height: 100%; width: 100%;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+        <ui:ScrollView name="ScVPlayerScores" />
+    </ui:VisualElement>
+</ui:UXML>

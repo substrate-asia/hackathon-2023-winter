@@ -1,0 +1,2768 @@
+{
+    "0x": {
+        "coin_id": "0x",
+        "symbol": "zrx",
+        "name": "0x",
+        "image_url": "coins/images/thumb/0x.png"
+    },
+    "1inch": {
+        "coin_id": "1inch",
+        "symbol": "1inch",
+        "name": "1inch",
+        "image_url": "coins/images/thumb/1inch-token.png"
+    },
+    "aave": {
+        "coin_id": "aave",
+        "symbol": "aave",
+        "name": "Aave",
+        "image_url": "coins/images/thumb/AAVE.png"
+    },
+    "aavegotchi": {
+        "coin_id": "aavegotchi",
+        "symbol": "ghst",
+        "name": "Aavegotchi",
+        "image_url": "coins/images/thumb/ghst_200.png"
+    },
+    "access-protocol": {
+        "coin_id": "access-protocol",
+        "symbol": "acs",
+        "name": "Access Protocol",
+        "image_url": "coins/images/thumb/dR4FovX4_400x400.jpg"
+    },
+    "adex": {
+        "coin_id": "adex",
+        "symbol": "adx",
+        "name": "Ambire AdEx",
+        "image_url": "coins/images/thumb/Ambire_AdEx_Symbol_color.png"
+    },
+    "adventure-gold": {
+        "coin_id": "adventure-gold",
+        "symbol": "agld",
+        "name": "Adventure Gold",
+        "image_url": "coins/images/thumb/lpgblc4h_400x400.jpg"
+    },
+    "aelf": {
+        "coin_id": "aelf",
+        "symbol": "elf",
+        "name": "aelf",
+        "image_url": "coins/images/thumb/aelf-logo.png"
+    },
+    "agoric": {
+        "coin_id": "agoric",
+        "symbol": "bld",
+        "name": "Agoric",
+        "image_url": "coins/images/thumb/bld-logo.png"
+    },
+    "akropolis": {
+        "coin_id": "akropolis",
+        "symbol": "akro",
+        "name": "Akropolis",
+        "image_url": "coins/images/thumb/Akropolis.png"
+    },
+    "alchemix": {
+        "coin_id": "alchemix",
+        "symbol": "alcx",
+        "name": "Alchemix",
+        "image_url": "coins/images/thumb/Alchemix.png"
+    },
+    "alchemix-usd": {
+        "coin_id": "alchemix-usd",
+        "symbol": "alusd",
+        "name": "Alchemix USD",
+        "image_url": "coins/images/thumb/Alchemix_USD.png"
+    },
+    "alchemy-pay": {
+        "coin_id": "alchemy-pay",
+        "symbol": "ach",
+        "name": "Alchemy Pay",
+        "image_url": "coins/images/thumb/ACH_(1).png"
+    },
+    "aleph-zero": {
+        "coin_id": "aleph-zero",
+        "symbol": "azero",
+        "name": "Aleph Zero",
+        "image_url": "coins/images/thumb/gtmuTVa.png"
+    },
+    "alethea-artificial-liquid-intelligence-token": {
+        "coin_id": "alethea-artificial-liquid-intelligence-token",
+        "symbol": "ali",
+        "name": "Artificial Liquid Intelligence",
+        "image_url": "coins/images/thumb/alethea-logo-transparent-colored.png"
+    },
+    "algorand": {
+        "coin_id": "algorand",
+        "symbol": "algo",
+        "name": "Algorand",
+        "image_url": "coins/images/thumb/download.png"
+    },
+    "alien-worlds": {
+        "coin_id": "alien-worlds",
+        "symbol": "tlm",
+        "name": "Alien Worlds",
+        "image_url": "coins/images/thumb/kY-C4o7RThfWrDQsLCAG4q4clZhBDDfJQVhWUEKxXAzyQYMj4Jmq1zmFwpRqxhAJFPOa0AsW_PTSshoPuMnXNwq3rU7Imp15QimXTjlXMx0nC088mt1rIwRs75GnLLugWjSllxgzvQ9YrP4tBgclK4_rb17hjnusGj_c0u2fx0AvVokjSNB-v2poTj0xT9BZRCbzRE3-lF1.jpg"
+    },
+    "alpaca-finance": {
+        "coin_id": "alpaca-finance",
+        "symbol": "alpaca",
+        "name": "Alpaca Finance",
+        "image_url": "coins/images/thumb/Logo200.png"
+    },
+    "alpha-finance": {
+        "coin_id": "alpha-finance",
+        "symbol": "alpha",
+        "name": "Alpha Venture DAO",
+        "image_url": "coins/images/thumb/AlphaToken_256x256.png"
+    },
+    "alpine-f1-team-fan-token": {
+        "coin_id": "alpine-f1-team-fan-token",
+        "symbol": "alpine",
+        "name": "Alpine F1 Team Fan Token",
+        "image_url": "coins/images/thumb/18112.png"
+    },
+    "amp-token": {
+        "coin_id": "amp-token",
+        "symbol": "amp",
+        "name": "Amp",
+        "image_url": "coins/images/thumb/amp-200x200.png"
+    },
+    "ampleforth-governance-token": {
+        "coin_id": "ampleforth-governance-token",
+        "symbol": "forth",
+        "name": "Ampleforth Governance",
+        "image_url": "coins/images/thumb/photo_2021-04-22_00.00.03.jpeg"
+    },
+    "ankr": {
+        "coin_id": "ankr",
+        "symbol": "ankr",
+        "name": "Ankr",
+        "image_url": "coins/images/thumb/U85xTl2.png"
+    },
+    "apecoin": {
+        "coin_id": "apecoin",
+        "symbol": "ape",
+        "name": "ApeCoin",
+        "image_url": "coins/images/thumb/apecoin.jpg"
+    },
+    "apenft": {
+        "coin_id": "apenft",
+        "symbol": "nft",
+        "name": "APENFT",
+        "image_url": "coins/images/thumb/apenft.jpg"
+    },
+    "api3": {
+        "coin_id": "api3",
+        "symbol": "api3",
+        "name": "API3",
+        "image_url": "coins/images/thumb/api3.jpg"
+    },
+    "aptos": {
+        "coin_id": "aptos",
+        "symbol": "apt",
+        "name": "Aptos",
+        "image_url": "coins/images/thumb/aptos_round.png"
+    },
+    "aragon": {
+        "coin_id": "aragon",
+        "symbol": "ant",
+        "name": "Aragon",
+        "image_url": "coins/images/thumb/JelZ58cv_400x400.png"
+    },
+    "arbdoge-ai": {
+        "coin_id": "arbdoge-ai",
+        "symbol": "aidoge",
+        "name": "ArbDoge AI",
+        "image_url": "coins/images/thumb/photo_2023-04-18_14-25-28.jpg"
+    },
+    "arbitrum": {
+        "coin_id": "arbitrum",
+        "symbol": "arb",
+        "name": "Arbitrum",
+        "image_url": "coins/images/thumb/photo_2023-03-29_21.47.00.jpeg"
+    },
+    "ardor": {
+        "coin_id": "ardor",
+        "symbol": "ardr",
+        "name": "Ardor",
+        "image_url": "coins/images/thumb/Ardor_Vertical_1.png"
+    },
+    "arpa": {
+        "coin_id": "arpa",
+        "symbol": "arpa",
+        "name": "ARPA",
+        "image_url": "coins/images/thumb/9u0a23XY_400x400.jpg"
+    },
+    "arweave": {
+        "coin_id": "arweave",
+        "symbol": "ar",
+        "name": "Arweave",
+        "image_url": "coins/images/thumb/oRt6SiEN_400x400.jpg"
+    },
+    "as-roma-fan-token": {
+        "coin_id": "as-roma-fan-token",
+        "symbol": "asr",
+        "name": "AS Roma Fan Token",
+        "image_url": "coins/images/thumb/Roma-10.png"
+    },
+    "astar": {
+        "coin_id": "astar",
+        "symbol": "astr",
+        "name": "Astar",
+        "image_url": "coins/images/thumb/astr.png"
+    },
+    "astrafer": {
+        "coin_id": "astrafer",
+        "symbol": "astrafer",
+        "name": "Astrafer",
+        "image_url": "coins/images/thumb/ATSRA_Token.png"
+    },
+    "atletico-madrid": {
+        "coin_id": "atletico-madrid",
+        "symbol": "atm",
+        "name": "Atletico Madrid Fan Token",
+        "image_url": "coins/images/thumb/Atletico-10.png"
+    },
+    "auction": {
+        "coin_id": "auction",
+        "symbol": "auction",
+        "name": "Bounce",
+        "image_url": "coins/images/thumb/1_KtgpRIJzuwfHe0Rl0avP_g.jpeg"
+    },
+    "audius": {
+        "coin_id": "audius",
+        "symbol": "audio",
+        "name": "Audius",
+        "image_url": "coins/images/thumb/AudiusCoinLogo_2x.png"
+    },
+    "aurora-dao": {
+        "coin_id": "aurora-dao",
+        "symbol": "idex",
+        "name": "IDEX",
+        "image_url": "coins/images/thumb/logomark-purple-286x286.png"
+    },
+    "automata": {
+        "coin_id": "automata",
+        "symbol": "ata",
+        "name": "Automata",
+        "image_url": "coins/images/thumb/ATA.jpg"
+    },
+    "avalanche-2": {
+        "coin_id": "avalanche-2",
+        "symbol": "avax",
+        "name": "Avalanche",
+        "image_url": "coins/images/thumb/coin-round-red.png"
+    },
+    "axelar": {
+        "coin_id": "axelar",
+        "symbol": "axl",
+        "name": "Axelar",
+        "image_url": "coins/images/thumb/V-65_xQ1_400x400.jpeg"
+    },
+    "axie-infinity": {
+        "coin_id": "axie-infinity",
+        "symbol": "axs",
+        "name": "Axie Infinity",
+        "image_url": "coins/images/thumb/axie_infinity_logo.png"
+    },
+    "baby-doge-coin": {
+        "coin_id": "baby-doge-coin",
+        "symbol": "babydoge",
+        "name": "Baby Doge Coin",
+        "image_url": "coins/images/thumb/Baby_Doge.png"
+    },
+    "badger-dao": {
+        "coin_id": "badger-dao",
+        "symbol": "badger",
+        "name": "Badger DAO",
+        "image_url": "coins/images/thumb/badger_dao_logo.jpg"
+    },
+    "bakerytoken": {
+        "coin_id": "bakerytoken",
+        "symbol": "bake",
+        "name": "BakerySwap",
+        "image_url": "coins/images/thumb/bakerytoken_logo.jpg"
+    },
+    "balancer": {
+        "coin_id": "balancer",
+        "symbol": "bal",
+        "name": "Balancer",
+        "image_url": "coins/images/thumb/Balancer.png"
+    },
+    "bancor": {
+        "coin_id": "bancor",
+        "symbol": "bnt",
+        "name": "Bancor Network",
+        "image_url": "coins/images/thumb/bancor-bnt.png"
+    },
+    "band-protocol": {
+        "coin_id": "band-protocol",
+        "symbol": "band",
+        "name": "Band Protocol",
+        "image_url": "coins/images/thumb/Band_token_blue_violet_token.png"
+    },
+    "basic-attention-token": {
+        "coin_id": "basic-attention-token",
+        "symbol": "bat",
+        "name": "Basic Attention",
+        "image_url": "coins/images/thumb/basic-attention-token.png"
+    },
+    "beldex": {
+        "coin_id": "beldex",
+        "symbol": "bdx",
+        "name": "Beldex",
+        "image_url": "coins/images/thumb/Beldex.png"
+    },
+    "biconomy": {
+        "coin_id": "biconomy",
+        "symbol": "bico",
+        "name": "Biconomy",
+        "image_url": "coins/images/thumb/biconomy_logo.jpg"
+    },
+    "big-crypto-game": {
+        "coin_id": "big-crypto-game",
+        "symbol": "crypto",
+        "name": "Big Crypto Game",
+        "image_url": "coins/images/thumb/bcg-token-symbol-500px-1.png"
+    },
+    "binance-usd": {
+        "coin_id": "binance-usd",
+        "symbol": "busd",
+        "name": "Binance USD",
+        "image_url": "coins/images/thumb/BUSD.png"
+    },
+    "binancecoin": {
+        "coin_id": "binancecoin",
+        "symbol": "bnb",
+        "name": "BNB",
+        "image_url": "coins/images/thumb/bnb-icon2_2x.png"
+    },
+    "binaryx": {
+        "coin_id": "binaryx",
+        "symbol": "bnx",
+        "name": "BinaryX",
+        "image_url": "coins/images/thumb/BinaryX-RGB-01_%282%29.png"
+    },
+    "biswap": {
+        "coin_id": "biswap",
+        "symbol": "bsw",
+        "name": "Biswap",
+        "image_url": "coins/images/thumb/biswap.png"
+    },
+    "bitcoin": {
+        "coin_id": "bitcoin",
+        "symbol": "btc",
+        "name": "Bitcoin",
+        "image_url": "coins/images/thumb/bitcoin.png"
+    },
+    "bitcoin-avalanche-bridged-btc-b": {
+        "coin_id": "bitcoin-avalanche-bridged-btc-b",
+        "symbol": "btc.b",
+        "name": "Bitcoin Avalanche Bridged (BTC.b)",
+        "image_url": "coins/images/thumb/btcb.png"
+    },
+    "bitcoin-cash": {
+        "coin_id": "bitcoin-cash",
+        "symbol": "bch",
+        "name": "Bitcoin Cash",
+        "image_url": "coins/images/thumb/bitcoin-cash-circle.png"
+    },
+    "bitcoin-cash-sv": {
+        "coin_id": "bitcoin-cash-sv",
+        "symbol": "bsv",
+        "name": "Bitcoin SV",
+        "image_url": "coins/images/thumb/BSV.png"
+    },
+    "bitcoin-gold": {
+        "coin_id": "bitcoin-gold",
+        "symbol": "btg",
+        "name": "Bitcoin Gold",
+        "image_url": "coins/images/thumb/bitcoin-gold-logo.png"
+    },
+    "bitdao": {
+        "coin_id": "bitdao",
+        "symbol": "bit",
+        "name": "BitDAO",
+        "image_url": "coins/images/thumb/rI_YptK8.png"
+    },
+    "bitget-token": {
+        "coin_id": "bitget-token",
+        "symbol": "bgb",
+        "name": "Bitget Token",
+        "image_url": "coins/images/thumb/photo_2022-01-24_14-08-03.jpg"
+    },
+    "bitkub-coin": {
+        "coin_id": "bitkub-coin",
+        "symbol": "kub",
+        "name": "Bitkub Coin",
+        "image_url": "coins/images/thumb/KUB.png"
+    },
+    "bitrise-token": {
+        "coin_id": "bitrise-token",
+        "symbol": "brise",
+        "name": "Bitgert",
+        "image_url": "coins/images/thumb/bitgert.png"
+    },
+    "bitshares": {
+        "coin_id": "bitshares",
+        "symbol": "bts",
+        "name": "BitShares",
+        "image_url": "coins/images/thumb/bts.png"
+    },
+    "bittorrent": {
+        "coin_id": "bittorrent",
+        "symbol": "btt",
+        "name": "BitTorrent",
+        "image_url": "coins/images/thumb/btt_logo.png"
+    },
+    "blockstack": {
+        "coin_id": "blockstack",
+        "symbol": "stx",
+        "name": "Stacks",
+        "image_url": "coins/images/thumb/Stacks_logo_full.png"
+    },
+    "blox": {
+        "coin_id": "blox",
+        "symbol": "cdt",
+        "name": "Blox",
+        "image_url": "coins/images/thumb/Blox_Staking_Logo_2.png"
+    },
+    "blur": {
+        "coin_id": "blur",
+        "symbol": "blur",
+        "name": "Blur",
+        "image_url": "coins/images/thumb/blur.png"
+    },
+    "bluzelle": {
+        "coin_id": "bluzelle",
+        "symbol": "blz",
+        "name": "Bluzelle",
+        "image_url": "coins/images/thumb/ColorIcon_3x.png"
+    },
+    "bob": {
+        "coin_id": "bob",
+        "symbol": "bob",
+        "name": "BOB",
+        "image_url": "coins/images/thumb/Bob-logo.png"
+    },
+    "boba-network": {
+        "coin_id": "boba-network",
+        "symbol": "boba",
+        "name": "Boba Network",
+        "image_url": "coins/images/thumb/BOBA.png"
+    },
+    "bolide": {
+        "coin_id": "bolide",
+        "symbol": "blid",
+        "name": "Bolide",
+        "image_url": "coins/images/thumb/BLID_token_logo_200x200.png"
+    },
+    "bone-shibaswap": {
+        "coin_id": "bone-shibaswap",
+        "symbol": "bone",
+        "name": "Bone ShibaSwap",
+        "image_url": "coins/images/thumb/bone_icon.png"
+    },
+    "bonfida": {
+        "coin_id": "bonfida",
+        "symbol": "fida",
+        "name": "Bonfida",
+        "image_url": "coins/images/thumb/bonfida.png"
+    },
+    "bora": {
+        "coin_id": "bora",
+        "symbol": "bora",
+        "name": "BORA",
+        "image_url": "coins/images/thumb/mqFw8hxm_400x400.jpeg"
+    },
+    "btse-token": {
+        "coin_id": "btse-token",
+        "symbol": "btse",
+        "name": "BTSE Token",
+        "image_url": "coins/images/thumb/BTSE_logo_Square.jpeg"
+    },
+    "burger-swap": {
+        "coin_id": "burger-swap",
+        "symbol": "burger",
+        "name": "BurgerCities",
+        "image_url": "coins/images/thumb/burger.png"
+    },
+    "canto": {
+        "coin_id": "canto",
+        "symbol": "canto",
+        "name": "CANTO",
+        "image_url": "coins/images/thumb/canto-network.png"
+    },
+    "cardano": {
+        "coin_id": "cardano",
+        "symbol": "ada",
+        "name": "Cardano",
+        "image_url": "coins/images/thumb/cardano.png"
+    },
+    "cartesi": {
+        "coin_id": "cartesi",
+        "symbol": "ctsi",
+        "name": "Cartesi",
+        "image_url": "coins/images/thumb/cartesi.png"
+    },
+    "casper-network": {
+        "coin_id": "casper-network",
+        "symbol": "cspr",
+        "name": "Casper Network",
+        "image_url": "coins/images/thumb/casper.PNG"
+    },
+    "cdai": {
+        "coin_id": "cdai",
+        "symbol": "cdai",
+        "name": "cDAI",
+        "image_url": "coins/images/thumb/cDAI.png"
+    },
+    "ceek": {
+        "coin_id": "ceek",
+        "symbol": "ceek",
+        "name": "CEEK Smart VR",
+        "image_url": "coins/images/thumb/ceek-smart-vr-token-logo.png"
+    },
+    "celer-network": {
+        "coin_id": "celer-network",
+        "symbol": "celr",
+        "name": "Celer Network",
+        "image_url": "coins/images/thumb/Celr.png"
+    },
+    "celo": {
+        "coin_id": "celo",
+        "symbol": "celo",
+        "name": "Celo",
+        "image_url": "coins/images/thumb/icon-celo-CELO-color-500.png"
+    },
+    "celsius-degree-token": {
+        "coin_id": "celsius-degree-token",
+        "symbol": "cel",
+        "name": "Celsius Network",
+        "image_url": "coins/images/thumb/CEL_logo.png"
+    },
+    "centrifuge": {
+        "coin_id": "centrifuge",
+        "symbol": "cfg",
+        "name": "Centrifuge",
+        "image_url": "coins/images/thumb/centrifuge.PNG"
+    },
+    "chain-2": {
+        "coin_id": "chain-2",
+        "symbol": "xcn",
+        "name": "Chain",
+        "image_url": "coins/images/thumb/Chain_icon_200x200.png"
+    },
+    "chainlink": {
+        "coin_id": "chainlink",
+        "symbol": "link",
+        "name": "Chainlink",
+        "image_url": "coins/images/thumb/chainlink-new-logo.png"
+    },
+    "chainx": {
+        "coin_id": "chainx",
+        "symbol": "pcx",
+        "name": "ChainX",
+        "image_url": "coins/images/thumb/chainx.png"
+    },
+    "chia": {
+        "coin_id": "chia",
+        "symbol": "xch",
+        "name": "Chia",
+        "image_url": "coins/images/thumb/zV5K5y9f_400x400.png"
+    },
+    "chiliz": {
+        "coin_id": "chiliz",
+        "symbol": "chz",
+        "name": "Chiliz",
+        "image_url": "coins/images/thumb/Chiliz.png"
+    },
+    "chromaway": {
+        "coin_id": "chromaway",
+        "symbol": "chr",
+        "name": "Chromia",
+        "image_url": "coins/images/thumb/Chromia.png"
+    },
+    "chronobank": {
+        "coin_id": "chronobank",
+        "symbol": "time",
+        "name": "chrono.tech",
+        "image_url": "coins/images/thumb/time-32x32.png"
+    },
+    "civic": {
+        "coin_id": "civic",
+        "symbol": "cvc",
+        "name": "Civic",
+        "image_url": "coins/images/thumb/civic-orange.png"
+    },
+    "clearpool": {
+        "coin_id": "clearpool",
+        "symbol": "cpool",
+        "name": "Clearpool",
+        "image_url": "coins/images/thumb/photo_2022-08-31_12.45.02.jpeg"
+    },
+    "cocos-bcx": {
+        "coin_id": "cocos-bcx",
+        "symbol": "cocos",
+        "name": "COCOS BCX",
+        "image_url": "coins/images/thumb/_QPpjoUi_400x400.jpg"
+    },
+    "coin98": {
+        "coin_id": "coin98",
+        "symbol": "c98",
+        "name": "Coin98",
+        "image_url": "coins/images/thumb/logo.png"
+    },
+    "coinex-token": {
+        "coin_id": "coinex-token",
+        "symbol": "cet",
+        "name": "CoinEx",
+        "image_url": "coins/images/thumb/coinex-token.png"
+    },
+    "coinmetro": {
+        "coin_id": "coinmetro",
+        "symbol": "xcm",
+        "name": "Coinmetro",
+        "image_url": "coins/images/thumb/XCM_Token_Logo_.png"
+    },
+    "compound-ether": {
+        "coin_id": "compound-ether",
+        "symbol": "ceth",
+        "name": "cETH",
+        "image_url": "coins/images/thumb/ceth2.JPG"
+    },
+    "compound-governance-token": {
+        "coin_id": "compound-governance-token",
+        "symbol": "comp",
+        "name": "Compound",
+        "image_url": "coins/images/thumb/COMP.png"
+    },
+    "compound-usd-coin": {
+        "coin_id": "compound-usd-coin",
+        "symbol": "cusdc",
+        "name": "cUSDC",
+        "image_url": "coins/images/thumb/Compound_USDC.png"
+    },
+    "compound-usdt": {
+        "coin_id": "compound-usdt",
+        "symbol": "cusdt",
+        "name": "cUSDT",
+        "image_url": "coins/images/thumb/cUSDT.png"
+    },
+    "conflux-token": {
+        "coin_id": "conflux-token",
+        "symbol": "cfx",
+        "name": "Conflux",
+        "image_url": "coins/images/thumb/3vuYMbjN.png"
+    },
+    "constellation-labs": {
+        "coin_id": "constellation-labs",
+        "symbol": "dag",
+        "name": "Constellation",
+        "image_url": "coins/images/thumb/Constellation_Network_Logo.png"
+    },
+    "constitutiondao": {
+        "coin_id": "constitutiondao",
+        "symbol": "people",
+        "name": "ConstitutionDAO",
+        "image_url": "coins/images/thumb/GN_UVm3d_400x400.jpg"
+    },
+    "contentos": {
+        "coin_id": "contentos",
+        "symbol": "cos",
+        "name": "Contentos",
+        "image_url": "coins/images/thumb/4036.png"
+    },
+    "convex-crv": {
+        "coin_id": "convex-crv",
+        "symbol": "cvxcrv",
+        "name": "Convex CRV",
+        "image_url": "coins/images/thumb/convex-crv.png"
+    },
+    "convex-finance": {
+        "coin_id": "convex-finance",
+        "symbol": "cvx",
+        "name": "Convex Finance",
+        "image_url": "coins/images/thumb/convex.png"
+    },
+    "coredaoorg": {
+        "coin_id": "coredaoorg",
+        "symbol": "core",
+        "name": "Core",
+        "image_url": "coins/images/thumb/coredao.png"
+    },
+    "cortex": {
+        "coin_id": "cortex",
+        "symbol": "ctxc",
+        "name": "Cortex",
+        "image_url": "coins/images/thumb/2638.png"
+    },
+    "cosmos": {
+        "coin_id": "cosmos",
+        "symbol": "atom",
+        "name": "Cosmos Hub",
+        "image_url": "coins/images/thumb/cosmos_hub.png"
+    },
+    "coti": {
+        "coin_id": "coti",
+        "symbol": "coti",
+        "name": "COTI",
+        "image_url": "coins/images/thumb/Coti.png"
+    },
+    "creditcoin-2": {
+        "coin_id": "creditcoin-2",
+        "symbol": "ctc",
+        "name": "Creditcoin",
+        "image_url": "coins/images/thumb/ctc.png"
+    },
+    "crypto-com-chain": {
+        "coin_id": "crypto-com-chain",
+        "symbol": "cro",
+        "name": "Cronos",
+        "image_url": "coins/images/thumb/oCw2s3GI_400x400.jpeg"
+    },
+    "curve-dao-token": {
+        "coin_id": "curve-dao-token",
+        "symbol": "crv",
+        "name": "Curve DAO",
+        "image_url": "coins/images/thumb/Curve.png"
+    },
+    "dai": {
+        "coin_id": "dai",
+        "symbol": "dai",
+        "name": "Dai",
+        "image_url": "coins/images/thumb/4943.png"
+    },
+    "dao-maker": {
+        "coin_id": "dao-maker",
+        "symbol": "dao",
+        "name": "DAO Maker",
+        "image_url": "coins/images/thumb/4.png"
+    },
+    "dash": {
+        "coin_id": "dash",
+        "symbol": "dash",
+        "name": "Dash",
+        "image_url": "coins/images/thumb/dash-logo.png"
+    },
+    "decentraland": {
+        "coin_id": "decentraland",
+        "symbol": "mana",
+        "name": "Decentraland",
+        "image_url": "coins/images/thumb/decentraland-mana.png"
+    },
+    "decred": {
+        "coin_id": "decred",
+        "symbol": "dcr",
+        "name": "Decred",
+        "image_url": "coins/images/thumb/decred.png"
+    },
+    "defactor": {
+        "coin_id": "defactor",
+        "symbol": "factr",
+        "name": "Defactor",
+        "image_url": "coins/images/thumb/jFLSu4U9_400x400.png"
+    },
+    "defichain": {
+        "coin_id": "defichain",
+        "symbol": "dfi",
+        "name": "DeFiChain",
+        "image_url": "coins/images/thumb/symbol-defi-blockchain_200.png"
+    },
+    "dego-finance": {
+        "coin_id": "dego-finance",
+        "symbol": "dego",
+        "name": "Dego Finance",
+        "image_url": "coins/images/thumb/c185FKx.png"
+    },
+    "dejitaru-tsuka": {
+        "coin_id": "dejitaru-tsuka",
+        "symbol": "tsuka",
+        "name": "Dejitaru Tsuka",
+        "image_url": "coins/images/thumb/Tsuka_200x200.png"
+    },
+    "dent": {
+        "coin_id": "dent",
+        "symbol": "dent",
+        "name": "Dent",
+        "image_url": "coins/images/thumb/gLCEA2G.png"
+    },
+    "deso": {
+        "coin_id": "deso",
+        "symbol": "deso",
+        "name": "Decentralized Social",
+        "image_url": "coins/images/thumb/deso-logo-refresh-white.png"
+    },
+    "dexe": {
+        "coin_id": "dexe",
+        "symbol": "dexe",
+        "name": "DeXe",
+        "image_url": "coins/images/thumb/logo_%2814%29.png"
+    },
+    "dforce-token": {
+        "coin_id": "dforce-token",
+        "symbol": "df",
+        "name": "dForce",
+        "image_url": "coins/images/thumb/xlGxxIjI_400x400.jpg"
+    },
+    "digibyte": {
+        "coin_id": "digibyte",
+        "symbol": "dgb",
+        "name": "DigiByte",
+        "image_url": "coins/images/thumb/digibyte.png"
+    },
+    "dkargo": {
+        "coin_id": "dkargo",
+        "symbol": "dka",
+        "name": "dKargo",
+        "image_url": "coins/images/thumb/bVD0g0dlmrEOPIkt943KZIBZ086eCshyY0jIQFti4zxYdOlFltU8tKa6uJlcA14HvNjX4bc7dxdMvlpoW5NFMND85oG4aiiCbFRhI6eowDfKEBY3BoSVY0IrBbA9SFGIxh_IYrkNC5uNdG-roZ0_TlGO3098now6Tbzga0p4IDqVk6lnaX3TuRC7pgnAYWZM15RD-uEIHr3O_3OoIIWP-.jpg"
+    },
+    "dock": {
+        "coin_id": "dock",
+        "symbol": "dock",
+        "name": "Dock",
+        "image_url": "coins/images/thumb/dock-icon-dark-large.png"
+    },
+    "dodo": {
+        "coin_id": "dodo",
+        "symbol": "dodo",
+        "name": "DODO",
+        "image_url": "coins/images/thumb/dodo_logo.png"
+    },
+    "dogecoin": {
+        "coin_id": "dogecoin",
+        "symbol": "doge",
+        "name": "Dogecoin",
+        "image_url": "coins/images/thumb/dogecoin.png"
+    },
+    "dogelon-mars": {
+        "coin_id": "dogelon-mars",
+        "symbol": "elon",
+        "name": "Dogelon Mars",
+        "image_url": "coins/images/thumb/6GxcPRo3_400x400.jpg"
+    },
+    "drep-new": {
+        "coin_id": "drep-new",
+        "symbol": "drep",
+        "name": "Drep",
+        "image_url": "coins/images/thumb/KotgsCgS_400x400.jpg"
+    },
+    "dusk-network": {
+        "coin_id": "dusk-network",
+        "symbol": "dusk",
+        "name": "DUSK Network",
+        "image_url": "coins/images/thumb/D_ticker_purple_on_circle_(2).png"
+    },
+    "dydx": {
+        "coin_id": "dydx",
+        "symbol": "dydx",
+        "name": "dYdX",
+        "image_url": "coins/images/thumb/hjnIm9bV.jpg"
+    },
+    "ecash": {
+        "coin_id": "ecash",
+        "symbol": "xec",
+        "name": "eCash",
+        "image_url": "coins/images/thumb/Logo_final-22.png"
+    },
+    "ecoin-2": {
+        "coin_id": "ecoin-2",
+        "symbol": "ecoin",
+        "name": "Ecoin",
+        "image_url": "coins/images/thumb/IMG_4307.jpg"
+    },
+    "ecomi": {
+        "coin_id": "ecomi",
+        "symbol": "omi",
+        "name": "ECOMI",
+        "image_url": "coins/images/thumb/ECOMI.png"
+    },
+    "edgecoin-2": {
+        "coin_id": "edgecoin-2",
+        "symbol": "edgt",
+        "name": "Edgecoin",
+        "image_url": "coins/images/thumb/edgecoin_bank_logo-4_(1).png"
+    },
+    "ellipsis-x": {
+        "coin_id": "ellipsis-x",
+        "symbol": "epx",
+        "name": "Ellipsis X",
+        "image_url": "coins/images/thumb/ellipsis-light_(1).png"
+    },
+    "elrond-erd-2": {
+        "coin_id": "elrond-erd-2",
+        "symbol": "egld",
+        "name": "MultiversX (Elrond)",
+        "image_url": "coins/images/thumb/elrond3_360.png"
+    },
+    "empowa": {
+        "coin_id": "empowa",
+        "symbol": "emp",
+        "name": "Empowa",
+        "image_url": "coins/images/thumb/Empowa-Token.png"
+    },
+    "energy-web-token": {
+        "coin_id": "energy-web-token",
+        "symbol": "ewt",
+        "name": "Energy Web",
+        "image_url": "coins/images/thumb/R9gQTJV__400x400.png"
+    },
+    "enjincoin": {
+        "coin_id": "enjincoin",
+        "symbol": "enj",
+        "name": "Enjin Coin",
+        "image_url": "coins/images/thumb/enjin-coin-logo.png"
+    },
+    "eos": {
+        "coin_id": "eos",
+        "symbol": "eos",
+        "name": "EOS",
+        "image_url": "coins/images/thumb/eos-eos-logo.png"
+    },
+    "ergo": {
+        "coin_id": "ergo",
+        "symbol": "erg",
+        "name": "Ergo",
+        "image_url": "coins/images/thumb/Ergo.png"
+    },
+    "escoin-token": {
+        "coin_id": "escoin-token",
+        "symbol": "elg",
+        "name": "Escoin",
+        "image_url": "coins/images/thumb/escoin-200.png"
+    },
+    "ethereum": {
+        "coin_id": "ethereum",
+        "symbol": "eth",
+        "name": "Ethereum",
+        "image_url": "coins/images/thumb/ethereum.png"
+    },
+    "ethereum-classic": {
+        "coin_id": "ethereum-classic",
+        "symbol": "etc",
+        "name": "Ethereum Classic",
+        "image_url": "coins/images/thumb/ethereum-classic-logo.png"
+    },
+    "ethereum-name-service": {
+        "coin_id": "ethereum-name-service",
+        "symbol": "ens",
+        "name": "Ethereum Name Service",
+        "image_url": "coins/images/thumb/acatxTm8_400x400.jpg"
+    },
+    "ethereum-pow-iou": {
+        "coin_id": "ethereum-pow-iou",
+        "symbol": "ethw",
+        "name": "EthereumPoW",
+        "image_url": "coins/images/thumb/logo-clear.png"
+    },
+    "ethernity-chain": {
+        "coin_id": "ethernity-chain",
+        "symbol": "ern",
+        "name": "Ethernity Chain",
+        "image_url": "coins/images/thumb/LOGO_HIGH_QUALITY.png"
+    },
+    "ethos": {
+        "coin_id": "ethos",
+        "symbol": "vgx",
+        "name": "Voyager VGX",
+        "image_url": "coins/images/thumb/Voyager-vgx.png"
+    },
+    "everipedia": {
+        "coin_id": "everipedia",
+        "symbol": "iq",
+        "name": "IQ",
+        "image_url": "coins/images/thumb/YAIS3fUh.png"
+    },
+    "everscale": {
+        "coin_id": "everscale",
+        "symbol": "ever",
+        "name": "Everscale",
+        "image_url": "coins/images/thumb/everscale_badge_main_round_1x.png"
+    },
+    "evmos": {
+        "coin_id": "evmos",
+        "symbol": "evmos",
+        "name": "Evmos",
+        "image_url": "coins/images/thumb/evmos.png"
+    },
+    "fantom": {
+        "coin_id": "fantom",
+        "symbol": "ftm",
+        "name": "Fantom",
+        "image_url": "coins/images/thumb/Fantom_round.png"
+    },
+    "fc-porto": {
+        "coin_id": "fc-porto",
+        "symbol": "porto",
+        "name": "FC Porto",
+        "image_url": "coins/images/thumb/fcp.jpg"
+    },
+    "fetch-ai": {
+        "coin_id": "fetch-ai",
+        "symbol": "fet",
+        "name": "Fetch.ai",
+        "image_url": "coins/images/thumb/Fetch.jpg"
+    },
+    "fidu": {
+        "coin_id": "fidu",
+        "symbol": "fidu",
+        "name": "Fidu",
+        "image_url": "coins/images/thumb/GFI-asset-icon.png"
+    },
+    "filecoin": {
+        "coin_id": "filecoin",
+        "symbol": "fil",
+        "name": "Filecoin",
+        "image_url": "coins/images/thumb/filecoin.png"
+    },
+    "fio-protocol": {
+        "coin_id": "fio-protocol",
+        "symbol": "fio",
+        "name": "FIO Protocol",
+        "image_url": "coins/images/thumb/fio200x200.png"
+    },
+    "flamingo-finance": {
+        "coin_id": "flamingo-finance",
+        "symbol": "flm",
+        "name": "Flamingo Finance",
+        "image_url": "coins/images/thumb/flamingo_finance_logo.jpg"
+    },
+    "flare-networks": {
+        "coin_id": "flare-networks",
+        "symbol": "flr",
+        "name": "Flare",
+        "image_url": "coins/images/thumb/FLR-icon200x200.png"
+    },
+    "floki": {
+        "coin_id": "floki",
+        "symbol": "floki",
+        "name": "FLOKI",
+        "image_url": "coins/images/thumb/PNG_image.png"
+    },
+    "flow": {
+        "coin_id": "flow",
+        "symbol": "flow",
+        "name": "Flow",
+        "image_url": "coins/images/thumb/5f6294c0c7a8cda55cb1c936_Flow_Wordmark.png"
+    },
+    "frax": {
+        "coin_id": "frax",
+        "symbol": "frax",
+        "name": "Frax",
+        "image_url": "coins/images/thumb/ethCanonicalFRAX.png"
+    },
+    "frax-ether": {
+        "coin_id": "frax-ether",
+        "symbol": "frxeth",
+        "name": "Frax Ether",
+        "image_url": "coins/images/thumb/JjqQ9ROz_400x400.jpeg"
+    },
+    "frax-share": {
+        "coin_id": "frax-share",
+        "symbol": "fxs",
+        "name": "Frax Share",
+        "image_url": "coins/images/thumb/ethCanonicalFXS.png"
+    },
+    "frontier-token": {
+        "coin_id": "frontier-token",
+        "symbol": "front",
+        "name": "Frontier",
+        "image_url": "coins/images/thumb/frontier_logo.png"
+    },
+    "funfair": {
+        "coin_id": "funfair",
+        "symbol": "fun",
+        "name": "FUN Token",
+        "image_url": "coins/images/thumb/funfair.png"
+    },
+    "fx-coin": {
+        "coin_id": "fx-coin",
+        "symbol": "fx",
+        "name": "Function X",
+        "image_url": "coins/images/thumb/47271330_590071468072434_707260356350705664_n.jpg"
+    },
+    "gains-farm": {
+        "coin_id": "gains-farm",
+        "symbol": "gfarm2",
+        "name": "Gains Farm",
+        "image_url": "coins/images/thumb/gfarm_v2.png"
+    },
+    "gains-network": {
+        "coin_id": "gains-network",
+        "symbol": "gns",
+        "name": "Gains Network",
+        "image_url": "coins/images/thumb/logo.png"
+    },
+    "gala": {
+        "coin_id": "gala",
+        "symbol": "gala",
+        "name": "GALA",
+        "image_url": "coins/images/thumb/GALA-COINGECKO.png"
+    },
+    "gatechain-token": {
+        "coin_id": "gatechain-token",
+        "symbol": "gt",
+        "name": "Gate",
+        "image_url": "coins/images/thumb/gt.png"
+    },
+    "gemini-dollar": {
+        "coin_id": "gemini-dollar",
+        "symbol": "gusd",
+        "name": "Gemini Dollar",
+        "image_url": "coins/images/thumb/gemini-dollar-gusd.png"
+    },
+    "gitcoin": {
+        "coin_id": "gitcoin",
+        "symbol": "gtc",
+        "name": "Gitcoin",
+        "image_url": "coins/images/thumb/gitcoin.png"
+    },
+    "gmx": {
+        "coin_id": "gmx",
+        "symbol": "gmx",
+        "name": "GMX",
+        "image_url": "coins/images/thumb/arbit.png"
+    },
+    "gnosis": {
+        "coin_id": "gnosis",
+        "symbol": "gno",
+        "name": "Gnosis",
+        "image_url": "coins/images/thumb/logo_square_simple_300px.png"
+    },
+    "goldfinch": {
+        "coin_id": "goldfinch",
+        "symbol": "gfi",
+        "name": "Goldfinch",
+        "image_url": "coins/images/thumb/GOLDFINCH.png"
+    },
+    "golem": {
+        "coin_id": "golem",
+        "symbol": "glm",
+        "name": "Golem",
+        "image_url": "coins/images/thumb/Golem_Submark_Positive_RGB.png"
+    },
+    "harmony": {
+        "coin_id": "harmony",
+        "symbol": "one",
+        "name": "Harmony",
+        "image_url": "coins/images/thumb/Y88JAze.png"
+    },
+    "harrypotterobamasonic10in": {
+        "coin_id": "harrypotterobamasonic10in",
+        "symbol": "bitcoin",
+        "name": "HarryPotterObamaSonic10Inu (ETH)",
+        "image_url": "coins/images/thumb/hpos10i_logo_casino_night-dexview.png"
+    },
+    "harvest-finance": {
+        "coin_id": "harvest-finance",
+        "symbol": "farm",
+        "name": "Harvest Finance",
+        "image_url": "coins/images/thumb/Harvest.png"
+    },
+    "hashflow": {
+        "coin_id": "hashflow",
+        "symbol": "hft",
+        "name": "Hashflow",
+        "image_url": "coins/images/thumb/hashflow-icon-cmc.png"
+    },
+    "havven": {
+        "coin_id": "havven",
+        "symbol": "snx",
+        "name": "Synthetix Network",
+        "image_url": "coins/images/thumb/SNX.png"
+    },
+    "hedera-hashgraph": {
+        "coin_id": "hedera-hashgraph",
+        "symbol": "hbar",
+        "name": "Hedera",
+        "image_url": "coins/images/thumb/hbar.png"
+    },
+    "helium": {
+        "coin_id": "helium",
+        "symbol": "hnt",
+        "name": "Helium",
+        "image_url": "coins/images/thumb/Helium_HNT.png"
+    },
+    "hermez-network-token": {
+        "coin_id": "hermez-network-token",
+        "symbol": "hez",
+        "name": "Hermez Network",
+        "image_url": "coins/images/thumb/hermez_logo.png"
+    },
+    "highstreet": {
+        "coin_id": "highstreet",
+        "symbol": "high",
+        "name": "Highstreet",
+        "image_url": "coins/images/thumb/logosq200200Coingecko.png"
+    },
+    "hive": {
+        "coin_id": "hive",
+        "symbol": "hive",
+        "name": "Hive",
+        "image_url": "coins/images/thumb/logo_transparent_4x.png"
+    },
+    "holotoken": {
+        "coin_id": "holotoken",
+        "symbol": "hot",
+        "name": "Holo",
+        "image_url": "coins/images/thumb/Holologo_Profile.png"
+    },
+    "hooked-protocol": {
+        "coin_id": "hooked-protocol",
+        "symbol": "hook",
+        "name": "Hooked Protocol",
+        "image_url": "coins/images/thumb/hooked2.png"
+    },
+    "huobi-btc": {
+        "coin_id": "huobi-btc",
+        "symbol": "hbtc",
+        "name": "Huobi BTC",
+        "image_url": "coins/images/thumb/Unknown-5.png"
+    },
+    "huobi-token": {
+        "coin_id": "huobi-token",
+        "symbol": "ht",
+        "name": "Huobi",
+        "image_url": "coins/images/thumb/huobi-token-logo.png"
+    },
+    "icon": {
+        "coin_id": "icon",
+        "symbol": "icx",
+        "name": "ICON",
+        "image_url": "coins/images/thumb/icon-icx-logo.png"
+    },
+    "iexec-rlc": {
+        "coin_id": "iexec-rlc",
+        "symbol": "rlc",
+        "name": "iExec RLC",
+        "image_url": "coins/images/thumb/pL1VuXm.png"
+    },
+    "illuvium": {
+        "coin_id": "illuvium",
+        "symbol": "ilv",
+        "name": "Illuvium",
+        "image_url": "coins/images/thumb/ILV.JPG"
+    },
+    "immutable-x": {
+        "coin_id": "immutable-x",
+        "symbol": "imx",
+        "name": "ImmutableX",
+        "image_url": "coins/images/thumb/immutableX-symbol-BLK-RGB.png"
+    },
+    "injective-protocol": {
+        "coin_id": "injective-protocol",
+        "symbol": "inj",
+        "name": "Injective",
+        "image_url": "coins/images/thumb/Secondary_Symbol.png"
+    },
+    "instadapp": {
+        "coin_id": "instadapp",
+        "symbol": "inst",
+        "name": "Instadapp",
+        "image_url": "coins/images/thumb/30hFM0-n_400x400.jpg"
+    },
+    "internet-computer": {
+        "coin_id": "internet-computer",
+        "symbol": "icp",
+        "name": "Internet Computer",
+        "image_url": "coins/images/thumb/Internet_Computer_logo.png"
+    },
+    "iostoken": {
+        "coin_id": "iostoken",
+        "symbol": "iost",
+        "name": "IOST",
+        "image_url": "coins/images/thumb/IOST.png"
+    },
+    "iota": {
+        "coin_id": "iota",
+        "symbol": "miota",
+        "name": "IOTA",
+        "image_url": "coins/images/thumb/IOTA_Swirl.png"
+    },
+    "iotex": {
+        "coin_id": "iotex",
+        "symbol": "iotx",
+        "name": "IoTeX",
+        "image_url": "coins/images/thumb/iotex-logo.png"
+    },
+    "jasmycoin": {
+        "coin_id": "jasmycoin",
+        "symbol": "jasmy",
+        "name": "JasmyCoin",
+        "image_url": "coins/images/thumb/JASMY200x200.jpg"
+    },
+    "joe": {
+        "coin_id": "joe",
+        "symbol": "joe",
+        "name": "JOE",
+        "image_url": "coins/images/thumb/joe_200x200.png"
+    },
+    "juno-network": {
+        "coin_id": "juno-network",
+        "symbol": "juno",
+        "name": "JUNO",
+        "image_url": "coins/images/thumb/juno.png"
+    },
+    "just": {
+        "coin_id": "just",
+        "symbol": "jst",
+        "name": "JUST",
+        "image_url": "coins/images/thumb/JUST.jpg"
+    },
+    "juventus-fan-token": {
+        "coin_id": "juventus-fan-token",
+        "symbol": "juv",
+        "name": "Juventus Fan Token",
+        "image_url": "coins/images/thumb/Juve-10.png"
+    },
+    "kadena": {
+        "coin_id": "kadena",
+        "symbol": "kda",
+        "name": "Kadena",
+        "image_url": "coins/images/thumb/djLWD6mR_400x400.jpg"
+    },
+    "kaspa": {
+        "coin_id": "kaspa",
+        "symbol": "kas",
+        "name": "Kaspa",
+        "image_url": "coins/images/thumb/kaspa-icon-exchanges.png"
+    },
+    "kava": {
+        "coin_id": "kava",
+        "symbol": "kava",
+        "name": "Kava",
+        "image_url": "coins/images/thumb/kava.png"
+    },
+    "kava-lend": {
+        "coin_id": "kava-lend",
+        "symbol": "hard",
+        "name": "Kava Lend",
+        "image_url": "coins/images/thumb/HARD_coin_256.png"
+    },
+    "keep3rv1": {
+        "coin_id": "keep3rv1",
+        "symbol": "kp3r",
+        "name": "Keep3rV1",
+        "image_url": "coins/images/thumb/kp3r_logo.jpg"
+    },
+    "klay-token": {
+        "coin_id": "klay-token",
+        "symbol": "klay",
+        "name": "Klaytn",
+        "image_url": "coins/images/thumb/klaytn.png"
+    },
+    "klima-dao": {
+        "coin_id": "klima-dao",
+        "symbol": "klima",
+        "name": "KlimaDAO",
+        "image_url": "coins/images/thumb/Klima-Token.png"
+    },
+    "komodo": {
+        "coin_id": "komodo",
+        "symbol": "kmd",
+        "name": "Komodo",
+        "image_url": "coins/images/thumb/KMD_Mark_Color.png"
+    },
+    "kucoin-shares": {
+        "coin_id": "kucoin-shares",
+        "symbol": "kcs",
+        "name": "KuCoin",
+        "image_url": "coins/images/thumb/sa9z79.png"
+    },
+    "kusama": {
+        "coin_id": "kusama",
+        "symbol": "ksm",
+        "name": "Kusama",
+        "image_url": "coins/images/thumb/m4zRhP5e_400x400.jpg"
+    },
+    "kyber-network-crystal": {
+        "coin_id": "kyber-network-crystal",
+        "symbol": "knc",
+        "name": "Kyber Network Crystal",
+        "image_url": "coins/images/thumb/RwdVsGcw_400x400.jpg"
+    },
+    "lazio-fan-token": {
+        "coin_id": "lazio-fan-token",
+        "symbol": "lazio",
+        "name": "Lazio Fan Token",
+        "image_url": "coins/images/thumb/B4Lla6V6_400x400.png"
+    },
+    "league-of-kingdoms": {
+        "coin_id": "league-of-kingdoms",
+        "symbol": "loka",
+        "name": "League of Kingdoms",
+        "image_url": "coins/images/thumb/loka_64pix.png"
+    },
+    "leo-token": {
+        "coin_id": "leo-token",
+        "symbol": "leo",
+        "name": "LEO Token",
+        "image_url": "coins/images/thumb/leo-token.png"
+    },
+    "lever": {
+        "coin_id": "lever",
+        "symbol": "lever",
+        "name": "LeverFi",
+        "image_url": "coins/images/thumb/WI72SpBl_400x400.jpeg"
+    },
+    "lido-dao": {
+        "coin_id": "lido-dao",
+        "symbol": "ldo",
+        "name": "Lido DAO",
+        "image_url": "coins/images/thumb/Lido_DAO.png"
+    },
+    "link": {
+        "coin_id": "link",
+        "symbol": "ln",
+        "name": "LINK",
+        "image_url": "coins/images/thumb/linklogo.png"
+    },
+    "liquity": {
+        "coin_id": "liquity",
+        "symbol": "lqty",
+        "name": "Liquity",
+        "image_url": "coins/images/thumb/200-lqty-icon.png"
+    },
+    "liquity-usd": {
+        "coin_id": "liquity-usd",
+        "symbol": "lusd",
+        "name": "Liquity USD",
+        "image_url": "coins/images/thumb/Group_3.png"
+    },
+    "lisk": {
+        "coin_id": "lisk",
+        "symbol": "lsk",
+        "name": "Lisk",
+        "image_url": "coins/images/thumb/Lisk_Symbol_-_Blue.png"
+    },
+    "litecoin": {
+        "coin_id": "litecoin",
+        "symbol": "ltc",
+        "name": "Litecoin",
+        "image_url": "coins/images/thumb/litecoin.png"
+    },
+    "livepeer": {
+        "coin_id": "livepeer",
+        "symbol": "lpt",
+        "name": "Livepeer",
+        "image_url": "coins/images/thumb/logo-circle-green.png"
+    },
+    "looksrare": {
+        "coin_id": "looksrare",
+        "symbol": "looks",
+        "name": "LooksRare",
+        "image_url": "coins/images/thumb/circle-black-256.png"
+    },
+    "loopring": {
+        "coin_id": "loopring",
+        "symbol": "lrc",
+        "name": "Loopring",
+        "image_url": "coins/images/thumb/LRC.png"
+    },
+    "lto-network": {
+        "coin_id": "lto-network",
+        "symbol": "lto",
+        "name": "LTO Network",
+        "image_url": "coins/images/thumb/lto.png"
+    },
+    "lukso-token": {
+        "coin_id": "lukso-token",
+        "symbol": "lyxe",
+        "name": "LUKSO",
+        "image_url": "coins/images/thumb/1_QAHTciwVhD7SqVmfRW70Pw.png"
+    },
+    "magic": {
+        "coin_id": "magic",
+        "symbol": "magic",
+        "name": "Magic",
+        "image_url": "coins/images/thumb/magic.png"
+    },
+    "magic-internet-money": {
+        "coin_id": "magic-internet-money",
+        "symbol": "mim",
+        "name": "Magic Internet Money",
+        "image_url": "coins/images/thumb/mimlogopng.png"
+    },
+    "maiar-dex": {
+        "coin_id": "maiar-dex",
+        "symbol": "mex",
+        "name": "Maiar DEX",
+        "image_url": "coins/images/thumb/MEX-icon.png"
+    },
+    "maidsafecoin": {
+        "coin_id": "maidsafecoin",
+        "symbol": "emaid",
+        "name": "MaidSafeCoin",
+        "image_url": "coins/images/thumb/maidsafecoin.png"
+    },
+    "maker": {
+        "coin_id": "maker",
+        "symbol": "mkr",
+        "name": "Maker",
+        "image_url": "coins/images/thumb/Mark_Maker.png"
+    },
+    "mantra-dao": {
+        "coin_id": "mantra-dao",
+        "symbol": "om",
+        "name": "MANTRA",
+        "image_url": "coins/images/thumb/OM_Token.png"
+    },
+    "maple": {
+        "coin_id": "maple",
+        "symbol": "mpl",
+        "name": "Maple",
+        "image_url": "coins/images/thumb/Maple_Logo_Mark_Maple_Orange.png"
+    },
+    "marlin": {
+        "coin_id": "marlin",
+        "symbol": "pond",
+        "name": "Marlin",
+        "image_url": "coins/images/thumb/POND_200x200.png"
+    },
+    "mask-network": {
+        "coin_id": "mask-network",
+        "symbol": "mask",
+        "name": "Mask Network",
+        "image_url": "coins/images/thumb/Mask_Network.jpg"
+    },
+    "mass-vehicle-ledger": {
+        "coin_id": "mass-vehicle-ledger",
+        "symbol": "mvl",
+        "name": "MVL",
+        "image_url": "coins/images/thumb/mass-vehicle-ledger.png"
+    },
+    "matic-network": {
+        "coin_id": "matic-network",
+        "symbol": "matic",
+        "name": "Polygon",
+        "image_url": "coins/images/thumb/matic-token-icon.png"
+    },
+    "mdex": {
+        "coin_id": "mdex",
+        "symbol": "mdx",
+        "name": "Mdex",
+        "image_url": "coins/images/thumb/mdex.png"
+    },
+    "medibloc": {
+        "coin_id": "medibloc",
+        "symbol": "med",
+        "name": "Medibloc",
+        "image_url": "coins/images/thumb/medibloc_basic.png"
+    },
+    "melon": {
+        "coin_id": "melon",
+        "symbol": "mln",
+        "name": "Enzyme",
+        "image_url": "coins/images/thumb/Enzyme_Icon_Secondary.png"
+    },
+    "merit-circle": {
+        "coin_id": "merit-circle",
+        "symbol": "mc",
+        "name": "Merit Circle",
+        "image_url": "coins/images/thumb/Db4XqML.png"
+    },
+    "metal": {
+        "coin_id": "metal",
+        "symbol": "mtl",
+        "name": "Metal DAO",
+        "image_url": "coins/images/thumb/Metal.png"
+    },
+    "metis-token": {
+        "coin_id": "metis-token",
+        "symbol": "metis",
+        "name": "Metis",
+        "image_url": "coins/images/thumb/metis.jpeg"
+    },
+    "milk-alliance": {
+        "coin_id": "milk-alliance",
+        "symbol": "mlk",
+        "name": "MiL.k Alliance",
+        "image_url": "coins/images/thumb/2.png"
+    },
+    "mina-protocol": {
+        "coin_id": "mina-protocol",
+        "symbol": "mina",
+        "name": "Mina Protocol",
+        "image_url": "coins/images/thumb/JM4_vQ34_400x400.png"
+    },
+    "mines-of-dalarnia": {
+        "coin_id": "mines-of-dalarnia",
+        "symbol": "dar",
+        "name": "Mines of Dalarnia",
+        "image_url": "coins/images/thumb/dar.png"
+    },
+    "mobilecoin": {
+        "coin_id": "mobilecoin",
+        "symbol": "mob",
+        "name": "MobileCoin",
+        "image_url": "coins/images/thumb/mobilecoin.png"
+    },
+    "mobox": {
+        "coin_id": "mobox",
+        "symbol": "mbox",
+        "name": "Mobox",
+        "image_url": "coins/images/thumb/mobox.PNG"
+    },
+    "monero": {
+        "coin_id": "monero",
+        "symbol": "xmr",
+        "name": "Monero",
+        "image_url": "coins/images/thumb/monero_logo.png"
+    },
+    "moonbeam": {
+        "coin_id": "moonbeam",
+        "symbol": "glmr",
+        "name": "Moonbeam",
+        "image_url": "coins/images/thumb/glmr.png"
+    },
+    "moonriver": {
+        "coin_id": "moonriver",
+        "symbol": "movr",
+        "name": "Moonriver",
+        "image_url": "coins/images/thumb/9285.png"
+    },
+    "moviebloc": {
+        "coin_id": "moviebloc",
+        "symbol": "mbl",
+        "name": "MovieBloc",
+        "image_url": "coins/images/thumb/MBL_Logo.png"
+    },
+    "msol": {
+        "coin_id": "msol",
+        "symbol": "msol",
+        "name": "Marinade staked SOL",
+        "image_url": "coins/images/thumb/mSOL.png"
+    },
+    "multichain": {
+        "coin_id": "multichain",
+        "symbol": "multi",
+        "name": "Multichain",
+        "image_url": "coins/images/thumb/1_Wyot-SDGZuxbjdkaOeT2-A.png"
+    },
+    "mx-token": {
+        "coin_id": "mx-token",
+        "symbol": "mx",
+        "name": "MX",
+        "image_url": "coins/images/thumb/TII1YIdv_400x400.png"
+    },
+    "mxc": {
+        "coin_id": "mxc",
+        "symbol": "mxc",
+        "name": "MXC",
+        "image_url": "coins/images/thumb/mxc.png"
+    },
+    "my-neighbor-alice": {
+        "coin_id": "my-neighbor-alice",
+        "symbol": "alice",
+        "name": "My Neighbor Alice",
+        "image_url": "coins/images/thumb/alice_logo.jpg"
+    },
+    "nano": {
+        "coin_id": "nano",
+        "symbol": "xno",
+        "name": "Nano",
+        "image_url": "coins/images/thumb/nano.png"
+    },
+    "nanobyte": {
+        "coin_id": "nanobyte",
+        "symbol": "nbt",
+        "name": "NanoByte",
+        "image_url": "coins/images/thumb/WpcmdLW.png"
+    },
+    "near": {
+        "coin_id": "near",
+        "symbol": "near",
+        "name": "NEAR Protocol",
+        "image_url": "coins/images/thumb/near_icon.png"
+    },
+    "neblio": {
+        "coin_id": "neblio",
+        "symbol": "nebl",
+        "name": "Neblio",
+        "image_url": "coins/images/thumb/Mark_Color_4x.png"
+    },
+    "nem": {
+        "coin_id": "nem",
+        "symbol": "xem",
+        "name": "NEM",
+        "image_url": "coins/images/thumb/NEM_WC_Logo_200px.png"
+    },
+    "neo": {
+        "coin_id": "neo",
+        "symbol": "neo",
+        "name": "NEO",
+        "image_url": "coins/images/thumb/NEO_512_512.png"
+    },
+    "nerve-finance": {
+        "coin_id": "nerve-finance",
+        "symbol": "nrv",
+        "name": "Nerve Finance",
+        "image_url": "coins/images/thumb/nerve_finance_logo.png"
+    },
+    "nervos-network": {
+        "coin_id": "nervos-network",
+        "symbol": "ckb",
+        "name": "Nervos Network",
+        "image_url": "coins/images/thumb/Nervos_White.png"
+    },
+    "nest": {
+        "coin_id": "nest",
+        "symbol": "nest",
+        "name": "Nest Protocol",
+        "image_url": "coins/images/thumb/52954052.png"
+    },
+    "neutrino": {
+        "coin_id": "neutrino",
+        "symbol": "usdn",
+        "name": "Neutrino USD",
+        "image_url": "coins/images/thumb/78GWcZu.png"
+    },
+    "nexo": {
+        "coin_id": "nexo",
+        "symbol": "nexo",
+        "name": "NEXO",
+        "image_url": "coins/images/thumb/nexo.png"
+    },
+    "nkn": {
+        "coin_id": "nkn",
+        "symbol": "nkn",
+        "name": "NKN",
+        "image_url": "coins/images/thumb/nkn.png"
+    },
+    "nucypher": {
+        "coin_id": "nucypher",
+        "symbol": "nu",
+        "name": "NuCypher",
+        "image_url": "coins/images/thumb/photo1198982838879365035.jpg"
+    },
+    "nuls": {
+        "coin_id": "nuls",
+        "symbol": "nuls",
+        "name": "Nuls",
+        "image_url": "coins/images/thumb/Nuls.png"
+    },
+    "numeraire": {
+        "coin_id": "numeraire",
+        "symbol": "nmr",
+        "name": "Numeraire",
+        "image_url": "coins/images/thumb/numeraire.png"
+    },
+    "nxm": {
+        "coin_id": "nxm",
+        "symbol": "nxm",
+        "name": "Nexus Mutual",
+        "image_url": "coins/images/thumb/nexus-mutual.jpg"
+    },
+    "oasis-network": {
+        "coin_id": "oasis-network",
+        "symbol": "rose",
+        "name": "Oasis Network",
+        "image_url": "coins/images/thumb/rose.png"
+    },
+    "ocean-protocol": {
+        "coin_id": "ocean-protocol",
+        "symbol": "ocean",
+        "name": "Ocean Protocol",
+        "image_url": "coins/images/thumb/ocean-protocol-logo.jpg"
+    },
+    "oec-token": {
+        "coin_id": "oec-token",
+        "symbol": "okt",
+        "name": "OKC",
+        "image_url": "coins/images/thumb/WeChat_Image_20220118095654.png"
+    },
+    "okb": {
+        "coin_id": "okb",
+        "symbol": "okb",
+        "name": "OKB",
+        "image_url": "coins/images/thumb/WeChat_Image_20220118095654.png"
+    },
+    "olympus": {
+        "coin_id": "olympus",
+        "symbol": "ohm",
+        "name": "Olympus",
+        "image_url": "coins/images/thumb/token_OHM_%281%29.png"
+    },
+    "omisego": {
+        "coin_id": "omisego",
+        "symbol": "omg",
+        "name": "OMG Network",
+        "image_url": "coins/images/thumb/OMG_Network.jpg"
+    },
+    "ontology": {
+        "coin_id": "ontology",
+        "symbol": "ont",
+        "name": "Ontology",
+        "image_url": "coins/images/thumb/ONT.png"
+    },
+    "ooki": {
+        "coin_id": "ooki",
+        "symbol": "ooki",
+        "name": "Ooki",
+        "image_url": "coins/images/thumb/Ooki_Token.png"
+    },
+    "optimism": {
+        "coin_id": "optimism",
+        "symbol": "op",
+        "name": "Optimism",
+        "image_url": "coins/images/thumb/Optimism.png"
+    },
+    "orbs": {
+        "coin_id": "orbs",
+        "symbol": "orbs",
+        "name": "Orbs",
+        "image_url": "coins/images/thumb/Orbs.jpg"
+    },
+    "orchid-protocol": {
+        "coin_id": "orchid-protocol",
+        "symbol": "oxt",
+        "name": "Orchid Protocol",
+        "image_url": "coins/images/thumb/download_(5).png"
+    },
+    "ordinals": {
+        "coin_id": "ordinals",
+        "symbol": "ordi",
+        "name": "ORDI",
+        "image_url": "coins/images/thumb/ordi.png"
+    },
+    "origin-protocol": {
+        "coin_id": "origin-protocol",
+        "symbol": "ogn",
+        "name": "Origin Protocol",
+        "image_url": "coins/images/thumb/op.jpg"
+    },
+    "origintrail": {
+        "coin_id": "origintrail",
+        "symbol": "trac",
+        "name": "OriginTrail",
+        "image_url": "coins/images/thumb/TRAC.jpg"
+    },
+    "orion-protocol": {
+        "coin_id": "orion-protocol",
+        "symbol": "orn",
+        "name": "Orion Protocol",
+        "image_url": "coins/images/thumb/orion_logo.png"
+    },
+    "osmosis": {
+        "coin_id": "osmosis",
+        "symbol": "osmo",
+        "name": "Osmosis",
+        "image_url": "coins/images/thumb/osmo.png"
+    },
+    "pancakeswap-token": {
+        "coin_id": "pancakeswap-token",
+        "symbol": "cake",
+        "name": "PancakeSwap",
+        "image_url": "coins/images/thumb/pancakeswap-cake-logo_%281%29.png"
+    },
+    "paris-saint-germain-fan-token": {
+        "coin_id": "paris-saint-germain-fan-token",
+        "symbol": "psg",
+        "name": "Paris Saint-Germain Fan Token",
+        "image_url": "coins/images/thumb/psg.png"
+    },
+    "pax-gold": {
+        "coin_id": "pax-gold",
+        "symbol": "paxg",
+        "name": "PAX Gold",
+        "image_url": "coins/images/thumb/paxg.PNG"
+    },
+    "paxos-standard": {
+        "coin_id": "paxos-standard",
+        "symbol": "usdp",
+        "name": "Pax Dollar",
+        "image_url": "coins/images/thumb/Pax_Dollar.png"
+    },
+    "pepe": {
+        "coin_id": "pepe",
+        "symbol": "pepe",
+        "name": "Pepe",
+        "image_url": "coins/images/thumb/pepe-token.jpeg"
+    },
+    "perlin": {
+        "coin_id": "perlin",
+        "symbol": "perl",
+        "name": "PERL.eco",
+        "image_url": "coins/images/thumb/PERL.eco-Icon-green_6x.png"
+    },
+    "perpetual-protocol": {
+        "coin_id": "perpetual-protocol",
+        "symbol": "perp",
+        "name": "Perpetual Protocol",
+        "image_url": "coins/images/thumb/60d18e06844a844ad75901a9_mark_only_03.png"
+    },
+    "persistence": {
+        "coin_id": "persistence",
+        "symbol": "xprt",
+        "name": "Persistence",
+        "image_url": "coins/images/thumb/512_Light.png"
+    },
+    "pha": {
+        "coin_id": "pha",
+        "symbol": "pha",
+        "name": "Phala",
+        "image_url": "coins/images/thumb/phala.png"
+    },
+    "platoncoin": {
+        "coin_id": "platoncoin",
+        "symbol": "pltc",
+        "name": "PlatonCoin",
+        "image_url": "coins/images/thumb/PLTC.png"
+    },
+    "playdapp": {
+        "coin_id": "playdapp",
+        "symbol": "pla",
+        "name": "PlayDapp",
+        "image_url": "coins/images/thumb/54023228.png"
+    },
+    "pocket-network": {
+        "coin_id": "pocket-network",
+        "symbol": "pokt",
+        "name": "Pocket Network",
+        "image_url": "coins/images/thumb/33689860.png"
+    },
+    "polkadot": {
+        "coin_id": "polkadot",
+        "symbol": "dot",
+        "name": "Polkadot",
+        "image_url": "coins/images/thumb/polkadot.png"
+    },
+    "polkastarter": {
+        "coin_id": "polkastarter",
+        "symbol": "pols",
+        "name": "Polkastarter",
+        "image_url": "coins/images/thumb/polkastarter.png"
+    },
+    "polymath": {
+        "coin_id": "polymath",
+        "symbol": "poly",
+        "name": "Polymath",
+        "image_url": "coins/images/thumb/inKkF01.png"
+    },
+    "polymesh": {
+        "coin_id": "polymesh",
+        "symbol": "polyx",
+        "name": "Polymesh",
+        "image_url": "coins/images/thumb/POLYX_logo.png"
+    },
+    "polytrade": {
+        "coin_id": "polytrade",
+        "symbol": "trade",
+        "name": "Polytrade",
+        "image_url": "coins/images/thumb/Logo_colored_200.png"
+    },
+    "power-ledger": {
+        "coin_id": "power-ledger",
+        "symbol": "powr",
+        "name": "Power Ledger",
+        "image_url": "coins/images/thumb/power-ledger.png"
+    },
+    "project-galaxy": {
+        "coin_id": "project-galaxy",
+        "symbol": "gal",
+        "name": "Galxe",
+        "image_url": "coins/images/thumb/galaxy.jpg"
+    },
+    "prometeus": {
+        "coin_id": "prometeus",
+        "symbol": "prom",
+        "name": "Prom",
+        "image_url": "coins/images/thumb/Ticker.png"
+    },
+    "propy": {
+        "coin_id": "propy",
+        "symbol": "pro",
+        "name": "Propy",
+        "image_url": "coins/images/thumb/propy.png"
+    },
+    "prosper": {
+        "coin_id": "prosper",
+        "symbol": "pros",
+        "name": "Prosper",
+        "image_url": "coins/images/thumb/heD6cg22l3sF5VgPh4G1xC6lnKEWXJif-jbaqUpv8CDP6jbWaqn9UjBdkXWNrw1CewaQOxb8zXRdNeNJWWiUDjfsEl_d7E3bPLg4cFoilQF5TGKHfWyJlnpm3UYc9ytvRvOjxOevMuiu8-lusnNoOcwgsJpMkYWHqe322GAxLt0_30kFMVAcjEDUrOlkK6hUYi0m9P433mvNlOm.jpg"
+    },
+    "pundi-x-2": {
+        "coin_id": "pundi-x-2",
+        "symbol": "pundix",
+        "name": "Pundi X",
+        "image_url": "coins/images/thumb/vDyefsXq_400x400.jpg"
+    },
+    "qtum": {
+        "coin_id": "qtum",
+        "symbol": "qtum",
+        "name": "Qtum",
+        "image_url": "coins/images/thumb/Qtum_Logo_blue_CG.png"
+    },
+    "quant-network": {
+        "coin_id": "quant-network",
+        "symbol": "qnt",
+        "name": "Quant",
+        "image_url": "coins/images/thumb/5ZOu7brX_400x400.jpg"
+    },
+    "radiant-capital": {
+        "coin_id": "radiant-capital",
+        "symbol": "rdnt",
+        "name": "Radiant Capital",
+        "image_url": "coins/images/thumb/Radiant-Logo-200x200.png"
+    },
+    "radicle": {
+        "coin_id": "radicle",
+        "symbol": "rad",
+        "name": "Radicle",
+        "image_url": "coins/images/thumb/radicle.png"
+    },
+    "radio-caca": {
+        "coin_id": "radio-caca",
+        "symbol": "raca",
+        "name": "Radio Caca",
+        "image_url": "coins/images/thumb/ez44_BSs_400x400.jpg"
+    },
+    "radix": {
+        "coin_id": "radix",
+        "symbol": "xrd",
+        "name": "Radix",
+        "image_url": "coins/images/thumb/Radix.png"
+    },
+    "ravencoin": {
+        "coin_id": "ravencoin",
+        "symbol": "rvn",
+        "name": "Ravencoin",
+        "image_url": "coins/images/thumb/ravencoin.png"
+    },
+    "raydium": {
+        "coin_id": "raydium",
+        "symbol": "ray",
+        "name": "Raydium",
+        "image_url": "coins/images/thumb/PSigc4ie_400x400.jpg"
+    },
+    "realio-network": {
+        "coin_id": "realio-network",
+        "symbol": "rio",
+        "name": "Realio",
+        "image_url": "coins/images/thumb/0.jpg"
+    },
+    "red-pulse": {
+        "coin_id": "red-pulse",
+        "symbol": "phb",
+        "name": "Phoenix Global [OLD]",
+        "image_url": "coins/images/thumb/phoenix-logo.png"
+    },
+    "reef": {
+        "coin_id": "reef",
+        "symbol": "reef",
+        "name": "Reef",
+        "image_url": "coins/images/thumb/Group_10572.png"
+    },
+    "regen": {
+        "coin_id": "regen",
+        "symbol": "regen",
+        "name": "Regen",
+        "image_url": "coins/images/thumb/REGEN.png"
+    },
+    "rei-network": {
+        "coin_id": "rei-network",
+        "symbol": "rei",
+        "name": "REI Network",
+        "image_url": "coins/images/thumb/c51_j0aB_400x400.jpg"
+    },
+    "render-token": {
+        "coin_id": "render-token",
+        "symbol": "rndr",
+        "name": "Render",
+        "image_url": "coins/images/thumb/rndr.png"
+    },
+    "republic-protocol": {
+        "coin_id": "republic-protocol",
+        "symbol": "ren",
+        "name": "REN",
+        "image_url": "coins/images/thumb/REN.png"
+    },
+    "request-network": {
+        "coin_id": "request-network",
+        "symbol": "req",
+        "name": "Request",
+        "image_url": "coins/images/thumb/Request_icon_green.png"
+    },
+    "reserve-rights-token": {
+        "coin_id": "reserve-rights-token",
+        "symbol": "rsr",
+        "name": "Reserve Rights",
+        "image_url": "coins/images/thumb/rsr.png"
+    },
+    "ribbon-finance": {
+        "coin_id": "ribbon-finance",
+        "symbol": "rbn",
+        "name": "Ribbon Finance",
+        "image_url": "coins/images/thumb/RBN_64x64.png"
+    },
+    "rif-token": {
+        "coin_id": "rif-token",
+        "symbol": "rif",
+        "name": "RSK Infrastructure Framework",
+        "image_url": "coins/images/thumb/RIF.png"
+    },
+    "ripple": {
+        "coin_id": "ripple",
+        "symbol": "xrp",
+        "name": "XRP",
+        "image_url": "coins/images/thumb/xrp-symbol-white-128.png"
+    },
+    "rocket-pool": {
+        "coin_id": "rocket-pool",
+        "symbol": "rpl",
+        "name": "Rocket Pool",
+        "image_url": "coins/images/thumb/rocket_pool_%28RPL%29.png"
+    },
+    "rocket-pool-eth": {
+        "coin_id": "rocket-pool-eth",
+        "symbol": "reth",
+        "name": "Rocket Pool ETH",
+        "image_url": "coins/images/thumb/reth.png"
+    },
+    "ronin": {
+        "coin_id": "ronin",
+        "symbol": "ron",
+        "name": "Ronin",
+        "image_url": "coins/images/thumb/ronin.jpg"
+    },
+    "safemoon": {
+        "coin_id": "safemoon",
+        "symbol": "safemoon",
+        "name": "SafeMoon [OLD]",
+        "image_url": "coins/images/thumb/174x174-white.png"
+    },
+    "safemoon-2": {
+        "coin_id": "safemoon-2",
+        "symbol": "sfm",
+        "name": "SafeMoon",
+        "image_url": "coins/images/thumb/photo_2021-12-22_14.43.36.jpeg"
+    },
+    "safepal": {
+        "coin_id": "safepal",
+        "symbol": "sfp",
+        "name": "SafePal",
+        "image_url": "coins/images/thumb/sfp.png"
+    },
+    "saitama-inu": {
+        "coin_id": "saitama-inu",
+        "symbol": "saitama",
+        "name": "Saitama",
+        "image_url": "coins/images/thumb/SOIKDUWf_400x400.jpeg"
+    },
+    "santos-fc-fan-token": {
+        "coin_id": "santos-fc-fan-token",
+        "symbol": "santos",
+        "name": "Santos FC Fan Token",
+        "image_url": "coins/images/thumb/santos.png"
+    },
+    "secret": {
+        "coin_id": "secret",
+        "symbol": "scrt",
+        "name": "Secret",
+        "image_url": "coins/images/thumb/Secret.png"
+    },
+    "serum": {
+        "coin_id": "serum",
+        "symbol": "srm",
+        "name": "Serum",
+        "image_url": "coins/images/thumb/serum-logo.png"
+    },
+    "seth2": {
+        "coin_id": "seth2",
+        "symbol": "seth2",
+        "name": "sETH2",
+        "image_url": "coins/images/thumb/emerald256.png"
+    },
+    "shardus": {
+        "coin_id": "shardus",
+        "symbol": "ult",
+        "name": "Shardus",
+        "image_url": "coins/images/thumb/final_logo_photoshop.png"
+    },
+    "sharering": {
+        "coin_id": "sharering",
+        "symbol": "shr",
+        "name": "Share",
+        "image_url": "coins/images/thumb/74586729_2443914875881351_2785018663453851648_n.png"
+    },
+    "shiba-inu": {
+        "coin_id": "shiba-inu",
+        "symbol": "shib",
+        "name": "Shiba Inu",
+        "image_url": "coins/images/thumb/shiba.png"
+    },
+    "siacoin": {
+        "coin_id": "siacoin",
+        "symbol": "sc",
+        "name": "Siacoin",
+        "image_url": "coins/images/thumb/siacoin.png"
+    },
+    "singularitynet": {
+        "coin_id": "singularitynet",
+        "symbol": "agix",
+        "name": "SingularityNET",
+        "image_url": "coins/images/thumb/singularitynet.png"
+    },
+    "skale": {
+        "coin_id": "skale",
+        "symbol": "skl",
+        "name": "SKALE",
+        "image_url": "coins/images/thumb/SKALE_token_300x300.png"
+    },
+    "smooth-love-potion": {
+        "coin_id": "smooth-love-potion",
+        "symbol": "slp",
+        "name": "Smooth Love Potion",
+        "image_url": "coins/images/thumb/SLP.png"
+    },
+    "solana": {
+        "coin_id": "solana",
+        "symbol": "sol",
+        "name": "Solana",
+        "image_url": "coins/images/thumb/solana.png"
+    },
+    "solo-coin": {
+        "coin_id": "solo-coin",
+        "symbol": "solo",
+        "name": "Sologenic",
+        "image_url": "coins/images/thumb/solo.png"
+    },
+    "songbird": {
+        "coin_id": "songbird",
+        "symbol": "sgb",
+        "name": "Songbird",
+        "image_url": "coins/images/thumb/SGB_512x512.png"
+    },
+    "spell-token": {
+        "coin_id": "spell-token",
+        "symbol": "spell",
+        "name": "Spell",
+        "image_url": "coins/images/thumb/abracadabra-3.png"
+    },
+    "ssv-network": {
+        "coin_id": "ssv-network",
+        "symbol": "ssv",
+        "name": "SSV Network",
+        "image_url": "coins/images/thumb/ssv.png"
+    },
+    "stafi": {
+        "coin_id": "stafi",
+        "symbol": "fis",
+        "name": "Stafi",
+        "image_url": "coins/images/thumb/stafi_logo.jpg"
+    },
+    "staked-ether": {
+        "coin_id": "staked-ether",
+        "symbol": "steth",
+        "name": "Lido Staked Ether",
+        "image_url": "coins/images/thumb/steth_logo.png"
+    },
+    "stargate-finance": {
+        "coin_id": "stargate-finance",
+        "symbol": "stg",
+        "name": "Stargate Finance",
+        "image_url": "coins/images/thumb/STG_LOGO.png"
+    },
+    "stasis-eurs": {
+        "coin_id": "stasis-eurs",
+        "symbol": "eurs",
+        "name": "STASIS EURO",
+        "image_url": "coins/images/thumb/EURS_300x300.png"
+    },
+    "status": {
+        "coin_id": "status",
+        "symbol": "snt",
+        "name": "Status",
+        "image_url": "coins/images/thumb/status.png"
+    },
+    "steem": {
+        "coin_id": "steem",
+        "symbol": "steem",
+        "name": "Steem",
+        "image_url": "coins/images/thumb/steem.png"
+    },
+    "stellar": {
+        "coin_id": "stellar",
+        "symbol": "xlm",
+        "name": "Stellar",
+        "image_url": "coins/images/thumb/Stellar_symbol_black_RGB.png"
+    },
+    "stepn": {
+        "coin_id": "stepn",
+        "symbol": "gmt",
+        "name": "STEPN",
+        "image_url": "coins/images/thumb/gmt.png"
+    },
+    "storj": {
+        "coin_id": "storj",
+        "symbol": "storj",
+        "name": "Storj",
+        "image_url": "coins/images/thumb/storj.png"
+    },
+    "storm": {
+        "coin_id": "storm",
+        "symbol": "stmx",
+        "name": "StormX",
+        "image_url": "coins/images/thumb/StormX.png"
+    },
+    "stp-network": {
+        "coin_id": "stp-network",
+        "symbol": "stpt",
+        "name": "STP",
+        "image_url": "coins/images/thumb/STP.png"
+    },
+    "stratis": {
+        "coin_id": "stratis",
+        "symbol": "strax",
+        "name": "Stratis",
+        "image_url": "coins/images/thumb/stratis.png"
+    },
+    "sui": {
+        "coin_id": "sui",
+        "symbol": "sui",
+        "name": "Sui",
+        "image_url": "coins/images/thumb/sui_asset.jpeg"
+    },
+    "sushi": {
+        "coin_id": "sushi",
+        "symbol": "sushi",
+        "name": "Sushi",
+        "image_url": "coins/images/thumb/512x512_Logo_no_chop.png"
+    },
+    "swarm-markets": {
+        "coin_id": "swarm-markets",
+        "symbol": "smt",
+        "name": "Swarm Markets",
+        "image_url": "coins/images/thumb/swarm-SMT-token-symbol_200x200.png"
+    },
+    "swipe": {
+        "coin_id": "swipe",
+        "symbol": "sxp",
+        "name": "SXP",
+        "image_url": "coins/images/thumb/swipe.png"
+    },
+    "swissborg": {
+        "coin_id": "swissborg",
+        "symbol": "chsb",
+        "name": "SwissBorg",
+        "image_url": "coins/images/thumb/YJUrRy7r_400x400.png"
+    },
+    "synapse-2": {
+        "coin_id": "synapse-2",
+        "symbol": "syn",
+        "name": "Synapse",
+        "image_url": "coins/images/thumb/synapse_social_icon.png"
+    },
+    "syscoin": {
+        "coin_id": "syscoin",
+        "symbol": "sys",
+        "name": "Syscoin",
+        "image_url": "coins/images/thumb/Syscoin.png"
+    },
+    "telcoin": {
+        "coin_id": "telcoin",
+        "symbol": "tel",
+        "name": "Telcoin",
+        "image_url": "coins/images/thumb/tel.png"
+    },
+    "tellor": {
+        "coin_id": "tellor",
+        "symbol": "trb",
+        "name": "Tellor",
+        "image_url": "coins/images/thumb/Blk_icon_current.png"
+    },
+    "tenset": {
+        "coin_id": "tenset",
+        "symbol": "10set",
+        "name": "Tenset",
+        "image_url": "coins/images/thumb/10set.png"
+    },
+    "terra-luna": {
+        "coin_id": "terra-luna",
+        "symbol": "lunc",
+        "name": "Terra Luna Classic",
+        "image_url": "coins/images/thumb/01_LunaClassic_color.png"
+    },
+    "terra-luna-2": {
+        "coin_id": "terra-luna-2",
+        "symbol": "luna",
+        "name": "Terra",
+        "image_url": "coins/images/thumb/01_Luna_color.png"
+    },
+    "terrausd": {
+        "coin_id": "terrausd",
+        "symbol": "ustc",
+        "name": "TerraClassicUSD",
+        "image_url": "coins/images/thumb/UST.png"
+    },
+    "tether": {
+        "coin_id": "tether",
+        "symbol": "usdt",
+        "name": "Tether",
+        "image_url": "coins/images/thumb/Tether.png"
+    },
+    "tether-eurt": {
+        "coin_id": "tether-eurt",
+        "symbol": "eurt",
+        "name": "Euro Tether",
+        "image_url": "coins/images/thumb/Tether_full_logo_dm.png"
+    },
+    "tether-gold": {
+        "coin_id": "tether-gold",
+        "symbol": "xaut",
+        "name": "Tether Gold",
+        "image_url": "coins/images/thumb/Tether_Gold.png"
+    },
+    "tezos": {
+        "coin_id": "tezos",
+        "symbol": "xtz",
+        "name": "Tezos",
+        "image_url": "coins/images/thumb/Tezos-logo.png"
+    },
+    "the-graph": {
+        "coin_id": "the-graph",
+        "symbol": "grt",
+        "name": "The Graph",
+        "image_url": "coins/images/thumb/Graph_Token.png"
+    },
+    "the-open-network": {
+        "coin_id": "the-open-network",
+        "symbol": "ton",
+        "name": "The Open Network",
+        "image_url": "coins/images/thumb/ton.PNG"
+    },
+    "the-sandbox": {
+        "coin_id": "the-sandbox",
+        "symbol": "sand",
+        "name": "The Sandbox",
+        "image_url": "coins/images/thumb/sandbox_logo.jpg"
+    },
+    "the-virtua-kolect": {
+        "coin_id": "the-virtua-kolect",
+        "symbol": "tvk",
+        "name": "The Virtua Kolect",
+        "image_url": "coins/images/thumb/virtua_original.png"
+    },
+    "theta-fuel": {
+        "coin_id": "theta-fuel",
+        "symbol": "tfuel",
+        "name": "Theta Fuel",
+        "image_url": "coins/images/thumb/1_0YusgngOrriVg4ZYx4wOFQ.png"
+    },
+    "theta-token": {
+        "coin_id": "theta-token",
+        "symbol": "theta",
+        "name": "Theta Network",
+        "image_url": "coins/images/thumb/theta-token-logo.png"
+    },
+    "thorchain": {
+        "coin_id": "thorchain",
+        "symbol": "rune",
+        "name": "THORChain",
+        "image_url": "coins/images/thumb/RUNE.png"
+    },
+    "tokenize-xchange": {
+        "coin_id": "tokenize-xchange",
+        "symbol": "tkx",
+        "name": "Tokenize Xchange",
+        "image_url": "coins/images/thumb/Tokenize.png"
+    },
+    "tokocrypto": {
+        "coin_id": "tokocrypto",
+        "symbol": "tko",
+        "name": "Tokocrypto",
+        "image_url": "coins/images/thumb/tko-logo.png"
+    },
+    "tomochain": {
+        "coin_id": "tomochain",
+        "symbol": "tomo",
+        "name": "TomoChain",
+        "image_url": "coins/images/thumb/Asset_59_2x.png"
+    },
+    "tribe-2": {
+        "coin_id": "tribe-2",
+        "symbol": "tribe",
+        "name": "Tribe",
+        "image_url": "coins/images/thumb/tribe.PNG"
+    },
+    "tron": {
+        "coin_id": "tron",
+        "symbol": "trx",
+        "name": "TRON",
+        "image_url": "coins/images/thumb/tron-logo.png"
+    },
+    "troy": {
+        "coin_id": "troy",
+        "symbol": "troy",
+        "name": "TROY",
+        "image_url": "coins/images/thumb/头像-twitter.jpg"
+    },
+    "true-usd": {
+        "coin_id": "true-usd",
+        "symbol": "tusd",
+        "name": "TrueUSD",
+        "image_url": "coins/images/thumb/tusd.png"
+    },
+    "truefi": {
+        "coin_id": "truefi",
+        "symbol": "tru",
+        "name": "TrueFi",
+        "image_url": "coins/images/thumb/truefi_glyph_color.png"
+    },
+    "trust-wallet-token": {
+        "coin_id": "trust-wallet-token",
+        "symbol": "twt",
+        "name": "Trust Wallet",
+        "image_url": "coins/images/thumb/Trust.png"
+    },
+    "uma": {
+        "coin_id": "uma",
+        "symbol": "uma",
+        "name": "UMA",
+        "image_url": "coins/images/thumb/UMA.png"
+    },
+    "unifi-protocol-dao": {
+        "coin_id": "unifi-protocol-dao",
+        "symbol": "unfi",
+        "name": "Unifi Protocol DAO",
+        "image_url": "coins/images/thumb/logo-2.png"
+    },
+    "uniswap": {
+        "coin_id": "uniswap",
+        "symbol": "uni",
+        "name": "Uniswap",
+        "image_url": "coins/images/thumb/uniswap-uni.png"
+    },
+    "usd-coin": {
+        "coin_id": "usd-coin",
+        "symbol": "usdc",
+        "name": "USD Coin",
+        "image_url": "coins/images/thumb/USD_Coin_icon.png"
+    },
+    "usdd": {
+        "coin_id": "usdd",
+        "symbol": "usdd",
+        "name": "USDD",
+        "image_url": "coins/images/thumb/UUSD.jpg"
+    },
+    "usdx": {
+        "coin_id": "usdx",
+        "symbol": "usdx",
+        "name": "USDX",
+        "image_url": "coins/images/thumb/USDX_coin.png"
+    },
+    "utrust": {
+        "coin_id": "utrust",
+        "symbol": "utk",
+        "name": "Utrust",
+        "image_url": "coins/images/thumb/300x300_logo.png"
+    },
+    "vechain": {
+        "coin_id": "vechain",
+        "symbol": "vet",
+        "name": "VeChain",
+        "image_url": "coins/images/thumb/VeChain-Logo-768x725.png"
+    },
+    "venus": {
+        "coin_id": "venus",
+        "symbol": "xvs",
+        "name": "Venus",
+        "image_url": "coins/images/thumb/download.jpg"
+    },
+    "verge": {
+        "coin_id": "verge",
+        "symbol": "xvg",
+        "name": "Verge",
+        "image_url": "coins/images/thumb/verge-symbol-color_logo.png"
+    },
+    "veritaseum": {
+        "coin_id": "veritaseum",
+        "symbol": "veri",
+        "name": "Veritaseum",
+        "image_url": "coins/images/thumb/veritaseum.png"
+    },
+    "vethor-token": {
+        "coin_id": "vethor-token",
+        "symbol": "vtho",
+        "name": "VeThor",
+        "image_url": "coins/images/thumb/vethor-token.png"
+    },
+    "viberate": {
+        "coin_id": "viberate",
+        "symbol": "vib",
+        "name": "Viberate",
+        "image_url": "coins/images/thumb/Viberate.png"
+    },
+    "vidt-dao": {
+        "coin_id": "vidt-dao",
+        "symbol": "vidt",
+        "name": "VIDT DAO",
+        "image_url": "coins/images/thumb/VIDTDAO_logo.png"
+    },
+    "vite": {
+        "coin_id": "vite",
+        "symbol": "vite",
+        "name": "Vite",
+        "image_url": "coins/images/thumb/Vite.png"
+    },
+    "volt-inu-2": {
+        "coin_id": "volt-inu-2",
+        "symbol": "volt",
+        "name": "Volt Inu",
+        "image_url": "coins/images/thumb/logo200.png"
+    },
+    "voxies": {
+        "coin_id": "voxies",
+        "symbol": "voxel",
+        "name": "Voxies",
+        "image_url": "coins/images/thumb/voxies.png"
+    },
+    "vulcan-forged": {
+        "coin_id": "vulcan-forged",
+        "symbol": "pyr",
+        "name": "Vulcan Forged",
+        "image_url": "coins/images/thumb/1617088937196.png"
+    },
+    "vvs-finance": {
+        "coin_id": "vvs-finance",
+        "symbol": "vvs",
+        "name": "VVS Finance",
+        "image_url": "coins/images/thumb/8glAYOTM_400x400.jpg"
+    },
+    "waltonchain": {
+        "coin_id": "waltonchain",
+        "symbol": "wtc",
+        "name": "Waltonchain",
+        "image_url": "coins/images/thumb/ggx6nnW.png"
+    },
+    "wanchain": {
+        "coin_id": "wanchain",
+        "symbol": "wan",
+        "name": "Wanchain",
+        "image_url": "coins/images/thumb/wanchain-logo.png"
+    },
+    "waves": {
+        "coin_id": "waves",
+        "symbol": "waves",
+        "name": "Waves",
+        "image_url": "coins/images/thumb/waves.png"
+    },
+    "wax": {
+        "coin_id": "wax",
+        "symbol": "waxp",
+        "name": "WAX",
+        "image_url": "coins/images/thumb/WAX_Coin_Tickers_P_512px.png"
+    },
+    "wazirx": {
+        "coin_id": "wazirx",
+        "symbol": "wrx",
+        "name": "WazirX",
+        "image_url": "coins/images/thumb/WazirX.png"
+    },
+    "wemix-token": {
+        "coin_id": "wemix-token",
+        "symbol": "wemix",
+        "name": "WEMIX",
+        "image_url": "coins/images/thumb/wemixcoin_color_200.png"
+    },
+    "whitebit": {
+        "coin_id": "whitebit",
+        "symbol": "wbt",
+        "name": "WhiteBIT Token",
+        "image_url": "coins/images/thumb/wbt_token.png"
+    },
+    "wing-finance": {
+        "coin_id": "wing-finance",
+        "symbol": "wing",
+        "name": "Wing Finance",
+        "image_url": "coins/images/thumb/s_wing_icon.png"
+    },
+    "wink": {
+        "coin_id": "wink",
+        "symbol": "win",
+        "name": "WINkLink",
+        "image_url": "coins/images/thumb/WinK.png"
+    },
+    "woo-network": {
+        "coin_id": "woo-network",
+        "symbol": "woo",
+        "name": "WOO Network",
+        "image_url": "coins/images/thumb/w2UiemF__400x400.jpg"
+    },
+    "worldcoin-wld": {
+        "coin_id": "worldcoin-wld",
+        "symbol": "wld",
+        "name": "Worldcoin",
+        "image_url": "coins/images/thumb/worldcoin.jpeg"
+    },
+    "wrapped-bitcoin": {
+        "coin_id": "wrapped-bitcoin",
+        "symbol": "wbtc",
+        "name": "Wrapped Bitcoin",
+        "image_url": "coins/images/thumb/wrapped_bitcoin_wbtc.png"
+    },
+    "wrapped-centrifuge": {
+        "coin_id": "wrapped-centrifuge",
+        "symbol": "wcfg",
+        "name": "Wrapped Centrifuge",
+        "image_url": "coins/images/thumb/WCFG.jpg"
+    },
+    "wrapped-nxm": {
+        "coin_id": "wrapped-nxm",
+        "symbol": "wnxm",
+        "name": "Wrapped NXM",
+        "image_url": "coins/images/thumb/wNXM.png"
+    },
+    "xdce-crowd-sale": {
+        "coin_id": "xdce-crowd-sale",
+        "symbol": "xdc",
+        "name": "XDC Network",
+        "image_url": "coins/images/thumb/xdc-icon.png"
+    },
+    "xsushi": {
+        "coin_id": "xsushi",
+        "symbol": "xsushi",
+        "name": "xSUSHI",
+        "image_url": "coins/images/thumb/xsushi.png"
+    },
+    "yearn-finance": {
+        "coin_id": "yearn-finance",
+        "symbol": "yfi",
+        "name": "yearn.finance",
+        "image_url": "coins/images/thumb/yfi-192x192.png"
+    },
+    "yfii-finance": {
+        "coin_id": "yfii-finance",
+        "symbol": "yfii",
+        "name": "DFI.money",
+        "image_url": "coins/images/thumb/YFII-logo.78631676.png"
+    },
+    "yield-guild-games": {
+        "coin_id": "yield-guild-games",
+        "symbol": "ygg",
+        "name": "Yield Guild Games",
+        "image_url": "coins/images/thumb/le1nzlO6_400x400.jpg"
+    },
+    "zcash": {
+        "coin_id": "zcash",
+        "symbol": "zec",
+        "name": "Zcash",
+        "image_url": "coins/images/thumb/circle-zcash-color.png"
+    },
+    "zelcash": {
+        "coin_id": "zelcash",
+        "symbol": "flux",
+        "name": "Flux",
+        "image_url": "coins/images/thumb/Flux_symbol_blue-white.png"
+    },
+    "zencash": {
+        "coin_id": "zencash",
+        "symbol": "zen",
+        "name": "Horizen",
+        "image_url": "coins/images/thumb/horizen.png"
+    },
+    "zilliqa": {
+        "coin_id": "zilliqa",
+        "symbol": "zil",
+        "name": "Zilliqa",
+        "image_url": "coins/images/thumb/Zilliqa-logo.png"
+    }
+}

@@ -1,0 +1,28 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="Body" style="flex-grow: 0; height: 1697px; width: 100%; flex-shrink: 0;">
+        <ui:VisualElement name="BodyPadding" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 100%; padding-right: 200px; padding-left: 200px; padding-top: 200px; padding-bottom: 400px; justify-content: flex-start;">
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Label tabindex="-1" text="MENU" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-color font-chicken" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; font-size: 120px; -unity-font-style: bold; -unity-text-outline-width: 20px; -unity-text-outline-color: rgb(255, 255, 255);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Button text="TRAIN" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnTrain" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Button text="WAIT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnPlay" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Button text="EXIT" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnExit" class="button-basic font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Button text="RESET" parse-escape-sequences="true" display-tooltip-when-elided="true" name="BtnReset" class="font-regular font-comic" style="width: 350px; height: 125px; font-size: 50px; -unity-font-style: normal; color: rgb(255, 255, 255); border-top-left-radius: 25px; border-top-right-radius: 25px; border-bottom-right-radius: 25px; border-bottom-left-radius: 25px; background-color: rgb(219, 61, 61);" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 1; justify-content: center; align-items: center;">
+                <ui:Label tabindex="-1" text="hexalem.unity-v0.0.1" parse-escape-sequences="true" display-tooltip-when-elided="true" class="font-comic font-color" style="font-size: 25px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; -unity-text-align: middle-center;" />
+            </ui:VisualElement>
+            <ui:VisualElement style="flex-grow: 0; justify-content: center; align-items: center; flex-shrink: 0; height: 100px;">
+                <ui:Label tabindex="-1" parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblExtriniscUpdate" text="... waiting ..." class="font-comic font-color" style="font-size: 40px; margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; -unity-font-style: bold; -unity-text-align: middle-center; color: rgb(51, 51, 51);" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

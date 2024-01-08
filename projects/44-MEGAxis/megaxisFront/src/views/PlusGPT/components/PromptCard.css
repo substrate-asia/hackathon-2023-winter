@@ -1,0 +1,186 @@
+.prompt-card {
+  max-height: 200px;
+  position: relative;
+  width: 95%;
+  /* 删除 height 属性，以便 prompt-card 的高度自适应内容 */
+  border: 1px solid #464646;
+  margin: 0 auto 7px auto;
+  border-radius: 10px;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.69) 0%,
+    rgba(0, 0, 0, 0.62) 56.77%,
+    rgba(0, 11, 123, 0.26) 97.4%
+  );
+  padding-bottom: 10px; /* 添加内边距以保留一些底部空间 */
+}
+
+.label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 55px;
+  height: 31px;
+  background-color: #055e3f;
+  border-radius: 10px 0 0 0;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 30px;
+  color: #ffffff;
+}
+
+.labels-right {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 100px;
+  height: 31px;
+
+  color: #ffffff;
+}
+.detail-box {
+  display: flex;
+  align-items: stretch; /* 使 imgbox 和 message 的高度相同 */
+
+  margin-top: 13px;
+}
+.bkg {
+  background: linear-gradient(180deg, #000b7b 0%, #ff7676 100%);
+  height: 80%;
+  width: 85%;
+  margin: 0 auto;
+}
+
+.imgbox {
+  flex: 0 0 20%;
+
+
+}
+
+.message {
+  flex: 1;
+  padding-bottom: 5px;
+  padding-left: 10px;
+
+}
+
+.title {
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: bold;
+  font-size: 18px;
+  line-height: 30px;
+  color: #ffffff;
+  text-align: left; /* 让标题靠左对齐 */
+  padding-right: 40px;
+}
+.class0{
+  text-align: left;
+
+}
+.link0 {
+  color: #73E2BB;
+  text-decoration: underline; /* 添加下划线 */
+}
+
+.link0:hover {
+  color: #00d58b;
+  cursor: pointer;
+}
+
+.link {
+  color: #CCCCCC;
+  text-decoration: underline; /* 添加下划线 */
+}
+
+
+
+.namecol {
+  display: flex;
+  color: #ffffff;
+  margin-top: 3px;
+}
+
+.details {
+  max-height: 100px;
+  color: #AFAFAF;
+  text-align: left;
+  margin-right: 10px;
+  margin-top: 5px;
+}
+
+.name{
+  text-align: left;
+  text-shadow: 0 4px 4px rgba(0, 0, 0, 0.25);
+  color: #AFAFAF;
+}
+
+.time{
+    margin-left:20px;
+    text-align: left;
+    color: #CCCCCC;
+
+}
+.bottombar {
+  display: flex;
+  justify-content: space-between; /* 使图标在横向空间内均匀分布 */
+  align-items: center;
+  width: 100%;
+  height: 20%;
+  padding: 0 10px; /* 在左右两侧添加一些内边距 */
+}
+.righticon{
+  margin-left: 5px;
+}
+.icon-container {
+  cursor: pointer;
+  margin-top: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.icon0 {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+.icon1 {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+  margin-top: 3px;
+}
+
+.icon-last {
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+  margin-right: 20px;
+}
+.icon-text {
+  font-size: 14px;
+  color: #ffffff;
+  margin-left: 5px; /* 根据需要调整左边距 */
+}
+.iconfill{
+  width: 20px;
+  height: 20px;
+  color: #ffffff;
+}
+
+.icon-alert {
+  width: 27px;
+  height: 27px;
+  color: #F27176;
+  cursor: pointer;
+}
+
+.icon-star {
+  margin-left: 20px;
+  width: 27px;
+  height: 27px;
+  color: #73E2BB;
+  cursor: pointer;
+}

@@ -32,6 +32,7 @@ pub enum StateQuery {
     SellPrice { shares_subject: ActorId,amount:u128 },
     BuyPriceAfterFee{shares_subject: ActorId,amount:u128},
     SellPriceAfterFee{shares_subject: ActorId,amount:u128},
+    SubjectShareUser{subject:ActorId,user:ActorId},
     FullState,
 }
 
@@ -41,6 +42,7 @@ pub enum StateQuery {
 pub enum StateReply {
     Price(u128),
     FullState(IoKeeBeeShare),
+    ShareAmount(u128),
 }
 
 #[derive(Debug, Decode, Encode, TypeInfo)]

@@ -1,0 +1,10 @@
+{
+    "parachain-nfts": {
+        "name": "parachain-nfts",
+        "webSocketUrl": "ws://127.0.0.1:43595"
+    },
+    "parachain-evms": {
+        "name": "parachain-evm",
+        "webSocketUrl": "ws://127.0.0.1:42311"
+    }
+}

@@ -1,0 +1,87 @@
+.lower {
+    height: 87%;
+    display: flex;
+    flex-direction: row;
+    padding: 10px;
+}
+.chat-container {
+    width: 55%;
+    padding: 0 8px 8px 8px;
+    margin: 0 10px 10px 10px;
+}
+.chat-window {
+    height: 89%;
+    background-color: black;
+    overflow-y: auto;
+    border: 1px solid #757575;
+}
+.left-input-box {
+    flex-grow: 1;
+    outline: none;
+    border: 1px solid #757575;
+    border-radius: 4px;
+    padding: 4px;
+    margin-right: 8px;
+    background-color: black;
+    color: #ffffff;
+}
+.input-container {
+    height: 9%;
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    background-color: black;
+    border: 1px solid #757575;
+}
+
+.left-send-button {
+    color: white;
+    cursor: pointer;
+    font-size: 24px;
+}
+.form-container {
+    width: 100%;
+    padding: 0 50px 50px 50px;
+    margin: 0 10px 10px 10px;
+
+}
+.form-window {
+    height: 100%;
+    background-color: black;
+    overflow-y: auto;
+    border: 1px solid #757575;
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.47) 101.58%);
+    backdrop-filter: blur(10px);
+}
+
+
+.create-title{
+    font-size: 40px;
+    font-weight: bolder;
+    color: #ffffff;
+    margin: 50px auto;
+
+}
+.ant-input::placeholder {
+    color: #CCCCCC;
+}
+.custom-form-item-label label {
+    font-weight: bold;
+}
+.custom-gradient-button {
+    border-width: 3px !important;
+    border-style: solid !important;
+    border-image: linear-gradient(to right, #73E2BB, #E1FFF4);
+    border-image-slice: 1;
+    background-color: transparent;
+    color: white;
+    width: 200px;
+    height: 40px;
+    box-shadow: 0 0 0;
+}
+.custom-gradient-button:hover {
+    background-image: linear-gradient(to right, #73E2BB, #E1FFF4);
+    color: #373938 !important;
+    border-radius: 0;
+    transition:none;
+}

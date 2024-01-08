@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "node",
+    "pallets/zk-poker",
+    "runtime",
+]
+[profile.release]
+panic = "unwind"

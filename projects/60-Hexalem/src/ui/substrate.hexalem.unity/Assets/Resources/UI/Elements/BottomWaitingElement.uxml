@@ -1,0 +1,11 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Resources/Styles/UIStylesheet.uss?fileID=7433441132597879392&amp;guid=7b9a8bdc89bd4444c8329e09faba0d7c&amp;type=3#UIStylesheet" />
+    <ui:VisualElement name="BottomExtrinsicElement">
+        <ui:VisualElement name="VelSelection" style="flex-grow: 0; flex-shrink: 0; width: 100%; height: 125px;">
+            <ui:VisualElement name="Spacer" style="flex-grow: 0; flex-shrink: 0; height: 25px; width: 100%;" />
+            <ui:VisualElement name="VelActionInfoBox" style="flex-grow: 0; width: 100%; height: 100px; flex-shrink: 0;">
+                <ui:Label tabindex="-1" text="Waiting on extrinsic ..." parse-escape-sequences="true" display-tooltip-when-elided="true" name="LblActionInfo" class="font-comic" style="margin-top: 0; margin-right: 0; margin-bottom: 0; margin-left: 0; padding-top: 0; padding-right: 0; padding-bottom: 0; padding-left: 0; width: 100%; height: 100%; -unity-text-align: middle-center; font-size: 30px; white-space: normal;" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

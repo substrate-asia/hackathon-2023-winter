@@ -1,0 +1,13 @@
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\bin\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.deps.json
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\bin\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\bin\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.pdb
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\bin\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\bin\Release\netstandard2.1\Substrate.Hexalem.NET.NetApiExt.pdb
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.csproj.AssemblyReference.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.GeneratedMSBuildEditorConfig.editorconfig
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.AssemblyInfoInputs.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.AssemblyInfo.cs
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.csproj.CoreCompileInputs.cache
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.csproj.CopyComplete
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.dll
+D:\repos\GENERATED\Substrate.Hexalem.NET\Substrate.Hexalem.NET.RestClient\obj\Release\netstandard2.1\Substrate.Hexalem.NET.RestClient.pdb

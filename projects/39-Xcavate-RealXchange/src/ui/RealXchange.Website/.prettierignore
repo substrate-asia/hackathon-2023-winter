@@ -1,0 +1,7 @@
+dist
+public
+node_modules
+.next
+build
+next-env.d.ts
+next.config.ts

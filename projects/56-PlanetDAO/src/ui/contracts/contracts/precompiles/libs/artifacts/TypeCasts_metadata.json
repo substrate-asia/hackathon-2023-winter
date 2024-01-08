@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.18+commit.87f61d96"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/precompiles/libs/TypeCasts.sol": "TypeCasts"
+		},
+		"evmVersion": "paris",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/precompiles/libs/TypeCasts.sol": {
+			"keccak256": "0x2b223c8b1cd9ff5d73208abe2f0ef563631810881922fb14c276d5a8fe08e811",
+			"license": "MIT OR Apache-2.0",
+			"urls": [
+				"bzz-raw://cded81480b151ffe00e5c9504932ee6ad0978a9c961eb61f1c0e0ab438f70c03",
+				"dweb:/ipfs/QmVLGiMc1UC4eKUa98ph8KJCsAnhYpRwkF92fcypc3VkJi"
+			]
+		}
+	},
+	"version": 1
+}
