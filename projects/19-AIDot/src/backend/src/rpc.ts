@@ -10,6 +10,9 @@ import crypto from "crypto";
 import cors from "@fastify/cors";
 import { MessageQueue } from "./queue.js";
 import { getCode } from "./snippet.js";
+import { ethers } from "ethers";
+import { verifyAuth } from "./auth.js";
+import { plans } from "./plans.js"; 
 
 const SHA256 = (message: string) => crypto.createHash("sha256").update(message).digest("hex");
 const fastify = Fastify({
@@ -82,6 +85,99 @@ export class RPC {
             }
 
             switch (req.body.method) {
+                case "getAuthKey":
+                    // Generate authkey
+                    const authkey = crypto.randomBytes(32).toString("hex");
+
+                    // Get authkey through username-password
+                    if (typeof req.body.params.username === "string" && typeof req.body.params.password === "string") {
+                        // Get user info and verify password
+                        let userInfo;
+
+                        try {
+                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
+    
+                            // Verify password
+                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
+                                throwError("Incorrect password.", 400);
+                                return;
+                            }
+                        } catch (e) {
+                            throwError("Account does not exist.", 400);
+                            return;
+                        }
+                        
+                        // Store authkey info
+                        await this.db.put("AUTHKEY" + authkey, JSON.stringify({
+                            owner: req.body.params.username
+                        }));
+                        // Add authkey into user's authkey list
+                        userInfo.authkeys.push(authkey);
+                        await this.db.put("USER_INFO" + req.body.params.username, JSON.stringify(userInfo));
+
+                        respond({ authkey });
+                    }
+                    // Get authkey through signature
+                    else if (
+                        typeof req.body.params.sig === "string" && 
+                        typeof req.body.params.salt === "string" &&
+                        typeof req.body.params.username === "string" // Username in this case is a blockchain address
+                    ) {
+                        // Check if salt has been used before
+                        try {
+                            await this.db.get("SALT" + req.body.params.username + req.body.params.salt);
+
+                            throwError("Salt has already been used", 400);
+                            return;
+                        } catch (e) {}
+
+                        // Verify sig
+                        const hash = ethers.utils.solidityKeccak256(["string"], ["AIDOT_AUTH_MESSAGE" + req.body.params.salt]);
+                        const sig = ethers.utils.splitSignature(req.body.params.sig);
+                        const recoveredAddress = ethers.utils.recoverAddress(
+                            ethers.utils.solidityKeccak256(["string", "bytes32"] , ["\x19Ethereum Signed Message:\n32", hash]),
+                            sig
+                        );
+
+                        if (recoveredAddress !== req.body.params.username) {
+                            throwError("Incorrect signature.", 400);
+                            return;
+                        }
+
+                        // Get the user info
+                        let userInfo;
+
+                        try {
+                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
+                        } catch (e) { // If user does not exist yet, create a new account
+                            userInfo = {
+                                passwordHash: "",
+                                assistantList: [],
+                                authkeys: []
+                            }
+
+                            await this.db.put("USER_INFO" + req.body.params.username, JSON.stringify(userInfo));
+                        }
+
+                        // Store authkey info
+                        await this.db.put("AUTHKEY" + authkey, JSON.stringify({
+                            owner: req.body.params.username
+                        }));
+                        // Add authkey into user's authkey list
+                        userInfo.authkeys.push(authkey);
+                        await this.db.put("USER_INFO" + req.body.params.username, JSON.stringify(userInfo));
+                        // Store salt
+                        await this.db.put("SALT" + req.body.params.username + req.body.params.salt, "");
+
+                        respond({ authkey });
+                    }
+                    // Bad request form
+                    else {
+                        throwError("Bad request form.", 400);
+                    }
+
+                    break;
+
                 case "register":
                     if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
                         throwError("Bad request form.", 400);
@@ -92,7 +188,8 @@ export class RPC {
                         } catch (e) {
                             await this.db.put("USER_INFO" + req.body.params.username, JSON.stringify({
                                 passwordHash: SHA256(req.body.params.password),
-                                assistantList: []
+                                assistantList: [],
+                                authkeys: []
                             }));
 
                             clog(`New account created: ${req.body.params.username}`);
@@ -106,30 +203,50 @@ export class RPC {
                     }
 
                     break;
+
+                case "getSubscription":
+                    let subscription = "free";
+                    
+                    try {
+                        subscription = await this.db.get("SUBSCRIPTION" + req.body.params.username); 
+                    } catch (e) {}
+
+                    respond({ subscription });
+
+                    break;
                 
                 case "createChatBot":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
+
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
 
+                        userInfo = authResult.message;
+
                         // Main process
                         try {
+                            // Check 
+                            let subscription = "free";
+                            try {
+                                subscription = await this.db.get("SUBSCRIPTION" + req.body.params.username); 
+                            } catch (e) {}
+
+                            // Admin can bypass anything
+                            if (req.body.params.username !== this.aiDotClient.adminUsername && userInfo.assistantList.length >= plans[subscription].botLimit) {
+                                throwError("Bot limit exceeded.", 400);
+                                return;
+                            }
+
                             // Create a new openai assistant for user
                             const assistant = await this.aiDotClient.createAssistant(
                                 req.body.params.instructions,
@@ -147,10 +264,17 @@ export class RPC {
                             // Store the current usage
                             await this.db.put("USAGE" + assistant.id, "0");
 
+                            // Store the usage limit of paid plans
+                            if (subscription === "advanced") {
+                                await this.db.put("USAGE_LIMIT" + assistant.id, "15000");
+                            }
+
                             clog(`New chat bot created: ${assistant.id}`);
 
                             respond({ botInfo: assistant });
                         } catch (e) {
+                            if (this.aiDotClient.debugMode) console.log(e);
+
                             throwError("An unexpected error occurred when creating a new chat bot.", 400);
                             return;
                         }
@@ -159,26 +283,25 @@ export class RPC {
                     break;
                 
                 case "listChatBots":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
+                    {
+                        // Authentication
+                        let userInfo;
 
-                        return;
-                    } else {
-                        try {
-                            const userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
 
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-    
-                                return;
-                            }
-
-                            respond({ chatBots: userInfo.assistantList });
-                        } catch (e) {
-                            throwError("Unexpected error while getting user's chat bots", 400);
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
+                            return;
                         }
-                    }    
+
+                        userInfo = authResult.message;
+
+                        respond({ chatBots: userInfo.assistantList });
+                    }
 
                     break;
                 
@@ -193,9 +316,15 @@ export class RPC {
                         // Get the current usage
                         const usage = parseInt(await this.db.get("USAGE" + assistant.id));
 
-                        respond({ botInfo: assistant, recommendations, usage });
+                        // Get the usage limit, usage limit only exists on paid bots, default is 150 for every free account
+                        let limit = 150;
+                        try {
+                            limit = parseInt(await this.db.get("USAGE_LIMIT" + assistant.id));
+                        } catch (e) {}
+
+                        respond({ botInfo: assistant, recommendations, usage, limit });
                     } catch (e) {
-                        console.log(e);
+                        if (this.aiDotClient.debugMode) console.log(e);
 
                         throwError("An unexpected error occurred when retrieving chat bot info.", 400);
                         return;
@@ -204,33 +333,38 @@ export class RPC {
                     break;
 
                 case "deleteChatBot":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
 
-                            // Verify if account has permission over the bot
-                            if (!userInfo.assistantList.includes(req.body.params.assistantID)) {
-                                throwError("Account does not have permission over the given bot.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
 
+                        userInfo = authResult.message;
+
                         // Main process
+                        
+                        // Admin bot can not be deleted
+                        try {
+                            const initialBotId = JSON.parse(await this.db.get("INITIAL_BOT")).id;
+
+                            if (initialBotId === req.body.params.assistantID) {
+                                throwError("Admin bot can not be deleted.", 400);
+                                return;
+                            }
+                        } catch (e) {
+                            throwError("An unexpected error occurred when verifying bot ID.", 400);
+                            return;   
+                        }
+
                         try {
                             // Delete openai assistant
                             const assistant = await this.aiDotClient.deleteAssistant(req.body.params.assistantID);
@@ -249,6 +383,8 @@ export class RPC {
 
                             respond({ botInfo: assistant });
                         } catch (e) {
+                            if (this.aiDotClient.debugMode) console.log(e);
+
                             throwError("An unexpected error occurred when deleting the chat bot.", 400);
                             return;
                         }
@@ -257,31 +393,22 @@ export class RPC {
                     break;
 
                 case "modifyChatBot":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
 
-                            // Verify if account has permission over the bot
-                            if (!userInfo.assistantList.includes(req.body.params.assistantID)) {
-                                throwError("Account does not have permission over the given bot.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
+
+                        userInfo = authResult.message;
 
                         // Main process
                         try {
@@ -301,9 +428,87 @@ export class RPC {
 
                             respond({ botInfo: assistant });
                         } catch (e) {
+                            if (this.aiDotClient.debugMode) console.log(e);
+
                             throwError("An unexpected error occurred when modifying the chat bot.", 400);
                             return;
                         }
+                    }
+
+                    break;
+                
+                case "purchasePack":
+                    if (req.body.params.paywith === "aca" || req.body.params.paywith === "glmr") {
+                        let txReceipt;
+
+                        // Check if payment is already used before
+                        try {
+                            await this.db.get("PAYMENT_HASH" + req.body.params.txHash);
+                            throwError("Transaction hash is already used before to make another purchase.", 400);
+                            return;
+                        } catch (e) {}
+
+                        // Get the user's payment receipt
+                        try {
+                            if (req.body.params.paywith === "aca") {
+                                txReceipt = await this.aiDotClient.acalaProvider.getTransaction(req.body.params.txHash);
+                            } else {
+                                txReceipt = await this.aiDotClient.mbeamProvider.getTransaction(req.body.params.txHash);
+                            }
+                        } catch (e) {
+                            if (this.aiDotClient.debugMode) console.log(e);
+
+                            throwError("Can not find payment.", 400);
+                            return;
+                        }
+
+                        // Check if the receiver is us
+                        if (txReceipt.to !== this.aiDotClient.receiverAddress) {
+                            throwError("Payment is made but not to us.", 400);
+                            return;
+                        }
+
+                        // Get payer's bot list
+                        let assistantList = [];
+                        try {
+                            const userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
+                            assistantList = userInfo.assistantList;
+                        } catch (e) {
+                            throwError("Can not get payer's account.", 400);
+                            return;    
+                        }
+
+                        /*if (txReceipt.value.toBigInt() >= ethers.utils.parseEther("100").toBigInt()) {
+
+                        } else */ 
+                        
+                        if (txReceipt.value.toBigInt() >= ethers.utils.parseEther("1").toBigInt()) {
+                            try {
+                                // Update usage limits for each bot
+                                for (const assistantID of assistantList) {
+                                    await this.db.put("USAGE_LIMIT" + assistantID, "15000");
+                                }
+                                // Store the payment hash so it can not be reused again
+                                await this.db.put("PAYMENT_HASH" + req.body.params.txHash, "");
+                                // Store the user's subscription details
+                                await this.db.put("SUBSCRIPTION" + req.body.params.username, "advanced");
+                                // Store the expiration date (1 month)
+                                await this.db.put("EXPIRATION" + req.body.params.username, (Date.now() + 2592000000).toString());
+
+                                respond(null);
+                            } catch (e) {
+                                if (this.aiDotClient.debugMode) console.log(e);
+
+                                throwError("An unexpected error occurred when updating usage limit.", 400);
+                                return;
+                            }
+                        } else {
+                            throwError("Invalid purchasing option.", 400);
+                            return;
+                        }
+                    } else {
+                        throwError("Invalid payment method.", 400);
+                        return;
                     }
 
                     break;
@@ -314,25 +519,22 @@ export class RPC {
                 //////////////////////////////////////////////////////////////*/
                 
                 case "uploadFile":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
+
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
+
+                        userInfo = authResult.message;
 
                         // Main process
                         try {
@@ -355,6 +557,8 @@ export class RPC {
 
                             respond(uploadInfo);
                         } catch (e) {
+                            if (this.aiDotClient.debugMode) console.log(e);
+
                             throwError("An unexpected error occurred when uploading the file.", 400);
                             return;
                         }
@@ -363,25 +567,22 @@ export class RPC {
                     break;
 
                 case "streamAdd":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
+
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
+
+                        userInfo = authResult.message;
 
                         // Verify if account has permission to edit this file and get file format in the mean time
                         let fileFormat: string;
@@ -400,6 +601,8 @@ export class RPC {
 
                             respond(null);
                         } catch (e) {
+                            if (this.aiDotClient.debugMode) console.log(e);
+
                             throwError("An unexpected error occurred when adding data to file.", 400);
                             return;
                         }
@@ -408,25 +611,22 @@ export class RPC {
                     break;
                 
                 case "streamFinish":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
+
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
+
+                        userInfo = authResult.message;
 
                         // Verify if account has permission to edit this file and get file format in the mean time
                         let fileFormat: string;
@@ -450,7 +650,7 @@ export class RPC {
                             
                             respond({ file });
                         } catch (e) {
-                            console.log(e);
+                            if (this.aiDotClient.debugMode) console.log(e);
 
                             throwError("An unexpected error occurred when uploading file to openai.", 400);
                             return;
@@ -460,25 +660,22 @@ export class RPC {
                     break;
                 
                 case "getFileInfo":
-                    if (typeof req.body.params.username !== "string" || typeof req.body.params.password !== "string") { 
-                        throwError("Bad request form.", 400);
-                        return;
-                    } else {
+                    {
+                        // Authentication
                         let userInfo;
 
-                        // Get user info and verify credentials
-                        try {
-                            userInfo = JSON.parse(await this.db.get("USER_INFO" + req.body.params.username));
-    
-                            // Verify password
-                            if (userInfo.passwordHash !== SHA256(req.body.params.password)) {
-                                throwError("Incorrect password.", 400);
-                                return;
-                            }
-                        } catch (e) {
-                            throwError("Account does not exist.", 400);
+                        const authResult = await verifyAuth({
+                            username: req.body.params.username,
+                            password: req.body.params.password,
+                            authkey: req.body.params.authkey
+                        }, this.db);
+
+                        if (authResult.error) {
+                            throwError(authResult.message, 400);        
                             return;
                         }
+
+                        userInfo = authResult.message;
 
                         // Main process
                         try {
@@ -489,7 +686,7 @@ export class RPC {
                             
                             respond({ file });
                         } catch (e) {
-                            console.log(e);
+                            if (this.aiDotClient.debugMode) console.log(e);
 
                             throwError("An unexpected error occurred when retrieving file from openai.", 400);
                             return;
@@ -512,6 +709,8 @@ export class RPC {
 
                         respond({ thread });
                     } catch (e) {
+                        if (this.aiDotClient.debugMode) console.log(e);
+
                         throwError("An unexpected error occurred when creating a new thread.", 400);
                         return;
                     }
@@ -524,8 +723,13 @@ export class RPC {
                             const queueCallback = async () => {
                                 // Get usage
                                 const usage = parseInt(await this.db.get("USAGE" + req.body.params.assistantID));
-    
-                                if (usage > 150 && req.body.params.assistantID !== this.aiDotClient.initialBotId) {
+                                // Get the usage limit, usage limit only exists on paid bots, default is 150 for every free account
+                                let usageLimit = 150;
+                                try {
+                                    usageLimit = parseInt(await this.db.get("USAGE_LIMIT" + req.body.params.assistantID));
+                                } catch (e) {} 
+
+                                if (usage > usageLimit && req.body.params.assistantID !== this.aiDotClient.initialBotId) {
                                     throwError("Response limit exceeded.", 400);
                                     return;
                                 }
@@ -553,6 +757,8 @@ export class RPC {
                             this.messageQueue.add(queueCallback);
                         });
                     } catch (e) {
+                        if (this.aiDotClient.debugMode) console.log(e);
+
                         throwError("An unexpected error occurred when sending message.", 400);
                         return;
                     }
@@ -581,6 +787,8 @@ export class RPC {
 
                         respond({ messages });
                     } catch (e) {
+                        if (this.aiDotClient.debugMode) console.log(e);
+
                         throwError("An unexpected error occurred when creating a new thread.", 400);
                         return;
                     }
@@ -592,7 +800,9 @@ export class RPC {
                     try {
                         respond({ id: JSON.parse(await this.db.get("INITIAL_BOT")).id });
                     } catch (e) {
-                        throwError("An unexpected error occurred when  getting initial bot ID.", 400);
+                        if (this.aiDotClient.debugMode) console.log(e);
+
+                        throwError("An unexpected error occurred when getting initial bot ID.", 400);
                     }
                     
                     break;
