@@ -85,36 +85,36 @@ You can configure the AIDot backend in `aidot.config.js`:
 ```js
 export const config = {
 	// These are files that are pre-loaded for every bot created
-    resourceFiles: [
-        // "./resources/Polkadot-whitepaper.pdf",
-        "./resources/basic.md",
-        "./resources/general.md",
-        "./resources/learn.md",
-        "./resources/build.md",
-        "./resources/maintain.md",
-        "./resources/acala.md",
-        "./resources/gear.md"
-    ],
+	resourceFiles: [
+		// "./resources/Polkadot-whitepaper.pdf",
+		"./resources/basic.md",
+		"./resources/general.md",
+		"./resources/learn.md",
+		"./resources/build.md",
+		"./resources/maintain.md",
+		"./resources/acala.md",
+		"./resources/gear.md"
+	],
 	// Configure the RPC server
-    rpcOptions: {
+	rpcOptions: {
 		// The port that the RPC server listen on
-        RPC_PORT: 20297
-    },
+		RPC_PORT: 20297
+	},
 	// Configure the Acala and Moonbeam RPCs
-    acalaRpcUrl: "https://eth-rpc-tc9.aca-staging.network",
-    mbeamRpcUrl: "https://moonbase-alpha.public.blastapi.io",
+	acalaRpcUrl: "https://eth-rpc-tc9.aca-staging.network",
+	mbeamRpcUrl: "https://moonbase-alpha.public.blastapi.io",
 	// Where to store the server's database
-    dbPath: "./db",
+	dbPath: "./db",
 	// Where to temporarily store users' uploaded files
-    dataPath: "./data",
+	dataPath: "./data",
 	// Admin account configuration
-    adminUsername: "parity",
-    adminPassword: "parity",
+	adminUsername: "parity",
+	adminPassword: "parity123456",
 	// Link to front-end
-    webUrl: "http://localhost:5173",
+	webUrl: "http://localhost:5173",
 	// Address to receive subscription payments
-    receiverAddress: "0x029B93211e7793759534452BDB1A74b58De22C9c",
-    // Enable/disable debugging mode, will log out useful error messages if turned on
+	receiverAddress: "0x029B93211e7793759534452BDB1A74b58De22C9c",
+	// Enable/disable debugging mode, will log out useful error messages if turned on
 	debugMode: false
 }
 ```
