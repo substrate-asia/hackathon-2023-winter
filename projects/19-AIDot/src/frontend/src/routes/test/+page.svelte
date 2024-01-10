@@ -6,7 +6,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <title>Test website</title>
     <!--------------Put AIDOT on the head of your HTML------------------------->
-    <script src="http://localhost:20297/asst_usOv3sBwq0HJICzNWarpm5Y6"></script>
+    <script src="http://localhost:20297/asst_1NgcPsrNTKo3bLJzndL4GM7S"></script>
     <!------------------------------------------------------------------------->
   </head>
   <style>

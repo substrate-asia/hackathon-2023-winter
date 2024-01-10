@@ -20,6 +20,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@acala-network/eth-providers": "^2.7.19",
+		"ethers": "^5.7.2",
 		"iframe-resizer": "^4.3.9"
 	}
 }

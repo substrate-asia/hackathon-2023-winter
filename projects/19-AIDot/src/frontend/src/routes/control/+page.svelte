@@ -21,20 +21,27 @@
     let customChatBotID = "";
 
     let customBotUsage = 0;
+    let customBotLimit = 150;
     let initialBotUsage = 0;
 
     let isAdmin = false;
 
     let username = "";
     let password = "";
+    let authkey = "";
 
     onMount(() => {
-        if (!localStorage.username || !localStorage.password) {
+        if (!localStorage.username) {
             goto("/../../login");
         }
 
+        console.log(username, password, authkey);
+
         username = localStorage.username;
         password = localStorage.password;
+        authkey = localStorage.authkey;
+
+        console.log(username, password, authkey);
 
         (async function() {
             let errorMessage = "An unknown error occurred.";
@@ -45,7 +52,8 @@
                     method: "listChatBots",
                     params: {
                         username,
-                        password
+                        password,
+                        authkey
                     }
                 }),
                 headers: {
@@ -68,8 +76,8 @@
 
                 await verifyAdmin();
 
-                customBotUsage = await getBotUsage(customChatBotID);
-                initialBotUsage = await getBotUsage(initialBotId);
+                [ customBotUsage, customBotLimit] = await getBotUsage(customChatBotID);
+                [ initialBotUsage, ] = await getBotUsage(initialBotId);
 
                 fulfilled = true;
             } else {
@@ -99,7 +107,8 @@
                 method: "listChatBots",
                 params: {
                     username,
-                    password
+                    password,
+                    authkey
                 }
             }),
             headers: {
@@ -166,6 +175,8 @@
 
     // get bot info
     async function getBotUsage(assistantID) {
+        console.log(assistantID);
+
         let errorMessage = "An unknown error occurred.";
 
         const response = await fetch(config.rpcUrl, {
@@ -185,7 +196,7 @@
             // Success
             const responseBody = await response.json();
 
-            return responseBody.payload.usage;
+            return [ responseBody.payload.usage, responseBody.payload.limit ];
         } else {
             // Fail
             const responseBody = await response.json();
@@ -195,12 +206,14 @@
             }
 
             console.log(errorMessage);
+
+            return [];
         }
     }
 
     //create Chat Bot
     let loadCreateChatBot = false;
-    async function createChatBot(username, password) {
+    async function createChatBot(username, password, authkey) {
         loadCreateChatBot = true;
         const response = await fetch(config.rpcUrl, {
             method: "POST",
@@ -208,7 +221,8 @@
                 method: "createChatBot",
                 params: {
                     username,
-                    password
+                    password,
+                    authkey
                 }
             }),
             headers: {
@@ -224,6 +238,8 @@
             customChatBotID = responseBody.payload.botInfo.id;
 
             console.log(responseBody.payload);
+
+            location.reload();
         } else {    
             // Fail
             const responseBody = await response.json();
@@ -254,6 +270,7 @@
                 params: {
                     username,
                     password,
+                    authkey,
                     assistantID: customChatBotID
                 }
             }),
@@ -285,6 +302,9 @@
         }
     }
 
+    function formatAddress(address) {
+			return `${address.substring(0, 6)}...${address.substring(address.length - 6)}`;
+		}
 </script>
 
 
@@ -298,7 +318,7 @@
         <!--Account & Add button Container-->
         <div class="flex flex-col w-full gap-4 bg-white py-[20px] px-6 rounded-2xl shadow-lg border" in:fade={{ duration: 300 }}>
             <!--Account stuffs-->
-            <div class="flex sm:flex-row flex-col justify-between items-center gap-2 sm:text-xl text-base font-semibold border-b pb-2">
+            <div class="flex sm:flex-row flex-col justify-between items-center gap-2  text-base font-semibold border-b pb-2">
                 <!--Account Container-->
                 <div class="flex gap-6 items-center"> 
                     <span class="hidden sm:flex">
@@ -308,32 +328,53 @@
                     <div class="flex p-1 border-2 rounded-xl gap-4">
                         <!--Your Account Name / Wallet-->
                         <span class="ml-2">
-                            {username}
+                            {#if username.length > 16}
+                                {formatAddress(username)}
+                            {:else}
+                                {username}
+                            {/if}
                         </span>
                         <!--Verified status-->
                         {#if isAdmin === true}
-                            <span class="sm:text-sm text-xs bg-pink text-white py-0.5 px-1 rounded-lg mb-[1px]">
+                            <span class="font-normal text-xs bg-pink text-white py-0.5 px-1 rounded-lg mb-[1px]">
                                 Admin
                             </span>
+                        {:else if customBotLimit === 15000}
+                            <button class="font-normal text-xs bg-linearPink text-white py-0.5 px-1 rounded-lg mb-[1px]" on:click={()=>{goto("/pricing")}}>
+                                Advanced plan
+                            </button>
                         {:else}
-                            <span class="sm:text-sm text-xs bg-gray-600 text-white py-0.5 px-1 rounded-lg mb-[1px]">
+                            <button class="font-normal text-xs bg-gray-500 text-white py-0.5 px-1 rounded-lg mb-[1px]" on:click={()=>{goto("/pricing")}}>
                                 Free plan
-                            </span>
+                            </button>
                         {/if}
                     </div>
                 </div> 
 
-                <button class="sm:w-fit w-[220px] sm:border-0 p-1 border rounded-lg font-normal sm:text-base text-xs sm:text-pink text-white sm:bg-white bg-pink"
-                on:click={()=>{localStorage.username = ""; localStorage.password = ""; goto("../login")}}>
+                <button class="flex justify-center items-center font-semibold sm:w-fit w-[220px] sm:border-0 p-1 border rounded-lg font-normal sm:text-base text-xs sm:text-red-600 text-white sm:fill-red-500 hover:fill-black hover:text-black fill-white sm:bg-white bg-red-600"
+                on:click={()=>{localStorage.username = ""; localStorage.password = ""; localStorage.authkey = ""; goto("../login")}}>
                     Log out
+                    <svg class="sm:h-6 h-4 mx-2 fill-inherit inline-block" viewBox="0 0 490.3 490.3" xml:space="preserve">
+                            <g>
+                                <g>
+                                    <path d="M0,121.05v248.2c0,34.2,27.9,62.1,62.1,62.1h200.6c34.2,0,62.1-27.9,62.1-62.1v-40.2c0-6.8-5.5-12.3-12.3-12.3
+                                        s-12.3,5.5-12.3,12.3v40.2c0,20.7-16.9,37.6-37.6,37.6H62.1c-20.7,0-37.6-16.9-37.6-37.6v-248.2c0-20.7,16.9-37.6,37.6-37.6h200.6
+                                        c20.7,0,37.6,16.9,37.6,37.6v40.2c0,6.8,5.5,12.3,12.3,12.3s12.3-5.5,12.3-12.3v-40.2c0-34.2-27.9-62.1-62.1-62.1H62.1
+                                        C27.9,58.95,0,86.75,0,121.05z"/>
+                                    <path d="M385.4,337.65c2.4,2.4,5.5,3.6,8.7,3.6s6.3-1.2,8.7-3.6l83.9-83.9c4.8-4.8,4.8-12.5,0-17.3l-83.9-83.9
+                                        c-4.8-4.8-12.5-4.8-17.3,0s-4.8,12.5,0,17.3l63,63H218.6c-6.8,0-12.3,5.5-12.3,12.3c0,6.8,5.5,12.3,12.3,12.3h229.8l-63,63
+                                        C380.6,325.15,380.6,332.95,385.4,337.65z"/>
+                                </g>
+                            </g>
+                    </svg>
                 </button>
             </div>
             
-            <!--Temporary limit each user create only 1 chatbot-->
-            {#if customChatBotExisted === false}
+            <!--Temporary limit each user create only 1 chatbot/admin can not create chatbot-->
+            {#if customChatBotExisted === false && isAdmin === false}
                 <!--Add bot Button-->
                 <button class="flex items-center sm:self-start self-center gap-2 w-fit border border-pink rounded-xl shadow-md px-2 py-1 text-xl"
-                    on:click={()=>{ setTimeout(() => createChatBot(username, password), 500) }}>
+                    on:click={()=>{ setTimeout(() => createChatBot(username, password, authkey), 500) }}>
                     <!--Loading create chat bot when it is existed-->
                     {#if loadCreateChatBot === true}
                         <img alt="loading" class="sm:h-8 h-6" src="/gif/loading2.gif"/>
@@ -350,7 +391,7 @@
             {:else}
                 <!--Message when chat bot is existed-->
                 {#if isAdmin}
-                    <span class="text-sm sm:mx-0 mx-auto">Currently for this MVP we only limit to create 1 custom bot</span>
+                    <span class="text-sm sm:mx-0 mx-auto">Admin account can not create extra bot</span>
                 {:else}
                     <span class="text-sm sm:mx-0 mx-auto">Currently for this MVP we only limit to create 1 custom bot</span>
                 {/if}
@@ -366,7 +407,7 @@
         <!--Render bot-->
         {#if fulfilled === true}
             <!--Check if user has created bot or not-->
-            {#if customChatBotExisted === true}
+            {#if customChatBotExisted === true && isAdmin === false}
                 <!--Custom Bot-->
                 <div class="flex flex-col w-full gap-4 bg-white py-[20px] px-6 rounded-2xl shadow-lg border" in:fade={{ duration: 300 }}>
                     <!--Your bot's Logo & Plan & Cap container-->
@@ -381,9 +422,15 @@
                                     Your custom bot
                                 </span>
                                 <!--Plan status-->
-                                <span class="font-semibold h-fit sm:text-sm text-xs bg-gray-600 text-white py-0.5 px-1 rounded-lg mb-[1px]">
-                                    Free plan
-                                </span>
+                                {#if customBotLimit === 15000}
+                                    <button class=" h-fit  text-xs bg-linearPink text-white p-1 rounded-lg mb-[1px]" on:click={()=>{goto("/pricing")}}>
+                                        Advanced plan
+                                    </button>
+                                {:else}
+                                    <button class=" h-fit text-xs bg-gray-600 text-white p-1 rounded-lg mb-[1px]" on:click={()=>{goto("/pricing")}}>
+                                        Free plan
+                                    </button>
+                                {/if}
                             </div>
                         </div> 
                         <!--Cap Container-->
@@ -392,7 +439,7 @@
                             <div class="flex gap-2">
                                 <span>Used:</span>
                                 <!--Cap value example-->
-                                <span class="text-gray-600">{customBotUsage}/150 response</span>
+                                <span class="text-gray-600">{customBotUsage}/{customBotLimit} response</span>
                             </div>
                             <!-- Cap per hour-->
                             <div class="flex gap-2">
