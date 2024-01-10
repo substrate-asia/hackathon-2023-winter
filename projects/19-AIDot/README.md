@@ -99,6 +99,7 @@ Integrating/Training AIDot for any Polkadot parachain website involves these sim
 * Pull and combine resources from multiple LLMs.
 * Integrate decentralized oracles into AIDot as data sources. 
 * Optimize AIDot for even higher accuracy and performance.
+* Enable bot to call custom APIs.
 
 
 ## Team Member Information
