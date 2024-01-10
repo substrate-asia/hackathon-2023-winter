@@ -33,11 +33,11 @@ AIDot is an AI chatbot seamlessly integrated with all Polkadot ecosystem resourc
 
 * [Website](http://www.aidot.tech).
 * [Try it out](http://www.aidot.tech).
-* Video: TBA
-* Powerpoint: TBA
+* Video: https://drive.google.com/drive/folders/1JY_79f3TPV5Yq0_vA7LUJflgQ-xOLp68
+* Powerpoint: https://drive.google.com/drive/folders/1JY_79f3TPV5Yq0_vA7LUJflgQ-xOLp68
 * [Control Panel to customize AI](http://www.aidot.tech/control) (Login with test account: `username: dummy123  password: dummy123` or your Moonbeam/AcalaEVM address).
   * Login:
-    TBA
+    ![Failed to load image.](./assets/login.png)
   * Train bot:
     ![Failed to load image.](./assets/train1.png)
     ![Failed to load image.](./assets/train2.png)
