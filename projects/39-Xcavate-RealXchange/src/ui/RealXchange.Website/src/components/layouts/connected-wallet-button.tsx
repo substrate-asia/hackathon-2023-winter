@@ -3,6 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { siteConfig } from '@/config/site';
 import { shortenAddress } from '@/lib/utils';
+import { Icons } from '../icons';
 
 type DropdownProps = {
   onClick: () => void;
@@ -41,8 +42,12 @@ export default function ConnectedWalletButton({ onClick, address }: DropdownProp
             </Menu.Item>
           ))}
           <Menu.Item>
-            <button className="mt-10" onClick={onClick}>
-              Disconnect wallet
+            <button
+              className="group mt-10 flex items-center gap-4 transition-colors duration-300"
+              onClick={onClick}
+            >
+              <Icons.Logout className="h-6 w-6 fill-foreground group-hover:fill-accent-error" />{' '}
+              <span className="group-hover:text-accent-error">Disconnect wallet</span>
             </button>
           </Menu.Item>
         </Menu.Items>

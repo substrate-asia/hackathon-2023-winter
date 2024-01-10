@@ -26,9 +26,13 @@ export interface Project {
   title: string;
   foundationName: string;
   image: string;
+  location?: string;
   category: CategoryName;
   price: string;
   price_per_nft?: number;
   noOfNFTs: number;
   description: string;
+  currentBalance: string;
+  duration: string;
+  type?: number;
 }

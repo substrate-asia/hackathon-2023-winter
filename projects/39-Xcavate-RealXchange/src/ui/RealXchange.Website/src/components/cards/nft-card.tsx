@@ -5,11 +5,16 @@ import Image from 'next/image';
 import { BaseButton } from '../ui/base-button';
 import { Icons } from '../icons';
 import { Project } from '@/types';
-import { formatNumber, formatPrice } from '@/lib/utils';
+import { formatNumber, formatPrice, shortenAddress } from '@/lib/utils';
 import ModalContainer from '../ui/modal-container';
 import { useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
+import SubstrateContextProvider, { useSubstrateContext } from '@/context/polkadot-contex';
+import ConnectPolkadotWallet from '../layouts/connect-polkadot-wallet';
+import { usePathname } from 'next/navigation';
+import { getAvailableNFTsbyType } from '@/lib/queries';
+import { buyNft } from '@/lib/extrinsics';
 
 interface NftCardProps {
   project: Project;
@@ -19,10 +24,13 @@ type BuyNowModalProps = {
   project: Project;
   open: boolean;
   close: () => void;
+  availableNFTs: number[];
 };
 
 export function NftCard({ project }: NftCardProps) {
+  const projectId = usePathname().split('/')[2];
   const [isOpen, setIsOpen] = useState(false);
+  const [availableNFTs, setAvailableNFTS] = useState<number[]>([]);
 
   function closeModal() {
     setIsOpen(false);
@@ -32,50 +40,72 @@ export function NftCard({ project }: NftCardProps) {
     setIsOpen(true);
   }
 
+  const makePaymentRequest = async () => {
+    const availableNFTs = (await getAvailableNFTsbyType(
+      parseInt(projectId),
+      project.type!
+    )) as Array<number>;
+
+    setAvailableNFTS(availableNFTs);
+    openModal();
+  };
+
   return (
-    <div className="flex h-full w-full flex-col items-start gap-[13px] rounded-lg bg-background px-[6px] pb-[13px] pt-[7px] shadow-feature-card">
-      <div className="w-full space-y-3.5">
-        <div className="relative">
-          {/* <Image
+    <SubstrateContextProvider>
+      <div className="flex h-[260px] w-[253px] flex-col items-start gap-[13px] rounded-lg bg-background px-[6px] pb-[13px] pt-[7px] shadow-feature-card">
+        <div className="w-full space-y-3.5">
+          <div className="relative">
+            {/* <Image
             src={project.image}
             alt={project.title}
             width={503}
             height={504}
             priority
           /> */}
-          <img src={project.image} alt={project.title} className="h-[180px] w-[239px]" />
-          {/* buy now button */}
-          <BaseButton
-            className="absolute bottom-4 right-[80px] flex w-[88px] items-center justify-center gap-2 rounded-[17px] border border-background bg-primary/50 px-2 py-[6px] text-[0.75rem] font-light text-primary-light hover:bg-primary/60"
-            onClick={openModal}
-          >
-            Buy now
-          </BaseButton>
+            <img
+              src={project.image}
+              alt={project.title}
+              className="h-[180px] w-[239px] bg-foreground/50 brightness-75"
+            />
+            {/* buy now button */}
+            <BaseButton
+              className="absolute bottom-4 right-[80px] flex w-[88px] items-center justify-center gap-2 rounded-[17px] border border-background bg-primary/50 px-2 py-[6px] text-[0.75rem] font-light text-primary-light hover:bg-primary/60"
+              onClick={makePaymentRequest}
+            >
+              Buy now
+            </BaseButton>
+          </div>
         </div>
-      </div>
 
-      <div className="flex w-full justify-between text-[0.6rem] font-light">
-        <dl>
-          <dt className="text-foreground/[0.6]">Price</dt>
-          <dd>{formatPrice(project.price, { currency: 'USD' })}</dd>
-        </dl>
-        <dl>
-          <dt className="text-foreground/[0.6]">NFTs</dt>
-          <dd>{formatNumber(project.noOfNFTs)}</dd>
-        </dl>
+        <div className="flex w-full justify-between text-[0.6rem] font-light">
+          <dl>
+            <dt className="text-foreground/[0.6]">Price</dt>
+            <dd>{formatPrice(project.price, { currency: 'USD' })}</dd>
+          </dl>
+          <dl>
+            <dt className="text-foreground/[0.6]">NFTs</dt>
+            <dd>{formatNumber(project.noOfNFTs)}</dd>
+          </dl>
+        </div>
+        <BuyNowModal
+          project={project}
+          open={isOpen}
+          close={closeModal}
+          availableNFTs={availableNFTs}
+        />
       </div>
-      <BuyNowModal project={project} open={isOpen} close={closeModal} />
-    </div>
+    </SubstrateContextProvider>
   );
 }
 
-const BuyNowModal = ({ project, open, close }: BuyNowModalProps) => {
-  const closeModalRef = useRef(null);
-
+const BuyNowModal = ({ project, open, close, availableNFTs }: BuyNowModalProps) => {
+  const [loading, setIsLoading] = useState<boolean>(false);
+  const { isConnected, address, disconnectWallet } = useSubstrateContext();
+  // const closeModalRef = useRef(null);
   const [value, setValue] = useState<number>(1);
 
   const incrementValue = () => {
-    if (value == project.noOfNFTs) {
+    if (value == availableNFTs.length) {
       return toast.error('You have reached available maximum unit purchase');
     }
     setValue(prev => prev + 1);
@@ -85,12 +115,28 @@ const BuyNowModal = ({ project, open, close }: BuyNowModalProps) => {
     setValue(prev => prev - 1);
   };
 
+  const onBuyNft = async () => {
+    // console.log(address, {
+    //   collectionId: project.id,
+    //   nftType: project.type,
+    //   quantity: value
+    // });
+    setIsLoading(true);
+    await buyNft(address, {
+      collectionId: project.id,
+      nftType: project.type,
+      quantity: value
+    });
+    setIsLoading(false);
+    close();
+  };
+
   return (
     <ModalContainer
       title={'Summary'}
       openModal={open}
       closeModal={close}
-      ref={closeModalRef}
+      // ref={closeModalRef}
     >
       <section className="flex w-full flex-col gap-[36px]">
         <div className="flex items-center gap-6 border-b border-foreground pb-[36px]">
@@ -99,7 +145,7 @@ const BuyNowModal = ({ project, open, close }: BuyNowModalProps) => {
             alt={project.title}
             width={136}
             height={89}
-            className="rounded-[6px]"
+            className="rounded-[6px] bg-foreground/50"
           />
 
           <ul className="flex flex-col gap-2 text-[0/75rem]/[1.5rem]">
@@ -108,7 +154,7 @@ const BuyNowModal = ({ project, open, close }: BuyNowModalProps) => {
               <BaseButton className="text-accent">@{project.foundationName}</BaseButton>
             </li>
             <li>{project.title}</li>
-            <li>#56 of 100 NFTs Minted</li>
+            <li>{`${availableNFTs.length} of ${project.noOfNFTs} NFTs available`}</li>
           </ul>
         </div>
         <div className="flex items-center justify-between px-[80px]">
@@ -123,15 +169,36 @@ const BuyNowModal = ({ project, open, close }: BuyNowModalProps) => {
         <div className="flex w-full flex-col items-start gap-2">
           <dl className="flex w-full items-center justify-between text-[1rem]/[1.5rem]">
             <dt>To pay</dt>
-            <dd>{formatPrice(value * (project?.price_per_nft || 0))}</dd>
+            <dd>{formatPrice(value * (parseInt(project?.price) || 1))}</dd>
           </dl>
           <p className="text-[0.75rem]/[1.5rem] font-light">
-            Price for 1 NFT = {formatPrice(project?.price_per_nft || 0)}
+            Price for 1 NFT = {formatPrice(project?.price || 0)}
           </p>
         </div>
-        <Button variant="primary" fullWidth>
-          Make payment
-        </Button>
+
+        {isConnected ? (
+          <Button variant="primary" fullWidth disabled={loading} onClick={onBuyNft}>
+            {loading ? 'processing' : 'Make payment'}{' '}
+            {loading && (
+              <Icons.spin className="h-[18px] w-[18px] animate-spin stroke-background" />
+            )}
+          </Button>
+        ) : (
+          <ConnectPolkadotWallet />
+        )}
+
+        {isConnected && (
+          <div className=" flex items-center justify-between">
+            <span></span>
+            <BaseButton
+              onClick={disconnectWallet}
+              className="broder flex items-center gap-2 rounded border-green-800 p-2 text-[0.75rem]/[1.5rem] font-light text-accent"
+            >
+              {' '}
+              <Icons.Logout className="h-4 w-4" /> {shortenAddress(address)}
+            </BaseButton>
+          </div>
+        )}
       </section>
     </ModalContainer>
   );

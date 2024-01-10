@@ -23,9 +23,9 @@ export async function getSession(provider: any) {
   const { dAppEncryptionKeyUri, challenge, sessionId } = response.data;
   const dAppName = 'CertifiedProof';
 
-  console.log({ dAppEncryptionKeyUri });
-  console.log({ challenge });
-  console.log({ sessionId });
+  // console.log({ dAppEncryptionKeyUri });
+  // console.log({ challenge });
+  // console.log({ sessionId });
 
   const session = await provider.startSession(dAppName, dAppEncryptionKeyUri, challenge);
 

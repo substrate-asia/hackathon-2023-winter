@@ -28,6 +28,8 @@ const config: Config = {
       boxShadow: {
         modal: '0px 0px 16px 0px rgba(0, 0, 0, 0.40)',
         disclosure: ' 0px 0px 8px 0px rgba(78, 78, 78, 0.24)',
+        connect: '0px 0px 16px 0px rgba(0, 0, 0, 0.40)',
+        activity: '0px 0.846px 6.772px 0px rgba(0, 0, 0, 0.10)',
         'nav-header': ' 0px -1px 4px 0px rgba(0, 0, 0, 0.42)',
         'feature-card': '0px 0.84649px 6.77189px 0px rgba(0, 0, 0, 0.10)'
       },
