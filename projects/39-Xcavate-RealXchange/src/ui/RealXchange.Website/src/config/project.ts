@@ -29,7 +29,9 @@ export const projects = [
     category: 'housing',
     price: '250000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 2,
@@ -39,7 +41,9 @@ export const projects = [
     category: 'environment',
     price: '550000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 2,
@@ -49,7 +53,9 @@ export const projects = [
     category: 'social',
     price: '345000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 4,
@@ -59,7 +65,9 @@ export const projects = [
     category: 'social',
     price: '250000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 5,
@@ -69,7 +77,9 @@ export const projects = [
     category: 'ecology',
     price: '250000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 6,
@@ -79,7 +89,9 @@ export const projects = [
     category: 'housing',
     price: '25000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 7,
@@ -89,7 +101,9 @@ export const projects = [
     category: 'housing',
     price: '25000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   },
   {
     id: 8,
@@ -99,6 +113,8 @@ export const projects = [
     category: 'ecology',
     price: '25000',
     noOfNFTs: 100,
-    description: ''
+    description: '',
+    currentBalance: '', // Add missing properties
+    duration: '' //
   }
 ] satisfies Project[];

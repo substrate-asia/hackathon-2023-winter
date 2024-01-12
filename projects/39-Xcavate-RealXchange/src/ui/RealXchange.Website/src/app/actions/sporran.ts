@@ -16,7 +16,7 @@ export interface GetSessionOutput {
 
 export const sessionHeader = 'x-session-id';
 
-export const getSessionValues = (): Promise<GetSessionOutput> => {
+export const getSessionValues = (): Promise<any> => {
   return client.get(`/session`);
 };
 

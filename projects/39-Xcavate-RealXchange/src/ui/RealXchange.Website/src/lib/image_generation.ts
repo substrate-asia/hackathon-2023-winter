@@ -56,7 +56,7 @@ export default async function generateImages(imagePrompts: ImagePrompt[]) {
     });
 
     const results = await Promise.all(apiCalls);
-    console.log(results);
+    console.log({ results });
     return results;
   } catch (e) {
     console.log(e);

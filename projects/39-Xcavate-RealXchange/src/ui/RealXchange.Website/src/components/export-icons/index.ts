@@ -29,3 +29,5 @@ export { default as RemoveSquare } from './remove-square';
 export { default as AddSquare } from './add-square';
 export { default as ArrowUp } from './arrow-up';
 export { default as ArrowDown } from './arrow-down';
+export { default as Logout } from './logout';
+export { default as Tailsman } from './tailsman-icon';

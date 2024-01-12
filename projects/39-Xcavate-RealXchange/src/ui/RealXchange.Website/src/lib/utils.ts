@@ -50,3 +50,12 @@ export function formatNumber(
     maximumFractionDigits: decimals
   }).format(Number(number));
 }
+
+export function getProjectIds(start: number, end: number) {
+  const integers = [];
+  for (let i = start; i <= end; i++) {
+    if (i == 44) continue;
+    integers.push(i);
+  }
+  return integers;
+}

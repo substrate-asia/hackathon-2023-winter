@@ -10,7 +10,6 @@ import Textarea from '@/components/ui/text-area';
 import { usePageContext } from '@/context/page-contex';
 import { createProjectSchema } from '@/lib/zod';
 import { Fragment } from 'react';
-import { number, object, string } from 'zod';
 
 const categories = [
   {
@@ -36,16 +35,16 @@ const lengths = [
     value: 3
   },
   {
-    name: '4 Month',
-    value: 4
-  },
-  {
     name: '6 Month',
     value: 6
   },
   {
     name: '9 Month',
     value: 9
+  },
+  {
+    name: '12 Month',
+    value: 12
   }
 ];
 

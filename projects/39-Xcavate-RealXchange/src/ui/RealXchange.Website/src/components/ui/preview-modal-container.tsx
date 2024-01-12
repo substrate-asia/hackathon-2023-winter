@@ -40,7 +40,7 @@ export default function PreviewModalContainer({
           </Transition.Child>
 
           <div className="fixed inset-0 top-[156px] overflow-y-auto">
-            <div className="te flex min-h-full items-start justify-center p-4 md:p-[119px]">
+            <div className="flex min-h-full items-start justify-center p-4 md:p-[119px]">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -50,7 +50,7 @@ export default function PreviewModalContainer({
                 leaveFrom="opacity-100 scale-100"
                 leaveTo="opacity-0 scale-95"
               >
-                <Dialog.Panel className="inline-flex h-full w-full transform flex-col gap-4 overflow-hidden rounded-lg bg-background px-10 pb-10 pt-[62px] align-middle shadow-modal  transition-all">
+                <Dialog.Panel className="inline-flex h-full w-full max-w-[463px] transform flex-col gap-4 overflow-hidden rounded-lg bg-background px-10 pb-10 pt-[62px] align-middle shadow-modal  transition-all">
                   <header className="flex w-full items-center justify-between">
                     <Dialog.Title as="hgroup" className="">
                       <h3 className="text-[1.125rem] font-medium">{header.title}</h3>

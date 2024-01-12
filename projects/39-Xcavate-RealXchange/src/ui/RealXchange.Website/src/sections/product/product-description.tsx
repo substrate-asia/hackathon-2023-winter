@@ -1,9 +1,11 @@
+import { Icons } from '@/components/icons';
 import {
   SectionDescription,
   SectionHeader,
   SectionTitle
 } from '@/components/section-header';
 import { BaseButton } from '@/components/ui/base-button';
+import { Button } from '@/components/ui/button';
 import {
   getAvailableNFTs,
   getCollectionMetadata,
@@ -12,16 +14,17 @@ import {
 } from '@/lib/queries';
 import { shortenAddress } from '@/lib/utils';
 import { Project } from '@/types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export interface ProjectDescriptionProps {
+  id: any;
   category: {
     title: string;
     icon: any;
   };
 }
 
-export function ProjectDescription({ category }: ProjectDescriptionProps) {
+export function ProjectDescription({ id, category }: ProjectDescriptionProps) {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [project, setProject] = useState<
     Pick<
@@ -34,6 +37,9 @@ export function ProjectDescription({ category }: ProjectDescriptionProps) {
       | 'price'
       | 'noOfNFTs'
       | 'image'
+      | 'location'
+      | 'currentBalance'
+      | 'duration'
     >
   >({
     title: '',
@@ -43,14 +49,17 @@ export function ProjectDescription({ category }: ProjectDescriptionProps) {
     description: '',
     price: '',
     noOfNFTs: 0,
-    image: ''
+    image: '',
+    location: '',
+    currentBalance: '',
+    duration: ''
   });
 
-  const fetchMetadata = async () => {
-    const collectionMetadata = await getCollectionMetadata(22);
-    const itemMetadata = await getItemMetadata(22, 1);
-    const availableNFTs = await getAvailableNFTs(22);
-    const projectDetails = await getProjectDetails(22);
+  const fetchMetadata = async (projectId: number) => {
+    const collectionMetadata = await getCollectionMetadata(projectId);
+    const itemMetadata = await getItemMetadata(projectId, 1);
+    const availableNFTs = await getAvailableNFTs(projectId);
+    const projectDetails = await getProjectDetails(projectId);
 
     return { collectionMetadata, itemMetadata, availableNFTs, projectDetails };
   };
@@ -58,51 +67,58 @@ export function ProjectDescription({ category }: ProjectDescriptionProps) {
   async function getProject() {
     try {
       setIsLoading(true);
-      const response: any = await fetchMetadata();
+      const response: any = await fetchMetadata(id);
       setIsLoading(false);
-      console.log(response);
 
       const result = await JSON.parse(response.collectionMetadata.data);
       const image = await JSON.parse(response.itemMetadata.data);
       const detail = response.projectDetails;
-      console.log({ result });
       const { data } = response.collectionMetadata;
 
       setProject({
-        id: 22,
+        id: id,
         title: result.projectName,
-        category: 'environment',
-        description: result.description,
+        category: result.projectCategory,
+        description: result.projectDescription,
+        location: result.projectLocation,
         image: `https://crustipfs.mobi/ipfs/${image.cid}`,
         price: detail.projectPrice,
         foundationName: shortenAddress(detail.projectOwner),
-        noOfNFTs: detail.nftTypes
+        noOfNFTs: detail.nftTypes,
+        currentBalance: detail.projectBalance,
+        duration: detail.duration
       });
     } catch (error) {
       console.log(error);
     }
   }
 
+  useEffect(() => {
+    getProject();
+  }, []);
+
+  const Icon = Icons[project.category ?? ''];
+
   return (
     <aside className="flex flex-col gap-10 border-l border-foreground/[0.42] py-[43px] pl-[64px]">
       <SectionHeader>
-        <SectionTitle>Lets Plant One Million Trees</SectionTitle>
+        <SectionTitle>{project.title}</SectionTitle>
         <div className="flex items-center space-x-2">
           <span className="text-[0.75rem] font-light text-[0.6]"> Created by:</span>
           <BaseButton className="text-[1rem]/[1.5rem] text-[#006EAE] underline-offset-4 hover:underline">
-            @Trillion_Treesfoundation
+            @{project.foundationName}
           </BaseButton>
         </div>
         {/* Utility Data */}
         <div className="mt-6 space-y-4">
           <dl className="flex items-center gap-x-2 font-light">
             <dt className="text-[0.75rem] text-[0.6]">Project location:</dt>
-            <dd className="text-[1rem]/[1.5rem]"></dd>
+            <dd className="text-[1rem]/[1.5rem]">{project.location}</dd>
           </dl>
           <dl className="flex items-center gap-x-2 font-light">
             <dt className="text-[0.75rem] text-[0.6]">Category:</dt>
             <dd className="flex items-center gap-1 text-[1rem]/[1.5rem] capitalize">
-              {category.icon} {category.title}
+              <Icon className="h-[14px] w-[18px]" /> {project.category}
             </dd>
           </dl>
         </div>
@@ -110,14 +126,29 @@ export function ProjectDescription({ category }: ProjectDescriptionProps) {
 
       <SectionHeader>
         <SectionTitle size={'md'}>Description</SectionTitle>
-        <SectionDescription>
-          Deforestation in the Brazilian Amazon has jumped 22% in the latest 12-month
-          period, reaching its highest level since 2006, data from the countrys space
-          agency shows. Between August 2020 and July 2021, trees were felled from land
-          measuring 13,235 square km (5,110 square miles), the National Institute for
-          Space Research (INPE) said. It is an area 17 times the size of New York City.
-        </SectionDescription>
+        <SectionDescription>{project.description}</SectionDescription>
       </SectionHeader>
+
+      <SectionHeader>
+        <SectionTitle size={'md'}>Funding Target</SectionTitle>
+
+        <div className="flex gap-4">
+          <TargetItem title="Target:" value={project.price} />
+          <TargetItem title="Raised:" value={project.currentBalance} />
+          <TargetItem title="Project Duration" value={`${project.duration} months`} />
+        </div>
+      </SectionHeader>
+
+      <Button href={`/project/${id}/activity`} variant={'primary'}>
+        View project activity
+      </Button>
     </aside>
   );
 }
+
+const TargetItem = ({ title, value }: { title: string; value: string }) => (
+  <div className="flex items-center gap-2 font-light">
+    <dt className="text-[0.75rem]/[1.5rem] text-foreground/80">{title}</dt>
+    <dd className="text-[1rem]">{value}</dd>
+  </div>
+);

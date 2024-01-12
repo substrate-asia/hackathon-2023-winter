@@ -15,8 +15,8 @@ export const CloseSquare = (props: IconProps) => (
       strokeLinejoin="round"
     />
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M14.7695 0.75H6.1005C3.0795 0.75 1.1855 2.889 1.1855 5.916V14.084C1.1855 17.111 3.0705 19.25 6.1005 19.25H14.7685C17.7995 19.25 19.6855 17.111 19.6855 14.084V5.916C19.6855 2.889 17.7995 0.75 14.7695 0.75Z"
       strokeWidth="1.5"
       strokeLinecap="round"

@@ -1,50 +1,41 @@
 import { useSporranContext } from '@/context/sporran-context';
-import { exceptionToError } from '@/lib/exceptionToError';
-import { shortenAddress } from '@/lib/utils';
-import { useCallback, useState } from 'react';
-
-type FlowError = 'closed' | 'unauthorized' | 'unknown';
+import { BaseButton } from '../ui/base-button';
+import Image from 'next/image';
+import { siteImage } from '@/config/image';
+import { IconProps } from '../export-icons';
 
 export default function ConnectKiltButton() {
-  const { kilt } = useSporranContext();
-  const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState<FlowError>();
-  const [user, setUser] = useState();
-
-  const handleConnect = useCallback(async (extension: any) => {
-    try {
-      setProcessing(true);
-      setError(undefined);
-
-      if (extension) {
-        const didList = await extension.getDidList();
-        if (didList.length > 0) {
-          const did = didList[0].did || '';
-          setUser(did);
-        }
-      }
-    } catch (exception) {
-      const { message } = exceptionToError(exception);
-      if (message.includes('closed')) {
-        setError('closed');
-      } else if (message.includes('Not authorized')) {
-        setError('unauthorized');
-      } else {
-        setError('unknown');
-        console.error(exception);
-      }
-      setProcessing(false);
-    }
-  }, []);
-
-  console.log(user);
+  const { kilt, processing, connectKiltWallet } = useSporranContext();
 
   return (
-    <button
-      className="flex items-center gap-2.5 rounded-3xl bg-primary px-4 py-2 text-[0.875rem]/[1.25rem] text-primary-light duration-700 hover:bg-primary/90"
-      onClick={() => handleConnect(kilt.sporran)}
+    <BaseButton
+      className="flex w-full items-center justify-between rounded-lg border border-foreground px-4 py-2"
+      onClick={() => connectKiltWallet(kilt.sporran)}
     >
-      {!user ? 'Connect wallet' : shortenAddress(user)}
-    </button>
+      <div className="flex items-center gap-2">
+        <Image src={siteImage.sporran} alt="sporran" width={42} height={42} priority />
+        <span className="text-[1rem]/[1.5rem]">Sporran</span>
+      </div>
+      {processing ? (
+        <StatusIcon className="h-4 w-4 animate-spin" />
+      ) : (
+        <span className="text-[0.75rem]/[1.5rem] font-light text-primary">
+          Recommended
+        </span>
+      )}
+    </BaseButton>
   );
 }
+
+const StatusIcon = (props: IconProps) => (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" {...props}>
+    <path
+      d="M2.45 14.97c1.07 3.44 3.95 6.09 7.53 6.82M2.05 10.98A9.996 9.996 0 0 1 12 2c5.18 0 9.44 3.94 9.95 8.98M14.01 21.8c3.57-.73 6.44-3.35 7.53-6.78"
+      stroke="#FF8A65"
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    ></path>
+  </svg>
+);
