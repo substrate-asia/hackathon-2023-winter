@@ -4,6 +4,8 @@ import fs from "fs";
 import { clog, cerror } from "./utils.js";
 import { RPC, RPCOptions } from "./rpc.js";
 import crypto from "crypto";
+import { ethers } from "ethers";
+import { AcalaJsonRpcProvider } from "@acala-network/eth-providers";
 
 const SHA256 = (message: string) => crypto.createHash("sha256").update(message).digest("hex");
 
@@ -14,6 +16,10 @@ export interface AIDotOptions {
     dataPath: string;
     adminUsername: string;
     adminPassword: string;
+    acalaRpcUrl: string;
+    mbeamRpcUrl: string;
+    receiverAddress: string;
+    debugMode: boolean;
 }
 
 export interface AIDotFile {
@@ -36,6 +42,12 @@ export class AIDot {
     public adminUsername: string;
     public adminPassword: string;
     public initialBotId: string = "";
+    public acalaRpcUrl: string;
+    public acalaProvider: ethers.providers.JsonRpcProvider;
+    public mbeamRpcUrl: string;
+    public mbeamProvider: ethers.providers.JsonRpcProvider;
+    public receiverAddress: string;
+    public debugMode: boolean;
 
     constructor(options: AIDotOptions) {
         // Initiate an OpenAI instance
@@ -49,6 +61,12 @@ export class AIDot {
         this.dataPath = options.dataPath || "./data";
         this.adminUsername = options.adminUsername;
         this.adminPassword = options.adminPassword;
+        this.acalaRpcUrl = options.acalaRpcUrl;
+        this.acalaProvider = new AcalaJsonRpcProvider(options.acalaRpcUrl);
+        this.mbeamRpcUrl = options.mbeamRpcUrl;
+        this.mbeamProvider = new ethers.providers.JsonRpcProvider(options.mbeamRpcUrl);
+        this.receiverAddress = options.receiverAddress;
+        this.debugMode = options.debugMode;
     }
     
     async startAI() {
@@ -70,7 +88,8 @@ export class AIDot {
             await this.db.put("INITIAL_BOT", JSON.stringify(bot));
             await this.db.put("USER_INFO" + this.adminUsername, JSON.stringify({
                 passwordHash: SHA256(this.adminPassword),
-                assistantList: [ bot.id ]
+                assistantList: [ bot.id ],
+                authkeys: []
             }));
 
             // Store the recommendations
@@ -106,9 +125,11 @@ export class AIDot {
             fileIds.push(openAIFile.id);
         }
 
+        // console.log(fileIds);
+
         // Create assistant instance
         const assistant = await this.openai.beta.assistants.create({
-            instructions: instructions || "You are a Polkadot blockchain technical support bot. You help answer technical questions. Avoid unrelated questions but be open about it.",
+            instructions: instructions || "You are a Polkadot blockchain technical support bot. You help answer technical questions. Avoid unrelated questions, you only answer Polkadot ecosystem related questions. Don't say you can't access the uploaded files.",
             name: name || "AIDot",
             model: "gpt-3.5-turbo-1106",
             tools: [{"type": "retrieval"}],
@@ -234,8 +255,6 @@ export class AIDot {
         const messagesFromAssistant: OpenAI.Beta.Threads.Messages.ThreadMessage[] = [];
 
         for (const messageObj of threadMessages.data) {
-            console.log(messageObj.content[0]);
-
             if (messageObj.assistant_id === assistantID) {
                 messagesFromAssistant.push(messageObj);
 

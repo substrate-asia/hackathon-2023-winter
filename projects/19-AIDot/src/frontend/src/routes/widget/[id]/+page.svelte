@@ -2,6 +2,7 @@
     import { page } from '$app/stores';
     import { fade } from 'svelte/transition';
     import { config } from '$lib/config.js';
+    import { onMount } from 'svelte';
     let loadWidget = true;
 
     const token = $page.url.pathname.split("/");
@@ -59,43 +60,45 @@
     }
 
     // Create new thread and get message ID
-    (async () => {
-        await createThread();
+    onMount(() => {
+        (async () => {
+            await createThread();
 
-        const response = await fetch(config.rpcUrl, {
-            method: "POST",
-            body: JSON.stringify({
-                method: "getMessages",
-                params: {
-                    threadID,
-                    assistantID
-                }        
-            }),
-            headers: {
-                "Content-Type": "application/json"
+            const response = await fetch(config.rpcUrl, {
+                method: "POST",
+                body: JSON.stringify({
+                    method: "getMessages",
+                    params: {
+                        threadID,
+                        assistantID
+                    }        
+                }),
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (response.ok) {
+                const responseBody = await response.json();
+
+                if (responseBody.payload.messages.length !== 0) {
+                    const message = responseBody.payload.messages[0];
+
+                    latestMessageID = message.id;
+
+                    console.log("Fulfilled", message);
+                }
+
+                await getChatBotInfo();
+
+                fulfilled = true;
+
+                console.log(threadID);
+            } else {
+                throw new Error("Can not fetch latest message ID.");
             }
-        });
-
-        if (response.ok) {
-            const responseBody = await response.json();
-
-            if (responseBody.payload.messages.length !== 0) {
-                const message = responseBody.payload.messages[0];
-
-                latestMessageID = message.id;
-
-                console.log("Fulfilled", message);
-            }
-
-            await getChatBotInfo();
-
-            fulfilled = true;
-
-            console.log(threadID);
-        } else {
-            throw new Error("Can not fetch latest message ID.");
-        }
-    })();
+        })();
+    })
 
     let botInfo;
     let name = "";
@@ -299,7 +302,7 @@
     //Example
 </script>
 
-<div class="fixed bottom-0 right-0 flex flex-col z-2509 mr-4">
+<div class="w-full fixed bottom-0 right-0 flex flex-col z-2509 sm:mr-2 mr-0">
     {#if isShowChat === true } 
         <!--Pop Up Chat-->
         <div class="max-w-[440px] max-h-[588px] bg-white flex flex-col border rounded-lg shadow-lg" in:fade={{ duration: 300 }} out:fade={{ duration: 300 }} >
@@ -347,7 +350,7 @@
             </div>
 
             <!--Content Container-->
-            <div class="flex flex-col overflow-auto h-[420px] border-b mx-2 my-3 gap-2 min-w-[350px]">
+            <div class="flex flex-col overflow-auto h-[420px] border-b mx-2 my-3 gap-2 sm:min-w-[350px] min-w-[250px]">
                 {#each messageList as message}
                     
                     <!--response-->

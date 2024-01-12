@@ -14,10 +14,14 @@ export function getCode(botId: string) {
 
     // Function to update iframe dimensions based on screen size
     function updateIframeSize() {
-        if (window.innerWidth < 648) {
-            iframe.style.width = window.innerWidth; // Full width on small screens
-            iframe.style.height = window.innerHeight; // Full height on small screens
-        } else {
+        if (window.innerWidth < 450) {
+            iframe.style.width = window.innerWidth + 'px'; // Full width on small screens
+            iframe.style.height = '682px'; // Full height on small screens
+        } else if (window.innerHeight > 682){
+            iframe.style.width = '460px';
+            iframe.style.height = window.innerHeight + 'px';
+        } 
+        else {
             iframe.style.width = '460px'; // Default width
             iframe.style.height = '682px'; // Default height
         }

@@ -107,6 +107,7 @@ Response payload:
 * `botInfo` (Object): OpenAI assistant info object.
 * `recommendations` (string[]): Suggested conversation starters to ask the bot.
 * `usage` (number): The amount of messages that the bot has handled.
+* `limit` (number): The maximum amount of messages that the bot can handle. 150 for free plan, 15000 for advanced plan.
 
 ### List chat bot ids
 
@@ -235,6 +236,33 @@ Response payload:
 * `message` (Object): OpenAI message object.
 * `run` (Object): OpenAI run object.
 
+
+## Subscription APIs
+
+### Purchase subscription
+
+Used to purchase a subscription, create a transaction first with the amount of `1` to `0x029B93211e7793759534452BDB1A74b58De22C9c`, then call this RPC method to get the subscription.
+
+Method name: `purchasePack`.
+
+Request body:
+* `paywith` (string): Payment option, currently accepts Moonbeam's Moonbase Alpha Testnet (`"glmr"`) and Acala's Mandala Testnet (`"aca"`).
+* `username` (string): Username to get the subscription.
+* `txHash` (string): Hash of the subscription payment transaction.
+
+Response payload: `null`.
+
+### Get current subscription
+
+Used to get the current subscription of an account.
+
+Method name: `getSubscription`.
+
+Request body:
+* `username` (string): Username of the account.
+
+Response payload:
+* `subscription` (string): The subscription plan, currently there are `advanced` and `free`.
 
 
 ## Special APIs

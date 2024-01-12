@@ -33,15 +33,19 @@ AIDot is an AI chatbot seamlessly integrated with all Polkadot ecosystem resourc
 
 * [Website](http://www.aidot.tech).
 * [Try it out](http://www.aidot.tech).
-* Video: https://youtu.be/NmAM6ASyp3w
-* Powerpoint: https://drive.google.com/file/d/13niC1CAIHOBcFZnGuXDJ0lcjbWty7kxT/view?usp=drive_link
-* [Control Panel to customize AI](http://www.aidot.tech/control) (Login with test account: `username: dummy123  password: dummy123`).
-  Train bot:
+* Video: https://drive.google.com/drive/folders/1JY_79f3TPV5Yq0_vA7LUJflgQ-xOLp68
+* Powerpoint: https://drive.google.com/drive/folders/1JY_79f3TPV5Yq0_vA7LUJflgQ-xOLp68
+* [Control Panel to customize AI](http://www.aidot.tech/control) (Login with test account: `username: dummy123  password: dummy123` or your Moonbeam/AcalaEVM address).
+  * Login:
+    ![Failed to load image.](./assets/login.png)
+  * Train bot:
     ![Failed to load image.](./assets/train1.png)
     ![Failed to load image.](./assets/train2.png)
-  Integrate bot:
+  * Integrate bot:
     ![Failed to load image.](./assets/integrate.png)
-* [Simple website that integrates AIDot chat bot]() + [its source code]().
+  * Buy plan:
+    ![Failed to load image.](./assets/purchase.png)
+* [Simple website that integrates AIDot chat bot](http://www.aidot.tech/test) + [its source code](https://github.com/parity-asia/hackathon-2023-winter/blob/main/projects/19-AIDot/src/frontend/src/routes/test/test.html).
 
 ### Build source
 
@@ -78,6 +82,8 @@ Integrating/Training AIDot for any Polkadot parachain website involves these sim
 * Ability to load additional resources to train chat bots how users like.
 * An RPC server that exports APIs for applications to integrate.
 * Generate code embed for developers to easily integrate AIDot chat bot into their website through a simple html tag.
+* $DOT subscription-based model for AIDot usage.
+* Login/Purchase plan with AcalaEVM Testnet, Moonbeam Testnet.
 
 **Client Side**
 
@@ -85,14 +91,15 @@ Integrating/Training AIDot for any Polkadot parachain website involves these sim
 * AI Control Panel to create, train, modify, and manage AIDot chat bots.
 * Account management.
 * Connect with AI through RPC APIs.
-
+* $DOT subscription-based model for AIDot usage.
+* Login/Purchase plan with AcalaEVM Testnet, Moonbeam Testnet.
 
 ## Items Planned to be Completed *After* the Hackathon
 
-* $DOT subscription-based model for AIDot usage.
 * Pull and combine resources from multiple LLMs.
 * Integrate decentralized oracles into AIDot as data sources. 
 * Optimize AIDot for even higher accuracy and performance.
+* Enable bot to call custom APIs.
 
 
 ## Team Member Information

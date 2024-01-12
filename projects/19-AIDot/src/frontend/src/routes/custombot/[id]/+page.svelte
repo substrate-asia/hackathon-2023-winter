@@ -24,14 +24,18 @@
 
     let username = "";
     let password = "";
+    let authkey = "";
 
     onMount(() => {
-        if (!localStorage.username || !localStorage.password) {
+        if (!localStorage.username) {
             goto("/../../login");
         }
 
         username = localStorage.username;
         password = localStorage.password;
+        authkey = localStorage.authkey;
+
+        console.log(username, password, authkey);
 
         (async function() {
             let errorMessage = "An unknown error occurred.";
@@ -43,6 +47,7 @@
                     params: {
                         username,
                         password,
+                        authkey,
                         assistantID
                     }
                 }),
@@ -100,7 +105,8 @@
                 method: "listChatBots",
                 params: {
                     username,
-                    password
+                    password,
+                    authkey
                 }
             }),
             headers: {
@@ -178,6 +184,7 @@
                 params: {
                     username,
                     password,
+                    authkey,
                     fileId
                 }
             }),
@@ -232,6 +239,7 @@
                 params: {
                     username,
                     password,
+                    authkey,
                     flag: "stream",
                     format
                 }
@@ -276,6 +284,7 @@
                             params: {
                                 username,
                                 password,
+                                authkey,
                                 fileKey,
                                 chunk
                             }
@@ -313,6 +322,7 @@
                     params: {
                         username,
                         password,
+                        authkey,
                         fileKey
                     }
                 }),
@@ -353,6 +363,7 @@
                 params: {
                     username,
                     password,
+                    authkey,
                     name,
                     instructions,
                     recommendations,
