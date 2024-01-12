@@ -80,7 +80,7 @@ async function main() {
   // })
 
   const tokenAddress = '0x0000000000000000000100000000000000000003'
-  const contractAddress = '0xC6C850C3455076da5726201a21593D537Ed58189'
+  const contractAddress = '0xEbEE1C11166bB804D780B3827eCc8dd19fC3fB2E'
   console.log('contractAddress:', contractAddress)
 
   // Step 1:
@@ -102,7 +102,7 @@ async function main() {
     functionName: 'createReward',
     // questionId is 1
     // deposit 1 LDOT
-    args: [1, parseUnits('1', 10)]
+    args: [1, parseUnits('1', 10), 'ar://2hsWeDxlSEL0KQL6AVkNp1-JLKhCOCYnxSWXtjKg8Yo']
   })
   await waitingTx(publicClient, hash2)
   console.info(hash2)

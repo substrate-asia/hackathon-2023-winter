@@ -103,7 +103,7 @@ const Login = () => {
       <div className="flex flex-col">
         <div className="flex flex-row gap-2.5">
           <Link href="/questions/create">
-            <Button className="bg-[#d3f2a4] text-black">Create Question</Button>
+            <Button className="bg-[#4C4C4C] text-white rounded-full">Create Question</Button>
           </Link>
           <Link href="/me">
             <Button className="flex flex-row gap-1.5 items-center" size="sm" variant="text">

@@ -4,6 +4,8 @@ import { createServerSideHelpers } from '@trpc/react-query/server'
 import { Prisma } from '@prisma/client'
 import * as R from 'ramda'
 import { fetch, ProxyAgent, setGlobalDispatcher } from 'undici'
+import Arweave from 'arweave'
+import { formatUnits } from 'viem'
 
 import { publicProcedure, protectedProcedure, router } from './router'
 import { createInternalContext } from './context'
@@ -157,9 +159,13 @@ const listLatestQuestions = publicProcedure
     return {
       items: sorted.map((question) => ({
         ...question,
+        totalDeposit: BigInt(question.totalDeposit.toString()),
         user: transformRegisteredUser(question.user),
         answers: question.answers.map((answer) => ({
           ...answer,
+          pricePerShare: BigInt(answer.pricePerShare.toString()),
+          values: BigInt(answer.values.toString()),
+          shares: BigInt(answer.shares.toString()),
           user: transformRegisteredUser(answer.user),
         })),
       }))
@@ -179,7 +185,7 @@ const createQuestion = protectedProcedure
         title,
         body,
         userId: currentUser.id,
-        totalDeposit: amount,
+        totalDeposit: amount.toString(),
       },
       include: {
         user: true,
@@ -187,6 +193,7 @@ const createQuestion = protectedProcedure
     })
     return {
       ...question,
+      totalDeposit: BigInt(question.totalDeposit.toString()),
       user: transformRegisteredUser(question.user),
     }
   })
@@ -208,6 +215,7 @@ const getQuestionById = publicProcedure
     }
     return {
       ...question,
+      totalDeposit: BigInt(question.totalDeposit.toString()),
       user: transformRegisteredUser(question.user),
     }
   })
@@ -239,9 +247,13 @@ const getUserCreatedQuestions = publicProcedure
     return {
       items: items.map((question) => ({
         ...question,
+        totalDeposit: BigInt(question.totalDeposit.toString()),
         user: transformRegisteredUser(question.user),
         answers: question.answers.map((answer) => ({
           ...answer,
+          pricePerShare: BigInt(answer.pricePerShare.toString()),
+          values: BigInt(answer.values.toString()),
+          shares: BigInt(answer.shares.toString()),
           user: transformRegisteredUser(answer.user),
         })),
       }))
@@ -279,9 +291,13 @@ const getUserAnsweredQuestions = publicProcedure
     return {
       items: items.map((question) => ({
         ...question,
+        totalDeposit: BigInt(question.totalDeposit.toString()),
         user: transformRegisteredUser(question.user),
         answers: question.answers.map((answer) => ({
           ...answer,
+          pricePerShare: BigInt(answer.pricePerShare.toString()),
+          values: BigInt(answer.values.toString()),
+          shares: BigInt(answer.shares.toString()),
           user: transformRegisteredUser(answer.user),
           question_creator_id: question.userId,
         })),
@@ -308,6 +324,53 @@ const deleteQuestion = protectedProcedure
       }
     })
     return result
+  })
+
+const uploadQuestionMetadata = protectedProcedure
+  .input(z.object({
+    questionId: z.number(),
+  }))
+  .mutation(async ({ input: { questionId }, ctx: { currentUser } }) => {
+    const where = { id: questionId }
+    const question = await prisma.question.findUnique({ where })
+    if (!question) {
+      throw new TRPCError({ code: 'NOT_FOUND', message: 'Question not found' })
+    }
+    const arweave = Arweave.init({
+      host: 'arweave.net',
+      protocol: 'https',
+      port: 443,
+    })
+    const wallet = JSON.parse(process.env.AR_KEY!)
+    const metadata = {
+      name: `DeQ NFT Question #${questionId}`,
+      description: `Question #${questionId}`,
+      external_url: `https://deq.lol/questions/view/${questionId}`,
+      attributes: [
+        {
+          trait_type: 'Title',
+          value: question.title
+        },
+        {
+          trait_type: 'Body',
+          value: question.body
+        },
+        {
+          trait_type: 'Reward',
+          value: formatUnits(BigInt(question.totalDeposit.toString()), 10)
+        },
+      ]
+    }
+    const tx = await arweave.createTransaction({ data: JSON.stringify(metadata) }, wallet)
+    tx.addTag('Content-Type', 'application/json')
+    await arweave.transactions.sign(tx, wallet)
+    const uploader = await arweave.transactions.getUploader(tx)
+    while (!uploader.isComplete) {
+      await uploader.uploadChunk()
+    }
+    return {
+      uri: `ar://${tx.id}`
+    }
   })
 
 const createAnswer = protectedProcedure
@@ -348,6 +411,13 @@ const getAnswer = publicProcedure
     }
     return {
       ...answer,
+      pricePerShare: BigInt(answer.pricePerShare.toString()),
+      values: BigInt(answer.values.toString()),
+      shares: BigInt(answer.shares.toString()),
+      question: {
+        ...answer.question,
+        totalDeposit: BigInt(answer.question.totalDeposit.toString()),
+      },
       user: transformRegisteredUser(answer.user),
     }
   })
@@ -362,7 +432,8 @@ const getAnswersByQuestionId = publicProcedure
     items: z.array(AnswerSchema.merge(z.object({
       question: z.object({
         id: z.number(),
-      })
+      }),
+      holders: z.number(),
     })))
   }))
   .query(async ({ input: { id, page, limit } }) => {
@@ -383,11 +454,20 @@ const getAnswersByQuestionId = publicProcedure
       include: {
         user: true,
         question: true,
+        _count: {
+          select: {
+            holders: true,
+          }
+        },
       },
     })
     return {
       items: items.map((answer, idx) => ({
         ...answer,
+        pricePerShare: BigInt(answer.pricePerShare.toString()),
+        values: BigInt(answer.values.toString()),
+        shares: BigInt(answer.shares.toString()),
+        holders: Number(answer._count?.holders || 0) || 0,
         user: transformRegisteredUser(answer.user),
         question_creator_id: answer.question.userId,
       }))
@@ -407,6 +487,42 @@ const pickAnswer = protectedProcedure
         picked
       }
     })
+  })
+
+const uploadAnswerMetadata = protectedProcedure
+  .input(z.object({
+    tokenId: z.number(),
+    questionId: z.number(),
+    body: z.string(),
+  }))
+  .mutation(async ({ input: { tokenId, questionId, body }, ctx: { currentUser } }) => {
+    const arweave = Arweave.init({
+      host: 'arweave.net',
+      protocol: 'https',
+      port: 443,
+    })
+    const wallet = JSON.parse(process.env.AR_KEY!)
+    const metadata = {
+      name: `DeQ NFT Answer #${tokenId}`,
+      description: `Answer #${tokenId}`,
+      external_url: `https://deq.lol/questions/view/${questionId}`,
+      attributes: [
+        {
+          trait_type: 'Body',
+          value: body
+        },
+      ]
+    }
+    const tx = await arweave.createTransaction({ data: JSON.stringify(metadata) }, wallet)
+    tx.addTag('Content-Type', 'application/json')
+    await arweave.transactions.sign(tx, wallet)
+    const uploader = await arweave.transactions.getUploader(tx)
+    while (!uploader.isComplete) {
+      await uploader.uploadChunk()
+    }
+    return {
+      uri: `ar://${tx.id}`
+    }
   })
 
 const setUserHandleName = protectedProcedure
@@ -459,12 +575,20 @@ const getAnswerTradeHistory = publicProcedure
     tokenId: z.number(),
     page: z.number().default(1),
     limit: z.number().default(10),
+    days: z.number().optional(),
   }))
-  .query(async ({ input: { tokenId, page, limit } }) => {
+  .query(async ({ input: { tokenId, page, limit, days } }) => {
+    const where: any = { tokenId }
+    if (days) {
+      const now = new Date()
+      const ago = new Date()
+      ago.setDate(now.getDate() - days)
+      where['createdAt'] = {
+        gte: ago
+      }
+    }
     const items = await prisma.tradeLog.findMany({
-      where: {
-        tokenId,
-      },
+      where,
       orderBy: {
         createdAt: 'desc',
       },
@@ -477,6 +601,9 @@ const getAnswerTradeHistory = publicProcedure
     return {
       items: items.map((log) => ({
         ...log,
+        amount: BigInt(log.amount.toString()),
+        tokens: BigInt(log.tokens.toString()),
+        creatorFee: BigInt(log.creatorFee.toString()),
         user: log.user ? transformRegisteredUser(log.user) : null,
       }))
     }
@@ -512,6 +639,7 @@ const getAnswerHolders = publicProcedure
     return {
       items: items.map((holder) => ({
         ...holder,
+        shares: BigInt(holder.shares.toString()),
         user: transformRegisteredUser(holder.user),
       }))
     }
@@ -568,11 +696,16 @@ const getUserHoldings = publicProcedure
     return {
       items: items.map((holder) => ({
         ...holder,
+        shares: BigInt(holder.shares.toString()),
         answer: {
           ...holder.answer,
+          pricePerShare: BigInt(holder.answer.pricePerShare.toString()),
+          values: BigInt(holder.answer.values.toString()),
+          shares: BigInt(holder.answer.shares.toString()),
           user: transformRegisteredUser(holder.answer.user),
           question: {
             ...holder.answer.question,
+            totalDeposit: BigInt(holder.answer.question.totalDeposit.toString()),
             user: transformRegisteredUser(holder.answer.question.user),
           },
         },
@@ -629,10 +762,14 @@ const getUserRewards = publicProcedure
     return {
       items: items.map(({ question, ...answer }) => ({
         ...question,
+        totalDeposit: BigInt(question.totalDeposit.toString()),
         user: transformRegisteredUser(question.user),
         answers: [
           {
             ...answer,
+            pricePerShare: BigInt(answer.pricePerShare.toString()),
+            values: BigInt(answer.values.toString()),
+            shares: BigInt(answer.shares.toString()),
             user: transformRegisteredUser(answer.user),
           }
         ]
@@ -683,18 +820,31 @@ const getUserAnswers = publicProcedure
       skip: (page - 1) * limit,
       take: limit,
     })
-    return {
+    const ret = {
       items: items.map(({ question, ...answer }) => ({
         ...question,
+        totalDeposit: BigInt(question.totalDeposit.toString()),
         user: transformRegisteredUser(question.user),
         answers: [
           {
             ...answer,
+            pricePerShare: BigInt(answer.pricePerShare.toString()),
+            values: BigInt(answer.values.toString()),
+            shares: BigInt(answer.shares.toString()),
             user: transformRegisteredUser(answer.user),
           }
         ]
       }))
     }
+    try {
+      const s = z.object({
+        items: z.array(QuestionSchema)
+      })
+      s.parse(ret)
+    } catch (err) {
+      console.error(err)
+    }
+    return ret
   })
 
 const getTokenPairs = publicProcedure
@@ -734,6 +884,7 @@ export const appRouter = router({
     getUserCreated: getUserCreatedQuestions,
     getUserAnswered: getUserAnsweredQuestions,
     delete: deleteQuestion,
+    uploadMetadata: uploadQuestionMetadata
   }),
   answers: router({
     create: createAnswer,
@@ -742,6 +893,7 @@ export const appRouter = router({
     holders: getAnswerHolders,
     getByQuestionId: getAnswersByQuestionId,
     pick: pickAnswer,
+    uploadMetadata: uploadAnswerMetadata
   }),
   users: router({
     info: getUserInfo,

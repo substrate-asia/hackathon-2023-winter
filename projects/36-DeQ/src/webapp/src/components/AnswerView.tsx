@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react'
 import { useSetAtom } from 'jotai'
 import {
   Avatar,
@@ -17,6 +18,8 @@ import {
 } from '@material-tailwind/react'
 import Link from 'next/link'
 import { formatEther } from 'viem'
+import { LineChart, Line, XAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
+import dayjs from 'dayjs'
 
 import { MarkdownView } from '@/components/MarkdownView'
 import { TradeList } from '@/components/TradeList'
@@ -72,7 +75,7 @@ export function AnswerView({ id }: { id: number }) {
               <span className="font-light text-sm ml-1.5">ACA / Share</span>
             </Typography>
           </div>
-          <ButtonGroup variant="gradient" color="amber">
+          <ButtonGroup color="yellow">
             <Button onClick={() => setBuyAnswerId(id)}>Buy</Button>
             <Button onClick={() => setSellAnswerId(id)}>Sell</Button>
           </ButtonGroup>
@@ -86,6 +89,7 @@ export function AnswerData({ id }: { id: number }) {
   const { data } = trpcQuery.answers.getById.useQuery({ id })
   return (
     <div className='w-full px-16 pb-8'>
+      <AnswerLineChart tokenId={id} />
       <Tabs value="trades">
         <TabsHeader>
           <Tab value="trades">Recent Trades</Tab>
@@ -122,3 +126,48 @@ export function AnswerData({ id }: { id: number }) {
     </div>
   )
 }
+
+function AnswerLineChart({ tokenId }: { tokenId: number }) {
+  const [days, setDays] = useState(30)
+  const { data, isLoading } = trpcQuery.answers.tradeHistory.useQuery({ tokenId, days })
+
+  return (
+    <div className="py-12 pt-6 flex-col flex gap-y-6">
+      <div className="flex justify-end">
+        <div className="flex gap-x-6">
+          <button onClick={() => setDays(30)}>
+            <span className={days === 30 ? 'text-black' : 'text-gray-500'}>30D</span>
+          </button>
+          <button onClick={() => setDays(60)}>
+            <span className={days === 60 ? 'text-black' : 'text-gray-500'}>60D</span>
+          </button>
+          <button onClick={() => setDays(90)}>
+            <span className={days === 90 ? 'text-black' : 'text-gray-500'}>90D</span>
+          </button>
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={300}>
+        {
+          isLoading ? (
+            <div className="w-full h-full flex items-center justify-center">
+              <Spinner />
+            </div>
+          ) : (
+            <LineChart
+              data={data && data.items ? data.items.map(item => ({
+                aca: Number(formatEther(item.tokens)),
+                createdAt: dayjs(item.createdAt).format('h:mm A MMM D'),
+              })) : []}
+            >
+              <CartesianGrid strokeDasharray="3 3" />
+              <Tooltip />
+              <XAxis dataKey="createdAt" type="category" hide />
+              <Line type="monotone" dataKey="aca" stroke="#4ADE80" />
+            </LineChart>
+          )
+        }
+      </ResponsiveContainer>
+    </div>
+  )
+}
+

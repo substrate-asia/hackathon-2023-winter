@@ -1,8 +1,18 @@
 import { initTRPC, TRPCError } from '@trpc/server'
 import superjson from 'superjson'
+import { Decimal } from 'decimal.js'
 
 import { type Context } from './context'
 import prisma from './db'
+
+superjson.registerCustom<Decimal, string>(
+  {
+    isApplicable: (v): v is Decimal => Decimal.isDecimal(v),
+    serialize: v => v.toJSON(),
+    deserialize: v => new Decimal(v),
+  },
+  'decimal.js'
+)
 
 
 //

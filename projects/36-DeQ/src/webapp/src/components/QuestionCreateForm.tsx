@@ -40,7 +40,7 @@ const erc20_abis = [
 ]
 
 const question_nft_abis = [
-  'function createReward(uint256 questionId, uint256 amount) public',
+  'function createReward(uint256 questionId, uint256 amount, string uri) public',
 ]
 
 export function QuestionCreateForm({
@@ -70,15 +70,10 @@ export function QuestionCreateForm({
     }
   }, [isConnected, connect])
 
-  const { mutate, isLoading } = trpcQuery.questions.create.useMutation({
-    onSuccess: (data) => {
-      console.info(data)
-      deposit(data.id)
-      queryClient.invalidateQueries(['questions.lastest'])
-    }
-  })
+  const { mutateAsync, isLoading } = trpcQuery.questions.create.useMutation()
 
   const { mutate: deleteMutate } = trpcQuery.questions.delete.useMutation()
+  const { mutateAsync: uploadMetadata, isLoading: uploading } = trpcQuery.questions.uploadMetadata.useMutation()
 
   const { data: rate, isLoading: rateIsLoading } = useContractRead({
     address: HOMA,
@@ -86,7 +81,7 @@ export function QuestionCreateForm({
     functionName: 'getExchangeRate',
   })
 
-  const deposit = async (questionId: number) => {
+  const deposit = async (questionId: number, uri: string) => {
     setErrorMsg('')
     if (!walletClient) {
       return
@@ -114,7 +109,7 @@ export function QuestionCreateForm({
 
       const ldot = new Decimal(dot).div(Decimal.div((rate as bigint).toString(), parseUnits('1', 18).toString())).toString()
 
-      const contractAddress = '0xC6C850C3455076da5726201a21593D537Ed58189'
+      const contractAddress = '0xEbEE1C11166bB804D780B3827eCc8dd19fC3fB2E'
       console.log('contractAddress:', contractAddress)
 
       // approve to transfer LDOT
@@ -138,7 +133,7 @@ export function QuestionCreateForm({
         address: contractAddress,
         abi: parseAbi(question_nft_abis),
         functionName: 'createReward',
-        args: [questionId, parseUnits(ldot, 10)]
+        args: [questionId, parseUnits(ldot, 10), uri]
       })
       console.info(hash3)
       await waitForTransactionReceipt(hash3)
@@ -171,13 +166,18 @@ export function QuestionCreateForm({
     }
   }, [publicClient])
 
-  const handleSubmit= async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    mutate({
+    const data = await mutateAsync({
       title: R.pathOr('', ['target', 'title', 'value'], e),
       body: R.pathOr('', ['target', 'body', 'value'], e),
       amount: parseUnits(dot, 10),
     })
+    const { uri } = await uploadMetadata({
+      questionId: data.id
+    })
+    await deposit(data.id, uri)
+    queryClient.invalidateQueries(['questions.lastest'])
   }
 
   return (
@@ -222,7 +222,7 @@ export function QuestionCreateForm({
                 </Button>
               </div>
               <div className="flex justify-end mt-4">
-                <Button loading={isLoading || walletIsLoading || loading} type="submit">{actionButtonLabel}</Button>
+                <Button loading={uploading || rateIsLoading || isLoading || walletIsLoading || loading} type="submit">{actionButtonLabel}</Button>
               </div>
             </div>
           </form>
