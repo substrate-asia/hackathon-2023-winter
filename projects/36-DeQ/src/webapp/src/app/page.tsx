@@ -22,12 +22,12 @@ export default async function Home() {
         <Tabs className="w-full">
           <TabList className="flex space-x-1 rounded-full bg-green-900/40 bg-clip-padding p-1 border border-solid border-white/30 mb-4">
             <Tab id="hot">Hot</Tab>
-            <Tab id="bounty">Bounty</Tab>
+            <Tab id="bounties">Bounties</Tab>
           </TabList>
           <TabPanel id="hot">
             <QuestionList type="hot" />
           </TabPanel>
-          <TabPanel id="bounty">
+          <TabPanel id="bounties">
             <QuestionList type="unanswer" />
           </TabPanel>
         </Tabs>

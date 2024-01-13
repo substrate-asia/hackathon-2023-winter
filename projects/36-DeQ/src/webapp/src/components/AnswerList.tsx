@@ -124,16 +124,31 @@ export function AnswerList({ id }: { id: number }) {
             <MarkdownView>
               {answer.body}
             </MarkdownView>
-            <div className="flex justify-between items-center mt-2 border-t border-gray-300 pt-2">
-              <div className="flex flex-col">
-                <Link href={`/answers/${answer.id}`}>
-                  <Typography variant="h3">
-                    {formatEther(answer.pricePerShare)}
-                    <span className="font-light text-sm ml-1.5">ACA / Share</span>
-                  </Typography>
-                </Link>
+            <div className="flex justify-between items-end mt-2 border-t border-gray-300 pt-2">
+              <div className="flex flex-rol gap-2 items-end">
+                <div className="flex flex-col">
+                  <Link href={`/answers/${answer.id}`}>
+                    <Typography variant="h3">
+                      {formatEther(answer.pricePerShare)}
+                      <span className="font-light text-sm ml-1.5">ACA / Share</span>
+                    </Typography>
+                  </Link>
+                </div>
+                {answer.values > 0 ? (
+                  <div className="inline-flex flex-row gap-1.5 relative -top-0.5">
+                    <span>
+                      {formatEther(answer.values || 0)} <small className="font-light text-xs">ACA in pool,</small>
+                    </span>
+                    <span>
+                      {formatEther(answer.shares || 0)} <small className="font-light text-xs">Shares,</small>
+                    </span>
+                    <span>
+                      {answer.holders} <small className="font-light text-xs">Holders</small>
+                    </span>
+                  </div>
+                ) : null}
               </div>
-              <ButtonGroup size="sm" variant="gradient" color="amber">
+              <ButtonGroup size="sm" color="yellow">
                 <Button onClick={() => setBuyAnswerId(answer.id)}>Buy</Button>
                 <Button onClick={() => setSellAnswerId(answer.id)}>Sell</Button>
               </ButtonGroup>

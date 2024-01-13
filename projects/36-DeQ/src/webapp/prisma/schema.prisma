@@ -68,7 +68,7 @@ model Question {
   userId        Int      @map("user_id")
   title         String
   body          String
-  totalDeposit  BigInt   @default(0) @map("total_deposit")
+  totalDeposit  Decimal   @default(0) @map("total_deposit")
   createdAt     DateTime @default(now()) @map("created_at")
 
   user          User     @relation(fields: [userId], references: [id])
@@ -82,7 +82,7 @@ model QuestionDeposits {
   id         Int      @id @default(autoincrement())
   userId     Int      @map("user_id")
   questionId Int      @map("question_id")
-  amount     BigInt
+  amount     Decimal
   createdAt  DateTime @default(now()) @map("created_at")
 
   user     User     @relation(fields: [userId], references: [id])
@@ -97,9 +97,9 @@ model Answer {
   questionId      Int      @map("question_id")
   tokenId         Int      @unique @map("token_id")
   body            String
-  shares          BigInt   @default(0)
-  values          BigInt   @default(0)
-  pricePerShare   BigInt   @default(0) @map("price_per_share")
+  shares          Decimal   @default(0)
+  values          Decimal   @default(0)
+  pricePerShare   Decimal   @default(0) @map("price_per_share")
   createdAt       DateTime @default(now()) @map("created_at")
 
   user     User       @relation(fields: [userId], references: [id])
@@ -116,7 +116,7 @@ model Holder {
   id        Int      @id @default(autoincrement())
   userId    Int      @map("user_id")
   tokenId   Int      @map("token_id")
-  shares    BigInt
+  shares    Decimal
   createdAt DateTime @default(now()) @map("created_at")
 
   user    User    @relation(fields: [userId], references: [id])
@@ -139,9 +139,9 @@ model TradeLog {
   type       TradeType
   blockHash  String   @map("block_hash")
   address    String
-  amount     BigInt
-  tokens     BigInt
-  creatorFee BigInt   @map("creator_fee")
+  amount     Decimal
+  tokens     Decimal
+  creatorFee Decimal   @map("creator_fee")
   createdAt  DateTime @default(now()) @map("created_at")
 
   user   User?  @relation(fields: [userId], references: [id])

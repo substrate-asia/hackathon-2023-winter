@@ -7,7 +7,17 @@ import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { httpBatchLink } from '@trpc/client'
 import superjson from 'superjson'
+import { Decimal } from 'decimal.js'
 
+
+superjson.registerCustom<Decimal, string>(
+  {
+    isApplicable: (v): v is Decimal => Decimal.isDecimal(v),
+    serialize: v => v.toJSON(),
+    deserialize: v => new Decimal(v),
+  },
+  'decimal.js'
+)
 
 export const trpcQuery = createTRPCReact<AppRouter>()
 
