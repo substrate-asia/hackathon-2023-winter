@@ -109,7 +109,7 @@ export default function VoteConviction({ show, onHide, PollIndex, goal_id, idea_
   async function LoadData() {
     const Web3 = require('web3');
     const web3 = new Web3(window.ethereum);
-    let Balance = await web3.eth.getBalance(window?.ethereum?.selectedAddress?.toLocaleLowerCase());
+    let Balance = await web3.eth.getBalance(window?.ethereum?.selectedAddress?.toLocaleUpperCase());
     let token = ' ' + getChain(Number(window.ethereum.networkVersion)).nativeCurrency.symbol;
     setToken(token);
     setBalance((Balance / 1000000000000000000).toPrecision(5));

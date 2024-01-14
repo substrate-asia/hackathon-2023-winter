@@ -7,7 +7,7 @@ export const Badge = ({ icon, label, description, granted }: { icon: JSX.Element
         {icon}
       </Avatar>
       <div className="flex flex-col gap-2">
-        <h4 className="text-moon-24 font-semibold">{label}</h4>
+        <h4 className={`text-moon-24 font-semibold  ${!granted && 'text-trunks'}`}>{label}</h4>
         <p className="text-moon-14">{description}</p>
       </div>
     </div>

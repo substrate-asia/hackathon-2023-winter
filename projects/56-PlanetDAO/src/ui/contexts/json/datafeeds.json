@@ -14,6 +14,10 @@
     "GoerliETH":{
         "rpc": "https://rpc.api.moonbeam.network",
         "price_feed_address": "0x9ce2388a1696e22F870341C3FC1E89710C7569B5"
+    },    
+    "DOT":{
+        "rpc": "https://rpc.api.moonbeam.network",
+        "price_feed_address": "0x1466b4bD0C4B6B8e1164991909961e0EE6a66d8c"
     }
     
 }

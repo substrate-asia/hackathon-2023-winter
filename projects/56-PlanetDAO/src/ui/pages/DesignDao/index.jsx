@@ -31,6 +31,8 @@ export default function DesignDao() {
   const { contract, signerAddress, sendTransaction } = useContract();
   const { api, showToast, userWalletPolkadot,userSigner, PolkadotLoggedIn } = usePolkadotContext();
   const [dao_type, setDaoType] = useState("metamask");
+  const [dao_idTxt, setDaoIdTxt] = useState("");
+  const [dao_id, setDaoId] = useState("");
 
   const [editor, setEditor] = useState(null);
   const regex = /\[(.*)\]/g;
@@ -50,10 +52,12 @@ export default function DesignDao() {
       if (m.index === regex.lastIndex) {
         regex.lastIndex++;
       }
+      setDaoIdTxt(m[1])
       let dao_type = m[1].startsWith("m_") ? "metamask" : "polkadot";
       setDaoType(dao_type);
       let splitter = dao_type =="metamask"?"m_":"p_"
-      id =(Number(m[1].split(splitter)[1]));
+      id =Number(m[1].split(splitter)[1]);
+      setDaoId(id)
     }
   }
 
@@ -405,13 +409,15 @@ export default function DesignDao() {
 
     let output = editor.getHtml() + '<style>' + editor.getCss() + '</style>';
     if (PolkadotLoggedIn) {
-      await api._extrinsics.daos.updateTemplate(Number(id), output).signAndSend(userWalletPolkadot, { signer: userSigner }, (status) => {
-        showToast(status, ToastId, 'Updated Successfully!', ()=>{});
+      await api._extrinsics.daos.updateTemplate(Number(dao_id), output).signAndSend(userWalletPolkadot, { signer: userSigner }, (status) => {
+        showToast(status, ToastId, 'Updated Successfully!', ()=>{
+          window.location.href="/daos/"+ dao_idTxt
+        });
       });
     } else {
 
       // Saving HTML in Smart contract from metamask chain
-      await sendTransaction(await window.contract.populateTransaction.update_template(Number(id), output));
+      await sendTransaction(await window.contract.populateTransaction.update_template(Number(dao_id), output));
       toast.update(ToastId, {
         render: 'Updated Successfully!', type: "success", isLoading: false, autoClose: 1000,
         closeButton: true,

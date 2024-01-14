@@ -7,11 +7,15 @@ import { Avatar, Button, IconButton } from '@heathmont/moon-core-tw';
 import { useState } from 'react';
 import { usePolkadotContext } from '../../contexts/PolkadotContext';
 import { toast } from 'react-toastify';
+import validator from 'validator';
+import Required from '../../components/components/Required';
+import { useRouter } from 'next/router';
 
 export default function Register() {
   const { api, deriveAcc, showToast } = usePolkadotContext();
   const NFT_STORAGE_TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDJDMDBFOGEzZEEwNzA5ZkI5MUQ1MDVmNDVGNUUwY0Q4YUYyRTMwN0MiLCJpc3MiOiJuZnQtc3RvcmFnZSIsImlhdCI6MTY1NDQ3MTgxOTY2NSwibmFtZSI6IlplbmNvbiJ9.6znEiSkiLKZX-a9q-CKvr4x7HS675EDdaXP622VmYs8';
   const client = new NFTStorage({ token: NFT_STORAGE_TOKEN });
+  const router = useRouter();
 
   //Input fields
   const [image, set_Image] = useState({});
@@ -24,7 +28,7 @@ export default function Register() {
 
   const [Email, EmailInput] = UseFormInput({
     defaultValue: '',
-    type: 'email',
+    type: 'text',
     placeholder: 'Add email',
     id: ''
   });
@@ -50,17 +54,21 @@ export default function Register() {
   async function registerAccount() {
     const id = toast.loading('Uploading IPFS ...');
     const metadata = image.type ? await client.storeBlob(image) : '';
- 
-    toast.update(id, { render: "Registering User...", isLoading: true });
+
+    toast.update(id, { render: 'Registering User...', isLoading: true });
 
     const doAfter = () => {
       setTimeout(() => {
-        window.location.href = '/login';
+        router.push('/login');
       }, 1000);
     };
     await api._extrinsics.users.registerUser(Fullname, Email, Password, metadata).signAndSend(deriveAcc, ({ status }) => {
       showToast(status, id, 'Registered Successfully!', doAfter);
     });
+  }
+
+  function isDisabled() {
+    return !(Fullname && validator.isEmail(Email) && Password);
   }
 
   return (
@@ -85,28 +93,37 @@ export default function Register() {
               <div className="upload">
                 <Avatar className="rounded-full border border-beerus bg-gohan text-moon-120 h-32 w-32">{image.type ? <img src={URL.createObjectURL(image)} className="h-full w-full object-cover" /> : <GenericUser className="h-24 w-24 text-trunks" />}</Avatar>
                 <div className="flex items-center justify-center round">
-                  <IconButton size="xs" icon={<FilesGeneric className="text-gohan" color="#ffff" />} onClick={chooseImage}></IconButton>
+                  <IconButton className="rounded-moon-i-sm" size="xs" icon={<FilesGeneric className="text-gohan" color="#ffff" />} onClick={chooseImage}></IconButton>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-6 w-full">
               <div className="flex flex-col gap-2">
-                <h6>Full Name</h6>
+                <h6>
+                  Full Name
+                  <Required />
+                </h6>
                 {FullnameInput}
               </div>
               <div className="flex flex-col gap-2">
-                <h6>Email</h6>
+                <h6>
+                  Email
+                  <Required />
+                </h6>
                 {EmailInput}
               </div>
               <div className="flex flex-col gap-2">
-                <h6>Password</h6>
+                <h6>
+                  Password
+                  <Required />
+                </h6>
                 {PasswordInput}
               </div>
             </div>
 
             <div className="flex w-full justify-end">
-              <Button id="RegisterBTN" onClick={registerAccount}>
+              <Button id="RegisterBTN" onClick={registerAccount} disabled={isDisabled()}>
                 Register
               </Button>
             </div>

@@ -3,62 +3,51 @@ import Card from '../../components/components/Card';
 import useContract from '../../services/useContract';
 import { useEffect, useState } from 'react';
 import { usePolkadotContext } from '../../contexts/PolkadotContext';
+import useEnvironment from '../../services/useEnvironment';
 
 const options = [{ id: 'most_donations_received', label: 'Received donations' }];
 
-const topDonators = [
-  { name: 'Thomas', amount: 5300 },
-  { name: 'Steve', amount: 4750 },
-  { name: 'Baha', amount: 2306 },
-  { name: 'Arjen', amount: 1774 },
-  { name: 'Franco', amount: 800.34 }
-];
-
-export const TopCommunityMembers = ({daoid}) => {
+export const TopCommunityMembers = ({ daoId, allJoined, goals }) => {
   const [selectedOption, setSelectedOption] = useState(options[0]);
-  const { getUserInfoById } = usePolkadotContext();
+  const { api, getUserInfoById } = usePolkadotContext();
   const [items, setItems] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-  const { contract } = useContract();
-
-
+  const [currency, setCurrency] = useState('');
 
   async function fetchContractData() {
     setisLoading(true);
 
     try {
-      if (contract ) {
-        const totalDonations = await contract._donations_ids();
-        let  alldonations = [];
-    
-        for (let i = 0; i < Number(totalDonations); i++) {
-          const donated = await contract._donations(i);
-          let dao_id_of_donated =  ( await contract.get_dao_id_by_ideas_id(Number(donated.ideas_id)));
-          if (dao_id_of_donated == daoid){
-            let foundUserDonated = alldonations.findIndex((item,idx)=>item.userid == Number(donated.userid));
-            if ( foundUserDonated== -1){
-              let user_info  = await getUserInfoById(Number(donated.userid))
-              alldonations.push({
-                userid: Number(donated.userid),
-                name:user_info?.fullName?.toString(),
-                amount: Number(donated.donation) / 1e18
-              })
-            }else{
-              alldonations[foundUserDonated].amount +=Number(donated.donation) / 1e18
-            }            
-          }
+      if (api && goals.length > 0) {
+        let Members = [];
+        for (let i = 0; i < allJoined.length; i++) {
+          const element = allJoined[i];
+          let userInfo = await getUserInfoById(element.user_id);
+          let UserCreatedGoals = goals.filter((e) => Number(e.UserId) ==Number (element.user_id))
+
+          let totalDonations = 0;
+          UserCreatedGoals.forEach(e => totalDonations += e.reached)
+          Members.push({
+            userid: (element.user_id),
+            name: userInfo?.fullName?.toString(),
+            amount: Number(totalDonations)
+          });
+
+
         }
-        setItems(alldonations);
+        setItems(Members);
         setisLoading(false);
       }
     } catch (error) {
       console.error(error);
     }
-    
   }
 
-  useEffect(()=>{fetchContractData()},[contract])
-  
+  useEffect(() => {
+    fetchContractData();
+    setCurrency(useEnvironment.getCurrency());
+  }, [api,allJoined,goals]);
+
   return (
     <Card className="flex flex-col gap-4 w-[236px] h-fit">
       <h5 className="text-trunks text-moon-14">Top community members by</h5>
@@ -84,19 +73,24 @@ export const TopCommunityMembers = ({daoid}) => {
         )}
       </Dropdown>
 
-      {selectedOption.id === 'most_donations_received' && 
-      <> <div className="flex flex-col gap-1">
-      {items.map((donator, index) => (
-        <div className="flex justify-between items-center border-b pb-1 border-goku last-of-type:border-0" key={index}>
+      {selectedOption.id === 'most_donations_received' && (
+        <>
+          {' '}
           <div className="flex flex-col gap-1">
-            <div className="text-piccolo">{donator.name}</div>
-            <div className="text-moon-12">DEV {donator.amount}</div>
+            {items.map((donator, index) => (
+              <div className="flex justify-between items-center border-b pb-1 border-goku last-of-type:border-0" key={index}>
+                <div className="flex flex-col gap-1">
+                  <div className="text-piccolo">{donator.name}</div>
+                  <div className="text-moon-12">
+                    {currency} {donator.amount}
+                  </div>
+                </div>
+                <div>{index + 1}</div>
+              </div>
+            ))}
           </div>
-          <div>{index + 1}</div>
-        </div>
-      ))}
-    </div></>
-      }
+        </>
+      )}
     </Card>
   );
 };

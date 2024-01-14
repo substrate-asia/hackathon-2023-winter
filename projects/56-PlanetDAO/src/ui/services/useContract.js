@@ -40,11 +40,11 @@ export default function useContract() {
 
 					window.sendTransaction = sendTransaction;
 					window.signer = signer;
-					contract.signerAddress = (await signer.getAddress())?.toString()?.toLocaleLowerCase();
+					contract.signerAddress = (await signer.getAddress())?.toString()?.toLocaleUpperCase();
 					window.signerAddress = contract.signerAddress;
 
 					setContractInstance(contract);
-					console.clear();
+					// console.clear();
 				} else {
 					const contract = { contract: null, signerAddress: null, sendTransaction: sendTransaction, formatTemplate: formatTemplate, saveReadMessage: saveReadMessage };
 
@@ -191,7 +191,15 @@ export function getChain(chainid) {
 	}
 	return chains.allchains[0];
 }
-
+export function getChainByToken(token) {
+	for (let i = 0; i < chains.allchains.length; i++) {
+		const element = chains.allchains[i]
+		if (element.nativeCurrency.symbol === token) {
+			return element
+		}
+	}
+	return chains.allchains[0];
+}
 export function formatTemplate(template, changings) {
 
 

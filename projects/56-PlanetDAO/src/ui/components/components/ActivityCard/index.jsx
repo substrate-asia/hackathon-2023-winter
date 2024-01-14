@@ -1,15 +1,13 @@
 import { formatDuration, intervalToDuration, isValid } from 'date-fns';
 import Card from '../Card';
-import { Activity } from '../../../data-model/activity';
 import { Avatar, IconButton } from '@heathmont/moon-core-tw';
 import { GenericHeart, GenericIdea, GenericPending, GenericUser, ShopWallet, SportDarts, SportSpecials } from '@heathmont/moon-icons-tw';
 import IdeaCard from '../IdeaCard';
 import GoalCard from '../GoalCard';
-import { enUS } from 'date-fns/locale';
 import { useEffect, useState } from 'react';
 import useContract from '../../../services/useContract';
-
-
+import useEnvironment from '../../../services/useEnvironment';
+import { usePolkadotContext } from '../../../contexts/PolkadotContext';
 
 const JoinActivity = ({ data }) => (
   <div className="flex gap-4 w-full items-center">
@@ -33,264 +31,194 @@ const BadgeActivity = ({ data }) => (
   </div>
 );
 
-function VoteActivity ({ data }) {
-  
-  const { contract } = useContract();
+function VoteActivity({ data }) {
+  const {api,GetAllIdeas} = usePolkadotContext();
 
   const [ideaURI, setIdeaURI] = useState({
     ideasId: 0,
-    Title: "",
+    Title: '',
     donation: 0,
     votes: 0,
-    logo: "",
+    logo: '',
     isVoted: false,
-    isOwner: false,
+    isOwner: false
   });
 
-
   async function fetchContractData() {
-    if (contract) {
-      const ideaURI = await contract.ideas_uri(Number(data.ideasid)); //Getting ideas uri
-      let Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
-      const object = JSON.parse(ideaURI).properties; //Getting ideas uri
-      let isvoted = false;
-      const Allvotes = await contract.get_ideas_votes_from_goal(Number(Goalid), Number(data.ideasid)); //Getting all votes
-
-      for (let i = 0; i < Allvotes.length; i++) {
-        const element = Allvotes[i];
-        if (element == Number(window.userid)) isvoted = true;
-      }
-
-
-
-      setIdeaURI({
-        ideasId: Number(data.ideasid),
-        Title: object.Title.description,
-        logo: object.logo.description?.url,
-        donation: Number((await contract._ideas_uris(Number(data.ideasid))).donation) / 1e18,
-        votes: Object.keys(Allvotes).filter((item, idx) => item !== '').length,
-        isVoted: isvoted,
-        isOwner: object.user_id.description == Number(window.userid) ? true : false,
-      });
+    if (api) {
+      let allIdeas = await GetAllIdeas()
+      let currentIdea=allIdeas.filter(e=>e.ideasId == data.ideasid)[0]
+      setIdeaURI(currentIdea);
+    
     }
   }
 
   useEffect(() => {
-    fetchContractData()
-  }, [contract]);
+    fetchContractData();
+  }, [api]);
 
-  return <div className="flex flex-col gap-3">
-    <div className="flex gap-4 w-full items-center">
-      <Avatar size="lg" className="rounded-full bg-dodoria-60 text-bulma shrink-0">
-        <GenericHeart className="text-moon-32" />
-      </Avatar>
-      <p>
-        <span className="font-bold">{data.votesAmount} people voted</span> on an idea for the goal <span className="font-bold">{data.goalTitle}</span>
-      </p>
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex gap-4 w-full items-center">
+        <Avatar size="lg" className="rounded-full bg-dodoria-60 text-bulma shrink-0">
+          <GenericHeart className="text-moon-32" />
+        </Avatar>
+        <p>
+          <span className="font-bold">{data.votesAmount} people voted</span> on an idea for the goal <span className="font-bold">{data.goalTitle}</span>
+        </p>
+      </div>
+      <IdeaCard item={ideaURI} className="shadow-none !bg-goku border border-beerus" preview />
     </div>
-    <IdeaCard item={ideaURI} preview />
-  </div>
-};
+  );
+}
 
 function GoalActivity({ data }) {
-  const { contract } = useContract();
+  const {api,GetAllGoals} = usePolkadotContext();
 
   const [goalURI, setGoalURI] = useState({
     goalId: 0,
-    Title: "",
-    Description: "",
-    Budget: "",
+    Title: '',
+    Description: '',
+    Budget: '',
     End_Date: new Date(),
-    logo: "",
+    logo: '',
     ideasCount: 0,
-    reached:0
+    reached: 0
   });
 
-
   async function fetchContractData() {
-    if (contract) {
-      const goalURIFull = await contract._goal_uris(Number(data.goalid));
-      const goalURI = JSON.parse(goalURIFull.goal_uri).properties;
-      const totalIdeasWithEmpty = await contract.get_all_ideas_by_goal_id(Number(data.goalid)); //Getting total goal (Number)
+    if (api) {
+      let allGoals = await GetAllGoals()
+      let currentGoal=allGoals.filter(e=>e.goalId == data.goalid)[0]
+      setGoalURI(currentGoal);
+    
 
-      let totalIdeas = totalIdeasWithEmpty.filter((e) => e !== '');
-
-      let total_reached = 0;
-      for (let i = 0; i < totalIdeas.length; i++) {
-        const element = totalIdeas[i];
-
-        const ideasId = await contract.get_ideas_id_by_ideas_uri(element);
-        let donation = Number((await contract._ideas_uris(Number(ideasId))).donation) / 1e18;
-        total_reached += donation;
-     
-      }
-
-
-      setGoalURI({
-        goalId: Number(data.goalid),
-        Title: goalURI.Title.description,
-        logo: goalURI.logo.description?.url,
-        Budget: goalURI.Budget.description,
-        ideasCount: Object.keys(totalIdeas).filter((item, idx) => item !== '').length,
-        reached:total_reached
-      });
     }
   }
 
   useEffect(() => {
-    fetchContractData()
-  }, [contract])
+    fetchContractData();
+  }, [api]);
 
-  return <div className="flex flex-col gap-3">
-    <div className="flex gap-4 w-full items-center">
-      <Avatar size="lg" className="rounded-full bg-jiren text-bulma shrink-0">
-        <SportDarts className="text-moon-32" />
-      </Avatar>
-      <p>
-        <span className="text-piccolo">{data.name}</span> just created a goal
-      </p>
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex gap-4 w-full items-center">
+        <Avatar size="lg" className="rounded-full bg-jiren text-bulma shrink-0">
+          <SportDarts className="text-moon-32" />
+        </Avatar>
+        <p>
+          <span className="text-piccolo">{data.name}</span> just created a goal
+        </p>
+      </div>
+      <GoalCard item={goalURI} preview className="shadow-none !bg-goku border border-beerus" />
     </div>
-    <GoalCard item={goalURI} preview />
-  </div>
-};
+  );
+}
 
 function DonationActivity({ data }) {
-  const { contract } = useContract();
+  const {api,GetAllIdeas} = usePolkadotContext();
+
+  const [currency, setCurrency] = useState('');
 
   const [ideaURI, setIdeaURI] = useState({
     ideasId: 0,
-    Title: "",
+    Title: '',
     donation: 0,
     votes: 0,
-    logo: "",
+    logo: '',
     isVoted: false,
-    isOwner: false,
+    isOwner: false
   });
 
-
   async function fetchContractData() {
-    if (contract) {
-      const ideaURI = await contract.ideas_uri(Number(data.ideasid)); //Getting ideas uri
-      let Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
-      const object = JSON.parse(ideaURI).properties; //Getting ideas uri
-      let isvoted = false;
-      const Allvotes = await contract.get_ideas_votes_from_goal(Number(Goalid), Number(data.ideasid)); //Getting all votes
-
-      for (let i = 0; i < Allvotes.length; i++) {
-        const element = Allvotes[i];
-        if (element == Number(window.userid)) isvoted = true;
-      }
+    if (api) {
+      let allIdeas = await GetAllIdeas()
+      let currentIdea=allIdeas.filter(e=>e.ideasId == data.ideasid)[0]
+      setIdeaURI(currentIdea);
     
-
-      setIdeaURI({
-        ideasId: Number(data.ideasid),
-        Title: object.Title.description,
-        logo: object.logo.description?.url,
-        donation: Number((await contract._ideas_uris(Number(data.ideasid))).donation) / 1e18,
-        votes: Object.keys(Allvotes).filter((item, idx) => item !== '').length,
-        isVoted: isvoted,
-        isOwner: object.user_id.description == Number(window.userid) ? true : false,
-      });
     }
   }
 
   useEffect(() => {
-    fetchContractData()
-  }, [contract]);
+    setCurrency(useEnvironment.getCurrency());
 
-  return <div className="flex flex-col gap-3">
-    <div className="flex gap-4 w-full items-center">
-      <Avatar size="lg" className="rounded-full bg-cell text-bulma shrink-0">
-        <ShopWallet className="text-moon-32" />
-      </Avatar>
-      <p>
-        <span className="font-bold">DEV {data.donated} donated</span> on an idea for the goal <span className="font-bold">{data.goalTitle}</span>
-      </p>
+    fetchContractData();
+  }, [api]);
+
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex gap-4 w-full items-center">
+        <Avatar size="lg" className="rounded-full bg-cell text-bulma shrink-0">
+          <ShopWallet className="text-moon-32" />
+        </Avatar>
+        <p>
+          <span className="font-bold">
+            {currency} {data.donated} donated
+          </span>{' '}
+          on an idea for the goal <span className="font-bold">{data.goalTitle}</span>
+        </p>
+      </div>
+      <IdeaCard item={ideaURI} className="shadow-none !bg-goku border border-beerus" preview />
     </div>
-    <IdeaCard item={ideaURI} preview />
-  </div>
-
+  );
 }
 
 function IdeaActivity({ data, hideGoToButton }) {
-  const { contract } = useContract();
+  const {api,GetAllIdeas} = usePolkadotContext();
 
   const [ideaURI, setIdeaURI] = useState({
     ideasId: 0,
-    Title: "",
+    Title: '',
     donation: 0,
     votes: 0,
-    logo: "",
+    logo: '',
     isVoted: false,
-    isOwner: false,
+    isOwner: false
   });
 
-
   async function fetchContractData() {
-    if (contract) {
-      const ideaURI = await contract.ideas_uri(Number(data.ideasid)); //Getting ideas uri
-      let Goalid = await contract.get_goal_id_from_ideas_uri(ideaURI);
-      const object = JSON.parse(ideaURI).properties; //Getting ideas uri
-      let isvoted = false;
-      const Allvotes = await contract.get_ideas_votes_from_goal(Number(Goalid), Number(data.ideasid)); //Getting all votes
-
-      for (let i = 0; i < Allvotes.length; i++) {
-        const element = Allvotes[i];
-        if (element == Number(window.userid)) isvoted = true;
-      }
-
-
-
-      setIdeaURI({
-        ideasId: Number(data.ideasid),
-        Title: object.Title.description,
-        logo: object.logo.description?.url,
-        donation: Number((await contract._ideas_uris(Number(data.ideasid))).donation) / 1e18,
-        votes: Object.keys(Allvotes).filter((item, idx) => item !== '').length,
-        isVoted: isvoted,
-        isOwner: object.user_id.description == Number(window.userid) ? true : false,
-      });
+    if (api) {
+      let allIdeas = await GetAllIdeas()
+      let currentIdea=allIdeas.filter(e=>e.ideasId == data.ideasid)[0]
+      setIdeaURI(currentIdea);
+    
     }
   }
 
   useEffect(() => {
-    fetchContractData()
-  }, [contract])
+    fetchContractData();
+  }, [api]);
 
-  return <div className="flex flex-col gap-3">
-    <div className="flex gap-4 w-full items-center">
-      <Avatar size="lg" className="rounded-full bg-krillin-60 text-bulma shrink-0">
-        <GenericIdea className="text-moon-32" />
-      </Avatar>
-      <p>
-        <span className="text-piccolo">{data.name}</span> just created an idea for the goal <span className="font-bold">{data.goalTitle}</span>
-      </p>
+  return (
+    <div className="flex flex-col gap-3">
+      <div className="flex gap-4 w-full items-center">
+        <Avatar size="lg" className="rounded-full bg-krillin-60 text-bulma shrink-0">
+          <GenericIdea className="text-moon-32" />
+        </Avatar>
+        <p>
+          <span className="text-piccolo">{data.name}</span> just created an idea for the goal <span className="font-bold">{data.goalTitle}</span>
+        </p>
+      </div>
+      <IdeaCard item={ideaURI} hideGoToButton={hideGoToButton} className="shadow-none !bg-goku border border-beerus" preview />
     </div>
-    <IdeaCard item={ideaURI} hideGoToButton={hideGoToButton} preview />
-  </div>
-};
+  );
+}
 
 const ActivityCard = ({ old_date, type, data, className, hideGoToButton }) => {
-  const [formattedDuration, SetformattedDuration] = useState("")
+  const [formattedDuration, SetformattedDuration] = useState('');
 
   useEffect(() => {
     if (isValid(old_date)) {
-      var date = new Date()
-      var now_utc = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(),
-        date.getUTCDate(), date.getUTCHours(),
-        date.getUTCMinutes(), date.getUTCSeconds()));
+      var date = new Date();
+      var now_utc = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()));
       const duration = intervalToDuration({ start: now_utc, end: old_date });
       // Format the duration
 
       SetformattedDuration(`${formatDuration(duration, { format: ['days', 'minutes'], zero: false })} ago`);
-
     } else {
       SetformattedDuration(``);
-
     }
-
-
-  }, [])
+  }, []);
 
   return (
     <Card className={`max-w-[540px] flex flex-col !p-4 relative ${className}`}>
