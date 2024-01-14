@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import {
   ModalBody,
   ModalFooter,
@@ -25,6 +26,7 @@ export default function CreateCase() {
   const [jurisdiction, setJurisdiction] = useState("");
   const [price, setPrice] = useState("");
   const [description, setDescription] = useState("");
+  const toast = useToast();
 
   const createCase = async (caseNumber, jurisdiction, price, description) => {
     try {
@@ -46,8 +48,51 @@ export default function CreateCase() {
       const receipt = await transaction.wait();
       const transactionHash = receipt.transactionHash;
       console.log(transactionHash);
+      toast({
+        title: 'Case Created',
+        description: 'Case is Created can be validated now',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     } catch (error) {
       console.log(`Error: ${error}`);
+      let errorMessage;
+      if (error.message && error.message.includes('Only Juster')) {
+        errorMessage = 'Only validated Juster can create cases';
+      }
+    
+      //error handling for rotam app chain Starts
+      else if (typeof error === 'object' && error.data && typeof error.data.message === 'string') {
+        
+        if (error.data.message.includes(' revert Only Juster')) {
+          errorMessage = 'Only validated Juster can create cases';
+        }
+        
+         if (error.data.message.includes('Case number already used')) {
+          errorMessage = 'Case number already used';
+        }
+         
+      }
+      //error handling for rotam app chain Ends
+      else if (error.message && error.message.includes('Case number already used')) {
+        errorMessage = 'Case number already used.';
+      }else if (error.message && error.message.includes('user rejected transaction')) {
+        errorMessage = 'User denied the transaction.';
+      } else {
+        errorMessage = `Unexpected error: ${error.message}`;
+      }
+      toast({
+        title: 'Create Case',
+        description: `Error: ${errorMessage}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-left',
+        
+      });
     }
   };
 
@@ -55,7 +100,15 @@ export default function CreateCase() {
     if (caseNumber && jurisdiction && price && description) {
       createCase(caseNumber, jurisdiction, price, description);
     } else {
-      console.log("Please Complete all the fields.");
+      toast({
+        title: 'Create Case',
+        description: 'Please provide all arguments',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     }
   };
   return (
@@ -71,7 +124,7 @@ export default function CreateCase() {
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent bgColor={"#969696"}>
+        <ModalContent bgColor={"#151515"}>
           <Flex
             alignItems="center"
             flexDir="column"

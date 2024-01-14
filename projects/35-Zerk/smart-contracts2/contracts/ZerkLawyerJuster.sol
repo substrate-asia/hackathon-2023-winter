@@ -343,4 +343,120 @@ contract ZerkLawyerJuster {
     function getCompletedCases(uint _caseNumber) public view returns (bool) {
         return s_completedCases[_caseNumber];
     }
+
+    /**
+     * @dev Get details of a lawyer.
+     * @param _lawyerAddress The address of the lawyer.
+     * @return licenseNumber The license number of the lawyer.
+     * @return name The name of the lawyer.
+     * @return jurisdiction The jurisdiction of the lawyer.
+     * @return speciality The speciality of the lawyer.
+     * @return isValidated A boolean indicating whether the lawyer is validated.
+     */
+    function getLawyer(
+        address _lawyerAddress
+    )
+        public
+        view
+        returns (
+            uint licenseNumber,
+            string memory name,
+            string memory jurisdiction,
+            string memory speciality,
+            bool isValidated
+        )
+    {
+        Lawyer memory lawyer = s_lawyers[_lawyerAddress];
+        return (
+            lawyer.licenseNumber,
+            lawyer.name,
+            lawyer.jurisdiction,
+            lawyer.speciality,
+            lawyer.isValidated
+        );
+    }
+
+    /**
+     * @dev Get details of a juster.
+     * @param _justerAddress The address of the juster.
+     * @return passportNumber The passport number of the juster.
+     * @return name The name of the juster.
+     * @return jurisdiction The jurisdiction of the juster.
+     * @return isValidated A boolean indicating whether the juster is validated.
+     */
+    function getJuster(
+        address _justerAddress
+    )
+        public
+        view
+        returns (
+            string memory passportNumber,
+            string memory name,
+            string memory jurisdiction,
+            bool isValidated
+        )
+    {
+        Juster memory juster = s_justers[_justerAddress];
+        return (
+            juster.passportNumber,
+            juster.name,
+            juster.jurisdiction,
+            juster.isValidated
+        );
+    }
+
+    /**
+     * @dev Get the owner of the contract.
+     * @return The address of the contract owner.
+     */
+    function getContractOwner() public view returns (address) {
+        return owner;
+    }
+
+    /**
+     * @dev Check if a case number is used.
+     * @param _caseNumber The number of the legal case.
+     * @return A boolean indicating whether the case number is used.
+     */
+    function isCaseUsed(uint _caseNumber) public view returns (bool) {
+        return s_usedCaseNumbers[_caseNumber];
+    }
+
+    /**
+     * @dev Get detailed information about a legal case.
+     * @param _caseNumber The number of the legal case.
+     * @return jurisdiction The jurisdiction of the legal case.
+     * @return price The price of the legal case.
+     * @return description The description of the legal case.
+     * @return isValidated A boolean indicating whether the legal case is validated.
+     * @return totalDonations The total donations received for the legal case.
+     * @return justerAddress The address of the assigned juster for the legal case.
+     * @return isFunded A boolean indicating whether the legal case is funded.
+     */
+    function getCaseDetails(
+        uint _caseNumber
+    )
+        public
+        view
+        returns (
+            string memory jurisdiction,
+            uint price,
+            string memory description,
+            bool isValidated,
+            uint totalDonations,
+            address justerAddress,
+            bool isFunded
+        )
+    {
+        Case memory legalCase = s_cases[_caseNumber];
+        return (
+            legalCase.jurisdiction,
+            legalCase.price,
+            legalCase.description,
+            legalCase.isValidated,
+            legalCase.totalDonations,
+            legalCase.justerAddress,
+            legalCase.isFunded
+        );
+    }
 }

@@ -5,7 +5,7 @@ import ValidateJuster from "../comps/validateJuster";
 
 export default function LegalVerificator() {
   return (
-    <Box p="2rem" align={"center"} bgColor="transparent">
+    <Box h="100vh" p="2rem" align={"center"} bgColor="transparent">
       <Heading p="10rem">
         Are you a Lawyer? <br /> Validate Cases & Earn Money
       </Heading>

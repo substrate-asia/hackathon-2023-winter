@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+import { useToast } from "@chakra-ui/react";
 import {
   ModalBody,
   ModalFooter,
@@ -21,6 +23,7 @@ const contractABIrotam = require("../../utils/contractABIrotam.json");
 export default function ValidateLawyer() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [address, setAddress] = useState("");
+  const toast = useToast();
 
   const validateLawyer = async (address) => {
     try {
@@ -37,8 +40,48 @@ export default function ValidateLawyer() {
       const receipt = await transaction.wait();
       const transactionHash = receipt.transactionHash;
       console.log(transactionHash);
+      toast({
+        title: 'Validate Lawyer',
+        description: 'Congratulations! Lawyer is validated now.',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     } catch (error) {
       console.log(`Error: ${error}`);
+      let errorMessage;
+      if (error.message && error.message.includes('Only owner')) {
+        errorMessage = 'Only Owner can validate Lawyer';
+      }
+      //error handling for rotam app chain Starts
+      else if (typeof error === 'object' && error.data && typeof error.data.message === 'string') {
+        
+        if (error.data.message.includes(' revert Only owner')) {
+          errorMessage = 'Only Owner can validate Lawyer';
+        }
+        if (error.data.message.includes('revert Lawyer is already validated')) {
+          errorMessage = 'Lawyer is already validated.';
+        }
+      }
+      //error handling for rotam app chain Ends
+        else if (error.message && error.message.includes(' Lawyer is already validated')) {
+        errorMessage = ' Lawyer is already validated.';
+      }else if (error.message && error.message.includes('user rejected transaction')) {
+        errorMessage = 'User denied the transaction.';
+      } else {
+        errorMessage = `Unexpected error: ${error.message}`;
+      }
+      toast({
+        title: 'Validate Lawyer',
+        description: `Error: ${errorMessage}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-left',
+        
+      });
     }
   };
 
@@ -46,7 +89,15 @@ export default function ValidateLawyer() {
     if (address) {
       validateLawyer(address);
     } else {
-      console.log("Please fullfill all the requirement fields");
+      toast({
+        title: 'Validate Lawyer',
+        description: 'Please provide Lawyer address',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     }
   };
   return (
@@ -62,7 +113,7 @@ export default function ValidateLawyer() {
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent bgColor={"#969696"}>
+        <ModalContent bgColor={"#151515"}>
           <Flex
             alignItems="center"
             flexDir="column"
