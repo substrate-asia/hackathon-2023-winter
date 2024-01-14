@@ -8,12 +8,16 @@ import { Button } from '@heathmont/moon-core-tw';
 import { ControlsPlus, GenericUsers } from '@heathmont/moon-icons-tw';
 import CreateDaoModal from '../../features/CreateDaoModal';
 import { usePolkadotContext } from '../../contexts/PolkadotContext';
+import JoinCommunityModal from '../../features/JoinCommunityModal';
 
 export default function DAOs() {
-  const { api, GetAllDaos } = usePolkadotContext();
+  const { api, GetAllDaos, GetAllJoined } = usePolkadotContext();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDaoModal, setShowCreateDaoModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
+  const [joinedDaosList, setJoinedDaosList] = useState([]);
+  const [communityToJoin, setCommunityToJoin] = useState({});
 
   const { contract } = useContract();
 
@@ -24,10 +28,28 @@ export default function DAOs() {
   async function fetchData() {
     if (contract && api) {
       setLoading(true);
-      let arr = await GetAllDaos();
+      let allDaos = await GetAllDaos();
+      let allJoined = await GetAllJoined();
+
+      const joinedDaosList = [];
+
+      allJoined.forEach((joined_dao) => {
+        let foundDao = (allDaos).filter((e) => (e?.daoId) == (joined_dao.daoId.toString()));
+        if (joined_dao.user_id.toString() == window.userid.toString() && foundDao.length > 0) {
+          joinedDaosList.push(foundDao[0]);
+        }
+
+      })
+
+      allDaos.forEach((dao) => {
+        if (Number(dao.user_id) === Number(window.userid)) {
+          joinedDaosList.push(dao);
+        }
+      });
 
       setLoading(false);
-      setList(arr.reverse());
+      setList(allDaos.reverse());
+      setJoinedDaosList(joinedDaosList);
     }
   }
 
@@ -36,8 +58,25 @@ export default function DAOs() {
       setShowCreateDaoModal(false);
     }
   }
-  function openModal() {
+
+  function openCreateDaoModal() {
     setShowCreateDaoModal(true);
+  }
+
+  function closeJoinCommunityModal(event) {
+    if (event) {
+      setShowJoinModal(false);
+      setCommunityToJoin({});
+    }
+  }
+
+  function openJoinModal(community) {
+    setCommunityToJoin(community);
+    setShowJoinModal(true);
+  }
+
+  function hasJoined(thisDAO) {
+    return joinedDaosList.some((dao) => dao.daoId === thisDAO.daoId);
   }
 
   return (
@@ -51,18 +90,19 @@ export default function DAOs() {
         <div className={`gap-8 flex w-full bg-gohan pt-10 pb-6 border-beerus border`}>
           <div className="container flex w-full justify-between">
             <h1 className="text-moon-32 font-bold">All communities</h1>
-            <Button iconLeft={<ControlsPlus />} onClick={openModal}>
+            <Button iconLeft={<ControlsPlus />} onClick={openCreateDaoModal}>
               Create community
             </Button>
           </div>
         </div>
 
         <div className="flex flex-col gap-8 container items-center pb-10">
-          <Loader element={list.length > 0 ? list.map((listItem, index) => <DAOCard item={listItem} key={index} />) : <EmptyState icon={<GenericUsers className="text-moon-48" />} label="There are no communities created yet" />} loading={loading} width={768} height={236} many={3} type="rounded" />{' '}
+          <Loader element={list.length > 0 ? list.map((listItem, index) => <DAOCard hasJoined={hasJoined(listItem)} item={listItem} key={index} onJoinCommunity={() => openJoinModal(listItem)} />) : <EmptyState icon={<GenericUsers className="text-moon-48" />} label="There are no communities created yet" />} loading={loading} width={768} height={236} many={3} type="rounded" />{' '}
         </div>
       </div>
 
       <CreateDaoModal open={showCreateDaoModal} onClose={closeModal} />
+      <JoinCommunityModal SubsPrice={communityToJoin.SubsPrice} show={showJoinModal} onHide={closeJoinCommunityModal} address={communityToJoin.wallet} recieveWallet={communityToJoin.recievewallet}  recievetype={communityToJoin.recievetype} title={communityToJoin.Title} daoId={communityToJoin.daoId} />
     </>
   );
 }

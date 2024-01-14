@@ -1,6 +1,5 @@
-import { Button, Checkbox, IconButton, Modal } from '@heathmont/moon-core-tw';
-import { ControlsClose, ControlsPlus, GenericPicture } from '@heathmont/moon-icons-tw';
-import { useRouter } from 'next/router';
+import { Button, IconButton, Modal } from '@heathmont/moon-core-tw';
+import { ControlsClose, ControlsPlus } from '@heathmont/moon-icons-tw';
 import { NFTStorage } from 'nft.storage';
 import React, { useEffect, useState } from 'react';
 import UseFormInput from '../../components/components/UseFormInput';
@@ -12,11 +11,13 @@ import isServer from '../../components/isServer';
 import AddImageInput from '../../components/components/AddImageInput';
 import ImageListDisplay from '../../components/components/ImageListDisplay';
 import { toast } from 'react-toastify';
+import Required from '../../components/components/Required';
 
 let addedDate = false;
 export default function CreateDaoModal({ open, onClose }) {
   const [DaoImage, setDaoImage] = useState([]);
   const [creating, setCreating] = useState(false);
+  const [RecieveType, setRecieveType] = useState('EVM');
 
   const { api, showToast, userWalletPolkadot, userSigner, PolkadotLoggedIn } = usePolkadotContext();
   const { contract, sendTransaction, formatTemplate, signerAddress } = useContract();
@@ -49,7 +50,7 @@ export default function CreateDaoModal({ open, onClose }) {
   const [RecieveWallet, RecieveWalletInput, setRecieveWallet] = UseFormInput({
     defaultValue: '',
     type: 'text',
-    placeholder: 'Wallet Address (EVM)',
+    placeholder: `Wallet Address (${RecieveType})`,
     id: 'recipient'
   });
 
@@ -63,10 +64,12 @@ export default function CreateDaoModal({ open, onClose }) {
   useEffect(() => {
     let dateTime = new Date();
     if (!PolkadotLoggedIn) {
-      setRecieveWallet(signerAddress);
+      setRecieveType('Polkadot');
+    } else {
+      setRecieveType('EVM');
     }
     if (!addedDate) setStartDate(dateTime.toISOString().split('T')[0]);
-  }, []);
+  }, [PolkadotLoggedIn]);
 
   //Downloading plugin function
   function downloadURI(uri, name) {
@@ -144,6 +147,10 @@ export default function CreateDaoModal({ open, onClose }) {
           type: 'string',
           description: 'Dao'
         },
+        Created_Date: {
+          type: 'string',
+          description: new Date().toLocaleDateString()
+        },
         allFiles
       }
     };
@@ -165,15 +172,22 @@ export default function CreateDaoModal({ open, onClose }) {
 
     toast.update(id, { render: 'Creating Dao...', isLoading: true });
 
+    async function onSuccess() {
+      setCreating(false);
+      onClose({ success: true });
+      window.setTimeout(() => {
+        window.location.reload();
+      }, 1000);
+    }
     if (PolkadotLoggedIn) {
       await api._extrinsics.daos.createDao(userWalletPolkadot, JSON.stringify(createdObject), formatted_template).signAndSend(userWalletPolkadot, { signer: userSigner }, (status) => {
-        showToast(status, id, 'Created Successfully!', onClose);
+        showToast(status, id, 'Created Successfully!', onSuccess);
       });
     } else {
       try {
         // Creating Dao in Smart contract from metamask chain
         await sendTransaction(await window.contract.populateTransaction.create_dao(window.signerAddress, JSON.stringify(createdObject), formatted_template, Number(window.userid)));
-        toast.update(id, {
+        await toast.update(id, {
           render: 'Created Successfully!',
           type: 'success',
           isLoading: false,
@@ -183,9 +197,7 @@ export default function CreateDaoModal({ open, onClose }) {
           draggable: true
         });
 
-        setCreating(false);
-        onClose({ success: true });
-        window.setTimeout(()=>{window.location.reload()},1000)
+        onSuccess();
       } catch (error) {
         console.error(error);
         setCreating(false);
@@ -193,7 +205,6 @@ export default function CreateDaoModal({ open, onClose }) {
         return;
       }
     }
-
   }
 
   function FilehandleChange(dao) {
@@ -207,6 +218,10 @@ export default function CreateDaoModal({ open, onClose }) {
     }
   }
 
+  function isInvalid() {
+    return !(DaoTitle && DaoDescription && RecieveWallet && StartDate && SubsPrice && DaoImage.length > 0);
+  }
+
   function AddBTNClick() {
     var DaoImagePic = document.getElementById('DaoImage');
     DaoImagePic.click();
@@ -216,7 +231,7 @@ export default function CreateDaoModal({ open, onClose }) {
     return (
       <>
         <div className="flex gap-4 justify-end">
-          <Button id="CreateDAOBTN" animation={creating && 'progress'} disabled={creating} onClick={createDao}>
+          <Button id="CreateDAOBTN" animation={creating && 'progress'} disabled={creating || isInvalid()} onClick={createDao}>
             <ControlsPlus className="text-moon-24" />
             Create Dao
           </Button>
@@ -245,40 +260,80 @@ export default function CreateDaoModal({ open, onClose }) {
       <Modal.Panel className="bg-gohan w-[90%] max-w-[600px] max-h-[95vh]">
         <div className="flex items-center justify-center flex-col">
           <div className="flex justify-between items-center w-full border-b border-beerus py-4 px-6">
-            <h1 className="text-moon-20 font-semibold">Create community</h1>
+            {<h1 className="text-moon-20 font-semibold">Create community</h1>}
             <IconButton className="text-trunks" variant="ghost" icon={<ControlsClose />} onClick={onClose} />
           </div>
           <div className="flex flex-col gap-6 w-full p-6 max-h-[calc(90vh-162px)] overflow-auto">
             <div className="flex flex-col gap-2">
-              <h6>Community name</h6>
+              <h6>
+                Community name
+                <Required />
+              </h6>
               {DaoTitleInput}
             </div>
 
             <div className="flex flex-col gap-2">
-              <h6>Description</h6>
+              <h6>
+                Description
+                <Required />
+              </h6>
               {DaoDescriptionInput}
             </div>
             <div className="flex flex-col gap-2">
-              <h6>Recipeint</h6>
+              <h6>
+                Recipeint
+                <Required />
+              </h6>
               {RecieveWalletInput}
             </div>
             <div className="flex flex-col gap-2">
-              <h6>Start Date</h6>
+              <h6>
+                Start Date
+                <Required />
+              </h6>
               {StartDateInput}
             </div>
 
             <div className="flex flex-col gap-2">
-              <h6>Monthly subscription in USD</h6>
+              <h6>
+                Monthly subscription in USD
+                <Required />
+              </h6>
               {SubsPriceInput}
             </div>
 
             <div className="flex flex-col gap-2">
-              <h6>Image</h6>
+              <h6>
+                Image
+                <Required />
+              </h6>
               <div className="flex gap-4">
                 <input className="file-input" hidden onChange={FilehandleChange} accept="image/*" id="DaoImage" name="DaoImage" type="file" />
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col">
                   {DaoImage.length < 1 && <AddImageInput onClick={AddBTNClick} />}
                   <ImageListDisplay images={DaoImage} onDeleteImage={DeleteSelectedImages} />
+                </div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-1">
+              <h6>Vote power distribution</h6>
+              <div className="flex gap-8">
+                <div className="bg-white rounded-lg flex flex-1 flex-col">
+                  <div className="flex w-full h-12 items-center">
+                    <h6 className="text-moon-18 font-semibold flex-1">Level 1 (lowest)</h6>
+                    <span className="text-trunks w-[160px]">1</span>
+                    <span className="text-trunks">votes</span>
+                  </div>
+                  <div className="flex w-full h-12 items-center">
+                    <h6 className="text-moon-18 font-semibold flex-1">Level 2</h6>
+                    <span className="text-trunks w-[160px]">2</span>
+                    <span className="text-trunks">votes</span>
+                  </div>
+                  <div className="flex w-full h-12 items-center">
+                    <h6 className="text-moon-18 font-semibold flex-1">Level 3</h6>
+                    <span className="text-trunks w-[160px]">3</span>
+                    <span className="text-trunks">votes</span>
+                  </div>
                 </div>
               </div>
             </div>

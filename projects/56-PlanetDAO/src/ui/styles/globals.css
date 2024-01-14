@@ -44,9 +44,6 @@ body {
   border: 1px solid  #E2107B;
 }
 
-.bg-gohan {
-  background-color: #fff;
-}
 .text-goten {
   --tw-text-opacity: 1;
   color: var(--link-text);
@@ -78,6 +75,12 @@ button.black{
 
 .container {
   max-width: 800px;
+  width: 90%;
+  margin: 0 auto;
+}
+
+.homepage-container {
+  max-width: 900px;
   width: 90%;
   margin: 0 auto;
 }
