@@ -13,17 +13,19 @@ import PlanetDAO from '../contracts/deployments/moonbase/PlanetDAO.json';
 import Web3 from 'web3';
 import { ChainId } from '@biconomy/core-types';
 import SmartAccount from '@biconomy/smart-account';
-import { getChain } from '../services/useContract';
+import { getChain, getChainByToken } from '../services/useContract';
 import ConvictionVoting from '../services/json/ConvictionVoting.json';
 
 const AppContext = createContext({
   USDPrice: null,
   BiconomySmartAccount: null,
-  LoadSmartAccount: async () => {},
-  BatchDonate: async () => {},
-  BatchJoin: async () => {},
-  BatchVoteConviction: async () => {},
-  getUSDPriceForChain: async () => {}
+  LoadSmartAccount: async () => { },
+  BatchDonate: async () => { },
+  BatchJoin: async () => { },
+  BatchVoteConviction: async () => { },
+  getUSDPriceForChain: async () => { },
+  getUSDPriceForDot: async () => { },
+  switchNetworkByToken :async()=>{}
 });
 
 export function UtilsProvider({ children }) {
@@ -32,15 +34,20 @@ export function UtilsProvider({ children }) {
   const [BiconomySmartAccount, SetBiconomySmartAccount] = useState(null);
 
   async function loadPrice() {
-    const targetNetwork = config.moonbase; //Moonbase
+    try {
+      const targetNetwork = config.moonbase; //Moonbase
 
-    let targetProvider = new ethers.providers.JsonRpcProvider(targetNetwork.rpc);
-    const PriceFeedContract = new ethers.Contract(config.price_feed_address, PriceFeedABI.abi, targetProvider);
-    let symbol = await PriceFeedContract.decimals();
-    let exchangePriceInfo = await PriceFeedContract.latestRoundData();
-    let symoblvalue = 10 ** Number(symbol);
-    let exchangePrice = Number(exchangePriceInfo.answer) / symoblvalue;
-    SetUSDPrice(exchangePrice.toFixed(2));
+      let targetProvider = new ethers.providers.JsonRpcProvider(targetNetwork.rpc);
+      const PriceFeedContract = new ethers.Contract(config.price_feed_address, PriceFeedABI.abi, targetProvider);
+      let symbol = await PriceFeedContract.decimals();
+      let exchangePriceInfo = await PriceFeedContract.latestRoundData();
+      let symoblvalue = 10 ** Number(symbol);
+      let exchangePrice = Number(exchangePriceInfo.answer) / symoblvalue;
+      SetUSDPrice(exchangePrice.toFixed(2));
+    } catch (error) {
+      SetUSDPrice(0)
+    }
+  
   }
   async function getUSDPriceForChain() {
     let token = getChain(Number(window.ethereum.networkVersion)).nativeCurrency.symbol;
@@ -63,6 +70,29 @@ export function UtilsProvider({ children }) {
     }
     return exchangePrice;
   }
+
+  async function getUSDPriceForDot() {
+    const targetNetwork = datafeeds["DOT"];
+
+    let targetProvider = new ethers.providers.JsonRpcProvider(targetNetwork.rpc);
+    const PriceFeedContract = new ethers.Contract(targetNetwork.price_feed_address, PriceFeedABI.abi, targetProvider);
+    let symbol = await PriceFeedContract.decimals();
+    let exchangePriceInfo = await PriceFeedContract.latestRoundData();
+    let symoblvalue = 10 ** Number(symbol);
+    let exchangePrice = Number(exchangePriceInfo.answer) / symoblvalue; // 1CELO = 0.001 ETH
+
+    if (targetNetwork.price_feed_address2 != null) {
+      const PriceFeedContract2 = new ethers.Contract(targetNetwork.price_feed_address2, PriceFeedABI.abi, targetProvider);
+      symbol = await PriceFeedContract2.decimals();
+      exchangePriceInfo = await PriceFeedContract2.latestRoundData();
+      symoblvalue = 10 ** Number(symbol);
+      let exchangePrice2 = Number(exchangePriceInfo.answer) / symoblvalue; // 1 ETH = 4 USD
+      return exchangePrice * exchangePrice2;
+    }
+    return exchangePrice;
+  }
+
+
 
   async function LoadSmartAccount() {
     if (typeof window.ethereum === 'undefined' || window?.ethereum?.selectedAddress == null) {
@@ -90,7 +120,59 @@ export function UtilsProvider({ children }) {
     return smartAccount;
   }
 
-  async function BatchDonate(amount, Recipient, ideas_id, Coin,feed1,feed2) {
+  async function switchNetworkByToken(token) {
+    if (token == "DOT"){
+     
+      const { web3Enable } = require('@polkadot/extension-dapp');
+      await web3Enable('PlanetDAO');
+      window.localStorage.setItem('loggedin', 'true');
+      window.localStorage.setItem('login-type', 'polkadot');
+      return;
+    }
+
+    let chainInfo = getChainByToken(token)
+
+    let result = await window.ethereum.request({ method: 'eth_requestAccounts' });
+    result;
+
+    try {
+      const getacc = await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: '0x' + chainInfo.chainId.toString(16) }]
+      });
+      getacc;
+    } catch (switchError) {
+      // This error code indicates that the chain has not been added to MetaMask.
+      if (switchError.code === 4902) {
+        try {
+          await window.ethereum.request({
+            method: 'wallet_addEthereumChain',
+            params: [
+              {
+                chainId: '0x' + chainInfo.chainId.toString(16),
+                chainName: chainInfo.name,
+                nativeCurrency: {
+                  name: chainInfo.nativeCurrency.name,
+                  symbol: chainInfo.nativeCurrency.symbol,
+                  decimals: chainInfo.nativeCurrency.decimals
+                },
+                rpcUrls: chainInfo.rpc
+              }
+            ]
+          });
+        } catch (addError) {
+          // handle "add" error
+          console.log(addError);
+        }
+      }
+      // handle other "switch" errors
+    }
+
+    window.localStorage.setItem('loggedin', 'true');
+    window.localStorage.setItem('login-type', 'metamask');
+
+  }
+  async function BatchDonate(amount, Recipient, ideas_id, Coin, feed1, feed2) {
     let parsedAmount = `${amount * 1e18}`;
 
     if (Number(window.ethereum.networkVersion) === 1287 && Coin == 'DEV') {
@@ -111,7 +193,7 @@ export function UtilsProvider({ children }) {
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
 
-      let encodedCallData = PlanetDAOContract.add_donation(ideas_id, parsedAmount, Number(window.userid),feed1,feed2).encodeABI();
+      let encodedCallData = PlanetDAOContract.add_donation(ideas_id, parsedAmount, Number(window.userid), feed1, feed2).encodeABI();
 
       callData.push(encodedCallData);
 
@@ -148,7 +230,7 @@ export function UtilsProvider({ children }) {
 
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
-      let encodedCallData3 = PlanetDAOContract.add_donation(ideas_id, parsedAmount, Number(window.userid),feed1,feed2).encodeABI();
+      let encodedCallData3 = PlanetDAOContract.add_donation(ideas_id, parsedAmount, Number(window.userid), feed1, feed2).encodeABI();
       callData.push(encodedCallData3);
 
       //Sending Batch Transaction
@@ -160,7 +242,7 @@ export function UtilsProvider({ children }) {
     }
   }
 
-  async function BatchJoin(amount, Recipient, dao_id,feed) {
+  async function BatchJoin(amount, Recipient, dao_id, feed) {
     if (Number(window.ethereum.networkVersion) === 1287) {
       //If it is sending from Moonbase then it will not use Biconomy Batch Transactions
       let to = [];
@@ -179,7 +261,9 @@ export function UtilsProvider({ children }) {
       let web3 = new Web3(window.ethereum);
       const PlanetDAOContract = new web3.eth.Contract(PlanetDAO.abi, PlanetDAO.address).methods;
 
-      let encodedCallData = PlanetDAOContract.join_community(dao_id, Number(window.userid),feed).encodeABI();
+      console.log('DAO_ID', dao_id);
+
+      let encodedCallData = PlanetDAOContract.join_community(dao_id, Number(window.userid),new Date().toLocaleDateString(), feed).encodeABI();
 
       callData.push(encodedCallData);
 
@@ -257,7 +341,7 @@ export function UtilsProvider({ children }) {
       LoadSmartAccount();
     }, 1000);
   }, []);
-  return <AppContext.Provider value={{ USDPrice: USDPrice, BatchDonate: BatchDonate, BatchJoin: BatchJoin, BatchVoteConviction: BatchVoteConviction, LoadSmartAccount: LoadSmartAccount, getUSDPriceForChain: getUSDPriceForChain, BiconomySmartAccount: BiconomySmartAccount }}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{ USDPrice: USDPrice,switchNetworkByToken:switchNetworkByToken, BatchDonate: BatchDonate, BatchJoin: BatchJoin, getUSDPriceForDot: getUSDPriceForDot, BatchVoteConviction: BatchVoteConviction, LoadSmartAccount: LoadSmartAccount, getUSDPriceForChain: getUSDPriceForChain, BiconomySmartAccount: BiconomySmartAccount }}>{children}</AppContext.Provider>;
 }
 
 export const useUtilsContext = () => useContext(AppContext);

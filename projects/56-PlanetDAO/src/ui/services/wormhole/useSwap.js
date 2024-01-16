@@ -9,7 +9,7 @@ export async function sendTransfer(chainid, amount, Recipient, ShowAlert) {
 	if (Number(window.ethereum.networkVersion) === 1287) {
 		//If it is sending from Moonbase then it will not use bridge
 		const tx = {
-			from: window?.ethereum?.selectedAddress?.toLocaleLowerCase(),
+			from: window?.ethereum?.selectedAddress?.toLocaleUpperCase(),
 			to: Recipient,
 			value: ethers.utils.parseEther(amount),
 			gasPrice: 6_000_000_000

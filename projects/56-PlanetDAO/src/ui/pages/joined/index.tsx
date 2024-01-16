@@ -8,38 +8,48 @@ import EmptyState from '../../components/components/EmptyState';
 import CreateDaoModal from '../../features/CreateDaoModal';
 import useContract from '../../services/useContract';
 import { usePolkadotContext } from '../../contexts/PolkadotContext';
+import { Dao } from '../../data-model/dao';
+import { useRouter } from 'next/router';
+import { JOINED } from '../../data-model/joined';
 declare let window;
 export const Joined = () => {
-  const { api, GetAllDaos } = usePolkadotContext();
+  const { api, GetAllDaos, GetAllJoined } = usePolkadotContext();
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showCreateDaoModal, setShowCreateDaoModal] = useState(false);
 
-  const { contract, signerAddress } = useContract();
+  const { contract } = useContract();
+  const router = useRouter();
 
   useEffect(() => {
     fetchContractData();
-  }, [contract,api]);
+  }, [contract, api]);
 
   async function fetchContractData() {
     setLoading(true);
     //Fetching data from Smart contract
     try {
       if (contract && api) {
-        let allDaos = await GetAllDaos();
-
-        const totalJoined = await contract._join_ids();
+        let allDaos = (await GetAllDaos()) as any as Dao[];
+        let allJoined = (await GetAllJoined()) as any as JOINED[];
 
         const arrList = [];
-        for (let i = 0; i < Number(totalJoined); i++) {
-          const joined_dao = await contract._joined_person(i)
-          let foundDao = (allDaos as any).filter(e => Number(e?.id) == Number( joined_dao.daoid));
-          if (joined_dao.user_id ==  Number((window).userid) && foundDao.length > 0){
+
+        allJoined.forEach((joined_dao) => {
+          let foundDao = (allDaos as any).filter((e) => e?.daoId == joined_dao.daoId.toString());
+          if (joined_dao.user_id.toString() == window.userid.toString() && foundDao.length > 0) {
             arrList.push(foundDao[0]);
           }
+        });
 
-        }
-        setList(arrList);
+        // allDaos.forEach((dao) => {
+        //   console.log('outer', dao);
+        //   if (Number(dao.user_id) === Number(window.userid)) {
+        //     arrList.push(dao);
+        //     console.log('inner', dao);
+        //   }
+        // });
+        setList(arrList.reverse());
       }
     } catch (error) {}
 
@@ -49,6 +59,7 @@ export const Joined = () => {
   function closeModal() {
     setShowCreateDaoModal(false);
   }
+
   function openModal() {
     setShowCreateDaoModal(true);
   }
@@ -71,7 +82,7 @@ export const Joined = () => {
         </div>
 
         <div className="flex flex-col gap-8 container items-center pb-10">
-          <Loader element={list.length > 0 ? list.map((listItem, index) => <DAOCard item={listItem} key={index} />) : <EmptyState icon={<GenericUsers className="text-moon-48" />} label="You haven't joined any communities yet" />} loading={loading} width={768} height={236} many={3} />{' '}
+          <Loader element={list.length > 0 ? list.map((listItem, index) => <DAOCard item={listItem} key={index} hasJoined />) : <EmptyState icon={<GenericUsers className="text-moon-48" />} label="You haven't joined any communities yet" />} loading={loading} width={768} height={236} many={3} />{' '}
         </div>
       </div>
 

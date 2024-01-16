@@ -4,17 +4,21 @@ import Alert from '@mui/material/Alert';
 import useContract from '../../services/useContract';
 import { useUtilsContext } from '../../contexts/UtilsContext';
 import { usePolkadotContext } from '../../contexts/PolkadotContext';
+import vTokenAbi from '../../services/json/vTokenABI.json';
 import { sendTransfer } from '../../services/wormhole/useSwap';
-import { Button, IconButton, Modal } from '@heathmont/moon-core-tw';
+import { Button, IconButton, Dropdown, MenuItem, Modal } from '@heathmont/moon-core-tw';
 import { ControlsClose } from '@heathmont/moon-icons-tw';
+import { useRouter } from 'next/router';
+import { toast } from 'react-toastify';
 
-export default function JoinCommunityModal({ SubsPrice, show, onHide, address, title, dao_id }) {
+export default function JoinCommunityModal({ SubsPrice, show, onHide, address, recieveWallet, recievetype, title, daoId }) {
   const [Balance, setBalance] = useState('');
   const [Token, setToken] = useState('');
   const [isLoading, setisLoading] = useState(false);
-  const [isSent, setisSent] = useState(false);
   const [Amount, setAmount] = useState(0);
-  const { contract, signerAddress, sendTransaction } = useContract();
+  const [Coin, setCoin] = useState('');
+  const { sendTransaction } = useContract();
+  const router = useRouter();
 
   let alertBox = null;
   const [transaction, setTransaction] = useState({
@@ -22,8 +26,8 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
     token: ''
   });
 
-  const { BatchJoin, getUSDPriceForChain } = useUtilsContext();
-  const { userInfo} = usePolkadotContext();
+  const { BatchJoin, getUSDPriceForChain, switchNetworkByToken, getUSDPriceForDot } = useUtilsContext();
+  const { userInfo, PolkadotLoggedIn, userWalletPolkadot, userSigner, showToast, api } = usePolkadotContext();
 
   function ShowAlert(type = 'default', message) {
     alertBox = document.querySelector('[name=alertbox]');
@@ -55,49 +59,109 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
   async function JoinSubmission(e) {
     e.preventDefault();
     console.clear();
-    setisSent(false);
+
+    const daoIdNumber = Number(daoId.split('_')[1]);
 
     setisLoading(true);
-      let feed = JSON.stringify({
-        name: userInfo?.fullName?.toString()
-      })
-    if (Number(window.ethereum.networkVersion) === 1287) {
-      //If it is sending from Moonbase so it will use batch precompiles
-      ShowAlert('pending', 'Sending Batch Transaction....');
-
-      await BatchJoin(Amount, address, Number(dao_id),feed);
-
-      ShowAlert('success', 'Purchased Subscription successfully!');
-      
-    } else {
-      let output = await sendTransfer(Number(window.ethereum.networkVersion),`${Number( Amount) }`, address, ShowAlert);
-      setTransaction({
-        link: output.transaction,
-        token: output?.wrappedAsset
-      });
-      // Saving Joined Person on smart contract
-      await sendTransaction(await window.contract.populateTransaction.join_community(dao_id, Number(window.userid),feed));
+    const id = toast.loading('Joining Community ...');
+    let feed = JSON.stringify({
+      daoId: daoId,
+      name: userInfo?.fullName?.toString()
+    });
+    async function onSuccess() {
+      router.push(`/daos/${daoId}`);
+      LoadData();
+      setisLoading(false);
+      onHide({ success: true });
     }
-    window.location.reload();
-    LoadData();
-    setisLoading(false);
-    setisSent(true);
-    onHide();
+    if (Coin == 'DOT') {
+      toast.update(id, {
+        render: 'Joining Community....',
+        type: 'pending'
+      });
+      let recipient = recievetype == 'Polkadot' ? recieveWallet : address;
+      const txs = [api.tx.balances.transferAllowDeath(recipient, `${Amount * 1e12}`), api._extrinsics.daos.joinCommunity(daoId, Number(window.userid), new Date().toLocaleDateString(), feed), api._extrinsics.feeds.addFeed(feed, 'join', new Date().valueOf())];
+
+      const transfer = api.tx.utility.batch(txs).signAndSend(userWalletPolkadot, { signer: userSigner }, (status) => {
+        showToast(status, id, 'Joined successfully!', () => {
+          onSuccess();
+        });
+      });
+    } else {
+      let recipient = recievetype == 'Polkadot' ? address : recieveWallet;
+      if (Number(window.ethereum.networkVersion) === 1287) {
+        toast.update(id, {
+          render: 'Sending Batch Transaction....',
+          type: 'pending'
+        });
+
+        await BatchJoin(Amount, recipient, daoIdNumber, feed);
+        toast.update(id, {
+          render: 'Purchased Subscription successfully!',
+          type: 'success',
+          isLoading: false,
+          autoClose: 1000,
+          closeButton: true,
+          closeOnClick: true,
+          draggable: true
+        });
+        onSuccess();
+      } else {
+        let output = await sendTransfer(Number(window.ethereum.networkVersion), `${Number(Amount)}`, recipient, ShowAlert);
+        setTransaction({
+          link: output.transaction,
+          token: output?.wrappedAsset
+        });
+
+        // Saving Joined Person on smart contract
+        await sendTransaction(await window.contract.populateTransaction.join_community(daoIdNumber, Number(window.userid), new Date().toLocaleDateString(), feed));
+        onSuccess();
+      }
+    }
   }
 
-  async function LoadData() {
-    const Web3 = require('web3');
-    const web3 = new Web3(window.ethereum);
-    let Balance = await web3.eth.getBalance(window?.ethereum?.selectedAddress?.toLocaleLowerCase());
-    let token = ' ' + getChain(Number(window.ethereum.networkVersion)).nativeCurrency.symbol;
+  async function LoadData(currencyChanged = false) {
+    async function setPolkadot() {
+      let usdPerDot = await getUSDPriceForDot();
+      setToken('DOT');
+      setCoin('DOT');
+      let amount = SubsPrice / Number(usdPerDot);
+      setAmount(amount.toPrecision(5));
+      const { nonce, data: balance } = await api.query.system.account(userWalletPolkadot);
+      setBalance(Number(balance.free.toString()) / 1e12);
+    }
+    async function setMetamask() {
+      const Web3 = require('web3');
+      const web3 = new Web3(window.ethereum);
+      let Balance = await web3.eth.getBalance(window?.ethereum?.selectedAddress?.toLocaleUpperCase());
+      
+      if (Coin !== 'DEV') {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-    setToken(token);
-    setBalance(Number((Balance / 1000000000000000000).toPrecision(5)));
+        const tokenInst = new ethers.Contract(vTokenAbi.address, vTokenAbi.abi, provider);
 
-    let UsdEchangePrice = await getUSDPriceForChain();
-    let amount = SubsPrice / Number(UsdEchangePrice);
-    setAmount(amount.toPrecision(5));
+        Balance = await tokenInst.balanceOf(window?.ethereum?.selectedAddress);
+      }
+
+      setBalance(Number((Balance / 1000000000000000000).toPrecision(5)));
+      let UsdEchangePrice = await getUSDPriceForChain();
+      let amount = SubsPrice / Number(UsdEchangePrice);
+      setAmount(amount.toPrecision(5));
+    }
+
+    if (PolkadotLoggedIn && currencyChanged == false) {
+      setPolkadot();
+    } else if (currencyChanged == true && Coin == 'DOT') {
+      await switchNetworkByToken(Coin);
+      setPolkadot();
+    } else if (currencyChanged == true && Coin !== 'DOT') {
+      await switchNetworkByToken(Coin);
+      setMetamask();
+    }
   }
+  useEffect(() => {
+    if (Coin !== '') LoadData(true);
+  }, [Coin]);
 
   useEffect(() => {
     LoadData();
@@ -124,12 +188,52 @@ export default function JoinCommunityModal({ SubsPrice, show, onHide, address, t
             </Alert>
           </div>
 
-          <div className="flex flex-col gap-8 w-full p-8">
+          <div className="flex flex-col gap-3 w-full p-8">
             <div className="flex justify-between pt-8">
               <h4 className="font-semibold text-moon-18">Total</h4>
-              <h4 className="font-semibold text-moon-18">{Amount} {Token}</h4>
+              <h4 className="font-semibold text-moon-18">{SubsPrice} USD</h4>
             </div>
-            {Amount > Balance ? <p className="pb-8 text-right text-dodoria">Insufficient funds</p> : <p className="pb-8 text-right">Your balance is {Balance} {Token}</p>}
+
+            <div className="flex justify-between">
+              <h4 className="font-semibold text-moon-18">Coin</h4>
+              <h4 className="font-semibold text-moon-18"></h4>
+              <div className="flex items-center gap-2">
+                {Amount}
+                <Dropdown value={Coin} onChange={setCoin}>
+                  <Dropdown.Select placeholder={"Select a Currency"} >
+                    {Coin}
+                  </Dropdown.Select>
+                  <Dropdown.Options className="bg-gohan w-48 min-w-0 w-full">
+                    <Dropdown.Option value="DOT">
+                      <MenuItem>DOT</MenuItem>
+                    </Dropdown.Option>
+                    <Dropdown.Option value="DEV">
+                      <MenuItem>DEV</MenuItem>
+                    </Dropdown.Option>
+                    <Dropdown.Option value="xcvGLMR">
+                      <MenuItem>xcvGLMR</MenuItem>
+                    </Dropdown.Option>
+                    <Dropdown.Option value="tBNB">
+                      <MenuItem>BNB</MenuItem>
+                    </Dropdown.Option>
+                    <Dropdown.Option value="CELO">
+                      <MenuItem>CELO</MenuItem>
+                    </Dropdown.Option>
+                    <Dropdown.Option value="GoerliETH">
+                      <MenuItem>ETH</MenuItem>
+                    </Dropdown.Option>
+                  </Dropdown.Options>
+                </Dropdown>
+              </div>
+            </div>
+
+            {Amount > Balance ? (
+              <p className="pt-5 text-right text-dodoria">Insufficient funds</p>
+            ) : (
+              <p className="pt-5 text-right">
+                Your balance is {Balance} {Coin}
+              </p>
+            )}
           </div>
 
           <div className="flex justify-between border-t border-beerus w-full p-6">

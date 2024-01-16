@@ -1,12 +1,16 @@
-import Image from "next/legacy/image";
+import Image from 'next/legacy/image';
 import { Nav } from '../Nav';
 import styles from './Header.module.scss';
 import Link from 'next/link';
 
 export const Header = () => {
+  const linkTarget = () => {
+    return !window.userid ? '/' : '/joined';
+  };
+
   return (
     <header className={`w-full px-8 py-4 gap-4 flex justify-between z-1 ${styles.header}`}>
-      <Link href="/">
+      <Link href={linkTarget()}>
         <div className={`inline-flex ${styles.logo}`}>
           <Image
             height={48}

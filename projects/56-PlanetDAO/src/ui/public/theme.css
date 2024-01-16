@@ -18,13 +18,13 @@
 
 :root {
 	--background: #FBF1E3;
-    --foreground: black;
-    --link-text: #fff;
-    --background-header: #0e1125;
-    --title-a-text: #41aed3;
-    --btn-bg: #EC1F52;
-    --btn-fg: #fff;
-    --btn-sec-fg: #000;
+  --foreground: black;
+  --link-text: #fff;
+  --background-header: #0e1125;
+  --title-a-text: #41aed3;
+  --btn-bg: #EC1F52;
+  --btn-fg: #fff;
+  --btn-sec-fg: #000;
 }
 
 :root,
@@ -73,7 +73,7 @@
   --whis-10: 132 144 249 / 0.08; /* #3448f0 */
 
   --frieza: 92 51 207; /* #5c33cf */
-  --frieza-60: 92 51 207 / 0.56; /* #5c33cf */
+  --frieza-60: 146 113 239; /* #5c33cf */
   --frieza-10: 92 51 207 / 0.08; /* #5c33cf */
 
   --nappa: 114 85 80; /* #725550 */
