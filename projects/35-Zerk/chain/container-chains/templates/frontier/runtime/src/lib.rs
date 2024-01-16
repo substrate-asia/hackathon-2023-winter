@@ -74,7 +74,7 @@ use {
         FeeCalculator, GasWeightMapping, IdentityAddressMapping,
         OnChargeEVMTransaction as OnChargeEVMTransactionT, Runner,
     },
-    pallet_transaction_payment::{ConstFeeMultiplier, CurrencyAdapter, Multiplier},
+    // pallet_transaction_payment::{ConstFeeMultiplier, CurrencyAdapter, Multiplier},
     parity_scale_codec::{Decode, Encode},
     scale_info::TypeInfo,
     smallvec::smallvec,
@@ -145,7 +145,7 @@ pub type SignedExtra = (
     frame_system::CheckEra<Runtime>,
     frame_system::CheckNonce<Runtime>,
     frame_system::CheckWeight<Runtime>,
-    pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
+    // pallet_transaction_payment::ChargeTransactionPayment<Runtime>,
 );
 
 /// Unchecked extrinsic type as expected by this runtime.
@@ -306,7 +306,7 @@ pub const VERSION: RuntimeVersion = RuntimeVersion {
     spec_name: create_runtime_str!("frontier-template"),
     impl_name: create_runtime_str!("frontier-template"),
     authoring_version: 1,
-    spec_version: 402,
+    spec_version: 405,
     impl_version: 0,
     apis: RUNTIME_API_VERSIONS,
     transaction_version: 1,
@@ -454,20 +454,20 @@ impl frame_system::Config for Runtime {
     type MaxConsumers = frame_support::traits::ConstU32<16>;
 }
 
-parameter_types! {
-    pub const TransactionByteFee: Balance = 1;
-    pub const FeeMultiplier: Multiplier = Multiplier::from_u32(1);
-}
+// parameter_types! {
+//     pub const TransactionByteFee: Balance = 1;
+//     pub const FeeMultiplier: Multiplier = Multiplier::from_u32(1);
+// }
 
-impl pallet_transaction_payment::Config for Runtime {
-    type RuntimeEvent = RuntimeEvent;
-    // This will burn the fees
-    type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
-    type OperationalFeeMultiplier = ConstU8<5>;
-    type WeightToFee = WeightToFee;
-    type LengthToFee = ConstantMultiplier<Balance, TransactionByteFee>;
-    type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
-}
+// impl pallet_transaction_payment::Config for Runtime {
+//     type RuntimeEvent = RuntimeEvent;
+//     // This will burn the fees
+//     type OnChargeTransaction = CurrencyAdapter<Balances, ()>;
+//     type OperationalFeeMultiplier = ConstU8<5>;
+//     type WeightToFee = WeightToFee;
+//     type LengthToFee = ConstantMultiplier<Balance, TransactionByteFee>;
+//     type FeeMultiplierUpdate = ConstFeeMultiplier<FeeMultiplier>;
+// }
 
 impl pallet_timestamp::Config for Runtime {
     /// A timestamp: milliseconds since the unix epoch.
@@ -1122,7 +1122,7 @@ construct_runtime!(
         DynamicFee: pallet_dynamic_fee = 63,
         BaseFee: pallet_base_fee = 64,
         HotfixSufficients: pallet_hotfix_sufficients = 65,
-        TransactionPayment: pallet_transaction_payment = 66,
+        // TransactionPayment: pallet_transaction_payment = 66,
 
         // XCM
         XcmpQueue: cumulus_pallet_xcmp_queue::{Pallet, Storage, Event<T>} = 70,
@@ -1202,11 +1202,13 @@ impl_runtime_apis! {
             xt: <Block as BlockT>::Extrinsic,
             block_hash: <Block as BlockT>::Hash,
         ) -> TransactionValidity {
+            Executive::validate_transaction(source, xt, block_hash)
             // Filtered calls should not enter the tx pool as they'll fail if inserted.
             // If this call is not allowed, we return early.
-            if !<Runtime as frame_system::Config>::BaseCallFilter::contains(&xt.0.function) {
-                return InvalidTransaction::Call.into();
-            }
+
+            // if !<Runtime as frame_system::Config>::BaseCallFilter::contains(&xt.0.function) {
+            //     return InvalidTransaction::Call.into();
+            // }
 
             // This runtime uses Substrate's pallet transaction payment. This
             // makes the chain feel like a standard Substrate chain when submitting
@@ -1222,43 +1224,44 @@ impl_runtime_apis! {
             // First we pass the transactions to the standard FRAME executive. This calculates all the
             // necessary tags, longevity and other properties that we will leave unchanged.
             // This also assigns some priority that we don't care about and will overwrite next.
-            let mut intermediate_valid = Executive::validate_transaction(source, xt.clone(), block_hash)?;
+            
+            // let mut intermediate_valid = Executive::validate_transaction(source, xt.clone(), block_hash)?;
 
-            let dispatch_info = xt.get_dispatch_info();
+            // let dispatch_info = xt.get_dispatch_info();
 
             // If this is a pallet ethereum transaction, then its priority is already set
             // according to effective priority fee from pallet ethereum. If it is any other kind of
             // transaction, we modify its priority. The goal is to arrive at a similar metric used
             // by pallet ethereum, which means we derive a fee-per-gas from the txn's tip and
             // weight.
-            Ok(match &xt.0.function {
-                RuntimeCall::Ethereum(transact { .. }) => intermediate_valid,
-                _ if dispatch_info.class != DispatchClass::Normal => intermediate_valid,
-                _ => {
-                    let tip = match xt.0.signature {
-                        None => 0,
-                        Some((_, _, ref signed_extra)) => {
-                            // Yuck, this depends on the index of charge transaction in Signed Extra
-                            let charge_transaction = &signed_extra.7;
-                            charge_transaction.tip()
-                        }
-                    };
+            // Ok(match &xt.0.function {
+            //     RuntimeCall::Ethereum(transact { .. }) => intermediate_valid,
+            //     _ if dispatch_info.class != DispatchClass::Normal => intermediate_valid,
+            //     _ => {
+            //         let tip = match xt.0.signature {
+            //             None => 0,
+            //             Some((_, _, ref signed_extra)) => {
+            //                 // Yuck, this depends on the index of charge transaction in Signed Extra
+            //                 let charge_transaction = &signed_extra.7;
+            //                 charge_transaction.tip()
+            //             }
+            //         };
 
-                    let effective_gas =
-                        <Runtime as pallet_evm::Config>::GasWeightMapping::weight_to_gas(
-                            dispatch_info.weight
-                        );
-                    let tip_per_gas = if effective_gas > 0 {
-                        tip.saturating_div(effective_gas as u128)
-                    } else {
-                        0
-                    };
+            //         let effective_gas =
+            //             <Runtime as pallet_evm::Config>::GasWeightMapping::weight_to_gas(
+            //                 dispatch_info.weight
+            //             );
+            //         let tip_per_gas = if effective_gas > 0 {
+            //             tip.saturating_div(effective_gas as u128)
+            //         } else {
+            //             0
+            //         };
 
-                    // Overwrite the original prioritization with this ethereum one
-                    intermediate_valid.priority = tip_per_gas as u64;
-                    intermediate_valid
-                }
-            })
+            //         // Overwrite the original prioritization with this ethereum one
+            //         intermediate_valid.priority = tip_per_gas as u64;
+            //         intermediate_valid
+            //     }
+            // })
         }
     }
 
@@ -1465,30 +1468,30 @@ impl_runtime_apis! {
         }
     }
 
-    impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance>
-    for Runtime {
-        fn query_info(
-            uxt: <Block as BlockT>::Extrinsic,
-            len: u32,
-        ) -> pallet_transaction_payment_rpc_runtime_api::RuntimeDispatchInfo<Balance> {
-            TransactionPayment::query_info(uxt, len)
-        }
+    // impl pallet_transaction_payment_rpc_runtime_api::TransactionPaymentApi<Block, Balance>
+    // for Runtime {
+    //     fn query_info(
+    //         uxt: <Block as BlockT>::Extrinsic,
+    //         len: u32,
+    //     ) -> pallet_transaction_payment_rpc_runtime_api::RuntimeDispatchInfo<Balance> {
+    //         TransactionPayment::query_info(uxt, len)
+    //     }
 
-        fn query_fee_details(
-            uxt: <Block as BlockT>::Extrinsic,
-            len: u32,
-        ) -> pallet_transaction_payment::FeeDetails<Balance> {
-            TransactionPayment::query_fee_details(uxt, len)
-        }
+    //     fn query_fee_details(
+    //         uxt: <Block as BlockT>::Extrinsic,
+    //         len: u32,
+    //     ) -> pallet_transaction_payment::FeeDetails<Balance> {
+    //         TransactionPayment::query_fee_details(uxt, len)
+    //     }
 
-        fn query_weight_to_fee(weight: Weight) -> Balance {
-            TransactionPayment::weight_to_fee(weight)
-        }
+    //     fn query_weight_to_fee(weight: Weight) -> Balance {
+    //         TransactionPayment::weight_to_fee(weight)
+    //     }
 
-        fn query_length_to_fee(length: u32) -> Balance {
-            TransactionPayment::length_to_fee(length)
-        }
-    }
+    //     fn query_length_to_fee(length: u32) -> Balance {
+    //         TransactionPayment::length_to_fee(length)
+    //     }
+    // }
 }
 
 struct CheckInherents;

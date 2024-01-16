@@ -154,19 +154,135 @@ describe("ZerkLawyerJuster", function () {
   });
 
   it("should allow a lawyer to validate a juster", async function () {
-    //pending
+    // Arrange - Add a juster and validate the lawyer
+    await zerkLawyerJuster
+      .connect(owner)
+      .createJuster("AB123456", "Alice", "CityABC");
+    await zerkLawyerJuster.connect(owner).addLawyer(lawyer.address);
+
+    // Act - Get access level before validation
+    const accessLevelBefore = await zerkLawyerJuster.getAccessLevel(
+      owner.address
+    );
+
+    // Validate the juster
+    await zerkLawyerJuster.connect(lawyer).validateJuster(owner.address);
+
+    // Get access level after validation
+    const accessLevelAfter = await zerkLawyerJuster.getAccessLevel(
+      owner.address
+    );
+
+    // Assert
+    console.log(
+      "Access Level (Before Validation):",
+      parseInt(accessLevelBefore)
+    );
+    console.log("Access Level (After Validation):", parseInt(accessLevelAfter));
+
+    // AccessLevel.Juster has a value of 3 before validation and 1 after validation
+    expect(parseInt(accessLevelBefore)).to.equal(3);
+    expect(parseInt(accessLevelAfter)).to.equal(1);
+
+    const isJusterValidated = (await zerkLawyerJuster.s_justers(owner.address))
+      .isValidated;
+
+    console.log("Is Juster Validated:", isJusterValidated);
+    expect(isJusterValidated).to.be.true; // Juster should be validated after the validation
   });
   it("should allow a juster to create a legal case", async function () {
-    // Add test logic for creating a legal case
+    // Arrange - Add a juster
+    await zerkLawyerJuster.connect(owner).addLawyer(lawyer.address);
+    await zerkLawyerJuster
+      .connect(owner)
+      .createJuster("AB123456", "Alice", "CityABC");
+    await zerkLawyerJuster.connect(lawyer).validateJuster(owner.address);
+
+    // Act - Create a legal case
+    const caseNumber = 1;
+    const jurisdiction = "CityABC";
+    const price = 100; // Assuming price is in uint
+    const description = "Legal case description";
+
+    await zerkLawyerJuster
+      .connect(owner)
+      .createCase(caseNumber, jurisdiction, price, description);
+
+    // Assert
+    const createdCase = await zerkLawyerJuster.s_cases(caseNumber);
+
+    console.log("Created Case Number:", parseInt(createdCase.caseNumber));
+    expect(createdCase.caseNumber).to.equal(caseNumber);
+
+    console.log("Created Case Jurisdiction:", createdCase.jurisdiction);
+    expect(createdCase.jurisdiction).to.equal(jurisdiction);
+
+    console.log("Created Case Price:", parseInt(createdCase.price));
+    expect(createdCase.price).to.equal(price);
+
+    console.log("Created Case Description:", createdCase.description);
+    expect(createdCase.description).to.equal(description);
+
+    console.log("Created Case IsValidated:", createdCase.isValidated);
+    expect(createdCase.isValidated).to.be.false; // isValidated should be false initially
+
+    console.log(
+      "Created Case Total Donations:",
+      parseInt(createdCase.totalDonations)
+    );
+    expect(createdCase.totalDonations).to.equal(0);
+
+    console.log("Created Case Juster Address:", createdCase.justerAddress);
+    expect(createdCase.justerAddress).to.equal(owner.address);
+
+    console.log("Created Case Is Funded:", createdCase.isFunded);
+    expect(createdCase.isFunded).to.be.false; // isFunded should be false initially
   });
 
   it("should allow a lawyer to validate a legal case", async function () {
-    // Add test logic for validating a legal case
+    //Arrange
+    await zerkLawyerJuster.connect(owner).addLawyer(lawyer.address);
+    await zerkLawyerJuster
+      .connect(owner)
+      .createJuster("AB123456", "Alice", "CityABC");
+    await zerkLawyerJuster.connect(lawyer).validateJuster(owner.address);
+
+    const caseNumber = 1;
+    const jurisdiction = "CityABC";
+    const price = 100; // Assuming price is in uint
+    const description = "Legal case description";
+
+    await zerkLawyerJuster
+      .connect(owner)
+      .createCase(caseNumber, jurisdiction, price, description);
+
+    // Act - Lawyer validates the legal case
+    await zerkLawyerJuster.connect(lawyer).validateCase(caseNumber);
+
+    // Assert
+    const validatedCase = await zerkLawyerJuster.s_cases(caseNumber);
+
+    console.log("Validated Case Number:", parseInt(validatedCase.caseNumber));
+    expect(validatedCase.caseNumber).to.equal(caseNumber);
+
+    console.log("Is Case Validated:", validatedCase.isValidated);
+    expect(validatedCase.isValidated).to.be.true; // Case should be validated after the validation
+
+    // Check if CaseValidated event is emitted
+    const events = await zerkLawyerJuster.queryFilter(
+      "CaseValidated",
+      validatedCase.blockNumber
+    );
+    const emittedCaseNumber = events[0].args[0];
+
+    console.log(
+      "Emitted CaseValidated Event Case Number:",
+      parseInt(emittedCaseNumber)
+    );
+    expect(emittedCaseNumber).to.equal(caseNumber);
   });
 
-  it("should allow a donor to contribute funds to a legal case", async function () {
-    // Add test logic for donating to a legal case
-  });
+  it("should allow a donor to contribute funds to a legal case", async function () {});
 
   it("should allow the assigned juster to withdraw funds from a fully funded legal case", async function () {
     // Add test logic for withdrawing funds from a fully funded legal case

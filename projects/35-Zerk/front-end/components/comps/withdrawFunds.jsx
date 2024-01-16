@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import {
   ModalBody,
   ModalFooter,
@@ -22,8 +23,9 @@ const contractABIrotam = require("../../utils/contractABIrotam.json");
 export default function WithdrawFunds() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [caseNumber, setCaseNumber] = useState("");
+  const toast = useToast();
 
-  const withdawFunds = async (caseNumber) => {
+  const withdrawFunds = async (caseNumber) => {
     try {
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       await window.ethereum.request({ method: "eth_requestAccounts" });
@@ -33,21 +35,72 @@ export default function WithdrawFunds() {
         contractABIrotam,
         signer
       );
-      const transaction = await contract.withdawFunds(caseNumber);
+      const transaction = await contract.withdrawFunds(caseNumber);
       console.log("transaction", transaction);
       const receipt = await transaction.wait();
       const transactionHash = receipt.transactionHash;
       console.log(transactionHash);
+      toast({
+        title: 'Withdraw Funds',
+        description: 'funds witdrawn Successfully',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     } catch (error) {
       console.log(`Error: ${error}`);
+      let errorMessage;
+      if (error.message && error.message.includes('Only Juster')) {
+        errorMessage = 'Only assigned Juster can withdraw funds';
+      }
+      
+       //error handling for rotam app chain Starts
+       else if (typeof error === 'object' && error.data && typeof error.data.message === 'string') {
+        
+        if (error.data.message.includes(' revert Only Juster')) {
+          errorMessage = 'Only assigned Juster can withdraw funds';
+        }
+        
+         if (error.data.message.includes('Case is not fully funded')) {
+          errorMessage = 'Case is not fully funded';
+        }
+         
+      }
+      //error handling for rotam app chain Ends
+      else if (error.message && error.message.includes('Case is not fully funded')) {
+        errorMessage = 'Case is not fully funded yet.';
+      }else if (error.message && error.message.includes('user rejected transaction')) {
+        errorMessage = 'User denied the transaction.';
+      } else {
+        errorMessage = `Unexpected error: ${error.message}`;
+      }
+      toast({
+        title: 'Withdraw Funds',
+        description: `Error: ${errorMessage}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-left',
+        
+      });
     }
   };
 
-  const handlewithdawFunds = async () => {
+  const handlewithdrawFunds = async () => {
     if (caseNumber) {
-      withdawFunds(caseNumber);
+      withdrawFunds(caseNumber);
     } else {
-      console.log("Please fullfill all the requirement fields");
+      toast({
+        title: 'Withdraw Funds',
+        description: 'Please enter a case no.',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     }
   };
   return (
@@ -94,14 +147,14 @@ export default function WithdrawFunds() {
             </Heading>
             <Text>Need an Id to validate</Text>
 
-            <form onSubmit={handlewithdawFunds}>
+            <form onSubmit={handlewithdrawFunds}>
               <Flex align={"center"} justify={"center"} direction={"column"}>
                 <FormControl p="1rem" pb="0" isRequired>
-                  <FormLabel textAlign="center"> Withdraw Funds</FormLabel>
+                  <FormLabel textAlign="center"> Case Number</FormLabel>
                   <Input
                     placeholder="Withdraw funds"
                     value={caseNumber}
-                    onChange={(e) => setAddress(e.target.value)}
+                    onChange={(e) => setCaseNumber(e.target.value)}
                   />
                 </FormControl>
 
@@ -118,7 +171,7 @@ export default function WithdrawFunds() {
               _hover={{
                 bg: "black",
               }}
-              onClick={handlewithdawFunds}
+              onClick={handlewithdrawFunds}
             >
               Withdraw funds
             </Button>

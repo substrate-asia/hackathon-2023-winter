@@ -19,10 +19,17 @@ const HeadDash = () => {
       align="center"
       p={4}
       bgColor="black"
+      mb="5rem"
     >
       <Button variant="link" onClick={handleConnection} m="2" ml="1rem">
         <Flex direction="column" bgColor="black">
-          <Image src="favicon.svg" bgColor="black" w="4rem" alt="Zerk Logo" />
+          <Image
+            alignSelf="center"
+            src="favicon.svg"
+            bgColor="black"
+            w="2rem"
+            alt="Zerk Logo"
+          />
           <Heading bgColor="black">Zerk</Heading>
         </Flex>
       </Button>

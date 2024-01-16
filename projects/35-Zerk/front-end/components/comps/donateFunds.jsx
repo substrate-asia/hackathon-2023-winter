@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import {
   ModalBody,
   ModalFooter,
@@ -23,6 +24,7 @@ export default function DonateToCase() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [caseNumber, setCaseNumber] = useState("");
   const [value, setValue] = useState("");
+  const toast = useToast();
 
   const donateToCase = async (caseNumber, value) => {
     try {
@@ -41,8 +43,60 @@ export default function DonateToCase() {
       const receipt = await transaction.wait();
       const transactionHash = receipt.transactionHash;
       console.log(transactionHash);
+      toast({
+        title: 'Donate Funds',
+        description: 'Donation received successfully',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     } catch (error) {
       console.log(`Error: ${error}`);
+      let errorMessage;
+      if (error.message && error.message.includes('Case number does not exist')) {
+        errorMessage = 'Case number does not exist';
+      }
+      
+       //error handling for rotam app chain Starts
+       else if (typeof error === 'object' && error.data && typeof error.data.message === 'string') {
+        
+        if (error.data.message.includes('Case number does not exist')) {
+          errorMessage = 'Case number does not exist';
+        }
+        
+         if (error.data.message.includes('Case is not validated')) {
+          errorMessage = 'Case is not validated';
+        }
+         if(error.data.message.includes('evm error: OutOfFund')){
+          errorMessage = 'insufficient funds';
+        }
+         if(error.data.message.includes('Invalid donation amount')){
+          errorMessage = 'Invalid donation amount';
+        }
+      }
+      //error handling for rotam app chain Ends
+      else if (error.message && error.message.includes(' Case is not validated')) {
+        errorMessage = ' Case is not validated.';
+      }else if (error.message && error.message.includes(' insufficient funds')) {
+        errorMessage = ' insufficient funds.';
+      }else if (error.message && error.message.includes(' Invalid donation amount')) {
+        errorMessage = ' Invalid donation amount.';
+      }else if (error.message && error.message.includes('user rejected transaction')) {
+        errorMessage = 'User denied the transaction.';
+      } else {
+        errorMessage = `Unexpected error: ${error.message}`;
+      }
+      toast({
+        title: 'Donate Funds',
+        description: `Error: ${errorMessage}`,
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+        position: 'top-left',
+        
+      });
     }
   };
 
@@ -50,7 +104,15 @@ export default function DonateToCase() {
     if (caseNumber && value) {
       donateToCase(caseNumber, value);
     } else {
-      console.log("Please, complete all the requirement fields.");
+      toast({
+        title: 'Donate Funds',
+        description: 'Please provide all arguments',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     }
   };
   return (

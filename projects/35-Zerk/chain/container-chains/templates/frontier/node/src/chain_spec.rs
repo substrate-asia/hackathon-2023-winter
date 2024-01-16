@@ -230,7 +230,7 @@ fn testnet_genesis(
         ethereum: Default::default(),
         dynamic_fee: Default::default(),
         base_fee: Default::default(),
-        transaction_payment: Default::default(),
+        // transaction_payment: Default::default(),
         sudo: container_chain_template_frontier_runtime::SudoConfig {
             key: Some(root_key),
         },

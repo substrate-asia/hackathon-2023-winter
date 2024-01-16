@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useToast } from "@chakra-ui/react";
 import {
   ModalBody,
   ModalFooter,
@@ -25,6 +26,7 @@ export default function CreateJuster() {
   const [licenseNumber, setLicenseNumber] = useState("");
   const [name, setName] = useState("");
   const [location, setLocation] = useState("");
+  const toast =useToast()
 
   const createJuster = async (licenseNumber, name, location) => {
     try {
@@ -45,7 +47,45 @@ export default function CreateJuster() {
       const receipt = await transaction.wait();
       const transactionHash = receipt.transactionHash;
       console.log(transactionHash);
+      toast({
+        title: 'Create Juster',
+        description: 'Juster  created successfully',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     } catch (error) {
+      let errorMessage;
+  if (error.message && error.message.includes('user rejected transaction')) {
+    errorMessage = 'User denied the transaction.';
+  }
+  
+  //error handling for rotam app chain starts
+  else if (typeof error === 'object' && error.data && typeof error.data.message === 'string') {
+        
+    if (error.data.message.includes(' revert Juster already exists')) {
+      errorMessage = 'Juster already exists';
+    }
+  
+  }
+  //error handling for rotam app chain ends
+  else if (error.message && error.message.includes("Juster already exists")){
+    errorMessage =" Juster already exists"
+  } else {
+    errorMessage = `Unexpected error: ${error.message}`;
+  }
+
+  toast({
+    title: 'Create Juster',
+    description: `Error: ${errorMessage}`,
+    status: 'error',
+    duration: 2000,
+    isClosable: true,
+    position: 'top-right',
+  });
+      
       console.log(`Error: ${error}`);
     }
   };
@@ -53,8 +93,17 @@ export default function CreateJuster() {
   const handlecreateJuster = async () => {
     if (licenseNumber && name && location) {
       createJuster(licenseNumber, name, location);
+      
     } else {
-      console.log("Por favor, complete todos los campos requeridos.");
+      toast({
+        title: 'Create Juster',
+        description: 'Please provide all arguments',
+        status: 'info',
+        duration: 2000,
+        isClosable: true,
+        position: 'top-right',
+        
+      });
     }
   };
   return (
@@ -70,7 +119,7 @@ export default function CreateJuster() {
       </Button>
 
       <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalContent bgColor={"#969696"}>
+        <ModalContent bgColor={"#151515"}>
           <Flex
             alignItems="center"
             flexDir="column"
